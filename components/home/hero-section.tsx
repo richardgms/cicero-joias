@@ -12,7 +12,7 @@ export function HeroSection() {
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `linear-gradient(rgba(24, 68, 52, 0.8), rgba(24, 68, 52, 0.9)), url('https://images.pexels.com/photos/1721934/pexels-photo-1721934.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop')`
+          backgroundImage: `linear-gradient(rgba(19, 54, 41, 0.8), rgba(19, 54, 41, 0.95)), url('https://images.pexels.com/photos/1721934/pexels-photo-1721934.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop')`
         }}
       />
       

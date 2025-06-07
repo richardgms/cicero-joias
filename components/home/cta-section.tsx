@@ -5,7 +5,7 @@ import { MessageCircle, Calendar, ArrowRight } from 'lucide-react';
 
 export function CTASection() {
   return (
-    <section className="py-24 bg-slate-900 relative overflow-hidden">
+    <section className="py-24 relative overflow-hidden" style={{ backgroundColor: '#133629' }}>
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div 
@@ -22,11 +22,11 @@ export function CTASection() {
           {/* Main Title */}
           <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
             Pronto para criar sua
-            <span className="text-primary block">joia dos sonhos?</span>
+            <span className="text-ouro block">joia dos sonhos?</span>
           </h2>
 
           {/* Subtitle */}
-          <p className="text-xl text-slate-300 mb-12 leading-relaxed">
+          <p className="text-xl text-marfim-dark mb-12 leading-relaxed">
             Nossa equipe especializada está pronta para transformar suas ideias em realidade. 
             Solicite um orçamento sem compromisso e descubra como podemos tornar seu momento especial ainda mais único.
           </p>
@@ -35,14 +35,14 @@ export function CTASection() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
             {/* Orçamento Card */}
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 premium-card-hover">
-              <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <Calendar className="w-8 h-8 text-white" />
+              <div className="w-16 h-16 bg-ouro rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <Calendar className="w-8 h-8 text-grafite" />
               </div>
               <h3 className="text-2xl font-bold mb-4">Solicitar Orçamento</h3>
-              <p className="text-slate-300 mb-6 leading-relaxed">
+              <p className="text-marfim-dark mb-6 leading-relaxed">
                 Preencha nosso formulário e receba um orçamento personalizado para seu projeto em até 24 horas.
               </p>
-              <Button size="lg" asChild className="w-full group">
+              <Button size="lg" asChild className="w-full group bg-ouro text-grafite hover:bg-ouro-light">
                 <Link href="/orcamento">
                   Solicitar Orçamento
                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -56,7 +56,7 @@ export function CTASection() {
                 <MessageCircle className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-2xl font-bold mb-4">Falar no WhatsApp</h3>
-              <p className="text-slate-300 mb-6 leading-relaxed">
+              <p className="text-marfim-dark mb-6 leading-relaxed">
                 Prefere conversar diretamente? Entre em contato conosco pelo WhatsApp para tirar dúvidas ou agendar uma visita.
               </p>
               <Button 
@@ -78,15 +78,15 @@ export function CTASection() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
               <div>
                 <h4 className="font-semibold mb-2">Atendimento Rápido</h4>
-                <p className="text-sm text-slate-400">Resposta em até 2 horas</p>
+                <p className="text-sm text-marfim-dark">Resposta em até 2 horas</p>
               </div>
               <div>
                 <h4 className="font-semibold mb-2">Orçamento Gratuito</h4>
-                <p className="text-sm text-slate-400">Sem compromisso</p>
+                <p className="text-sm text-marfim-dark">Sem compromisso</p>
               </div>
               <div>
                 <h4 className="font-semibold mb-2">Consultoria Especializada</h4>
-                <p className="text-sm text-slate-400">40+ anos de experiência</p>
+                <p className="text-sm text-marfim-dark">40+ anos de experiência</p>
               </div>
             </div>
           </div>
