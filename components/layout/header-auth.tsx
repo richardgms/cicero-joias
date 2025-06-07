@@ -20,6 +20,14 @@ export function HeaderAuth() {
                 userButtonAvatarBox: "h-8 w-8",
               }
             }}
+            localization={{
+              userButton: {
+                action__signOut: "Sair",
+                action__manageAccount: "Gerenciar conta",
+                action__switchAccount: "Trocar conta",
+                action__addAccount: "Adicionar conta"
+              }
+            }}
           />
         </>
       ) : (

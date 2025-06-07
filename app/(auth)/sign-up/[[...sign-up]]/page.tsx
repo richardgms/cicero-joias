@@ -9,6 +9,18 @@ export default function SignUpPage() {
             formButtonPrimary: 'bg-amber-600 hover:bg-amber-700',
           }
         }}
+        localization={{
+          socialButtonsBlockButton: "Continuar com {{provider}}",
+          dividerText: "ou",
+          formFieldLabel__emailAddress: "E-mail",
+          formFieldLabel__username: "Nome de usuário",
+          formFieldLabel__password: "Senha",
+          formFieldLabel__firstName: "Nome",
+          formFieldLabel__lastName: "Sobrenome",
+          formButtonPrimary: "Cadastrar",
+          footerActionLink: "Entrar",
+          footerActionText: "Já tem uma conta?",
+        }}
       />
     </div>
   );

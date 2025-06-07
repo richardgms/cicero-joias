@@ -9,6 +9,16 @@ export default function SignInPage() {
             formButtonPrimary: 'bg-amber-600 hover:bg-amber-700',
           }
         }}
+        localization={{
+          socialButtonsBlockButton: "Continuar com {{provider}}",
+          dividerText: "ou",
+          formFieldLabel__emailAddress: "E-mail",
+          formFieldLabel__password: "Senha",
+          formButtonPrimary: "Entrar",
+          footerActionLink: "Criar conta",
+          footerActionText: "Não tem uma conta?",
+          formFieldAction__forgotPassword: "Esqueci minha senha"
+        }}
       />
     </div>
   );
