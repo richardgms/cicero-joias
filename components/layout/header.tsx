@@ -34,12 +34,12 @@ export function Header() {
       className={cn(
         'sticky top-0 z-50 transition-all duration-300',
         scrolled
-          ? 'bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm'
+          ? 'bg-marfim/95 backdrop-blur-md border-b border-marfim-dark shadow-sm'
           : 'bg-transparent'
       )}
     >
       {/* Top bar with contact info */}
-      <div className="bg-slate-900 text-white py-2 px-4 text-sm">
+      <div className="bg-esmeralda text-marfim py-2 px-4 text-sm">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
@@ -62,14 +62,14 @@ export function Header() {
         <nav className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-              <Gem className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 bg-esmeralda rounded-lg flex items-center justify-center">
+              <Gem className="w-6 h-6 text-ouro" />
             </div>
             <div className="flex flex-col">
-              <span className="font-playfair text-xl font-bold text-slate-900">
+              <span className="font-playfair text-xl font-bold text-esmeralda">
                 Cícero Joias
               </span>
-              <span className="text-xs text-slate-600 -mt-1">
+              <span className="text-xs text-esmeralda/70 -mt-1">
                 Tradição que se renova
               </span>
             </div>
@@ -81,7 +81,7 @@ export function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-slate-700 hover:text-primary transition-colors duration-200 font-medium"
+                className="text-esmeralda hover:text-ouro transition-colors duration-200 font-medium"
               >
                 {item.name}
               </Link>
@@ -90,7 +90,7 @@ export function Header() {
 
           {/* CTA Button */}
           <div className="hidden md:flex">
-            <Button asChild>
+            <Button asChild className="bg-ouro text-grafite hover:bg-ouro-light">
               <Link href="/orcamento">Solicitar Orçamento</Link>
             </Button>
           </div>
@@ -102,6 +102,7 @@ export function Header() {
               size="sm"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle mobile menu"
+              className="text-esmeralda hover:text-ouro hover:bg-marfim-dark"
             >
               {mobileMenuOpen ? (
                 <X className="w-6 h-6" />
@@ -114,20 +115,20 @@ export function Header() {
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-slate-200">
+          <div className="md:hidden py-4 border-t border-marfim-dark">
             <div className="flex flex-col space-y-4">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="text-slate-700 hover:text-primary transition-colors font-medium py-2"
+                  className="text-esmeralda hover:text-ouro transition-colors font-medium py-2"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {item.name}
                 </Link>
               ))}
-              <div className="pt-4 border-t border-slate-200">
-                <Button asChild className="w-full">
+              <div className="pt-4 border-t border-marfim-dark">
+                <Button asChild className="w-full bg-ouro text-grafite hover:bg-ouro-light">
                   <Link href="/orcamento" onClick={() => setMobileMenuOpen(false)}>
                     Solicitar Orçamento
                   </Link>

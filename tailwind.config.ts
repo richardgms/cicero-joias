@@ -20,6 +20,28 @@ const config: Config = {
         sm: 'calc(var(--radius) - 4px)',
       },
       colors: {
+        // Paleta Esmeralda Solar
+        esmeralda: {
+          DEFAULT: '#184434', // Esmeralda Profundo (cor-base)
+          light: '#2A6A52',
+          dark: '#0F2A20',
+        },
+        ouro: {
+          DEFAULT: '#C79A34', // Ouro Âmbar (realce metálico)
+          light: '#E1B959',
+          dark: '#9E7A29',
+        },
+        marfim: {
+          DEFAULT: '#F7F5F0', // Marfim Clássico (complementar claro)
+          light: '#FFFFFF',
+          dark: '#E8E4D8',
+        },
+        grafite: {
+          DEFAULT: '#1A1A1A', // Grafite Lux (sombras/texto)
+          light: '#333333',
+          dark: '#000000',
+        },
+        // Cores padrão do sistema
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {

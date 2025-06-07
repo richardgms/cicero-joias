@@ -43,15 +43,15 @@ const features = [
 
 export function FeaturesSection() {
   return (
-    <section className="py-24 bg-gradient-to-b from-white to-slate-50">
+    <section className="py-24 bg-gradient-to-b from-marfim to-marfim-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-4">
+          <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl font-bold text-esmeralda mb-4">
             Por que escolher a
-            <span className="text-primary"> Cícero Joias?</span>
+            <span className="text-ouro"> Cícero Joias?</span>
           </h2>
-          <p className="text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg text-esmeralda-light max-w-3xl mx-auto leading-relaxed">
             Combinamos tradição e inovação para oferecer a melhor experiência em joalheria. 
             Conheça os valores que nos guiam há mais de quatro décadas.
           </p>
@@ -62,19 +62,19 @@ export function FeaturesSection() {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="group p-8 bg-white rounded-2xl elegant-shadow premium-card-hover border border-slate-100"
+              className="group p-8 bg-white rounded-2xl elegant-shadow premium-card-hover border border-marfim-dark"
             >
               <div className="flex items-center mb-6">
-                <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center group-hover:bg-primary group-hover:scale-110 transition-all duration-300">
-                  <feature.icon className="w-7 h-7 text-primary group-hover:text-white transition-colors duration-300" />
+                <div className="w-14 h-14 bg-esmeralda/10 rounded-2xl flex items-center justify-center group-hover:bg-esmeralda group-hover:scale-110 transition-all duration-300">
+                  <feature.icon className="w-7 h-7 text-esmeralda group-hover:text-marfim transition-colors duration-300" />
                 </div>
               </div>
               
-              <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-primary transition-colors duration-300">
+              <h3 className="text-xl font-bold text-esmeralda mb-3 group-hover:text-ouro transition-colors duration-300">
                 {feature.title}
               </h3>
               
-              <p className="text-slate-600 leading-relaxed">
+              <p className="text-esmeralda-light leading-relaxed">
                 {feature.description}
               </p>
             </div>
@@ -83,23 +83,23 @@ export function FeaturesSection() {
 
         {/* Bottom CTA */}
         <div className="text-center mt-16">
-          <div className="inline-block p-8 bg-slate-900 rounded-2xl text-white">
+          <div className="inline-block p-8 bg-esmeralda rounded-2xl text-marfim">
             <h3 className="font-playfair text-2xl font-bold mb-4">
               Pronto para criar sua joia dos sonhos?
             </h3>
-            <p className="text-slate-300 mb-6 max-w-md">
+            <p className="text-marfim-dark mb-6 max-w-md">
               Nossa equipe está preparada para transformar suas ideias em realidade.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href="/orcamento"
-                className="inline-flex items-center justify-center px-6 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary/90 transition-colors"
+                className="inline-flex items-center justify-center px-6 py-3 bg-ouro text-grafite font-semibold rounded-lg hover:bg-ouro-light transition-colors"
               >
                 Solicitar Orçamento
               </a>
               <a
                 href="https://wa.me/5583988073784?text=Olá! Gostaria de mais informações sobre os serviços da Cícero Joias."
-                className="inline-flex items-center justify-center px-6 py-3 border border-slate-700 text-slate-300 font-semibold rounded-lg hover:bg-slate-800 transition-colors"
+                className="inline-flex items-center justify-center px-6 py-3 border border-esmeralda-dark text-marfim font-semibold rounded-lg hover:bg-esmeralda-dark transition-colors"
               >
                 Falar no WhatsApp
               </a>
