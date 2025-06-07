@@ -12,7 +12,7 @@ const publicRoutes = createRouteMatcher([
 export default clerkMiddleware((auth, req) => {
   if (!publicRoutes(req)) {
     // Proteger rotas não-públicas
-    // auth.protect(); // Descomente para exigir autenticação
+    auth.protect();
   }
 });
 
