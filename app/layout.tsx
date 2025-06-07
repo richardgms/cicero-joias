@@ -7,13 +7,13 @@ import { Toaster } from '@/components/ui/toaster';
 import { Providers } from './providers';
 
 const inter = Inter({ 
-  subsets: ['latin'],
+  subsets: ['latin'], 
   variable: '--font-inter',
   display: 'swap',
 });
 
 const playfair = Playfair_Display({ 
-  subsets: ['latin'],
+  subsets: ['latin'], 
   variable: '--font-playfair',
   display: 'swap',
 });
@@ -21,7 +21,7 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: 'Cícero Joias - Tradição que se Renova',
   description: 'Joalheria familiar com mais de 40 anos de tradição. Especializados em alianças sob encomenda, consertos e joias personalizadas.',
-  keywords: 'joalheria, alianças, consertos, joias personalizadas, banho de ouro, anel de formatura',
+  keywords: 'joalheria, alianças, consertos, joias personalizadas, banho de ouro, anel de formatura, portfólio',
   authors: [{ name: 'Cícero Joias' }],
   creator: 'Cícero Joias',
   openGraph: {

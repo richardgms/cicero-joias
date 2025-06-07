@@ -2,6 +2,15 @@ import React from 'react';
 import { Heart, Shield, Gem, Users, Clock, Award, Star, RotateCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { 
+  AliancasIcon, 
+  BanhoOuroIcon, 
+  ConsertosIcon, 
+  JoiasSobMedidaIcon, 
+  OculosIcon, 
+  QualidadeIcon 
+} from '@/components/icons';
+import { IconWrapper } from '@/components/icons';
 
 export default function SobrePage() {
   return (
@@ -169,39 +178,41 @@ export default function SobrePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               {
-                icon: Heart,
+                customIcon: AliancasIcon,
                 title: 'Alianças Personalizadas',
                 description: 'Nossa principal especialidade é a criação de alianças exclusivas em ouro 16k, 18k e prata, cuidadosamente elaboradas para simbolizar compromissos duradouros.'
               },
               {
-                icon: RotateCw,
+                customIcon: BanhoOuroIcon,
                 title: 'Banho de Ouro Profissional',
                 description: 'Oferecemos serviço especializado de banho de ouro, permitindo renovar peças antigas ou transformar itens especiais com acabamento dourado de alta qualidade.'
               },
               {
-                icon: Shield,
+                customIcon: ConsertosIcon,
                 title: 'Consertos Especializados',
                 description: 'Nossa expertise técnica nos permite realizar consertos complexos em joias, relógios e óculos, devolvendo vida e funcionalidade a peças de valor.'
               },
               {
-                icon: Gem,
+                customIcon: JoiasSobMedidaIcon,
                 title: 'Joias Sob Medida',
                 description: 'Criamos joias personalizadas que contam histórias e eternizam momentos, trabalhando em estreita colaboração com nossos clientes do início ao fim.'
               },
               {
-                icon: Users,
+                customIcon: OculosIcon,
                 title: 'Lentes de Óculos',
                 description: 'Oferecemos lentes de alta qualidade, com foco em conforto visual, durabilidade e estilo. Trabalhamos com diversos tipos de lentes para atender suas necessidades.'
               },
               {
-                icon: Award,
+                customIcon: QualidadeIcon,
                 title: 'Compromisso com a Qualidade',
                 description: 'Na Cícero Joias, qualidade não é apenas um objetivo, mas um compromisso diário. Cada peça passa por rigorosos controles que garantem perfeição.'
               }
             ].map((specialty, index) => (
               <div key={index} className="bg-white p-8 rounded-2xl elegant-shadow premium-card-hover">
                 <div className="w-14 h-14 bg-esmeralda/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-esmeralda group-hover:scale-110 transition-all duration-300">
-                  <specialty.icon className="w-7 h-7 text-esmeralda group-hover:text-marfim transition-colors duration-300" />
+                  {specialty.customIcon && (
+                    <specialty.customIcon className="w-7 h-7 text-esmeralda group-hover:text-marfim transition-colors duration-300" />
+                  )}
                 </div>
                 <h3 className="text-xl font-bold text-esmeralda mb-3 group-hover:text-ouro transition-colors duration-300">
                   {specialty.title}

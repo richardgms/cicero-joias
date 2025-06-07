@@ -1,96 +1,89 @@
 import React from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Heart, Wrench, Sparkles } from 'lucide-react';
 
-const portfolioItems = [
+// Projetos em destaque para a pré-visualização
+const featuredProjects = [
   {
     id: 1,
-    title: 'Alianças Românticas',
-    description: 'Alianças únicas que contam a história de cada casal',
-    image: 'https://images.pexels.com/photos/1616113/pexels-photo-1616113.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop',
-    category: 'Alianças',
-    icon: Heart
+    title: 'Aliança de Ouro 18k Personalizada',
+    description: 'Aliança de casamento em ouro 18k com detalhes em relevo e acabamento fosco.',
+    imageUrl: '/assets/images/home-hero.jpg',
   },
   {
-    id: 2,
-    title: 'Restauração Completa',
-    description: 'Antes e depois de consertos que devolvem vida às suas joias',
-    image: 'https://images.pexels.com/photos/1927259/pexels-photo-1927259.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop',
-    category: 'Consertos',
-    icon: Wrench
+    id: 5,
+    title: 'Pulseira de Ouro com Pedras',
+    description: 'Pulseira em ouro 18k com pedras semipreciosas em engaste pavê.',
+    imageUrl: '/assets/images/home-values.jpg',
   },
   {
-    id: 3,
-    title: 'Banho de Ouro Premium',
-    description: 'Transformação completa com acabamento dourado de alta qualidade',
-    image: 'https://images.pexels.com/photos/1927260/pexels-photo-1927260.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop',
-    category: 'Banho de Ouro',
-    icon: Sparkles
-  }
+    id: 7,
+    title: 'Conjunto de Brincos e Colar',
+    description: 'Conjunto harmonizado de brincos e colar em ouro 18k com desenho floral.',
+    imageUrl: '/assets/images/home-services.jpg',
+  },
 ];
 
 export function PortfolioPreview() {
   return (
-    <section className="py-24 bg-white">
+    <section className="py-20 bg-marfim">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-4">
-            Nossos
-            <span className="text-primary"> Trabalhos</span>
-          </h2>
-          <p className="text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed">
-            Cada peça conta uma história única. Conheça alguns dos nossos trabalhos mais especiais 
-            e inspire-se para criar a sua joia dos sonhos.
-          </p>
-        </div>
-
-        {/* Portfolio Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {portfolioItems.map((item) => (
-            <div
-              key={item.id}
-              className="group relative overflow-hidden rounded-2xl elegant-shadow premium-card-hover"
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-12">
+          <div>
+            <h2 className="text-3xl md:text-4xl font-playfair font-bold text-esmeralda mb-4">
+              Nossos Trabalhos em Destaque
+            </h2>
+            <p className="text-lg text-esmeralda-light max-w-2xl">
+              Cada peça conta uma história única. Conheça alguns de nossos trabalhos mais recentes e deixe-se inspirar.
+            </p>
+          </div>
+          <div className="mt-6 md:mt-0">
+            <Button
+              asChild
+              variant="outline"
+              className="border-esmeralda text-esmeralda hover:bg-esmeralda hover:text-marfim"
             >
-              {/* Image */}
-              <div className="aspect-[4/3] overflow-hidden">
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </div>
-
-              {/* Content */}
-              <div className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                <div className="flex items-center mb-2">
-                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center mr-3">
-                    <item.icon className="w-4 h-4 text-white" />
-                  </div>
-                  <span className="text-sm font-medium text-primary">
-                    {item.category}
-                  </span>
-                </div>
-                <h3 className="text-xl font-bold mb-2">{item.title}</h3>
-                <p className="text-sm text-gray-200 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
-                  {item.description}
-                </p>
-              </div>
-            </div>
-          ))}
+              <Link href="/portfolio" className="flex items-center">
+                Ver Portfólio Completo
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
         </div>
 
-        {/* CTA */}
-        <div className="text-center">
-          <Button size="lg" asChild className="group">
-            <Link href="/portfolio">
-              Ver Portfólio Completo
-              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {featuredProjects.map((project) => (
+            <Link key={project.id} href={`/portfolio/${project.id}`} className="group">
+              <div className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 h-full flex flex-col">
+                <div className="relative h-64 overflow-hidden">
+                  <Image
+                    src={project.imageUrl}
+                    alt={project.title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  />
+                  <div className="absolute top-4 right-4 bg-ouro text-esmeralda text-xs font-bold px-3 py-1 rounded-full">
+                    Destaque
+                  </div>
+                </div>
+                <div className="p-6 flex flex-col flex-grow">
+                  <h3 className="text-xl font-bold text-esmeralda mb-3 group-hover:text-ouro transition-colors">
+                    {project.title}
+                  </h3>
+                  <p className="text-esmeralda-light text-sm mb-4 flex-grow">
+                    {project.description}
+                  </p>
+                  <Button variant="ghost" className="justify-start p-0 text-esmeralda hover:text-ouro hover:bg-transparent">
+                    <span>Ver Detalhes</span>
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
             </Link>
-          </Button>
+          ))}
         </div>
       </div>
     </section>

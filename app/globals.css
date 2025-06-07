@@ -6,6 +6,45 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --background: 36 33% 97%;
+  --foreground: 162 60% 14%;
+  
+  --muted: 162 30% 95%;
+  --muted-foreground: 162 25% 30%;
+  
+  --popover: 0 0% 100%;
+  --popover-foreground: 162 60% 14%;
+  
+  --card: 0 0% 100%;
+  --card-foreground: 162 60% 14%;
+  
+  --border: 166 12% 80%;
+  --input: 166 12% 80%;
+  
+  --primary: 162 57% 15%; /* Esmeralda */
+  --primary-foreground: 36 33% 97%; /* Marfim */
+  
+  --secondary: 39 81% 57%; /* Ouro */
+  --secondary-foreground: 162 60% 14%; /* Esmeralda (texto em fundos ouro) */
+  
+  --accent: 166 40% 80%;
+  --accent-foreground: 162 60% 14%;
+  
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  
+  --ring: 36 33% 88%;
+  
+  --radius: 0.5rem;
+
+  /* Cores do tema */
+  --esmeralda: 162 57% 15%;
+  --esmeralda-light: 162 40% 25%;
+  --ouro: 39 81% 57%;
+  --ouro-light: 39 80% 65%;
+  --marfim: 36 33% 97%;
+  --marfim-dark: 36 15% 85%;
+  --grafite: 210 14% 21%;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -13,64 +52,6 @@
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
-  }
-}
-
-@layer base {
-  :root {
-    /* Paleta Esmeralda Solar */
-    --background: 48 21% 95%; /* Baseado no Marfim Clássico */
-    --foreground: 0 0% 10%; /* Baseado no Grafite Lux */
-    --card: 0 0% 100%;
-    --card-foreground: 157 48% 18%; /* Baseado no Esmeralda Profundo */
-    --popover: 0 0% 100%;
-    --popover-foreground: 157 48% 18%; /* Baseado no Esmeralda Profundo */
-    --primary: 157 48% 18%; /* Esmeralda Profundo */
-    --primary-foreground: 48 21% 95%; /* Marfim Clássico */
-    --secondary: 39 57% 49%; /* Ouro Âmbar */
-    --secondary-foreground: 0 0% 10%; /* Grafite Lux */
-    --muted: 48 21% 90%; /* Variação do Marfim */
-    --muted-foreground: 157 48% 25%; /* Variação do Esmeralda */
-    --accent: 39 57% 49%; /* Ouro Âmbar */
-    --accent-foreground: 0 0% 10%; /* Grafite Lux */
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 48 21% 85%; /* Variação do Marfim */
-    --input: 48 21% 85%; /* Variação do Marfim */
-    --ring: 39 57% 49%; /* Ouro Âmbar */
-    --chart-1: 157 48% 18%; /* Esmeralda Profundo */
-    --chart-2: 39 57% 49%; /* Ouro Âmbar */
-    --chart-3: 48 21% 95%; /* Marfim Clássico */
-    --chart-4: 0 0% 10%; /* Grafite Lux */
-    --chart-5: 157 48% 32%; /* Variação do Esmeralda */
-    --radius: 0.75rem;
-  }
-  .dark {
-    /* Paleta Esmeralda Solar (versão dark) */
-    --background: 0 0% 10%; /* Grafite Lux */
-    --foreground: 48 21% 95%; /* Marfim Clássico */
-    --card: 0 0% 15%; /* Variação do Grafite */
-    --card-foreground: 48 21% 95%; /* Marfim Clássico */
-    --popover: 0 0% 15%; /* Variação do Grafite */
-    --popover-foreground: 48 21% 95%; /* Marfim Clássico */
-    --primary: 157 48% 25%; /* Versão mais clara do Esmeralda para dark mode */
-    --primary-foreground: 48 21% 95%; /* Marfim Clássico */
-    --secondary: 39 57% 55%; /* Versão mais clara do Ouro Âmbar */
-    --secondary-foreground: 0 0% 15%; /* Variação do Grafite */
-    --muted: 0 0% 20%; /* Variação do Grafite */
-    --muted-foreground: 48 21% 85%; /* Variação do Marfim */
-    --accent: 39 57% 55%; /* Versão mais clara do Ouro Âmbar */
-    --accent-foreground: 0 0% 15%; /* Variação do Grafite */
-    --destructive: 0 62% 30%;
-    --destructive-foreground: 0 0% 95%;
-    --border: 0 0% 25%; /* Variação do Grafite */
-    --input: 0 0% 25%; /* Variação do Grafite */
-    --ring: 39 57% 55%; /* Versão mais clara do Ouro Âmbar */
-    --chart-1: 157 48% 25%; /* Variação do Esmeralda */
-    --chart-2: 39 57% 55%; /* Versão mais clara do Ouro */
-    --chart-3: 48 21% 90%; /* Variação do Marfim */
-    --chart-4: 0 0% 20%; /* Variação do Grafite */
-    --chart-5: 157 48% 40%; /* Variação do Esmeralda */
   }
 }
 
@@ -128,15 +109,95 @@
 
 /* Elegant shadow */
 .elegant-shadow {
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
 }
 
 /* Premium card hover effect */
 .premium-card-hover {
-  transition: all 0.3s ease;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .premium-card-hover:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Estilos para o portfólio */
+.portfolio-gallery .image-thumbnail {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.portfolio-gallery .image-thumbnail:hover {
+  opacity: 0.85;
+  transform: scale(1.05);
+}
+
+.portfolio-gallery .active-thumbnail {
+  border: 2px solid hsl(var(--ouro));
+  box-shadow: 0 0 0 2px hsl(var(--ouro) / 0.3);
+}
+
+/* Animação de loading para imagens */
+.image-placeholder {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--marfim-dark) / 0.5) 25%,
+    hsl(var(--marfim-dark) / 0.7) 50%,
+    hsl(var(--marfim-dark) / 0.5) 75%
+  );
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Estilo para especificações */
+.specs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.5rem;
+}
+
+.spec-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.spec-label {
+  font-size: 0.875rem;
+  color: hsl(var(--esmeralda-light));
+  margin-bottom: 0.25rem;
+}
+
+.spec-value {
+  font-weight: 500;
+  color: hsl(var(--esmeralda));
+}
+
+/* Estilos de tag e destaque */
+.category-tag {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: hsl(var(--esmeralda-light));
+  background-color: hsl(var(--esmeralda) / 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+}
+
+.featured-tag {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: hsl(var(--ouro-light));
+  background-color: hsl(var(--ouro) / 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  margin-left: 0.5rem;
 }

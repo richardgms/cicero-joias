@@ -103,3 +103,60 @@ npm start
 - **Outubro 2024**: Atualizado para Next.js 15 com suporte a React 19
 
 [Edit in StackBlitz next generation editor ⚡️](https://stackblitz.com/~/github.com/richardgms/cicerojoias)
+
+# Cícero Joias - Website Oficial
+
+Website institucional da Cícero Joias, joalheria com mais de 40 anos de tradição.
+
+## Sistema de Ícones
+
+O projeto utiliza dois tipos de ícones:
+
+### 1. Ícones do Lucide React
+
+Para ícones gerais, utilizamos a biblioteca [Lucide React](https://lucide.dev/), que oferece uma grande variedade de ícones modernos e de alta qualidade.
+
+```jsx
+import { Heart, Star, ArrowRight } from 'lucide-react';
+
+// Utilizando o ícone
+<Heart className="w-6 h-6 text-esmeralda" />
+```
+
+### 2. Ícones Personalizados
+
+Para ícones específicos de joalheria, criamos componentes React a partir de SVGs personalizados.
+
+#### Como usar ícones personalizados:
+
+1. Adicione o arquivo SVG na pasta `public/assets/icons/`
+2. Crie um componente para o ícone em `components/icons/[nome-do-icone]-icon.tsx`
+3. Exporte o componente no arquivo `components/icons/index.ts`
+4. Importe e use o ícone em seu componente:
+
+```jsx
+import { AliancasIcon } from '@/components/icons';
+
+// Utilizando o ícone
+<AliancasIcon className="w-6 h-6 text-esmeralda" />
+```
+
+#### Ou use o componente IconWrapper:
+
+```jsx
+import { IconWrapper } from '@/components/icons';
+import { Heart } from 'lucide-react';
+import { AliancasIcon } from '@/components/icons';
+
+// Com ícone do Lucide
+<IconWrapper icon={Heart} size="md" />
+
+// Com ícone personalizado
+<IconWrapper icon={AliancasIcon} size="md" />
+```
+
+Os tamanhos disponíveis para o IconWrapper são:
+- sm: pequeno (32px x 32px)
+- md: médio (40px x 40px) - padrão
+- lg: grande (48px x 48px)
+- xl: extra grande (64px x 64px)
