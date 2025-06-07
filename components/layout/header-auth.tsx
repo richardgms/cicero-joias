@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs';
+import { UserButton, useUser } from '@clerk/nextjs';
 
 export function HeaderAuth() {
   const { isSignedIn, user } = useUser();
@@ -32,16 +32,16 @@ export function HeaderAuth() {
         </>
       ) : (
         <>
-          <SignInButton mode="modal">
-            <button className="text-sm hover:text-primary transition-colors">
+          <Link href="/sign-in">
+            <span className="text-sm hover:text-primary transition-colors">
               Entrar
-            </button>
-          </SignInButton>
-          <SignUpButton mode="modal">
-            <button className="text-sm hover:text-primary transition-colors">
+            </span>
+          </Link>
+          <Link href="/sign-up">
+            <span className="text-sm hover:text-primary transition-colors">
               Cadastrar
-            </button>
-          </SignUpButton>
+            </span>
+          </Link>
         </>
       )}
     </div>
