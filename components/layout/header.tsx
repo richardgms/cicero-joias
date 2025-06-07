@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, Gem, Phone, Mail } from 'lucide-react';
+import { Menu, X, Gem, Phone, Mail, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { HeaderAuth } from './header-auth';
+import { useUser } from '@clerk/nextjs';
 
 const navigation = [
   { name: 'Início', href: '/' },
@@ -18,6 +19,7 @@ const navigation = [
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { isSignedIn } = useUser();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -86,6 +88,15 @@ export function Header() {
                 {item.name}
               </Link>
             ))}
+            {isSignedIn && (
+              <Link
+                href="/dashboard"
+                className="text-esmeralda hover:text-ouro transition-colors duration-200 font-medium flex items-center"
+              >
+                <User className="w-4 h-4 mr-1" />
+                <span>Minha Área</span>
+              </Link>
+            )}
           </div>
 
           {/* CTA Button */}
@@ -127,6 +138,16 @@ export function Header() {
                   {item.name}
                 </Link>
               ))}
+              {isSignedIn && (
+                <Link
+                  href="/dashboard"
+                  className="text-esmeralda hover:text-ouro transition-colors font-medium py-2 flex items-center"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <User className="w-4 h-4 mr-2" />
+                  <span>Minha Área</span>
+                </Link>
+              )}
               <div className="pt-4 border-t border-marfim-dark">
                 <Button asChild className="w-full bg-ouro text-grafite hover:bg-ouro-light">
                   <Link href="/orcamento" onClick={() => setMobileMenuOpen(false)}>
