@@ -1,0 +1,278 @@
+// Schema Prisma Otimizado para Vibe Coding - Cícero Joias
+// Focado em MVP e desenvolvimento ágil
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ===== USUÁRIOS E AUTENTICAÇÃO (SIMPLIFICADO) =====
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  role      UserRole @default(CLIENT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamento direto com cliente
+  client Client?
+
+  @@map("users")
+}
+
+enum UserRole {
+  ADMIN
+  CLIENT
+}
+
+// ===== CLIENTES (CORE) =====
+
+model Client {
+  id          String   @id @default(cuid())
+  name        String
+  email       String   @unique
+  phone       String?
+  whatsapp    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Fidelidade simplificada
+  loyaltyPoints Int         @default(0)
+  loyaltyLevel  LoyaltyLevel @default(CLIENT)
+  
+  // Relacionamentos essenciais
+  userId       String? @unique
+  user         User?   @relation(fields: [userId], references: [id])
+  
+  quoteRequests QuoteRequest[]
+  orders        Order[]
+
+  @@map("clients")
+}
+
+enum LoyaltyLevel {
+  CLIENT
+  SPECIAL
+  VIP
+}
+
+// ===== ORÇAMENTOS (CORE - MVP) =====
+
+model QuoteRequest {
+  id          String      @id @default(cuid())
+  name        String
+  email       String
+  phone       String
+  whatsapp    String?
+  type        QuoteType
+  description String?
+  status      QuoteStatus @default(NEW)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  // Relacionamento simplificado
+  clientId String?
+  client   Client? @relation(fields: [clientId], references: [id])
+  
+  // Link direto para pedido (sem orçamento formal no MVP)
+  orderId String? @unique
+  order   Order?  @relation(fields: [orderId], references: [id])
+
+  @@map("quote_requests")
+}
+
+enum QuoteType {
+  REPAIRS
+  GRADUATION_RING
+  WEDDING_RINGS
+  CUSTOM_JEWELRY
+  GOLD_PLATING
+  GLASSES_LENS
+}
+
+enum QuoteStatus {
+  NEW
+  CONTACTED
+  IN_NEGOTIATION
+  APPROVED
+  COMPLETED
+  CANCELLED
+}
+
+// ===== PEDIDOS (CORE) =====
+
+model Order {
+  id          String      @id @default(cuid())
+  orderNumber String      @unique @default(cuid())
+  status      OrderStatus @default(PENDING)
+  totalValue  Decimal     @db.Decimal(10, 2)
+  category    OrderCategory
+  description String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  // Relacionamentos essenciais
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id])
+  
+  quoteRequest QuoteRequest?
+  statusHistory OrderStatusHistory[]
+  attachments   OrderAttachment[]
+
+  @@map("orders")
+}
+
+enum OrderStatus {
+  PENDING
+  DESIGN_APPROVED
+  IN_PRODUCTION
+  READY_FOR_PICKUP
+  COMPLETED
+  CANCELLED
+}
+
+enum OrderCategory {
+  JEWELRY_SALES
+  REPAIR_SERVICES
+  CUSTOM_SERVICES
+  GOLD_PLATING
+  GRADUATION_RINGS
+  WEDDING_RINGS
+}
+
+// ===== HISTÓRICO DE STATUS (SIMPLIFICADO) =====
+
+model OrderStatusHistory {
+  id          String      @id @default(cuid())
+  status      OrderStatus
+  description String?
+  createdAt   DateTime    @default(now())
+  
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("order_status_history")
+}
+
+// ===== ANEXOS (SIMPLIFICADO) =====
+
+model OrderAttachment {
+  id          String          @id @default(cuid())
+  fileName    String
+  filePath    String
+  fileType    AttachmentType
+  description String?
+  createdAt   DateTime        @default(now())
+  
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("order_attachments")
+}
+
+enum AttachmentType {
+  IMAGE
+  VIDEO
+  DOCUMENT
+}
+
+// ===== PRODUTOS (PRONTA ENTREGA) =====
+
+model Product {
+  id              String   @id @default(cuid())
+  name            String
+  description     String?
+  price           Decimal? @db.Decimal(10, 2)
+  isActive        Boolean  @default(true)
+  isReadyDelivery Boolean  @default(false)
+  mainImage       String?  // URL da imagem principal
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relacionamento com portfólio
+  portfolioItems PortfolioItem[]
+
+  @@map("products")
+}
+
+// ===== PORTFÓLIO (SIMPLIFICADO) =====
+
+model PortfolioItem {
+  id          String        @id @default(cuid())
+  title       String
+  description String?
+  category    PortfolioCategory
+  mainImage   String        // URL da imagem principal
+  images      String[]      // Array de URLs das imagens
+  isActive    Boolean       @default(true)
+  order       Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id])
+
+  @@map("portfolio_items")
+}
+
+enum PortfolioCategory {
+  WEDDING_RINGS
+  REPAIRS_BEFORE_AFTER
+  GOLD_PLATING
+  CUSTOM_JEWELRY
+  GRADUATION_RINGS
+}
+
+// ===== CONTEÚDO DO SITE (SIMPLIFICADO) =====
+
+model SiteContent {
+  id        String      @id @default(cuid())
+  page      SitePage
+  section   String
+  title     String?
+  content   String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@unique([page, section])
+  @@map("site_content")
+}
+
+enum SitePage {
+  HOME
+  ABOUT
+  PORTFOLIO
+  CONTACT
+}
+
+// ===== CONFIGURAÇÕES DO SISTEMA =====
+
+model SystemConfig {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  description String?
+  updatedAt   DateTime @updatedAt
+
+  @@map("system_config")
+}
+
+// ===== LOGS ESSENCIAIS =====
+
+model ActivityLog {
+  id          String   @id @default(cuid())
+  action      String
+  entity      String
+  entityId    String
+  description String?
+  userId      String?
+  createdAt   DateTime @default(now())
+
+  @@map("activity_logs")
+}
