@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Menu, X, Gem, Phone, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { HeaderAuth } from './header-auth';
 
 const navigation = [
   { name: 'Início', href: '/' },
@@ -51,12 +52,7 @@ export function Header() {
             </div>
           </div>
           <div className="hidden md:flex items-center space-x-4">
-            <Link href="/cliente" className="text-sm hover:text-primary transition-colors">
-              Portal do Cliente
-            </Link>
-            <Link href="/admin" className="text-sm hover:text-primary transition-colors">
-              Área Admin
-            </Link>
+            <HeaderAuth />
           </div>
         </div>
       </div>
@@ -138,20 +134,7 @@ export function Header() {
                 </Button>
               </div>
               <div className="flex flex-col space-y-2 pt-2">
-                <Link
-                  href="/cliente"
-                  className="text-sm text-slate-600 hover:text-primary transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Portal do Cliente
-                </Link>
-                <Link
-                  href="/admin"
-                  className="text-sm text-slate-600 hover:text-primary transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Área Admin
-                </Link>
+                <HeaderAuth />
               </div>
             </div>
           </div>

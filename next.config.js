@@ -4,6 +4,8 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: { unoptimized: true },
+  // Suprimir avisos de hidratação durante o desenvolvimento
+  reactStrictMode: false,
 };
 
 module.exports = nextConfig;

@@ -4,7 +4,7 @@ import { Inter, Playfair_Display } from 'next/font/google';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Toaster } from '@/components/ui/toaster';
-import { QueryProvider } from '@/lib/query-provider';
+import { Providers } from './providers';
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -53,15 +53,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR" className={`${inter.variable} ${playfair.variable}`}>
-      <body className="min-h-screen bg-background font-sans antialiased">
-        <QueryProvider>
+      <body suppressHydrationWarning className="min-h-screen bg-background font-sans antialiased">
+        <Providers>
           <div className="flex min-h-screen flex-col">
             <Header />
             <main className="flex-1">{children}</main>
             <Footer />
           </div>
           <Toaster />
-        </QueryProvider>
+        </Providers>
       </body>
     </html>
   );
