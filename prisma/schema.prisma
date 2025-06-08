@@ -185,20 +185,37 @@ enum AttachmentType {
 // ===== PRODUTOS (PRONTA ENTREGA) =====
 
 model Product {
-  id              String   @id @default(cuid())
+  id              String         @id @default(cuid())
   name            String
   description     String?
-  price           Decimal? @db.Decimal(10, 2)
-  isActive        Boolean  @default(true)
-  isReadyDelivery Boolean  @default(false)
-  mainImage       String?  // URL da imagem principal
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  price           Decimal?       @db.Decimal(10, 2)
+  category        ProductCategory @default(JEWELRY)
+  isActive        Boolean        @default(true)
+  isReadyDelivery Boolean        @default(false)
+  mainImage       String?        // URL da imagem principal
+  images          String[]       // Array de URLs das imagens
+  stock           Int            @default(0)
+  weight          Decimal?       @db.Decimal(8, 2) // em gramas
+  material        String?        // ouro, prata, etc.
+  size           String?        // tamanho/medida
+  code           String?        @unique // código do produto
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
   
   // Relacionamento com portfólio
   portfolioItems PortfolioItem[]
 
   @@map("products")
+}
+
+enum ProductCategory {
+  JEWELRY       // Joias em geral
+  RINGS         // Anéis
+  NECKLACES     // Colares
+  EARRINGS      // Brincos
+  BRACELETS     // Pulseiras
+  WATCHES       // Relógios
+  ACCESSORIES   // Acessórios
 }
 
 // ===== PORTFÓLIO (SIMPLIFICADO) =====
