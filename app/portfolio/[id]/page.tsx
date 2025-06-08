@@ -285,8 +285,9 @@ const categories = [
 ];
 
 // Componente para a página de detalhes do portfólio
-export default function PortfolioItemPage({ params }: { params: { id: string } }) {
-  const id = parseInt(params.id);
+export default async function PortfolioItemPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id: idString } = await params;
+  const id = parseInt(idString);
   const item = portfolioItems.find(item => item.id === id);
   
   if (!item) {
