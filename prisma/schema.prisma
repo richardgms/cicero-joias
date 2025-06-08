@@ -202,6 +202,13 @@ model Product {
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
   
+  // Novos campos adicionados na etapa 2
+  deliveryTime        String?    // Tempo estimado de entrega (ex: "24h", "3 dias")
+  promotionalPrice    Decimal?   @db.Decimal(10, 2) // Preço promocional, se aplicável
+  seoTitle            String?    // Título otimizado para SEO
+  seoDescription      String?    // Descrição otimizada para SEO
+  tags                String[]   // Array de tags para categorização
+  
   // Relacionamento com portfólio
   portfolioItems PortfolioItem[]
 
@@ -218,7 +225,7 @@ enum ProductCategory {
   ACCESSORIES   // Acessórios
 }
 
-// ===== PORTFÓLIO (SIMPLIFICADO) =====
+// ===== PORTFÓLIO (EXPANDIDO) =====
 
 model PortfolioItem {
   id          String        @id @default(cuid())
@@ -231,6 +238,16 @@ model PortfolioItem {
   order       Int           @default(0)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
+  
+  // Novos campos adicionados na etapa 1
+  detailedDescription String?    // Descrição detalhada do projeto
+  specifications      Json?      // Especificações técnicas em formato JSON
+  seoTitle            String?    // Título otimizado para SEO
+  seoDescription      String?    // Descrição otimizada para SEO 
+  keywords            String[]   // Palavras-chave para SEO
+  status              String     @default("DRAFT") // Valores: DRAFT, PUBLISHED, FEATURED
+  relatedProjects     String[]   // Array de IDs de projetos relacionados
+  customCategory      String?    // Categoria personalizada definida pelo admin
   
   productId String?
   product   Product? @relation(fields: [productId], references: [id])
