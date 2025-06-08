@@ -7,38 +7,38 @@ const publicRoutes = [
   "/portfolio", 
   "/pronta-entrega",
   "/orcamento",
-  "/api/webhook",
+  "/api/webhook/clerk",
   "/sign-in",
   "/sign-up",
-  "/acesso-negado", // Página de acesso negado
+  "/acesso-negado",
 ];
 
-// Matcher para rotas que requerem role ADMIN
-const isAdminRoute = createRouteMatcher(['/admin(.*)']);
+// Rotas que precisam de autenticação
+const isProtectedRoute = createRouteMatcher([
+  '/admin(.*)',
+  '/dashboard(.*)',
+  '/cliente(.*)',
+]);
 
 export default clerkMiddleware((auth, req) => {
   const pathName = req.nextUrl.pathname;
   
-  // Verifica se a rota está na lista de rotas públicas
-  if (publicRoutes.some(route => 
-    pathName === route || 
-    (route.endsWith('*') && pathName.startsWith(route.slice(0, -1)))
-  )) {
-    return;
+  // Permitir todas as rotas públicas
+  if (publicRoutes.includes(pathName)) {
+    return NextResponse.next();
   }
 
-  // Se for rota administrativa, verificar autenticação primeiro
-  if (isAdminRoute(req)) {
-    // Proteger a rota - usuário deve estar autenticado
+  // Permitir rotas de arquivos estáticos
+  if (pathName.includes('.') || pathName.startsWith('/_next')) {
+    return NextResponse.next();
+  }
+
+  // Só proteger rotas específicas que realmente precisam de auth
+  if (isProtectedRoute(req)) {
     auth.protect();
-    
-    // Para verificação de role, usaremos um componente/middleware separado
-    // pois não podemos fazer calls async aqui facilmente
-    // A verificação de role será feita no layout da área admin
   }
 
-  // Proteger rotas não-públicas
-  auth.protect();
+  return NextResponse.next();
 });
 
 export const config = {
