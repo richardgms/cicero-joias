@@ -7,14 +7,14 @@ import { z } from 'zod';
 const updateProductSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório').optional(),
   description: z.string().optional(),
-  price: z.number().positive('Preço deve ser positivo').optional(),
+  price: z.number().positive('Preço deve ser positivo').optional().nullable(),
   category: z.enum(['JEWELRY', 'RINGS', 'NECKLACES', 'EARRINGS', 'BRACELETS', 'WATCHES', 'ACCESSORIES']).optional(),
   isActive: z.boolean().optional(),
   isReadyDelivery: z.boolean().optional(),
   mainImage: z.string().optional(),
   images: z.array(z.string()).optional(),
   stock: z.number().int().min(0, 'Estoque não pode ser negativo').optional(),
-  weight: z.number().positive('Peso deve ser positivo').optional(),
+  weight: z.number().positive('Peso deve ser positivo').optional().nullable(),
   material: z.string().optional(),
   size: z.string().optional(),
   code: z.string().optional(),
@@ -94,6 +94,9 @@ export async function PUT(
 
     const { id } = await params;
     const body = await request.json();
+    
+    console.log('Dados recebidos para atualização:', JSON.stringify(body, null, 2));
+    
     const validatedData = updateProductSchema.parse(body);
 
     // Verificar se produto existe
@@ -119,10 +122,17 @@ export async function PUT(
       }
     }
 
+    // Preparar dados para o Prisma (converter números para Decimal se necessário)
+    const prismaData = {
+      ...validatedData,
+      price: validatedData.price ? parseFloat(validatedData.price.toString()) : null,
+      weight: validatedData.weight ? parseFloat(validatedData.weight.toString()) : null,
+    };
+
     // Atualizar produto
     const product = await prisma.product.update({
       where: { id },
-      data: validatedData,
+      data: prismaData,
       include: {
         portfolioItems: {
           select: {
@@ -147,8 +157,12 @@ export async function PUT(
     return NextResponse.json({ product });
   } catch (error) {
     if (error instanceof z.ZodError) {
+      console.error('Erro de validação:', error.errors);
       return NextResponse.json(
-        { error: 'Dados inválidos', details: error.errors },
+        { 
+          error: 'Dados inválidos', 
+          details: error.errors.map(err => `${err.path.join('.')}: ${err.message}`).join(', ')
+        },
         { status: 400 }
       );
     }

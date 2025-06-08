@@ -27,8 +27,13 @@ const navigation = [
   },
   {
     name: 'Produtos',
-    href: '/admin/produtos',
+    href: '/admin/products',
     icon: Package,
+  },
+  {
+    name: 'Categorias',
+    href: '/admin/categories',
+    icon: Gem,
   },
   {
     name: 'Usuários',

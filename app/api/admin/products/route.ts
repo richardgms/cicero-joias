@@ -7,14 +7,14 @@ import { z } from 'zod';
 const createProductSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
   description: z.string().optional(),
-  price: z.number().positive('Preço deve ser positivo').optional(),
+  price: z.number().positive('Preço deve ser positivo').optional().nullable(),
   category: z.enum(['JEWELRY', 'RINGS', 'NECKLACES', 'EARRINGS', 'BRACELETS', 'WATCHES', 'ACCESSORIES']),
   isActive: z.boolean().default(true),
   isReadyDelivery: z.boolean().default(false),
   mainImage: z.string().optional(),
   images: z.array(z.string()).default([]),
   stock: z.number().int().min(0, 'Estoque não pode ser negativo').default(0),
-  weight: z.number().positive('Peso deve ser positivo').optional(),
+  weight: z.number().positive('Peso deve ser positivo').optional().nullable(),
   material: z.string().optional(),
   size: z.string().optional(),
   code: z.string().optional(),
@@ -102,9 +102,16 @@ export async function POST(request: Request) {
       }
     }
 
+    // Preparar dados para o Prisma (converter números para Decimal se necessário)
+    const prismaData = {
+      ...validatedData,
+      price: validatedData.price ? parseFloat(validatedData.price.toString()) : null,
+      weight: validatedData.weight ? parseFloat(validatedData.weight.toString()) : null,
+    };
+
     // Criar produto
     const product = await prisma.product.create({
-      data: validatedData,
+      data: prismaData,
       include: {
         portfolioItems: {
           select: {

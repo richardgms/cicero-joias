@@ -122,13 +122,13 @@ export default function EditProductPage() {
     try {
       const submitData = {
         ...formData,
-        description: formData.description || undefined,
+        description: formData.description.trim() || undefined,
         price: formData.price || undefined,
-        mainImage: formData.mainImage || undefined,
+        mainImage: formData.mainImage.trim() || undefined,
         weight: formData.weight || undefined,
-        material: formData.material || undefined,
-        size: formData.size || undefined,
-        code: formData.code || undefined,
+        material: formData.material.trim() || undefined,
+        size: formData.size.trim() || undefined,
+        code: formData.code.trim() || undefined,
       };
 
       const response = await fetch(`/api/admin/products/${productId}`, {

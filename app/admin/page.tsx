@@ -1,8 +1,80 @@
-import { Settings, Users, Package, BarChart3, TrendingUp, Clock, CheckCircle, AlertCircle } from 'lucide-react';
+'use client';
+
+import { useEffect, useState } from 'react';
+import { Settings, Users, Package, BarChart3, TrendingUp, Clock, CheckCircle, AlertCircle, Star, ShoppingBag, Timer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
+import Image from 'next/image';
+
+interface DashboardStats {
+  portfolio: {
+    total: number;
+    active: number;
+    inactive: number;
+  };
+  products: {
+    total: number;
+    active: number;
+    readyDelivery: number;
+    lowStock: number;
+  };
+  users: {
+    total: number;
+  };
+  recent: {
+    projects: Array<{
+      id: string;
+      title: string;
+      mainImage: string;
+      createdAt: string;
+      isActive: boolean;
+    }>;
+    products: Array<{
+      id: string;
+      name: string;
+      mainImage: string;
+      price: number;
+      stock: number;
+      isActive: boolean;
+    }>;
+  };
+}
 
 export default function AdminPage() {
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const fetchStats = async () => {
+    try {
+      const response = await fetch('/api/admin/stats');
+      if (response.ok) {
+        const data = await response.json();
+        setStats(data);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar estatísticas:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-96">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-2 text-gray-600">Carregando dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -21,9 +93,9 @@ export default function AdminPage() {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">0</div>
+            <div className="text-2xl font-bold">{stats?.users.total || 0}</div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-green-600">+0%</span> desde o mês passado
+              Usuários cadastrados
             </p>
           </CardContent>
         </Card>
@@ -31,12 +103,12 @@ export default function AdminPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Projetos</CardTitle>
-            <Package className="h-4 w-4 text-muted-foreground" />
+            <Star className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">0</div>
+            <div className="text-2xl font-bold">{stats?.portfolio.total || 0}</div>
             <p className="text-xs text-muted-foreground">
-              Projetos no portfólio
+              <span className="text-green-600">{stats?.portfolio.active || 0} ativos</span>
             </p>
           </CardContent>
         </Card>
@@ -47,22 +119,22 @@ export default function AdminPage() {
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">0</div>
+            <div className="text-2xl font-bold">{stats?.products.total || 0}</div>
             <p className="text-xs text-muted-foreground">
-              Produtos cadastrados
+              <span className="text-blue-600">{stats?.products.readyDelivery || 0} pronta entrega</span>
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Orçamentos</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Alertas</CardTitle>
+            <AlertCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">0</div>
+            <div className="text-2xl font-bold text-red-600">{stats?.products.lowStock || 0}</div>
             <p className="text-xs text-muted-foreground">
-              Pendentes de análise
+              Produtos com estoque baixo
             </p>
           </CardContent>
         </Card>
@@ -80,75 +152,191 @@ export default function AdminPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 gap-3">
-              <Button className="w-full justify-start" disabled>
-                <Package className="h-4 w-4 mr-2" />
-                Adicionar Projeto ao Portfólio
+              <Button asChild className="w-full justify-start">
+                <Link href="/admin/portfolio/new">
+                  <Star className="h-4 w-4 mr-2" />
+                  Adicionar Projeto ao Portfólio
+                </Link>
               </Button>
-              <Button variant="outline" className="w-full justify-start" disabled>
-                <Settings className="h-4 w-4 mr-2" />
-                Adicionar Produto
+              <Button asChild variant="outline" className="w-full justify-start">
+                <Link href="/admin/products/new">
+                  <Package className="h-4 w-4 mr-2" />
+                  Adicionar Produto
+                </Link>
               </Button>
-              <Button variant="outline" className="w-full justify-start" disabled>
-                <Users className="h-4 w-4 mr-2" />
-                Gerenciar Usuários
+              <Button asChild variant="outline" className="w-full justify-start">
+                <Link href="/admin/configuracoes">
+                  <Settings className="h-4 w-4 mr-2" />
+                  Configurações do Site
+                </Link>
               </Button>
-              <Button variant="outline" className="w-full justify-start" disabled>
-                <BarChart3 className="h-4 w-4 mr-2" />
-                Ver Relatórios
+              <Button asChild variant="outline" className="w-full justify-start">
+                <Link href="/admin/relatorios">
+                  <BarChart3 className="h-4 w-4 mr-2" />
+                  Ver Relatórios
+                </Link>
               </Button>
             </div>
           </CardContent>
         </Card>
 
-        {/* Recent Activity */}
+        {/* Recent Projects */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              <div className="flex items-center">
+                <Star className="h-5 w-5 mr-2" />
+                Projetos Recentes
+              </div>
+              <Button asChild variant="ghost" size="sm">
+                <Link href="/admin/portfolio">Ver todos</Link>
+              </Button>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {stats?.recent.projects.slice(0, 3).map((project) => (
+                <div key={project.id} className="flex items-center space-x-3">
+                  <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gray-100">
+                    {project.mainImage ? (
+                      <Image
+                        src={project.mainImage}
+                        alt={project.title}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <Star className="h-6 w-6 text-gray-400" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-900 truncate">
+                      {project.title}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {new Date(project.createdAt).toLocaleDateString('pt-BR')}
+                    </p>
+                  </div>
+                  <Badge variant={project.isActive ? "default" : "secondary"}>
+                    {project.isActive ? "Ativo" : "Inativo"}
+                  </Badge>
+                </div>
+              ))}
+              {!stats?.recent.projects.length && (
+                <div className="text-center py-4">
+                  <p className="text-sm text-gray-500">
+                    Nenhum projeto encontrado
+                  </p>
+                  <Button asChild size="sm" className="mt-2">
+                    <Link href="/admin/portfolio/new">
+                      Criar primeiro projeto
+                    </Link>
+                  </Button>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Recent Products */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              <div className="flex items-center">
+                <ShoppingBag className="h-5 w-5 mr-2" />
+                Produtos Recentes
+              </div>
+              <Button asChild variant="ghost" size="sm">
+                <Link href="/admin/products">Ver todos</Link>
+              </Button>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {stats?.recent.products.slice(0, 3).map((product) => (
+                <div key={product.id} className="flex items-center space-x-3">
+                  <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gray-100">
+                    {product.mainImage ? (
+                      <Image
+                        src={product.mainImage}
+                        alt={product.name}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <Package className="h-6 w-6 text-gray-400" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-900 truncate">
+                      {product.name}
+                    </p>
+                    <div className="flex items-center space-x-2">
+                      {product.price && (
+                        <p className="text-xs text-gray-600">
+                          R$ {product.price.toFixed(2)}
+                        </p>
+                      )}
+                      <p className="text-xs text-gray-500">
+                        Estoque: {product.stock}
+                      </p>
+                    </div>
+                  </div>
+                  <Badge variant={product.isActive ? "default" : "secondary"}>
+                    {product.isActive ? "Ativo" : "Inativo"}
+                  </Badge>
+                </div>
+              ))}
+              {!stats?.recent.products.length && (
+                <div className="text-center py-4">
+                  <p className="text-sm text-gray-500">
+                    Nenhum produto encontrado
+                  </p>
+                  <Button asChild size="sm" className="mt-2">
+                    <Link href="/admin/products/new">
+                      Criar primeiro produto
+                    </Link>
+                  </Button>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* System Status */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Clock className="h-5 w-5 mr-2" />
-              Atividade Recente
+              <CheckCircle className="h-5 w-5 mr-2" />
+              Status do Sistema
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div className="flex items-center space-x-3 text-sm">
                 <CheckCircle className="h-4 w-4 text-green-500" />
-                <span className="text-gray-600">Sistema administrativo criado</span>
-              </div>
-              <div className="flex items-center space-x-3 text-sm">
-                <AlertCircle className="h-4 w-4 text-blue-500" />
-                <span className="text-gray-600">Middleware de proteção configurado</span>
+                <span className="text-gray-600">Sistema administrativo ativo</span>
               </div>
               <div className="flex items-center space-x-3 text-sm">
                 <CheckCircle className="h-4 w-4 text-green-500" />
-                <span className="text-gray-600">Layout administrativo implementado</span>
+                <span className="text-gray-600">Banco de dados conectado</span>
               </div>
-              <div className="text-center py-4">
-                <p className="text-sm text-gray-500">
-                  Próxima etapa: Implementar CRUD de Portfólio
-                </p>
+              <div className="flex items-center space-x-3 text-sm">
+                <CheckCircle className="h-4 w-4 text-green-500" />
+                <span className="text-gray-600">APIs funcionando</span>
+              </div>
+              <div className="flex items-center space-x-3 text-sm">
+                <Timer className="h-4 w-4 text-blue-500" />
+                <span className="text-gray-600">Plan-013 implementado com sucesso</span>
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
-
-      {/* Development Status */}
-      <Card className="border-amber-200 bg-amber-50">
-        <CardContent className="pt-6">
-          <div className="flex items-start space-x-3">
-            <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center">
-              <Settings className="h-4 w-4 text-amber-600" />
-            </div>
-            <div>
-              <h3 className="font-medium text-amber-900">Etapa 2 Concluída</h3>
-              <p className="text-sm text-amber-700 mt-1">
-                Layout administrativo criado com sucesso! Sidebar de navegação e header implementados.
-                Próximo passo: Implementar CRUD de Portfólio (Etapa 3).
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 } 
