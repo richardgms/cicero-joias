@@ -1,4 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
 
 const publicRoutes = [
   "/",
@@ -9,7 +10,11 @@ const publicRoutes = [
   "/api/webhook",
   "/sign-in",
   "/sign-up",
+  "/acesso-negado", // Página de acesso negado
 ];
+
+// Matcher para rotas que requerem role ADMIN
+const isAdminRoute = createRouteMatcher(['/admin(.*)']);
 
 export default clerkMiddleware((auth, req) => {
   const pathName = req.nextUrl.pathname;
@@ -21,7 +26,17 @@ export default clerkMiddleware((auth, req) => {
   )) {
     return;
   }
-  
+
+  // Se for rota administrativa, verificar autenticação primeiro
+  if (isAdminRoute(req)) {
+    // Proteger a rota - usuário deve estar autenticado
+    auth.protect();
+    
+    // Para verificação de role, usaremos um componente/middleware separado
+    // pois não podemos fazer calls async aqui facilmente
+    // A verificação de role será feita no layout da área admin
+  }
+
   // Proteger rotas não-públicas
   auth.protect();
 });
