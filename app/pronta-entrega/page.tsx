@@ -36,7 +36,7 @@ interface Product {
   description?: string;
   price: number;
   category: string;
-  mainImage: string;
+  mainImage: string | null;
   images: string[];
   stock: number;
   weight?: number;
@@ -94,8 +94,7 @@ export default function ProntaEntregaPage() {
       const response = await fetch('/api/public/categories');
       if (response.ok) {
         const data = await response.json();
-        const productCategories = data.categories
-          .filter((cat: any) => cat.type === 'product')
+        const productCategories = data.categories.product
           .map((cat: any) => cat.id);
         setAvailableCategories(productCategories);
       }
@@ -159,7 +158,7 @@ export default function ProntaEntregaPage() {
         });
 
         // Extrair materiais únicos e estatísticas de preço
-        const materials = [...new Set(data.products.map(p => p.material).filter(Boolean))];
+        const materials = Array.from(new Set(data.products.map(p => p.material).filter(Boolean)));
         setAvailableMaterials(materials as string[]);
 
         if (data.products.length > 0) {
@@ -429,7 +428,7 @@ export default function ProntaEntregaPage() {
                           <Card className="overflow-hidden hover:shadow-xl transition-all duration-300">
                             <div className="relative h-64 overflow-hidden">
                               <Image
-                                src={product.mainImage}
+                                src={product.mainImage || '/assets/images/home-hero.jpg'}
                                 alt={product.name}
                                 fill
                                 className="object-cover group-hover:scale-105 transition-transform duration-500"
@@ -497,7 +496,7 @@ export default function ProntaEntregaPage() {
                             <div className="flex">
                               <div className="relative w-32 h-32 flex-shrink-0">
                                 <Image
-                                  src={product.mainImage}
+                                  src={product.mainImage || '/assets/images/home-hero.jpg'}
                                   alt={product.name}
                                   fill
                                   className="object-cover"

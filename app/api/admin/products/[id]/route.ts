@@ -94,9 +94,6 @@ export async function PUT(
 
     const { id } = await params;
     const body = await request.json();
-    
-    console.log('Dados recebidos para atualização:', JSON.stringify(body, null, 2));
-    
     const validatedData = updateProductSchema.parse(body);
 
     // Verificar se produto existe

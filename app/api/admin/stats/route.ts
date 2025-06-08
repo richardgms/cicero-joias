@@ -58,6 +58,12 @@ export async function GET() {
       },
     });
 
+    // Converter preços para números para evitar problemas com Decimal
+    const productsWithConvertedPrices = recentProducts.map(product => ({
+      ...product,
+      price: product.price ? Number(product.price) : null,
+    }));
+
     return NextResponse.json({
       portfolio: {
         total: totalPortfolio,
@@ -75,7 +81,7 @@ export async function GET() {
       },
       recent: {
         projects: recentProjects,
-        products: recentProducts,
+        products: productsWithConvertedPrices,
       },
     });
   } catch (error) {

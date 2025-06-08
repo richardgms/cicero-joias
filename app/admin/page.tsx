@@ -35,7 +35,7 @@ interface DashboardStats {
       id: string;
       name: string;
       mainImage: string;
-      price: number;
+      price: number | string | null;
       stock: number;
       isActive: boolean;
     }>;
@@ -278,7 +278,7 @@ export default function AdminPage() {
                     <div className="flex items-center space-x-2">
                       {product.price && (
                         <p className="text-xs text-gray-600">
-                          R$ {product.price.toFixed(2)}
+                          R$ {Number(product.price).toFixed(2)}
                         </p>
                       )}
                       <p className="text-xs text-gray-500">

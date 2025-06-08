@@ -22,7 +22,7 @@ interface PortfolioItem {
   title: string;
   description?: string;
   category: string;
-  mainImage: string;
+  mainImage: string | null;
   images: string[];
   createdAt: string;
 }
@@ -68,8 +68,7 @@ export default function PortfolioPage() {
       const response = await fetch('/api/public/categories');
       if (response.ok) {
         const data = await response.json();
-        const portfolioCategories = data.categories
-          .filter((cat: any) => cat.type === 'portfolio')
+        const portfolioCategories = data.categories.portfolio
           .map((cat: any) => cat.id);
         setAvailableCategories(portfolioCategories);
       }
@@ -228,7 +227,7 @@ export default function PortfolioPage() {
                           <div className="relative h-64 overflow-hidden">
                             <div className="absolute inset-0 bg-gray-200 animate-pulse"></div>
                             <Image
-                              src={item.mainImage}
+                              src={item.mainImage || '/assets/images/home-hero.jpg'}
                               alt={item.title}
                               fill
                               className="object-cover group-hover:scale-105 transition-transform duration-500"
