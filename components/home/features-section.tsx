@@ -1,111 +1,150 @@
+'use client';
+
 import React from 'react';
-import { 
-  Heart, 
-  Shield, 
-  Gem, 
-  Users, 
-  Clock, 
-  Award 
-} from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+import { Gem, Sparkles, Heart, Award, Clock, Shield } from 'lucide-react';
+import { AnimatedSection, GlassCard } from '@/components/ui/animated-section';
 
 const features = [
   {
-    icon: Heart,
-    title: 'Tradição Familiar',
-    description: 'Mais de 40 anos de experiência passada de geração em geração, mantendo os valores e a qualidade que nos tornaram referência.'
-  },
-  {
-    icon: Shield,
-    title: 'Confiança Absoluta',
-    description: 'Garantia em todos os nossos serviços e produtos. Sua satisfação é nossa prioridade número um.'
-  },
-  {
     icon: Gem,
-    title: 'Qualidade Premium',
-    description: 'Utilizamos apenas materiais de primeira qualidade e técnicas refinadas para criar peças excepcionais.'
+    title: "Joias Personalizadas",
+    description: "Criamos peças únicas que contam sua história, com design exclusivo e acabamento impecável.",
+    gradient: "from-ouro/20 to-yellow-400/20"
   },
   {
-    icon: Users,
-    title: 'Atendimento Personalizado',
-    description: 'Cada cliente é único. Oferecemos consultoria especializada para criar a joia perfeita para você.'
-  },
-  {
-    icon: Clock,
-    title: 'Agilidade e Pontualidade',
-    description: 'Respeitamos prazos e mantemos você informado sobre cada etapa do processo de criação.'
+    icon: Heart,
+    title: "Alianças de Casamento",
+    description: "Simbolize seu amor eterno com alianças feitas sob medida, com gravações personalizadas.",
+    gradient: "from-esmeralda/20 to-esmeralda-light/20"
   },
   {
     icon: Award,
-    title: 'Excelência Reconhecida',
-    description: 'Nossa reputação foi construída ao longo de décadas de dedicação e compromisso com a excelência.'
+    title: "Qualidade Premium",
+    description: "Utilizamos apenas metais nobres e gemas selecionadas, garantindo durabilidade e beleza.",
+    gradient: "from-ouro/20 to-yellow-400/20"
+  },
+  {
+    icon: Clock,
+    title: "Tradição Familiar",
+    description: "Mais de 40 anos de tradição em ourivesaria, passando técnicas de geração em geração.",
+    gradient: "from-esmeralda/20 to-esmeralda-light/20"
+  },
+  {
+    icon: Shield,
+    title: "Garantia Vitalícia",
+    description: "Todas as nossas peças têm garantia vitalícia contra defeitos de fabricação.",
+    gradient: "from-ouro/20 to-yellow-400/20"
+  },
+  {
+    icon: Sparkles,
+    title: "Atendimento Exclusivo",
+    description: "Consultoria personalizada para escolher a joia perfeita para cada momento especial.",
+    gradient: "from-esmeralda/20 to-esmeralda-light/20"
   }
 ];
 
 export function FeaturesSection() {
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+
   return (
-    <section className="py-24 bg-gradient-to-b from-marfim to-marfim-dark">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-24 bg-gradient-to-br from-marfim via-marfim to-marfim-light relative overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute inset-0" 
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23184434' fill-opacity='0.4'%3E%3Cpath d='M30 30c0-16.569 13.431-30 30-30v60c-16.569 0-30-13.431-30-30zm30 0c0 16.569-13.431 30-30 30V0c16.569 0 30 13.431 30 30z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            backgroundSize: '60px 60px'
+          }}
+        />
+      </div>
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl font-bold text-esmeralda mb-4">
-            Por que escolher a
-            <span className="text-ouro"> Cícero Joias?</span>
+        <AnimatedSection className="text-center mb-16" delay={0.2}>
+          <motion.div
+            className="inline-flex items-center space-x-2 bg-gradient-to-r from-esmeralda/10 to-ouro/10 rounded-full px-6 py-3 mb-6 border border-ouro/20"
+            whileHover={{ scale: 1.05 }}
+          >
+            <Sparkles className="w-4 h-4 text-ouro" />
+            <span className="text-sm font-medium text-esmeralda">
+              Por que escolher a Cícero Joias
+            </span>
+          </motion.div>
+
+          <h2 className="font-playfair text-4xl md:text-5xl font-bold text-esmeralda mb-6">
+            Excelência em Cada
+            <span className="block bg-gradient-to-r from-ouro to-yellow-400 bg-clip-text text-transparent">
+              Detalhe
+            </span>
           </h2>
-          <p className="text-lg text-esmeralda-light max-w-3xl mx-auto leading-relaxed">
-            Combinamos tradição e inovação para oferecer a melhor experiência em joalheria. 
-            Conheça os valores que nos guiam há mais de quatro décadas.
+
+          <p className="text-xl text-grafite-light max-w-3xl mx-auto leading-relaxed">
+            Combinamos tradição artesanal com tecnologia moderna para criar joias que superam expectativas e marcam momentos únicos.
           </p>
-        </div>
+        </AnimatedSection>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <AnimatedSection 
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          stagger={true}
+          delay={0.4}
+        >
           {features.map((feature, index) => (
-            <div
+            <GlassCard 
               key={index}
-              className="group p-8 bg-white rounded-2xl elegant-shadow premium-card-hover border border-marfim-dark"
+              className={`p-8 group bg-gradient-to-br ${feature.gradient} backdrop-blur-sm`}
+              hover={true}
             >
-              <div className="flex items-center mb-6">
-                <div className="w-14 h-14 bg-esmeralda/10 rounded-2xl flex items-center justify-center group-hover:bg-esmeralda group-hover:scale-110 transition-all duration-300">
-                  <feature.icon className="w-7 h-7 text-esmeralda group-hover:text-marfim transition-colors duration-300" />
-                </div>
-              </div>
-              
-              <h3 className="text-xl font-bold text-esmeralda mb-3 group-hover:text-ouro transition-colors duration-300">
-                {feature.title}
-              </h3>
-              
-              <p className="text-esmeralda-light leading-relaxed">
-                {feature.description}
-              </p>
-            </div>
-          ))}
-        </div>
+              <motion.div
+                className="text-center"
+                whileHover={{ y: -5 }}
+                transition={{ duration: 0.3 }}
+              >
+                {/* Icon */}
+                <motion.div 
+                  className="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-r from-esmeralda to-esmeralda-light flex items-center justify-center group-hover:from-ouro group-hover:to-yellow-400 transition-all duration-500 shadow-lg"
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                >
+                  <feature.icon className="w-8 h-8 text-marfim" />
+                </motion.div>
 
-        {/* Bottom CTA */}
-        <div className="text-center mt-16">
-          <div className="inline-block p-8 bg-esmeralda rounded-2xl text-marfim">
-            <h3 className="font-playfair text-2xl font-bold mb-4">
-              Pronto para criar sua joia dos sonhos?
-            </h3>
-            <p className="text-marfim-dark mb-6 max-w-md">
-              Nossa equipe está preparada para transformar suas ideias em realidade.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href="/orcamento"
-                className="inline-flex items-center justify-center px-6 py-3 bg-ouro text-grafite font-semibold rounded-lg hover:bg-ouro-light transition-colors"
-              >
-                Solicitar Orçamento
-              </a>
-              <a
-                href="https://wa.me/5583988073784?text=Olá! Gostaria de mais informações sobre os serviços da Cícero Joias."
-                className="inline-flex items-center justify-center px-6 py-3 border border-esmeralda-dark text-marfim font-semibold rounded-lg hover:bg-esmeralda-dark transition-colors"
-              >
-                Falar no WhatsApp
-              </a>
-            </div>
-          </div>
-        </div>
+                {/* Title */}
+                <h3 className="font-playfair text-xl font-bold text-esmeralda mb-4 group-hover:text-ouro transition-colors duration-300">
+                  {feature.title}
+                </h3>
+
+                {/* Description */}
+                <p className="text-grafite-light leading-relaxed">
+                  {feature.description}
+                </p>
+              </motion.div>
+            </GlassCard>
+          ))}
+        </AnimatedSection>
+
+        {/* CTA Section */}
+        <AnimatedSection className="text-center mt-16" delay={0.8}>
+          <motion.div
+            className="inline-block"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <motion.button
+              className="bg-gradient-to-r from-esmeralda to-esmeralda-light text-marfim px-8 py-4 rounded-full font-semibold shadow-2xl shadow-esmeralda/25 hover:shadow-3xl hover:shadow-esmeralda/40 transition-all duration-300 border border-ouro/20"
+              whileHover={{
+                background: "linear-gradient(to right, #C79A34, #E1B959)",
+                boxShadow: "0 25px 50px -12px rgba(199, 154, 52, 0.4)"
+              }}
+            >
+              Conheça Nosso Atelier
+            </motion.button>
+          </motion.div>
+        </AnimatedSection>
       </div>
     </section>
   );

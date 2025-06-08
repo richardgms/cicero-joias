@@ -112,10 +112,18 @@ export async function PUT(
       return NextResponse.json({ error: 'Item não encontrado' }, { status: 404 });
     }
 
+    // Preparar dados para o Prisma
+    const updateData = {
+      ...validatedData,
+      ...(validatedData.specifications !== undefined && {
+        specifications: validatedData.specifications as any,
+      }),
+    };
+
     // Atualizar item do portfólio
     const portfolioItem = await prisma.portfolioItem.update({
       where: { id },
-      data: validatedData,
+      data: updateData,
       include: {
         product: {
           select: {

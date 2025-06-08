@@ -90,9 +90,17 @@ export async function POST(request: Request) {
     const body = await request.json();
     const validatedData = createPortfolioSchema.parse(body);
 
+    // Preparar dados para o Prisma
+    const createData = {
+      ...validatedData,
+      ...(validatedData.specifications !== undefined && {
+        specifications: validatedData.specifications as any,
+      }),
+    };
+
     // Criar item do portfólio
     const portfolioItem = await prisma.portfolioItem.create({
-      data: validatedData,
+      data: createData,
       include: {
         product: {
           select: {

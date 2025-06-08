@@ -1,91 +1,259 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+import CountUp from 'react-countup';
 import { Button } from '@/components/ui/button';
-import { Heart, Star, Gem, ArrowRight } from 'lucide-react';
+import { Heart, Star, Gem, ArrowRight, Sparkles, Award, Users } from 'lucide-react';
 
 export function HeroSection() {
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.3,
+        duration: 0.8,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut",
+      },
+    },
+  };
+
+  const badgeVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut",
+      },
+    },
+  };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image - Overlay com a cor Esmeralda */}
+      {/* Background with Modern Gradient Overlay */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `linear-gradient(rgba(19, 54, 41, 0.8), rgba(19, 54, 41, 0.95)), url('https://images.pexels.com/photos/1721934/pexels-photo-1721934.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop')`
+          backgroundImage: `
+            linear-gradient(
+              135deg,
+              rgba(19, 54, 41, 0.92) 0%,
+              rgba(19, 54, 41, 0.85) 30%,
+              rgba(19, 54, 41, 0.95) 100%
+            ),
+            linear-gradient(
+              45deg,
+              rgba(207, 154, 36, 0.1) 0%,
+              transparent 50%,
+              rgba(207, 154, 36, 0.05) 100%
+            ),
+            url('https://images.unsplash.com/photo-1551698618-1dfe5d97d256?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')`
         }}
       />
       
+      {/* Animated Particles Background */}
+      {mounted && (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {[...Array(window.innerWidth < 768 ? 10 : 20)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 bg-ouro rounded-full opacity-20"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                y: [0, -20, 0],
+                opacity: [0.2, 0.8, 0.2],
+              }}
+              transition={{
+                duration: 3 + Math.random() * 2,
+                repeat: Infinity,
+                delay: Math.random() * 2,
+                ease: "easeInOut",
+              }}
+            />
+          ))}
+        </div>
+      )}
+      
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-marfim">
-        <div className="animate-fade-in-up">
-          {/* Badge */}
-          <div className="inline-flex items-center space-x-2 bg-esmeralda-light/20 backdrop-blur-md rounded-full px-4 py-2 mb-6">
-            <Star className="w-4 h-4 text-ouro" />
-            <span className="text-sm font-medium">Mais de 40 anos de tradição</span>
-          </div>
+      <motion.div 
+        ref={ref}
+        className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-marfim"
+        variants={containerVariants}
+        initial="hidden"
+        animate={inView ? "visible" : "hidden"}
+      >
+        {/* Badge */}
+        <motion.div 
+          variants={badgeVariants}
+          className="inline-flex items-center space-x-2 bg-gradient-to-r from-esmeralda-light/20 to-ouro/20 backdrop-blur-md rounded-full px-6 py-3 mb-8 border border-ouro/20"
+        >
+          <Sparkles className="w-4 h-4 text-ouro animate-pulse" />
+          <span className="text-sm font-medium bg-gradient-to-r from-marfim to-ouro bg-clip-text text-transparent">
+            Mais de 40 anos de tradição
+          </span>
+        </motion.div>
 
-          {/* Main Title */}
-          <h1 className="font-playfair text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+        {/* Main Title */}
+        <motion.h1 
+          variants={itemVariants}
+          className="font-playfair text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold mb-4 md:mb-6 leading-tight"
+        >
+          <span className="bg-gradient-to-r from-marfim via-marfim to-marfim-dark bg-clip-text text-transparent">
             Tradição que se
-            <span className="block text-ouro gold-gradient bg-clip-text text-transparent">
-              Renova
-            </span>
-          </h1>
+          </span>
+          <motion.span 
+            className="block bg-gradient-to-r from-ouro via-yellow-400 to-ouro bg-clip-text text-transparent"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
+            transition={{ delay: 1, duration: 0.8, ease: "easeOut" }}
+          >
+            Renova
+          </motion.span>
+        </motion.h1>
 
-          {/* Subtitle */}
-          <p className="text-xl md:text-2xl text-marfim-dark mb-8 max-w-3xl mx-auto leading-relaxed">
-            Criamos momentos especiais através de joias únicas, alianças personalizadas e serviços de qualidade excepcional.
-          </p>
+        {/* Subtitle */}
+        <motion.p 
+          variants={itemVariants}
+          className="text-lg sm:text-xl md:text-2xl text-marfim-dark mb-8 md:mb-10 max-w-4xl mx-auto leading-relaxed px-4 sm:px-0"
+        >
+          Criamos momentos especiais através de joias únicas, alianças personalizadas e serviços de qualidade excepcional.
+        </motion.p>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <Button size="lg" asChild className="group bg-ouro text-grafite hover:bg-ouro-light">
+        {/* CTA Buttons */}
+        <motion.div 
+          variants={itemVariants}
+          className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-12 md:mb-16 px-4 sm:px-0"
+        >
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Button size="lg" asChild className="group bg-gradient-to-r from-ouro to-yellow-400 text-grafite hover:from-yellow-400 hover:to-ouro shadow-lg shadow-ouro/25 transition-all duration-300">
               <Link href="/orcamento">
                 Solicitar Orçamento
                 <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" asChild className="bg-esmeralda-light/10 backdrop-blur-md border-marfim/20 text-marfim hover:bg-esmeralda-light/20">
+          </motion.div>
+          
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Button 
+              size="lg" 
+              variant="outline" 
+              asChild 
+              className="bg-esmeralda-light/10 backdrop-blur-md border-marfim/30 text-marfim hover:bg-esmeralda-light/20 hover:border-ouro/50 transition-all duration-300 shadow-lg"
+            >
               <Link href="/portfolio">
                 Ver Nosso Trabalho
               </Link>
             </Button>
-          </div>
+          </motion.div>
+        </motion.div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl mx-auto">
-            <div className="text-center">
-              <div className="flex items-center justify-center mb-2">
-                <Heart className="w-6 h-6 text-ouro mr-2" />
-                <span className="text-3xl font-bold">40+</span>
-              </div>
-              <p className="text-marfim-dark">Anos de Experiência</p>
+        {/* Animated Stats */}
+        <motion.div 
+          variants={itemVariants}
+          className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto px-4 sm:px-0"
+        >
+          <motion.div 
+            className="text-center p-4 md:p-6 rounded-2xl bg-gradient-to-br from-esmeralda-light/10 to-transparent backdrop-blur-sm border border-ouro/20"
+            whileHover={{ scale: 1.05, borderColor: "rgba(207, 154, 36, 0.4)" }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="flex items-center justify-center mb-2 md:mb-3">
+              <Award className="w-5 h-5 md:w-6 md:h-6 text-ouro mr-2" />
+              <span className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-ouro to-yellow-400 bg-clip-text text-transparent">
+                {inView && mounted && <CountUp end={40} duration={2.5} suffix="+" />}
+                {(!inView || !mounted) && "40+"}
+              </span>
             </div>
-            <div className="text-center">
-              <div className="flex items-center justify-center mb-2">
-                <Gem className="w-6 h-6 text-ouro mr-2" />
-                <span className="text-3xl font-bold">1000+</span>
-              </div>
-              <p className="text-marfim-dark">Alianças Criadas</p>
-            </div>
-            <div className="text-center">
-              <div className="flex items-center justify-center mb-2">
-                <Star className="w-6 h-6 text-ouro mr-2" />
-                <span className="text-3xl font-bold">500+</span>
-              </div>
-              <p className="text-marfim-dark">Clientes Satisfeitos</p>
-            </div>
-          </div>
-        </div>
-      </div>
+            <p className="text-marfim-dark font-medium text-sm md:text-base">Anos de Experiência</p>
+          </motion.div>
 
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-marfim animate-bounce">
-        <div className="w-6 h-10 border-2 border-marfim rounded-full flex justify-center">
-          <div className="w-1 h-3 bg-ouro rounded-full mt-2 animate-pulse"></div>
-        </div>
-      </div>
+          <motion.div 
+            className="text-center p-4 md:p-6 rounded-2xl bg-gradient-to-br from-esmeralda-light/10 to-transparent backdrop-blur-sm border border-ouro/20"
+            whileHover={{ scale: 1.05, borderColor: "rgba(207, 154, 36, 0.4)" }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="flex items-center justify-center mb-2 md:mb-3">
+              <Heart className="w-5 h-5 md:w-6 md:h-6 text-ouro mr-2" />
+              <span className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-ouro to-yellow-400 bg-clip-text text-transparent">
+                {inView && mounted && <CountUp end={1000} duration={2.5} suffix="+" />}
+                {(!inView || !mounted) && "1000+"}
+              </span>
+            </div>
+            <p className="text-marfim-dark font-medium text-sm md:text-base">Alianças Criadas</p>
+          </motion.div>
+
+          <motion.div 
+            className="text-center p-4 md:p-6 rounded-2xl bg-gradient-to-br from-esmeralda-light/10 to-transparent backdrop-blur-sm border border-ouro/20"
+            whileHover={{ scale: 1.05, borderColor: "rgba(207, 154, 36, 0.4)" }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="flex items-center justify-center mb-2 md:mb-3">
+              <Users className="w-5 h-5 md:w-6 md:h-6 text-ouro mr-2" />
+              <span className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-ouro to-yellow-400 bg-clip-text text-transparent">
+                {inView && mounted && <CountUp end={500} duration={2.5} suffix="+" />}
+                {(!inView || !mounted) && "500+"}
+              </span>
+            </div>
+            <p className="text-marfim-dark font-medium text-sm md:text-base">Clientes Satisfeitos</p>
+          </motion.div>
+        </motion.div>
+      </motion.div>
+
+      {/* Modern Scroll Indicator */}
+      <motion.div 
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-marfim"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 2, duration: 0.8 }}
+      >
+        <motion.div 
+          className="w-6 h-10 border-2 border-ouro/60 rounded-full flex justify-center relative overflow-hidden"
+          whileHover={{ borderColor: "rgba(207, 154, 36, 1)" }}
+        >
+          <motion.div 
+            className="w-1 h-3 bg-gradient-to-b from-ouro to-yellow-400 rounded-full mt-2"
+            animate={{ y: [0, 16, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </motion.div>
+        <p className="text-xs mt-2 text-marfim-dark">Role para baixo</p>
+      </motion.div>
     </section>
   );
 }
