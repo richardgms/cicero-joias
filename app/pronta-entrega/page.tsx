@@ -169,7 +169,12 @@ export default function ProntaEntregaPage() {
           });
         }
       } else {
-        console.error('Erro ao buscar produtos');
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Erro ao buscar produtos:', {
+          status: response.status,
+          statusText: response.statusText,
+          errorData
+        });
       }
     } catch (error) {
       console.error('Erro ao buscar produtos:', error);

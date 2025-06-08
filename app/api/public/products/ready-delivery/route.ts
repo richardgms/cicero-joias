@@ -92,8 +92,21 @@ export async function GET(request: Request) {
 
   } catch (error) {
     console.error('Erro ao buscar produtos pronta entrega:', error);
+    
+    // Log detalhado do erro
+    if (error instanceof Error) {
+      console.error('Erro detalhado:', {
+        message: error.message,
+        stack: error.stack,
+        name: error.name
+      });
+    }
+    
     return NextResponse.json(
-      { error: 'Erro interno do servidor' },
+      { 
+        error: 'Erro interno do servidor',
+        details: error instanceof Error ? error.message : 'Erro desconhecido'
+      },
       { status: 500 }
     );
   }
