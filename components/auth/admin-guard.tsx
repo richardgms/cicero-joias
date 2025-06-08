@@ -20,25 +20,14 @@ export function AdminGuard({ children }: AdminGuardProps) {
         return;
       }
 
-      // Debug: ver o que está vindo do Clerk
-      console.log('👤 User data:', {
-        userId: user.id,
-        publicMetadata: user.publicMetadata,
-        role: user.publicMetadata?.role
-      });
-
       // Verificar se o usuário tem role ADMIN (case insensitive)
       const userRole = (user.publicMetadata?.role as string)?.toLowerCase();
-      console.log('🔍 Role verificado:', userRole);
       
       if (userRole !== 'admin') {
-        console.log('❌ Acesso negado - role:', userRole);
         // Redirecionar para página de acesso negado
         router.push('/acesso-negado');
         return;
       }
-      
-      console.log('✅ Acesso permitido - role:', userRole);
     }
   }, [isLoaded, user, router]);
 
