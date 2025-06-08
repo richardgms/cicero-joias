@@ -7,11 +7,19 @@ import { z } from 'zod';
 const updatePortfolioSchema = z.object({
   title: z.string().min(1, 'Título é obrigatório').optional(),
   description: z.string().optional(),
+  detailedDescription: z.string().optional(),
   category: z.enum(['WEDDING_RINGS', 'REPAIRS_BEFORE_AFTER', 'GOLD_PLATING', 'CUSTOM_JEWELRY', 'GRADUATION_RINGS']).optional(),
+  customCategory: z.string().optional(),
   mainImage: z.string().optional(),
   images: z.array(z.string()).optional(),
   isActive: z.boolean().optional(),
+  status: z.enum(['DRAFT', 'PUBLISHED', 'FEATURED']).optional(),
   order: z.number().optional(),
+  specifications: z.record(z.string()).optional().nullable(),
+  seoTitle: z.string().optional(),
+  seoDescription: z.string().optional(),
+  keywords: z.array(z.string()).optional(),
+  relatedProjects: z.array(z.string()).optional(),
   productId: z.string().optional(),
 });
 
@@ -38,7 +46,7 @@ async function checkAdminAuth() {
   }
 }
 
-// GET /api/admin/portfolio/[id] - Buscar item específico do portfólio
+// GET /api/admin/portfolio/[id] - Buscar item específico
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -50,6 +58,7 @@ export async function GET(
     }
 
     const { id } = await params;
+
     const portfolioItem = await prisma.portfolioItem.findUnique({
       where: { id },
       include: {
@@ -57,6 +66,7 @@ export async function GET(
           select: {
             id: true,
             name: true,
+            price: true,
           },
         },
       },
@@ -87,11 +97,13 @@ export async function PUT(
       return NextResponse.json({ error: authResult.error }, { status: authResult.status });
     }
 
+    const { userId } = authResult;
     const { id } = await params;
+
     const body = await request.json();
     const validatedData = updatePortfolioSchema.parse(body);
 
-    // Verificar se item existe
+    // Verificar se o item existe
     const existingItem = await prisma.portfolioItem.findUnique({
       where: { id },
     });
@@ -109,6 +121,7 @@ export async function PUT(
           select: {
             id: true,
             name: true,
+            price: true,
           },
         },
       },
@@ -121,7 +134,7 @@ export async function PUT(
         entity: 'PortfolioItem',
         entityId: portfolioItem.id,
         description: `Item "${portfolioItem.title}" atualizado no portfólio`,
-        userId: authResult.userId,
+        userId,
       },
     });
 
@@ -153,8 +166,10 @@ export async function DELETE(
       return NextResponse.json({ error: authResult.error }, { status: authResult.status });
     }
 
+    const { userId } = authResult;
     const { id } = await params;
-    // Verificar se item existe
+
+    // Verificar se o item existe
     const existingItem = await prisma.portfolioItem.findUnique({
       where: { id },
     });
@@ -174,12 +189,12 @@ export async function DELETE(
         action: 'DELETE',
         entity: 'PortfolioItem',
         entityId: id,
-        description: `Item "${existingItem.title}" removido do portfólio`,
-        userId: authResult.userId,
+        description: `Item "${existingItem.title}" deletado do portfólio`,
+        userId,
       },
     });
 
-    return NextResponse.json({ message: 'Item removido com sucesso' });
+    return NextResponse.json({ message: 'Item deletado com sucesso' });
   } catch (error) {
     console.error('Erro ao deletar item do portfólio:', error);
     return NextResponse.json(

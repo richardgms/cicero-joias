@@ -1,122 +1,140 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Search, Filter } from 'lucide-react';
 
-// Dados de exemplo para o portfólio
-const portfolioItems = [
-  {
-    id: 1,
-    title: 'Aliança de Ouro 18k Personalizada',
-    category: 'aliancas',
-    description: 'Aliança de casamento em ouro 18k com detalhes em relevo e acabamento fosco.',
-    thumbnail: '/assets/images/home-hero.jpg',
-    images: [
-      '/assets/images/home-hero.jpg',
-      '/assets/images/home-testimonials.jpg',
-      '/assets/images/home-services.jpg',
-    ],
-    featured: true
-  },
-  {
-    id: 2,
-    title: 'Pingente Personalizado com Diamante',
-    category: 'joias',
-    description: 'Pingente em ouro branco 18k com diamante central de 0.25 quilates.',
-    thumbnail: '/assets/images/home-values.jpg',
-    images: [
-      '/assets/images/home-values.jpg',
-      '/assets/images/home-testimonials.jpg',
-    ],
-    featured: true
-  },
-  {
-    id: 3,
-    title: 'Restauração de Relógio Vintage',
-    category: 'consertos',
-    description: 'Restauração completa de relógio vintage com substituição de peças e polimento.',
-    thumbnail: '/assets/images/home-services.jpg',
-    images: [
-      '/assets/images/home-services.jpg',
-      '/assets/images/home-values.jpg',
-      '/assets/images/home-hero.jpg',
-    ],
-    featured: false
-  },
-  {
-    id: 4,
-    title: 'Aliança de Prata com Gravação',
-    category: 'aliancas',
-    description: 'Aliança de compromisso em prata 950 com gravação personalizada interna.',
-    thumbnail: '/assets/images/home-testimonials.jpg',
-    images: [
-      '/assets/images/home-testimonials.jpg',
-      '/assets/images/home-hero.jpg',
-    ],
-    featured: false
-  },
-  {
-    id: 5,
-    title: 'Pulseira de Ouro com Pedras',
-    category: 'joias',
-    description: 'Pulseira em ouro 18k com pedras semipreciosas em engaste pavê.',
-    thumbnail: '/assets/images/home-hero.jpg',
-    images: [
-      '/assets/images/home-hero.jpg',
-      '/assets/images/home-values.jpg',
-    ],
-    featured: true
-  },
-  {
-    id: 6,
-    title: 'Recuperação de Óculos Vintage',
-    category: 'oculos',
-    description: 'Recuperação de armação vintage com substituição de lentes e ajustes.',
-    thumbnail: '/assets/images/home-services.jpg',
-    images: [
-      '/assets/images/home-services.jpg',
-      '/assets/images/home-testimonials.jpg',
-    ],
-    featured: false
-  },
-  {
-    id: 7,
-    title: 'Conjunto de Brincos e Colar',
-    category: 'joias',
-    description: 'Conjunto harmonizado de brincos e colar em ouro 18k com desenho floral.',
-    thumbnail: '/assets/images/home-values.jpg',
-    images: [
-      '/assets/images/home-values.jpg',
-      '/assets/images/home-testimonials.jpg',
-      '/assets/images/home-hero.jpg',
-    ],
-    featured: true
-  },
-  {
-    id: 8,
-    title: 'Aliança Fosca com Diamantes',
-    category: 'aliancas',
-    description: 'Aliança de casamento com acabamento fosco e linha de diamantes.',
-    thumbnail: '/assets/images/home-testimonials.jpg',
-    images: [
-      '/assets/images/home-testimonials.jpg',
-      '/assets/images/home-services.jpg',
-    ],
-    featured: true
-  },
-];
+// Mapeamento de categorias para exibição
+const categoryLabels = {
+  WEDDING_RINGS: 'Alianças de Casamento',
+  REPAIRS_BEFORE_AFTER: 'Consertos (Antes/Depois)',
+  GOLD_PLATING: 'Banho de Ouro',
+  CUSTOM_JEWELRY: 'Joias Personalizadas',
+  GRADUATION_RINGS: 'Anéis de Formatura',
+};
 
-// Categorias para filtro
-const categories = [
-  { id: 'todos', name: 'Todos os Projetos' },
-  { id: 'aliancas', name: 'Alianças' },
-  { id: 'joias', name: 'Joias' },
-  { id: 'consertos', name: 'Consertos' },
-  { id: 'oculos', name: 'Óculos' },
-];
+interface PortfolioItem {
+  id: string;
+  title: string;
+  description?: string;
+  category: string;
+  mainImage: string;
+  images: string[];
+  createdAt: string;
+}
+
+interface ApiResponse {
+  portfolioItems: PortfolioItem[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
+}
 
 export default function PortfolioPage() {
+  const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [activeCategory, setActiveCategory] = useState('todos');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pagination, setPagination] = useState({
+    total: 0,
+    totalPages: 0,
+    hasNextPage: false,
+    hasPrevPage: false,
+  });
+
+  // Buscar categorias disponíveis
+  const [availableCategories, setAvailableCategories] = useState<string[]>([]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    fetchPortfolioItems();
+  }, [activeCategory, currentPage]);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('/api/public/categories');
+      if (response.ok) {
+        const data = await response.json();
+        const portfolioCategories = data.categories
+          .filter((cat: any) => cat.type === 'portfolio')
+          .map((cat: any) => cat.id);
+        setAvailableCategories(portfolioCategories);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar categorias:', error);
+    }
+  };
+
+  const fetchPortfolioItems = async () => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams({
+        page: currentPage.toString(),
+        limit: '12',
+      });
+
+      if (activeCategory !== 'todos') {
+        params.append('category', activeCategory);
+      }
+
+      const response = await fetch(`/api/public/portfolio?${params}`);
+      if (response.ok) {
+        const data: ApiResponse = await response.json();
+        setPortfolioItems(data.portfolioItems);
+        setPagination({
+          total: data.pagination.total,
+          totalPages: data.pagination.totalPages,
+          hasNextPage: data.pagination.hasNextPage,
+          hasPrevPage: data.pagination.hasPrevPage,
+        });
+      } else {
+        console.error('Erro ao buscar portfolio');
+      }
+    } catch (error) {
+      console.error('Erro ao buscar portfolio:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Filtrar itens baseado na busca local
+  const filteredItems = portfolioItems.filter(item =>
+    item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.description?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Criar lista de categorias para os tabs
+  const categories = [
+    { id: 'todos', name: 'Todos os Projetos' },
+    ...availableCategories.map(cat => ({
+      id: cat,
+      name: categoryLabels[cat as keyof typeof categoryLabels] || cat
+    }))
+  ];
+
+  const handleCategoryChange = (category: string) => {
+    setActiveCategory(category);
+    setCurrentPage(1);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -145,10 +163,28 @@ export default function PortfolioPage() {
       </section>
 
       {/* Portfolio Section */}
-      <section className="py-16 bg-marfim">
+      <section className="py-20 bg-marfim">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Busca e Filtros */}
+          <div className="mb-8">
+            <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+              <div className="relative flex-1 max-w-md">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <Input
+                  placeholder="Buscar projetos..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+              <div className="text-sm text-gray-600">
+                {loading ? 'Carregando...' : `${pagination.total} projeto${pagination.total !== 1 ? 's' : ''} encontrado${pagination.total !== 1 ? 's' : ''}`}
+              </div>
+            </div>
+          </div>
+
           <div className="mb-12">
-            <Tabs defaultValue="todos" className="w-full">
+            <Tabs value={activeCategory} onValueChange={handleCategoryChange} className="w-full">
               <div className="flex justify-center mb-8">
                 <TabsList className="bg-marfim-dark/20">
                   {categories.map((category) => (
@@ -163,58 +199,116 @@ export default function PortfolioPage() {
                 </TabsList>
               </div>
 
-              {categories.map((category) => (
-                <TabsContent key={category.id} value={category.id}>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {portfolioItems
-                      .filter(item => category.id === 'todos' || item.category === category.id)
-                      .map((item) => (
-                        <Link href={`/portfolio/${item.id}`} key={item.id} className="group">
-                          <div className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 h-full flex flex-col">
-                            <div className="relative h-64 overflow-hidden">
-                              <div className="absolute inset-0 bg-gray-200 animate-pulse"></div>
-                              <Image
-                                src={item.thumbnail}
-                                alt={item.title}
-                                fill
-                                className="object-cover group-hover:scale-105 transition-transform duration-500"
-                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                              />
-                              {item.featured && (
-                                <div className="absolute top-4 right-4 bg-ouro text-esmeralda text-xs font-bold px-3 py-1 rounded-full">
-                                  Destaque
-                                </div>
-                              )}
-                            </div>
-                            <div className="p-6 flex flex-col flex-grow">
-                              <div className="mb-2">
-                                <span className="text-xs font-semibold text-esmeralda-light bg-esmeralda/10 px-3 py-1 rounded-full">
-                                  {categories.find(cat => cat.id === item.category)?.name || 'Outro'}
-                                </span>
-                              </div>
-                              <h3 className="text-xl font-bold text-esmeralda mb-3 group-hover:text-ouro transition-colors">
-                                {item.title}
-                              </h3>
-                              <p className="text-esmeralda-light text-sm mb-4 flex-grow">
-                                {item.description}
-                              </p>
-                              <Button variant="outline" className="w-full border-esmeralda text-esmeralda hover:bg-esmeralda hover:text-marfim mt-auto">
-                                Ver Detalhes
-                              </Button>
-                            </div>
-                          </div>
-                        </Link>
-                      ))}
+              <TabsContent value={activeCategory}>
+                {loading ? (
+                  <div className="flex items-center justify-center min-h-96">
+                    <div className="text-center">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-esmeralda mx-auto"></div>
+                      <p className="mt-2 text-gray-600">Carregando projetos...</p>
+                    </div>
                   </div>
-                </TabsContent>
-              ))}
+                ) : filteredItems.length === 0 ? (
+                  <div className="text-center py-12">
+                    <Filter className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      Nenhum projeto encontrado
+                    </h3>
+                    <p className="text-gray-600">
+                      {searchTerm 
+                        ? `Não encontramos projetos que correspondam a "${searchTerm}"`
+                        : 'Ainda não há projetos nesta categoria'
+                      }
+                    </p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {filteredItems.map((item) => (
+                      <Link href={`/portfolio/${item.id}`} key={item.id} className="group">
+                        <div className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 h-full flex flex-col">
+                          <div className="relative h-64 overflow-hidden">
+                            <div className="absolute inset-0 bg-gray-200 animate-pulse"></div>
+                            <Image
+                              src={item.mainImage}
+                              alt={item.title}
+                              fill
+                              className="object-cover group-hover:scale-105 transition-transform duration-500"
+                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.src = '/assets/images/home-hero.jpg'; // Fallback image
+                              }}
+                            />
+                          </div>
+                          
+                          <div className="p-6 flex flex-col flex-grow">
+                            <div className="mb-2">
+                              <span className="text-xs font-semibold text-esmeralda-light bg-esmeralda/10 px-3 py-1 rounded-full">
+                                {categoryLabels[item.category as keyof typeof categoryLabels] || item.category}
+                              </span>
+                            </div>
+                            <h3 className="text-xl font-bold text-esmeralda mb-3 group-hover:text-ouro transition-colors">
+                              {item.title}
+                            </h3>
+                            <p className="text-esmeralda-light text-sm mb-4 flex-grow">
+                              {item.description || 'Projeto de alta qualidade criado especialmente para nosso cliente.'}
+                            </p>
+                            <Button variant="outline" className="w-full border-esmeralda text-esmeralda hover:bg-esmeralda hover:text-marfim mt-auto">
+                              Ver Detalhes
+                            </Button>
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </TabsContent>
             </Tabs>
           </div>
+
+          {/* Paginação */}
+          {!loading && filteredItems.length > 0 && pagination.totalPages > 1 && (
+            <div className="flex justify-center items-center space-x-4 mt-12">
+              <Button
+                variant="outline"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={!pagination.hasPrevPage}
+                className="border-esmeralda text-esmeralda hover:bg-esmeralda hover:text-marfim"
+              >
+                Anterior
+              </Button>
+              
+              <div className="flex items-center space-x-2">
+                {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map((page) => (
+                  <Button
+                    key={page}
+                    variant={page === currentPage ? "default" : "outline"}
+                    onClick={() => handlePageChange(page)}
+                    className={page === currentPage 
+                      ? "bg-esmeralda text-marfim" 
+                      : "border-esmeralda text-esmeralda hover:bg-esmeralda hover:text-marfim"
+                    }
+                    size="sm"
+                  >
+                    {page}
+                  </Button>
+                ))}
+              </div>
+              
+              <Button
+                variant="outline"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={!pagination.hasNextPage}
+                className="border-esmeralda text-esmeralda hover:bg-esmeralda hover:text-marfim"
+              >
+                Próxima
+              </Button>
+            </div>
+          )}
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-white">
+      <section className="py-20 bg-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="font-playfair text-3xl font-bold text-esmeralda mb-6">
             Tem um Projeto em Mente?

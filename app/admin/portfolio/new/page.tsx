@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Upload, X, Save } from 'lucide-react';
+import { ArrowLeft, Upload, X, Save, Plus, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
+import { Separator } from '@/components/ui/separator';
 
 const categoryOptions = {
   WEDDING_RINGS: 'Alianças de Casamento',
@@ -26,14 +27,33 @@ const categoryOptions = {
   GRADUATION_RINGS: 'Anéis de Formatura',
 };
 
+const statusOptions = {
+  DRAFT: 'Rascunho',
+  PUBLISHED: 'Publicado',
+  FEATURED: 'Destaque',
+};
+
+interface Specification {
+  key: string;
+  value: string;
+}
+
 interface FormData {
   title: string;
   description: string;
+  detailedDescription: string;
   category: string;
+  customCategory: string;
   mainImage: string;
   images: string[];
   isActive: boolean;
+  status: string;
   order: number;
+  specifications: Specification[];
+  seoTitle: string;
+  seoDescription: string;
+  keywords: string[];
+  relatedProjects: string[];
 }
 
 export default function NewPortfolioPage() {
@@ -42,12 +62,21 @@ export default function NewPortfolioPage() {
   const [formData, setFormData] = useState<FormData>({
     title: '',
     description: '',
+    detailedDescription: '',
     category: '',
+    customCategory: '',
     mainImage: '',
     images: [],
     isActive: true,
+    status: 'DRAFT',
     order: 0,
+    specifications: [],
+    seoTitle: '',
+    seoDescription: '',
+    keywords: [],
+    relatedProjects: [],
   });
+  const [newKeyword, setNewKeyword] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,12 +89,25 @@ export default function NewPortfolioPage() {
     setLoading(true);
 
     try {
+      // Converter especificações para JSON
+      const specifications = formData.specifications.reduce((acc, spec) => {
+        if (spec.key && spec.value) {
+          acc[spec.key] = spec.value;
+        }
+        return acc;
+      }, {} as Record<string, string>);
+
+      const payload = {
+        ...formData,
+        specifications: Object.keys(specifications).length > 0 ? specifications : null,
+      };
+
       const response = await fetch('/api/admin/portfolio', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       if (response.ok) {
@@ -110,6 +152,46 @@ export default function NewPortfolioPage() {
     }));
   };
 
+  const addSpecification = () => {
+    setFormData(prev => ({
+      ...prev,
+      specifications: [...prev.specifications, { key: '', value: '' }]
+    }));
+  };
+
+  const updateSpecification = (index: number, field: 'key' | 'value', value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      specifications: prev.specifications.map((spec, i) => 
+        i === index ? { ...spec, [field]: value } : spec
+      )
+    }));
+  };
+
+  const removeSpecification = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      specifications: prev.specifications.filter((_, i) => i !== index)
+    }));
+  };
+
+  const addKeyword = () => {
+    if (newKeyword.trim() && !formData.keywords.includes(newKeyword.trim())) {
+      setFormData(prev => ({
+        ...prev,
+        keywords: [...prev.keywords, newKeyword.trim()]
+      }));
+      setNewKeyword('');
+    }
+  };
+
+  const removeKeyword = (keyword: string) => {
+    setFormData(prev => ({
+      ...prev,
+      keywords: prev.keywords.filter(k => k !== keyword)
+    }));
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -149,32 +231,55 @@ export default function NewPortfolioPage() {
                 </div>
 
                 <div>
-                  <Label htmlFor="description">Descrição</Label>
+                  <Label htmlFor="description">Descrição Breve</Label>
                   <Textarea
                     id="description"
                     value={formData.description}
                     onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                    placeholder="Descreva o projeto..."
-                    rows={4}
+                    placeholder="Descrição resumida do projeto..."
+                    rows={3}
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="category">Categoria *</Label>
-                  <Select 
-                    value={formData.category} 
-                    onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
-                    required
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione uma categoria" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.entries(categoryOptions).map(([value, label]) => (
-                        <SelectItem key={value} value={value}>{label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Label htmlFor="detailedDescription">Descrição Detalhada</Label>
+                  <Textarea
+                    id="detailedDescription"
+                    value={formData.detailedDescription}
+                    onChange={(e) => setFormData(prev => ({ ...prev, detailedDescription: e.target.value }))}
+                    placeholder="Descrição completa e detalhada do projeto, processo de criação, materiais utilizados..."
+                    rows={6}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="category">Categoria *</Label>
+                    <Select 
+                      value={formData.category} 
+                      onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
+                      required
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione uma categoria" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Object.entries(categoryOptions).map(([value, label]) => (
+                          <SelectItem key={value} value={value}>{label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="customCategory">Categoria Personalizada</Label>
+                    <Input
+                      id="customCategory"
+                      value={formData.customCategory}
+                      onChange={(e) => setFormData(prev => ({ ...prev, customCategory: e.target.value }))}
+                      placeholder="Ex: Joias Especiais"
+                    />
+                  </div>
                 </div>
 
                 <div>
@@ -186,6 +291,117 @@ export default function NewPortfolioPage() {
                     onChange={(e) => setFormData(prev => ({ ...prev, order: parseInt(e.target.value) || 0 }))}
                     placeholder="0"
                   />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Especificações Técnicas */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Especificações Técnicas</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {formData.specifications.map((spec, index) => (
+                  <div key={index} className="grid grid-cols-2 gap-2">
+                    <Input
+                      placeholder="Nome da especificação"
+                      value={spec.key}
+                      onChange={(e) => updateSpecification(index, 'key', e.target.value)}
+                    />
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="Valor"
+                        value={spec.value}
+                        onChange={(e) => updateSpecification(index, 'value', e.target.value)}
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="icon"
+                        onClick={() => removeSpecification(index)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={addSpecification}
+                  className="w-full"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Adicionar Especificação
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* SEO */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Otimização SEO</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="seoTitle">Título SEO</Label>
+                  <Input
+                    id="seoTitle"
+                    value={formData.seoTitle}
+                    onChange={(e) => setFormData(prev => ({ ...prev, seoTitle: e.target.value }))}
+                    placeholder="Título otimizado para motores de busca"
+                    maxLength={60}
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    {formData.seoTitle.length}/60 caracteres recomendados
+                  </p>
+                </div>
+
+                <div>
+                  <Label htmlFor="seoDescription">Descrição SEO</Label>
+                  <Textarea
+                    id="seoDescription"
+                    value={formData.seoDescription}
+                    onChange={(e) => setFormData(prev => ({ ...prev, seoDescription: e.target.value }))}
+                    placeholder="Descrição para motores de busca"
+                    rows={3}
+                    maxLength={160}
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    {formData.seoDescription.length}/160 caracteres recomendados
+                  </p>
+                </div>
+
+                <div>
+                  <Label>Palavras-chave</Label>
+                  <div className="flex gap-2 mb-2">
+                    <Input
+                      value={newKeyword}
+                      onChange={(e) => setNewKeyword(e.target.value)}
+                      placeholder="Adicionar palavra-chave"
+                      onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addKeyword())}
+                    />
+                    <Button type="button" onClick={addKeyword} variant="outline">
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {formData.keywords.map((keyword) => (
+                      <span
+                        key={keyword}
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
+                      >
+                        {keyword}
+                        <button
+                          type="button"
+                          onClick={() => removeKeyword(keyword)}
+                          className="hover:text-blue-600"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -280,9 +496,28 @@ export default function NewPortfolioPage() {
           <div className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Configurações</CardTitle>
+                <CardTitle>Status e Publicação</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="status">Status</Label>
+                  <Select 
+                    value={formData.status} 
+                    onValueChange={(value) => setFormData(prev => ({ ...prev, status: value }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(statusOptions).map(([value, label]) => (
+                        <SelectItem key={value} value={value}>{label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <Separator />
+
                 <div className="flex items-center justify-between">
                   <Label htmlFor="isActive">Projeto Ativo</Label>
                   <Switch
@@ -323,6 +558,6 @@ export default function NewPortfolioPage() {
           </div>
         </div>
       </form>
-    </div>
-  );
+          </div>
+    );
 } 

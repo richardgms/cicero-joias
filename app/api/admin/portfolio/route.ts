@@ -7,11 +7,19 @@ import { z } from 'zod';
 const createPortfolioSchema = z.object({
   title: z.string().min(1, 'Título é obrigatório'),
   description: z.string().optional(),
+  detailedDescription: z.string().optional(),
   category: z.enum(['WEDDING_RINGS', 'REPAIRS_BEFORE_AFTER', 'GOLD_PLATING', 'CUSTOM_JEWELRY', 'GRADUATION_RINGS']),
+  customCategory: z.string().optional(),
   mainImage: z.string().min(1, 'Imagem principal é obrigatória'),
   images: z.array(z.string()).default([]),
   isActive: z.boolean().default(true),
+  status: z.enum(['DRAFT', 'PUBLISHED', 'FEATURED']).default('DRAFT'),
   order: z.number().default(0),
+  specifications: z.record(z.string()).optional().nullable(),
+  seoTitle: z.string().optional(),
+  seoDescription: z.string().optional(),
+  keywords: z.array(z.string()).default([]),
+  relatedProjects: z.array(z.string()).default([]),
   productId: z.string().optional(),
 });
 
