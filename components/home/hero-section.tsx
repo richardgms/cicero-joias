@@ -74,7 +74,7 @@ export function HeroSection() {
               transparent 50%,
               rgba(207, 154, 36, 0.05) 100%
             ),
-            url('https://images.unsplash.com/photo-1551698618-1dfe5d97d256?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')`
+            url('/assets/images/jewelry-workshop-hero.jpg')`
         }}
       />
       
@@ -235,24 +235,38 @@ export function HeroSection() {
         </motion.div>
       </motion.div>
 
-      {/* Modern Scroll Indicator */}
+      {/* Intuitive Scroll Indicator */}
       <motion.div 
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-marfim"
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 2, duration: 0.8 }}
       >
         <motion.div 
-          className="w-6 h-10 border-2 border-ouro/60 rounded-full flex justify-center relative overflow-hidden"
-          whileHover={{ borderColor: "rgba(207, 154, 36, 1)" }}
+          className="relative w-8 h-8 bg-gradient-to-r from-ouro/20 to-yellow-400/20 backdrop-blur-md rounded-full border border-ouro/30 flex items-center justify-center cursor-pointer"
+          whileHover={{ 
+            scale: 1.1, 
+            borderColor: "rgba(207, 154, 36, 0.8)",
+            backgroundColor: "rgba(207, 154, 36, 0.1)"
+          }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
         >
-          <motion.div 
-            className="w-1 h-3 bg-gradient-to-b from-ouro to-yellow-400 rounded-full mt-2"
-            animate={{ y: [0, 16, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          <motion.div
+            className="w-1 h-3 bg-gradient-to-b from-ouro to-yellow-400 rounded-full"
+            animate={{ y: [-2, 2, -2] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
           />
         </motion.div>
-        <p className="text-xs mt-2 text-marfim-dark">Role para baixo</p>
+        
+        {/* Optional: Subtle hint */}
+        <motion.div 
+          className="mt-2 opacity-0 group-hover:opacity-100 transition-opacity"
+          animate={{ opacity: [0.3, 0.7, 0.3] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <div className="w-1 h-1 bg-ouro/40 rounded-full mx-auto" />
+        </motion.div>
       </motion.div>
     </section>
   );

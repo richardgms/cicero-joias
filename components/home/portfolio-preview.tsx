@@ -43,13 +43,14 @@ export function PortfolioPreview() {
 
   const fetchPortfolioItems = async () => {
     try {
-      const response = await fetch('/api/public/portfolio?limit=6&featured=true');
+      const response = await fetch('/api/public/portfolio?limit=6');
       if (response.ok) {
         const data = await response.json();
-        setPortfolioItems(data.items || []);
+        setPortfolioItems(data.portfolioItems || []);
       }
     } catch (error) {
       console.error('Erro ao buscar portfólio:', error);
+      setPortfolioItems([]);
     } finally {
       setLoading(false);
     }
@@ -145,6 +146,18 @@ export function PortfolioPreview() {
                 <div className="bg-white/50 backdrop-blur-sm rounded-2xl h-96" />
               </div>
             ))}
+          </div>
+        ) : filteredItems.length === 0 ? (
+          <div className="text-center py-16">
+            <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-esmeralda/20 to-ouro/20 rounded-full flex items-center justify-center">
+              <Sparkles className="w-8 h-8 text-esmeralda" />
+            </div>
+            <h3 className="text-xl font-semibold text-esmeralda mb-2">
+              Em breve, novos projetos
+            </h3>
+            <p className="text-grafite-light max-w-md mx-auto">
+              Estamos trabalhando em projetos incríveis que serão adicionados ao nosso portfólio em breve.
+            </p>
           </div>
         ) : (
           <motion.div 

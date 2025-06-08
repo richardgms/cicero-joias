@@ -49,6 +49,8 @@ export function Footer() {
                 href="https://wa.me/5583988073784" 
                 className="text-marfim-dark hover:text-ouro transition-colors"
                 aria-label="WhatsApp"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <MessageCircle className="w-5 h-5" />
               </a>

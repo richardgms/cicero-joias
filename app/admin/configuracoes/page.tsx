@@ -56,8 +56,41 @@ interface SiteConfig {
   maintenanceMode: boolean;
 }
 
+const getDefaultConfig = (): SiteConfig => ({
+  homeHeroTitle: 'Cícero Joias - Tradição em Ouro',
+  homeHeroSubtitle: 'Há mais de 30 anos criando joias exclusivas com qualidade e tradição familiar',
+  portfolioHeroTitle: 'Nosso Portfólio',
+  portfolioHeroSubtitle: 'Conheça alguns dos nossos trabalhos mais especiais',
+  contactHeroTitle: 'Entre em Contato',
+  contactHeroSubtitle: 'Estamos prontos para criar a joia dos seus sonhos',
+  
+  siteTitle: 'Cícero Joias - Joias Exclusivas e Personalizadas',
+  siteDescription: 'Especializada em anéis de formatura, alianças de casamento, joias personalizadas e serviços de ourivesaria com mais de 30 anos de tradição.',
+  siteKeywords: 'joias, anéis de formatura, alianças, ourivesaria, ouro, prata, joias personalizadas',
+  siteAuthor: 'Cícero Joias',
+  
+  companyName: 'Cícero Joias',
+  companyEmail: 'contato@cicerojoias.com.br',
+  companyPhone: '(11) 99999-9999',
+  companyWhatsapp: '5511999999999',
+  companyAddress: 'Rua das Joias, 123 - Centro, São Paulo - SP',
+  
+  facebookUrl: '',
+  instagramUrl: '',
+  linkedinUrl: '',
+  
+  primaryColor: '#D97706',
+  secondaryColor: '#1F2937',
+  fontFamily: 'Inter',
+  
+  enableBlog: false,
+  enableTestimonials: true,
+  enableNewsletter: false,
+  maintenanceMode: false,
+});
+
 export default function AdminConfigPage() {
-  const [config, setConfig] = useState<SiteConfig | null>(null);
+  const [config, setConfig] = useState<SiteConfig>(getDefaultConfig());
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState('hero');
@@ -69,7 +102,7 @@ export default function AdminConfigPage() {
 
   const fetchConfig = async () => {
     try {
-      const response = await fetch('/api/admin/site-settings');
+      const response = await fetch('/api/admin/site-config');
       if (response.ok) {
         const data = await response.json();
         setConfig(data);
@@ -85,45 +118,12 @@ export default function AdminConfigPage() {
     }
   };
 
-  const getDefaultConfig = (): SiteConfig => ({
-    homeHeroTitle: 'Cícero Joias - Tradição em Ouro',
-    homeHeroSubtitle: 'Há mais de 30 anos criando joias exclusivas com qualidade e tradição familiar',
-    portfolioHeroTitle: 'Nosso Portfólio',
-    portfolioHeroSubtitle: 'Conheça alguns dos nossos trabalhos mais especiais',
-    contactHeroTitle: 'Entre em Contato',
-    contactHeroSubtitle: 'Estamos prontos para criar a joia dos seus sonhos',
-    
-    siteTitle: 'Cícero Joias - Joias Exclusivas e Personalizadas',
-    siteDescription: 'Especializada em anéis de formatura, alianças de casamento, joias personalizadas e serviços de ourivesaria com mais de 30 anos de tradição.',
-    siteKeywords: 'joias, anéis de formatura, alianças, ourivesaria, ouro, prata, joias personalizadas',
-    siteAuthor: 'Cícero Joias',
-    
-    companyName: 'Cícero Joias',
-    companyEmail: 'contato@cicerojoias.com.br',
-    companyPhone: '(11) 99999-9999',
-    companyWhatsapp: '5511999999999',
-    companyAddress: 'Rua das Joias, 123 - Centro, São Paulo - SP',
-    
-    facebookUrl: '',
-    instagramUrl: '',
-    linkedinUrl: '',
-    
-    primaryColor: '#D97706',
-    secondaryColor: '#1F2937',
-    fontFamily: 'Inter',
-    
-    enableBlog: false,
-    enableTestimonials: true,
-    enableNewsletter: false,
-    maintenanceMode: false,
-  });
+
 
   const handleSave = async () => {
-    if (!config) return;
-    
     setSaving(true);
     try {
-      const response = await fetch('/api/admin/site-settings', {
+      const response = await fetch('/api/admin/site-config', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -133,6 +133,9 @@ export default function AdminConfigPage() {
 
       if (response.ok) {
         alert('Configurações salvas com sucesso!');
+      } else {
+        const errorData = await response.json();
+        alert(`Erro ao salvar: ${errorData.error || 'Erro desconhecido'}`);
       }
     } catch (error) {
       console.error('Erro ao salvar configurações:', error);
@@ -143,8 +146,7 @@ export default function AdminConfigPage() {
   };
 
   const updateConfig = (key: keyof SiteConfig, value: any) => {
-    if (!config) return;
-    setConfig({ ...config, [key]: value });
+    setConfig(prev => ({ ...prev, [key]: value }));
   };
 
   if (loading) {
@@ -157,8 +159,6 @@ export default function AdminConfigPage() {
       </div>
     );
   }
-
-  if (!config) return null;
 
   return (
     <div className="space-y-6">
@@ -385,11 +385,25 @@ export default function AdminConfigPage() {
                 </div>
                 <div>
                   <Label htmlFor="companyWhatsapp">WhatsApp</Label>
-                  <Input
-                    id="companyWhatsapp"
-                    value={config.companyWhatsapp}
-                    onChange={(e) => updateConfig('companyWhatsapp', e.target.value)}
-                  />
+                  <div className="space-y-2">
+                    <Input
+                      id="companyWhatsapp"
+                      value={config.companyWhatsapp}
+                      onChange={(e) => updateConfig('companyWhatsapp', e.target.value)}
+                      placeholder="5583988073784"
+                    />
+                    <p className="text-xs text-gray-500">
+                      Formato: código do país + DDD + número (ex: 5583988073784)
+                    </p>
+                    {config.companyWhatsapp && (
+                      <div className="p-2 bg-green-50 rounded border border-green-200">
+                        <p className="text-xs text-green-700 font-medium">Preview do link:</p>
+                        <p className="text-xs text-green-600 break-all">
+                          https://wa.me/{config.companyWhatsapp}
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
               <div>

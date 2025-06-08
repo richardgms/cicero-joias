@@ -134,15 +134,18 @@ export function FeaturesSection() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <motion.button
-              className="bg-gradient-to-r from-esmeralda to-esmeralda-light text-marfim px-8 py-4 rounded-full font-semibold shadow-2xl shadow-esmeralda/25 hover:shadow-3xl hover:shadow-esmeralda/40 transition-all duration-300 border border-ouro/20"
+            <motion.a
+              href="https://wa.me/5583988073784?text=Olá! Gostaria de conhecer melhor o atelier da Cícero Joias e saber mais sobre os serviços oferecidos."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block bg-gradient-to-r from-esmeralda to-esmeralda-light text-marfim px-8 py-4 rounded-full font-semibold shadow-2xl shadow-esmeralda/25 hover:shadow-3xl hover:shadow-esmeralda/40 transition-all duration-300 border border-ouro/20"
               whileHover={{
                 background: "linear-gradient(to right, #C79A34, #E1B959)",
                 boxShadow: "0 25px 50px -12px rgba(199, 154, 52, 0.4)"
               }}
             >
-              Conheça Nosso Atelier
-            </motion.button>
+              Entrar em Contato
+            </motion.a>
           </motion.div>
         </AnimatedSection>
       </div>
