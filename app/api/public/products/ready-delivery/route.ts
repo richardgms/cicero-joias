@@ -78,8 +78,15 @@ export async function GET(request: Request) {
     const hasNextPage = page < totalPages;
     const hasPrevPage = page > 1;
 
+    // Adicionar imagem placeholder para produtos sem imagem
+    const productsWithPlaceholder = products.map((product: any) => ({
+      ...product,
+      mainImage: product.mainImage || '/assets/images/placeholder-jewelry.svg',
+      images: product.images.length > 0 ? product.images : ['/assets/images/placeholder-jewelry.svg']
+    }));
+
     return NextResponse.json({
-      products,
+      products: productsWithPlaceholder,
       pagination: {
         page,
         limit,
