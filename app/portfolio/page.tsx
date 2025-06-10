@@ -142,7 +142,7 @@ export default function PortfolioPage() {
           <div 
             className="w-full h-full bg-cover bg-center"
             style={{
-              backgroundImage: `url('/assets/images/home-hero.jpg')`
+              backgroundImage: `url('/assets/images/portfolio-hero.png')`
             }}
           />
         </div>

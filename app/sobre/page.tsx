@@ -21,7 +21,7 @@ export default function SobrePage() {
           <div 
             className="w-full h-full bg-cover bg-center"
             style={{
-              backgroundImage: `url('https://images.pexels.com/photos/1927259/pexels-photo-1927259.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop')`
+              backgroundImage: `url('/assets/images/sobre-nos-hero.jpg')`
             }}
           />
         </div>

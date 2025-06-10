@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Gem, Sparkles, Heart, Award, Clock, Shield } from 'lucide-react';
@@ -53,7 +54,7 @@ export function FeaturesSection() {
 
   return (
     <section className="py-24 bg-gradient-to-br from-marfim via-marfim to-marfim-light relative overflow-hidden">
-      {/* Background Pattern */}
+      {/* Background Pattern com shine decorativo */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0" 
           style={{
@@ -63,6 +64,39 @@ export function FeaturesSection() {
         />
       </div>
 
+      {/* Shine elements decorativos */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-20 left-20 opacity-30">
+          <Image
+            src="/assets/brand/shine.png"
+            alt=""
+            width={20}
+            height={20}
+            className="animate-pulse"
+          />
+        </div>
+        <div className="absolute top-32 right-32 opacity-40">
+          <Image
+            src="/assets/brand/shine.png"
+            alt=""
+            width={16}
+            height={16}
+            className="animate-pulse"
+            style={{ animationDelay: '1s' }}
+          />
+        </div>
+        <div className="absolute bottom-24 left-1/3 opacity-35">
+          <Image
+            src="/assets/brand/shine.png"
+            alt=""
+            width={18}
+            height={18}
+            className="animate-pulse"
+            style={{ animationDelay: '2s' }}
+          />
+        </div>
+      </div>
+
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
         {/* Section Header */}
         <AnimatedSection className="text-center mb-16" delay={0.2}>
@@ -70,10 +104,24 @@ export function FeaturesSection() {
             className="inline-flex items-center space-x-2 bg-gradient-to-r from-esmeralda/10 to-ouro/10 rounded-full px-6 py-3 mb-6 border border-ouro/20"
             whileHover={{ scale: 1.05 }}
           >
-            <Sparkles className="w-4 h-4 text-ouro" />
+            <Image
+              src="/assets/brand/shine.png"
+              alt=""
+              width={16}
+              height={16}
+              className="animate-pulse"
+            />
             <span className="text-sm font-medium text-esmeralda">
               Por que escolher a Cícero Joias
             </span>
+            <Image
+              src="/assets/brand/shine.png"
+              alt=""
+              width={12}
+              height={12}
+              className="animate-pulse"
+              style={{ animationDelay: '0.5s' }}
+            />
           </motion.div>
 
           <h2 className="font-playfair text-4xl md:text-5xl font-bold text-esmeralda mb-6">
@@ -97,9 +145,20 @@ export function FeaturesSection() {
           {features.map((feature, index) => (
             <GlassCard 
               key={index}
-              className={`p-8 group bg-gradient-to-br ${feature.gradient} backdrop-blur-sm`}
+              className={`p-8 group bg-gradient-to-br ${feature.gradient} backdrop-blur-sm relative`}
               hover={true}
             >
+              {/* Shine decorativo no canto superior direito */}
+              <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                <Image
+                  src="/assets/brand/shine.png"
+                  alt=""
+                  width={12}
+                  height={12}
+                  className="animate-pulse"
+                />
+              </div>
+
               <motion.div
                 className="text-center"
                 whileHover={{ y: -5 }}
@@ -107,10 +166,20 @@ export function FeaturesSection() {
               >
                 {/* Icon */}
                 <motion.div 
-                  className="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-r from-esmeralda to-esmeralda-light flex items-center justify-center group-hover:from-ouro group-hover:to-yellow-400 transition-all duration-500 shadow-lg"
+                  className="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-r from-esmeralda to-esmeralda-light flex items-center justify-center group-hover:from-ouro group-hover:to-yellow-400 transition-all duration-500 shadow-lg relative"
                   whileHover={{ scale: 1.1, rotate: 5 }}
                 >
                   <feature.icon className="w-8 h-8 text-marfim" />
+                  {/* Shine no hover do ícone */}
+                  <div className="absolute -top-1 -right-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <Image
+                      src="/assets/brand/shine.png"
+                      alt=""
+                      width={8}
+                      height={8}
+                      className="animate-pulse"
+                    />
+                  </div>
                 </motion.div>
 
                 {/* Title */}
@@ -138,13 +207,22 @@ export function FeaturesSection() {
               href="https://wa.me/5583988073784?text=Olá! Gostaria de conhecer melhor o atelier da Cícero Joias e saber mais sobre os serviços oferecidos."
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block bg-gradient-to-r from-esmeralda to-esmeralda-light text-marfim px-8 py-4 rounded-full font-semibold shadow-2xl shadow-esmeralda/25 hover:shadow-3xl hover:shadow-esmeralda/40 transition-all duration-300 border border-ouro/20"
+              className="inline-flex items-center space-x-2 bg-gradient-to-r from-esmeralda to-esmeralda-light text-marfim px-8 py-4 rounded-full font-semibold shadow-2xl shadow-esmeralda/25 hover:shadow-3xl hover:shadow-esmeralda/40 transition-all duration-300 border border-ouro/20 group"
               whileHover={{
                 background: "linear-gradient(to right, #C79A34, #E1B959)",
                 boxShadow: "0 25px 50px -12px rgba(199, 154, 52, 0.4)"
               }}
             >
-              Entrar em Contato
+              <span>Entrar em Contato</span>
+              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <Image
+                  src="/assets/brand/shine.png"
+                  alt=""
+                  width={14}
+                  height={14}
+                  className="animate-pulse"
+                />
+              </div>
             </motion.a>
           </motion.div>
         </AnimatedSection>

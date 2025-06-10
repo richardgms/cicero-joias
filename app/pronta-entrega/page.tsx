@@ -213,7 +213,7 @@ export default function ProntaEntregaPage() {
           <div 
             className="w-full h-full bg-cover bg-center"
             style={{
-              backgroundImage: `url('/assets/images/home-hero.jpg')`
+              backgroundImage: `url('/assets/images/pronta-entrega-hero.PNG')`
             }}
           />
         </div>

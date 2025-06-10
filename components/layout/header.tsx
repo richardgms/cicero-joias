@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Menu, X, Gem, Phone, Mail, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -63,12 +64,28 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <nav className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-esmeralda rounded-lg flex items-center justify-center">
-              <Gem className="w-6 h-6 text-ouro" />
+          <Link href="/" className="flex items-center space-x-2 group">
+            <div className="relative">
+              <Image
+                src="/assets/logos/circle-monogram.png"
+                alt="Cícero Joias - Monograma"
+                width={40}
+                height={40}
+                className="transition-transform duration-300 group-hover:scale-105"
+              />
+              {/* Shine effect decorativo */}
+              <div className="absolute -top-1 -right-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <Image
+                  src="/assets/brand/shine.png"
+                  alt=""
+                  width={12}
+                  height={12}
+                  className="animate-pulse"
+                />
+              </div>
             </div>
             <div className="flex flex-col">
-              <span className="font-playfair text-xl font-bold text-esmeralda">
+              <span className="font-playfair text-xl font-bold text-esmeralda group-hover:text-ouro transition-colors duration-300">
                 Cícero Joias
               </span>
               <span className="text-xs text-esmeralda/70 -mt-1">
@@ -83,9 +100,10 @@ export function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-esmeralda hover:text-ouro transition-colors duration-200 font-medium"
+                className="text-esmeralda hover:text-ouro transition-colors duration-200 font-medium relative group"
               >
                 {item.name}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-ouro transition-all duration-300 group-hover:w-full"></span>
               </Link>
             ))}
             {isSignedIn && (
@@ -100,9 +118,28 @@ export function Header() {
           </div>
 
           {/* CTA Button */}
-          <div className="hidden md:flex">
-            <Button asChild className="bg-ouro text-grafite hover:bg-ouro-light">
-              <Link href="/orcamento">Solicitar Orçamento</Link>
+          <div className="hidden md:flex items-center space-x-3">
+            <div className="relative">
+              <Image
+                src="/assets/brand/shine.png"
+                alt=""
+                width={16}
+                height={16}
+                className="animate-pulse opacity-70"
+              />
+            </div>
+            <Button asChild className="bg-ouro text-grafite hover:bg-ouro-light shadow-lg hover:shadow-xl transition-all duration-300 group">
+              <Link href="/orcamento">
+                Solicitar Orçamento
+                <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <Image
+                    src="/assets/brand/shine.png"
+                    alt=""
+                    width={12}
+                    height={12}
+                  />
+                </div>
+              </Link>
             </Button>
           </div>
 

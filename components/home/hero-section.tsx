@@ -74,7 +74,7 @@ export function HeroSection() {
               transparent 50%,
               rgba(207, 154, 36, 0.05) 100%
             ),
-            url('/assets/images/jewelry-workshop-hero.jpg')`
+            url('/assets/images/home-hero.jpg')`
         }}
       />
       

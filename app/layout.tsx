@@ -24,17 +24,31 @@ export const metadata: Metadata = {
   keywords: 'joalheria, alianças, consertos, joias personalizadas, banho de ouro, anel de formatura, portfólio',
   authors: [{ name: 'Cícero Joias' }],
   creator: 'Cícero Joias',
+  icons: {
+    icon: '/assets/logos/circle-monogram.png',
+    shortcut: '/assets/logos/circle-monogram.png',
+    apple: '/assets/logos/circle-monogram.png',
+  },
   openGraph: {
     title: 'Cícero Joias - Tradição que se Renova',
     description: 'Joalheria familiar com mais de 40 anos de tradição. Especializados em alianças sob encomenda, consertos e joias personalizadas.',
     type: 'website',
     locale: 'pt_BR',
     siteName: 'Cícero Joias',
+    images: [
+      {
+        url: '/assets/logos/circle-monogram.png',
+        width: 800,
+        height: 800,
+        alt: 'Cícero Joias - Logo',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Cícero Joias - Tradição que se Renova',
     description: 'Joalheria familiar com mais de 40 anos de tradição.',
+    images: ['/assets/logos/circle-monogram.png'],
   },
   robots: {
     index: true,
