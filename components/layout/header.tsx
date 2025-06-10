@@ -142,11 +142,12 @@ export function Header() {
               ))}
               {!loading && isSignedIn && (
                 <Link
-                  href="/dashboard"
-                  className="text-esmeralda hover:text-ouro transition-colors duration-200 font-medium flex items-center"
+                  href="/minha-area"
+                  className="text-esmeralda hover:text-ouro transition-colors duration-200 font-medium flex items-center relative group"
                 >
                   <User className="w-4 h-4 mr-1" />
                   <span>Minha Área</span>
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-ouro transition-all duration-300 group-hover:w-full"></span>
                 </Link>
               )}
             </div>
@@ -216,7 +217,7 @@ export function Header() {
               ))}
               {!loading && isSignedIn && (
                 <Link
-                  href="/dashboard"
+                  href="/minha-area"
                   className="text-esmeralda hover:text-ouro transition-colors font-medium py-2 flex items-center"
                   onClick={() => setMobileMenuOpen(false)}
                 >

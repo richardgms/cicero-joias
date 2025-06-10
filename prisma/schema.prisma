@@ -52,6 +52,11 @@ model Client {
   
   quoteRequests QuoteRequest[]
   orders        Order[]
+  
+  // Novos relacionamentos
+  coupons             Coupon[]
+  favorites           Favorite[]
+  loyaltyTransactions LoyaltyTransaction[]
 
   @@map("clients")
 }
@@ -251,6 +256,9 @@ model PortfolioItem {
   
   productId String?
   product   Product? @relation(fields: [productId], references: [id])
+  
+  // Relacionamento com favoritos
+  favorites Favorite[]
 
   @@map("portfolio_items")
 }
@@ -354,4 +362,74 @@ model PageVisibilityLog {
   pageVisibility  PageVisibility @relation(fields: [pageSlug], references: [slug], onDelete: Cascade)
 
   @@map("page_visibility_logs")
+}
+
+// ===== SISTEMA DE CUPONS =====
+
+model Coupon {
+  id          String      @id @default(cuid())
+  code        String      @unique
+  type        CouponType
+  value       Decimal     @db.Decimal(10, 2) // Valor em reais
+  percentage  Int?        // Percentual de desconto (1-100)
+  maxDiscount Decimal?    @db.Decimal(10, 2) // Desconto máximo em reais
+  isActive    Boolean     @default(true)
+  isUsed      Boolean     @default(false)
+  expiresAt   DateTime?   // Data de expiração (opcional)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  usedAt      DateTime?   // Data que foi usado
+  
+  // Relacionamentos
+  clientId    String?
+  client      Client?     @relation(fields: [clientId], references: [id])
+  orderId     String?     // Pedido onde foi usado
+  
+  @@map("coupons")
+}
+
+enum CouponType {
+  NEW_USER       // Cupom de R$10 para novos usuários
+  LOYALTY        // Cupom de fidelidade (100% até R$40)
+  PROMOTIONAL    // Cupons promocionais
+}
+
+// ===== SISTEMA DE FAVORITOS =====
+
+model Favorite {
+  id              String    @id @default(cuid())
+  clientId        String
+  portfolioItemId String
+  createdAt       DateTime  @default(now())
+  
+  // Relacionamentos
+  client          Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  portfolioItem   PortfolioItem @relation(fields: [portfolioItemId], references: [id], onDelete: Cascade)
+  
+  @@unique([clientId, portfolioItemId])
+  @@map("favorites")
+}
+
+// ===== PROGRAMA DE FIDELIDADE =====
+
+model LoyaltyTransaction {
+  id            String      @id @default(cuid())
+  clientId      String
+  type          LoyaltyType
+  points        Int         // Pontos ganhos ou perdidos
+  orderId       String?     // Pedido relacionado
+  couponId      String?     // Cupom relacionado
+  description   String?     // Descrição da transação
+  createdAt     DateTime    @default(now())
+  
+  // Relacionamentos
+  client        Client      @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  
+  @@map("loyalty_transactions")
+}
+
+enum LoyaltyType {
+  EARNED        // Pontos ganhos
+  REDEEMED      // Pontos resgatados
+  EXPIRED       // Pontos expirados
 }

@@ -62,12 +62,19 @@ export default function PortfolioItemPage() {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
+  const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
 
   useEffect(() => {
     if (slug) {
       fetchPortfolioItem();
     }
   }, [slug]);
+
+  useEffect(() => {
+    if (portfolioItem) {
+      checkIfFavorited();
+    }
+  }, [portfolioItem]);
 
   const fetchPortfolioItem = async () => {
     setLoading(true);
@@ -134,6 +141,45 @@ export default function PortfolioItemPage() {
   const copyToClipboard = () => {
     navigator.clipboard.writeText(window.location.href);
     // TODO: Adicionar toast de feedback
+  };
+
+  const checkIfFavorited = async () => {
+    try {
+      const response = await fetch('/api/favorites');
+      if (response.ok) {
+        const data = await response.json();
+        const isFav = data.favorites?.some((fav: any) => fav.portfolioItem.id === portfolioItem?.id);
+        setIsFavorited(isFav || false);
+      }
+    } catch (error) {
+      console.error('Erro ao verificar favorito:', error);
+    }
+  };
+
+  const toggleFavorite = async () => {
+    if (!portfolioItem || isTogglingFavorite) return;
+    
+    setIsTogglingFavorite(true);
+    try {
+      const response = await fetch('/api/favorites/toggle', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          portfolioItemId: portfolioItem.id
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setIsFavorited(data.isFavorited);
+      }
+    } catch (error) {
+      console.error('Erro ao alterar favorito:', error);
+    } finally {
+      setIsTogglingFavorite(false);
+    }
   };
 
   if (loading) {
@@ -233,10 +279,11 @@ export default function PortfolioItemPage() {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => setIsFavorited(!isFavorited)}
-                className="text-gray-600 hover:text-ouro"
+                onClick={toggleFavorite}
+                disabled={isTogglingFavorite}
+                className="text-gray-600 hover:text-ouro disabled:opacity-50"
               >
-                <Heart className={`h-4 w-4 ${isFavorited ? 'fill-current text-ouro' : ''}`} />
+                <Heart className={`h-4 w-4 ${isFavorited ? 'fill-current text-ouro' : ''} ${isTogglingFavorite ? 'animate-pulse' : ''}`} />
               </Button>
               <Button
                 variant="ghost"
