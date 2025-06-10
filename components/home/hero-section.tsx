@@ -56,7 +56,7 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[100vh] md:min-h-[90vh] flex items-start justify-center overflow-hidden pt-12 md:pt-24">
       {/* Background with Modern Gradient Overlay */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -250,7 +250,7 @@ export function HeroSection() {
             backgroundColor: "rgba(207, 154, 36, 0.1)"
           }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
+          onClick={() => window.scrollTo({ top: window.innerHeight * 0.7, behavior: 'smooth' })}
         >
           <motion.div
             className="w-1 h-3 bg-gradient-to-b from-ouro to-yellow-400 rounded-full"

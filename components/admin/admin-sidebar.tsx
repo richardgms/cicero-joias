@@ -141,8 +141,8 @@ export function AdminSidebar() {
               className="animate-pulse"
             />
             <h3 className="text-sm font-medium text-esmeralda">
-              Ações Rápidas
-            </h3>
+            Ações Rápidas
+          </h3>
           </div>
           <div className="space-y-2">
             <Link

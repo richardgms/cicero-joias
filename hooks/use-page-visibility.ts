@@ -75,6 +75,7 @@ export function usePageVisibility(pageSlug?: string) {
     visiblePages,
     loading,
     error,
+    isAdmin,
     checkPageVisibility,
     refetch: fetchVisiblePages
   };
