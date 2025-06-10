@@ -12,7 +12,8 @@ import {
   Settings, 
   BarChart3,
   FileText,
-  Gem
+  Gem,
+  Eye
 } from 'lucide-react';
 
 const navigation = [
@@ -35,6 +36,11 @@ const navigation = [
     name: 'Categorias',
     href: '/admin/categories',
     icon: Gem,
+  },
+  {
+    name: 'Visibilidade da Página',
+    href: '/admin/page-visibility',
+    icon: Eye,
   },
   {
     name: 'Usuários',

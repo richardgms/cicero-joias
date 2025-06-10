@@ -322,3 +322,36 @@ model SiteSettings {
 
   @@map("site_settings")
 }
+
+// ===== CONTROLE DE VISIBILIDADE DE PÁGINAS =====
+
+model PageVisibility {
+  id          String   @id @default(cuid())
+  slug        String   @unique // ex: "pronta-entrega", "portfolio", "sobre", "orcamento"
+  title       String             // Nome amigável da página
+  isVisible   Boolean  @default(true)
+  description String?            // Descrição da página para o admin
+  priority    Int      @default(0) // Ordem de exibição no admin
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Logs de alteração
+  visibilityLogs PageVisibilityLog[]
+
+  @@map("page_visibility")
+}
+
+model PageVisibilityLog {
+  id              String         @id @default(cuid())
+  pageSlug        String
+  previousStatus  Boolean
+  newStatus       Boolean
+  adminUserId     String?        // ID do admin que fez a alteração
+  adminEmail      String?        // Email do admin para auditoria
+  changeReason    String?        // Motivo da alteração (opcional)
+  createdAt       DateTime       @default(now())
+  
+  pageVisibility  PageVisibility @relation(fields: [pageSlug], references: [slug], onDelete: Cascade)
+
+  @@map("page_visibility_logs")
+}

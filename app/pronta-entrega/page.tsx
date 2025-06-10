@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
+import { PageVisibilityGuard } from '@/components/page-visibility-guard';
 
 // Mapeamento de categorias para exibição
 const categoryLabels = {
@@ -58,7 +59,7 @@ interface ApiResponse {
   };
 }
 
-export default function ProntaEntregaPage() {
+function ProntaEntregaContent() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -599,5 +600,13 @@ export default function ProntaEntregaPage() {
         </div>
       </section>
     </div>
+  );
+}
+
+export default function ProntaEntregaPage() {
+  return (
+    <PageVisibilityGuard pageSlug="pronta-entrega">
+      <ProntaEntregaContent />
+    </PageVisibilityGuard>
   );
 } 

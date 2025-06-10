@@ -78,7 +78,7 @@ export default function SobrePage() {
                     </div>
                   </div>
                   <h3 className="text-xl font-bold text-esmeralda mb-2">2000</h3>
-                  <p className="text-esmeralda-light">Expansão com a abertura da segunda loja em Santa Rita</p>
+                  <p className="text-esmeralda-light">Expansão com a abertura da segunda loja em João Pessoa</p>
                 </div>
                 
                 <div>
@@ -94,7 +94,7 @@ export default function SobrePage() {
             </div>
 
             <p className="mb-6">
-              Em meados de 2000, expandimos nossa presença com a abertura da segunda loja em Santa Rita, ampliando nosso alcance e permitindo atender um número maior de clientes na região. Ao longo das décadas, enfrentamos desafios e celebramos conquistas, sempre com o compromisso inabalável de oferecer o melhor aos nossos clientes.
+              Em meados de 2000, expandimos nossa presença com a abertura da segunda loja em João Pessoa, ampliando nosso alcance e permitindo atender um número maior de clientes na região. Ao longo das décadas, enfrentamos desafios e celebramos conquistas, sempre com o compromisso inabalável de oferecer o melhor aos nossos clientes.
             </p>
             
             <p className="mb-6">

@@ -8,19 +8,50 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { HeaderAuth } from './header-auth';
 import { useUser } from '@clerk/nextjs';
+import { usePageVisibility } from '@/hooks/use-page-visibility';
 
-const navigation = [
-  { name: 'Início', href: '/' },
-  { name: 'Sobre Nós', href: '/sobre' },
-  { name: 'Portfólio', href: '/portfolio' },
-  { name: 'Pronta Entrega', href: '/pronta-entrega' },
-  { name: 'Orçamento', href: '/orcamento' },
+// Todas as páginas possíveis do site
+const allNavigation = [
+  { name: 'Início', href: '/', slug: 'home' },
+  { name: 'Sobre Nós', href: '/sobre', slug: 'sobre' },
+  { name: 'Portfólio', href: '/portfolio', slug: 'portfolio' },
+  { name: 'Pronta Entrega', href: '/pronta-entrega', slug: 'pronta-entrega' },
+  { name: 'Orçamento', href: '/orcamento', slug: 'orcamento' },
 ];
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { isSignedIn } = useUser();
+  const { visiblePages, loading } = usePageVisibility();
+
+  // Filtrar navegação baseado nas páginas visíveis
+  const navigation = React.useMemo(() => {
+    if (loading) {
+      // Enquanto carrega, mostrar todas exceto as que sabemos que podem estar escondidas
+      return allNavigation.filter(item => item.slug === 'home' || item.slug === 'sobre' || item.slug === 'portfolio')
+    }
+    
+    // Sempre incluir "Início" (página home)
+    const visibleNavigation = [allNavigation[0]] // Início sempre visível
+    
+    // Adicionar outras páginas se estão visíveis
+    const visibleSlugs = visiblePages.map(page => page.slug)
+    
+    allNavigation.slice(1).forEach(navItem => {
+      if (visibleSlugs.includes(navItem.slug)) {
+        visibleNavigation.push(navItem)
+      }
+    })
+    
+    return visibleNavigation
+  }, [visiblePages, loading])
+
+  // Verificar se página de orçamento está visível para mostrar o botão CTA
+  const isOrcamentoVisible = React.useMemo(() => {
+    if (loading) return true // Default mostrar enquanto carrega
+    return visiblePages.some(page => page.slug === 'orcamento')
+  }, [visiblePages, loading])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -117,31 +148,33 @@ export function Header() {
             )}
           </div>
 
-          {/* CTA Button */}
-          <div className="hidden md:flex items-center space-x-3">
-            <div className="relative">
-              <Image
-                src="/assets/brand/shine.png"
-                alt=""
-                width={16}
-                height={16}
-                className="animate-pulse opacity-70"
-              />
+          {/* CTA Button - só mostra se página de orçamento estiver visível */}
+          {isOrcamentoVisible && (
+            <div className="hidden md:flex items-center space-x-3">
+              <div className="relative">
+                <Image
+                  src="/assets/brand/shine.png"
+                  alt=""
+                  width={16}
+                  height={16}
+                  className="animate-pulse opacity-70"
+                />
+              </div>
+              <Button asChild className="bg-ouro text-grafite hover:bg-ouro-light shadow-lg hover:shadow-xl transition-all duration-300 group">
+                <Link href="/orcamento">
+                  Solicitar Orçamento
+                  <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <Image
+                      src="/assets/brand/shine.png"
+                      alt=""
+                      width={12}
+                      height={12}
+                    />
+                  </div>
+                </Link>
+              </Button>
             </div>
-            <Button asChild className="bg-ouro text-grafite hover:bg-ouro-light shadow-lg hover:shadow-xl transition-all duration-300 group">
-              <Link href="/orcamento">
-                Solicitar Orçamento
-                <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <Image
-                    src="/assets/brand/shine.png"
-                    alt=""
-                    width={12}
-                    height={12}
-                  />
-                </div>
-              </Link>
-            </Button>
-          </div>
+          )}
 
           {/* Mobile menu button */}
           <div className="md:hidden">
@@ -185,13 +218,16 @@ export function Header() {
                   <span>Minha Área</span>
                 </Link>
               )}
-              <div className="pt-4 border-t border-marfim-dark">
-                <Button asChild className="w-full bg-ouro text-grafite hover:bg-ouro-light">
-                  <Link href="/orcamento" onClick={() => setMobileMenuOpen(false)}>
-                    Solicitar Orçamento
-                  </Link>
-                </Button>
-              </div>
+              {/* Botão de orçamento mobile - só mostra se página estiver visível */}
+              {isOrcamentoVisible && (
+                <div className="pt-4 border-t border-marfim-dark">
+                  <Button asChild className="w-full bg-ouro text-grafite hover:bg-ouro-light">
+                    <Link href="/orcamento" onClick={() => setMobileMenuOpen(false)}>
+                      Solicitar Orçamento
+                    </Link>
+                  </Button>
+                </div>
+              )}
               <div className="flex flex-col space-y-2 pt-2">
                 <HeaderAuth />
               </div>
