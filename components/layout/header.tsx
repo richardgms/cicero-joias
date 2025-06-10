@@ -28,8 +28,8 @@ export function Header() {
   // Filtrar navegação baseado nas páginas visíveis
   const navigation = React.useMemo(() => {
     if (loading) {
-      // Enquanto carrega, mostrar todas exceto as que sabemos que podem estar escondidas
-      return allNavigation.filter(item => item.slug === 'home' || item.slug === 'sobre' || item.slug === 'portfolio')
+      // Enquanto carrega, não mostrar nada para evitar flash visual
+      return []
     }
     
     // Sempre incluir "Início" (página home)
@@ -49,7 +49,7 @@ export function Header() {
 
   // Verificar se página de orçamento está visível para mostrar o botão CTA
   const isOrcamentoVisible = React.useMemo(() => {
-    if (loading) return true // Default mostrar enquanto carrega
+    if (loading) return false // Não mostrar enquanto carrega para evitar flash
     return visiblePages.some(page => page.slug === 'orcamento')
   }, [visiblePages, loading])
 
@@ -93,104 +93,110 @@ export function Header() {
 
       {/* Main navigation */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <nav className="flex items-center justify-between h-16">
+        <nav className="flex items-center h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2 group">
-            <div className="relative">
-              <Image
-                src="/assets/logos/circle-monogram.png"
-                alt="Cícero Joias - Monograma"
-                width={40}
-                height={40}
-                className="transition-transform duration-300 group-hover:scale-105"
-              />
-              {/* Shine effect decorativo */}
-              <div className="absolute -top-1 -right-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <Image
-                  src="/assets/brand/shine.png"
-                  alt=""
-                  width={12}
-                  height={12}
-                  className="animate-pulse"
-                />
-              </div>
-            </div>
-            <div className="flex flex-col">
-              <span className="font-playfair text-xl font-bold text-esmeralda group-hover:text-ouro transition-colors duration-300">
-                Cícero Joias
-              </span>
-              <span className="text-xs text-esmeralda/70 -mt-1">
-                Tradição que se renova
-              </span>
-            </div>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="text-esmeralda hover:text-ouro transition-colors duration-200 font-medium relative group"
-              >
-                {item.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-ouro transition-all duration-300 group-hover:w-full"></span>
-              </Link>
-            ))}
-            {isSignedIn && (
-              <Link
-                href="/dashboard"
-                className="text-esmeralda hover:text-ouro transition-colors duration-200 font-medium flex items-center"
-              >
-                <User className="w-4 h-4 mr-1" />
-                <span>Minha Área</span>
-              </Link>
-            )}
-          </div>
-
-          {/* CTA Button - só mostra se página de orçamento estiver visível */}
-          {isOrcamentoVisible && (
-            <div className="hidden md:flex items-center space-x-3">
+          <div className="flex-shrink-0">
+            <Link href="/" className="flex items-center space-x-2 group">
               <div className="relative">
                 <Image
-                  src="/assets/brand/shine.png"
-                  alt=""
-                  width={16}
-                  height={16}
-                  className="animate-pulse opacity-70"
+                  src="/assets/logos/circle-monogram.png"
+                  alt="Cícero Joias - Monograma"
+                  width={40}
+                  height={40}
+                  className="transition-transform duration-300 group-hover:scale-105"
                 />
+                {/* Shine effect decorativo */}
+                <div className="absolute -top-1 -right-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <Image
+                    src="/assets/brand/shine.png"
+                    alt=""
+                    width={12}
+                    height={12}
+                    className="animate-pulse"
+                  />
+                </div>
               </div>
-              <Button asChild className="bg-ouro text-grafite hover:bg-ouro-light shadow-lg hover:shadow-xl transition-all duration-300 group">
-                <Link href="/orcamento">
-                  Solicitar Orçamento
-                  <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <Image
-                      src="/assets/brand/shine.png"
-                      alt=""
-                      width={12}
-                      height={12}
-                    />
-                  </div>
+              <div className="flex flex-col">
+                <span className="font-playfair text-xl font-bold text-esmeralda group-hover:text-ouro transition-colors duration-300">
+                  Cícero Joias
+                </span>
+                <span className="text-xs text-esmeralda/70 -mt-1">
+                  Tradição que se renova
+                </span>
+              </div>
+            </Link>
+          </div>
+
+          {/* Desktop Navigation - Centralizada */}
+          <div className="flex-1 flex justify-center">
+            <div className="hidden md:flex items-center space-x-8">
+              {!loading && navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="text-esmeralda hover:text-ouro transition-colors duration-200 font-medium relative group"
+                >
+                  {item.name}
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-ouro transition-all duration-300 group-hover:w-full"></span>
                 </Link>
+              ))}
+              {!loading && isSignedIn && (
+                <Link
+                  href="/dashboard"
+                  className="text-esmeralda hover:text-ouro transition-colors duration-200 font-medium flex items-center"
+                >
+                  <User className="w-4 h-4 mr-1" />
+                  <span>Minha Área</span>
+                </Link>
+              )}
+            </div>
+          </div>
+
+          {/* CTA Button e Mobile Button - lado direito */}
+          <div className="flex-shrink-0 flex items-center">
+            {!loading && isOrcamentoVisible && (
+              <div className="hidden md:flex items-center space-x-3 mr-4">
+                <div className="relative">
+                  <Image
+                    src="/assets/brand/shine.png"
+                    alt=""
+                    width={16}
+                    height={16}
+                    className="animate-pulse opacity-70"
+                  />
+                </div>
+                <Button asChild className="bg-ouro text-grafite hover:bg-ouro-light shadow-lg hover:shadow-xl transition-all duration-300 group">
+                  <Link href="/orcamento">
+                    Solicitar Orçamento
+                    <div className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <Image
+                        src="/assets/brand/shine.png"
+                        alt=""
+                        width={12}
+                        height={12}
+                      />
+                    </div>
+                  </Link>
+                </Button>
+              </div>
+            )}
+
+            {/* Mobile menu button */}
+            <div className="md:hidden">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label="Toggle mobile menu"
+                className="text-esmeralda hover:text-ouro hover:bg-marfim-dark"
+              >
+                {mobileMenuOpen ? (
+                  <X className="w-6 h-6" />
+                ) : (
+                  <Menu className="w-6 h-6" />
+                )}
               </Button>
             </div>
-          )}
-
-          {/* Mobile menu button */}
-          <div className="md:hidden">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Toggle mobile menu"
-              className="text-esmeralda hover:text-ouro hover:bg-marfim-dark"
-            >
-              {mobileMenuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
-            </Button>
           </div>
         </nav>
 
@@ -198,7 +204,7 @@ export function Header() {
         {mobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-marfim-dark">
             <div className="flex flex-col space-y-4">
-              {navigation.map((item) => (
+              {!loading && navigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
@@ -208,7 +214,7 @@ export function Header() {
                   {item.name}
                 </Link>
               ))}
-              {isSignedIn && (
+              {!loading && isSignedIn && (
                 <Link
                   href="/dashboard"
                   className="text-esmeralda hover:text-ouro transition-colors font-medium py-2 flex items-center"
@@ -219,7 +225,7 @@ export function Header() {
                 </Link>
               )}
               {/* Botão de orçamento mobile - só mostra se página estiver visível */}
-              {isOrcamentoVisible && (
+              {!loading && isOrcamentoVisible && (
                 <div className="pt-4 border-t border-marfim-dark">
                   <Button asChild className="w-full bg-ouro text-grafite hover:bg-ouro-light">
                     <Link href="/orcamento" onClick={() => setMobileMenuOpen(false)}>
