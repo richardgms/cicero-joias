@@ -223,8 +223,8 @@ export function Footer() {
                 <Clock className="w-5 h-5 text-ouro mt-0.5 flex-shrink-0" />
                 <div>
                   <p className="text-sm text-marfim-dark">
-                    Seg - Sex: 8h às 18h<br />
-                    Sáb: 8h às 16h<br />
+                    Seg - Sex: 10h às 17h<br />
+                    Sáb: 10h às 14h<br />
                     Dom: Fechado
                   </p>
                 </div>
