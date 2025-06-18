@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, ReactElement } from 'react';
+import { ReactNode } from 'react';
 import { usePageVisibility } from '@/hooks/use-page-visibility';
 import { Eye, Shield } from 'lucide-react';
 
@@ -15,10 +15,10 @@ export function PageVisibilityGuard({
   children, 
   fallback 
 }: PageVisibilityGuardProps) {
-  const { isLoading, isVisible, isAdmin, error } = usePageVisibility(pageSlug);
+  const { loading, isVisible, isAdmin, error } = usePageVisibility(pageSlug);
 
   // Loading state
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-marfim via-gray-50 to-esmeralda/5">
         <div className="text-center">
@@ -32,7 +32,7 @@ export function PageVisibilityGuard({
   // Error state (fail-safe: show content)
   if (error) {
     console.error('PageVisibilityGuard error:', error);
-    return <div>{children}</div>;
+    return <div className="w-full">{children}</div>;
   }
 
   // Admin preview mode
@@ -53,18 +53,22 @@ export function PageVisibilityGuard({
             </div>
           </div>
         </div>
-        {children}
+        <div className="w-full">{children}</div>
       </div>
     );
   }
 
   // Page is visible or user is admin
   if (isVisible || isAdmin) {
-    return <div>{children}</div>;
+    return <div className="w-full">{children}</div>;
   }
 
   // Page is hidden - this shouldn't happen due to redirect in hook, but just in case
-  return fallback || (
+  if (fallback) {
+    return <div className="w-full">{fallback}</div>;
+  }
+  
+  return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-marfim via-gray-50 to-esmeralda/5">
       <div className="text-center">
         <Eye className="h-12 w-12 text-gray-400 mx-auto mb-4" />

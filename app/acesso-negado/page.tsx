@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { Shield, ArrowLeft, Home, Eye, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Suspense } from 'react';
 
 // Mapeamento de páginas para títulos amigáveis
 const pageNames: Record<string, string> = {
@@ -11,8 +10,13 @@ const pageNames: Record<string, string> = {
   'orcamento': 'Orçamento'
 };
 
-function AcessoNegadoContent({ searchParams }: { searchParams: { page?: string } }) {
-  const pageSlug = searchParams.page;
+export default async function AcessoNegadoPage({ 
+  searchParams 
+}: { 
+  searchParams: Promise<{ page?: string }> 
+}) {
+  const params = await searchParams;
+  const pageSlug = params.page;
   const pageName = pageSlug ? pageNames[pageSlug] || pageSlug : 'esta página';
 
   return (
@@ -73,21 +77,5 @@ function AcessoNegadoContent({ searchParams }: { searchParams: { page?: string }
         </div>
       </div>
     </div>
-  );
-}
-
-export default function AcessoNegadoPage({ 
-  searchParams 
-}: { 
-  searchParams: { page?: string } 
-}) {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-esmeralda"></div>
-      </div>
-    }>
-      <AcessoNegadoContent searchParams={searchParams} />
-    </Suspense>
   );
 } 
