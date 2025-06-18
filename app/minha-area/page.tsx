@@ -169,10 +169,20 @@ export default function MinhaAreaPage() {
           className="mb-8"
         >
           <div className="flex items-center space-x-4 mb-2">
-            <div className="w-16 h-16 bg-gradient-to-br from-esmeralda to-ouro rounded-full flex items-center justify-center">
-              <span className="text-2xl font-bold text-white">
-                {user.firstName?.charAt(0) || user.emailAddresses[0].emailAddress.charAt(0).toUpperCase()}
-              </span>
+            <div className="w-16 h-16 bg-gradient-to-br from-esmeralda to-ouro rounded-full flex items-center justify-center overflow-hidden">
+              {user.imageUrl ? (
+                <Image
+                  src={user.imageUrl}
+                  alt={user.firstName || 'Usuário'}
+                  width={64}
+                  height={64}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-2xl font-bold text-white">
+                  {user.firstName?.charAt(0) || user.emailAddresses[0].emailAddress.charAt(0).toUpperCase()}
+                </span>
+              )}
             </div>
             <div>
               <h1 className="text-3xl font-bold text-gray-900">
