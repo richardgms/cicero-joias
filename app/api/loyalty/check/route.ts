@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { currentUser } from '@clerk/nextjs';
+import { currentUser } from '@clerk/nextjs/server';
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,7 +16,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'ID do pedido é obrigatório' }, { status: 400 });
     }
 
-    const email = user.emailAddresses[0].emailAddress;
+    const email = user.emailAddresses?.[0]?.emailAddress || user.primaryEmailAddress?.emailAddress;
+    
+    if (!email) {
+      return NextResponse.json({ error: 'Email do usuário não encontrado' }, { status: 400 });
+    }
 
     // Buscar cliente
     const client = await prisma.client.findUnique({

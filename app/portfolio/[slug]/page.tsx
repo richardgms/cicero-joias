@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronLeft, ArrowLeft, ArrowRight, ExternalLink, ZoomIn, Share2, Heart, ChevronRight } from 'lucide-react';
+import { useUser } from '@clerk/nextjs';
 import { Button } from '@/components/ui/button';
 import { useParams, notFound } from 'next/navigation';
 import { generatePortfolioSlug } from '@/lib/slug-utils';
@@ -54,6 +55,7 @@ interface ApiResponse {
 export default function PortfolioItemPage() {
   const params = useParams();
   const slug = params?.slug as string;
+  const { user, isSignedIn, isLoaded } = useUser();
   
   const [portfolioItem, setPortfolioItem] = useState<PortfolioItem | null>(null);
   const [relatedProjects, setRelatedProjects] = useState<RelatedProject[]>([]);
@@ -71,10 +73,14 @@ export default function PortfolioItemPage() {
   }, [slug]);
 
   useEffect(() => {
-    if (portfolioItem) {
-      checkIfFavorited();
+    if (portfolioItem && isLoaded) {
+      if (isSignedIn) {
+        checkIfFavorited();
+      } else {
+        setIsFavorited(false);
+      }
     }
-  }, [portfolioItem]);
+  }, [portfolioItem, isLoaded, isSignedIn]);
 
   const fetchPortfolioItem = async () => {
     setLoading(true);
@@ -149,16 +155,28 @@ export default function PortfolioItemPage() {
       if (response.ok) {
         const data = await response.json();
         const isFav = data.favorites?.some((fav: any) => fav.portfolioItem.id === portfolioItem?.id);
+        console.log('Verificando favorito:', { portfolioId: portfolioItem?.id, isFav, favorites: data.favorites });
         setIsFavorited(isFav || false);
+      } else if (response.status === 401) {
+        // Usuário não logado, não marcar como favorito
+        setIsFavorited(false);
       }
     } catch (error) {
       console.error('Erro ao verificar favorito:', error);
+      setIsFavorited(false);
     }
   };
 
   const toggleFavorite = async () => {
     if (!portfolioItem || isTogglingFavorite) return;
     
+    // Verificar se usuário está logado
+    if (!isSignedIn) {
+      window.location.href = '/sign-in';
+      return;
+    }
+    
+    console.log('Tentando alternar favorito para:', portfolioItem.id);
     setIsTogglingFavorite(true);
     try {
       const response = await fetch('/api/favorites/toggle', {
@@ -173,7 +191,13 @@ export default function PortfolioItemPage() {
 
       if (response.ok) {
         const data = await response.json();
+        console.log('Toggle favorito resultado:', data);
         setIsFavorited(data.isFavorited);
+      } else if (response.status === 401) {
+        // Usuário não logado, redirecionar para login
+        window.location.href = '/sign-in';
+      } else {
+        console.error('Erro na resposta:', response.status);
       }
     } catch (error) {
       console.error('Erro ao alterar favorito:', error);
@@ -282,8 +306,16 @@ export default function PortfolioItemPage() {
                 onClick={toggleFavorite}
                 disabled={isTogglingFavorite}
                 className="text-gray-600 hover:text-ouro disabled:opacity-50"
+                title={isSignedIn ? (isFavorited ? 'Remover dos favoritos' : 'Adicionar aos favoritos') : 'Faça login para favoritar'}
               >
-                <Heart className={`h-4 w-4 ${isFavorited ? 'fill-current text-ouro' : ''} ${isTogglingFavorite ? 'animate-pulse' : ''}`} />
+                <Heart 
+                  className={`h-4 w-4 transition-all duration-200 ${isTogglingFavorite ? 'animate-pulse' : ''}`}
+                  style={{
+                    fill: isFavorited ? '#C79A34' : 'none',
+                    stroke: isFavorited ? '#C79A34' : 'currentColor',
+                    color: isFavorited ? '#C79A34' : 'inherit'
+                  }}
+                />
               </Button>
               <Button
                 variant="ghost"
@@ -297,6 +329,8 @@ export default function PortfolioItemPage() {
           </div>
         </div>
       </div>
+
+
 
       {/* Hero Section */}
       <motion.section 

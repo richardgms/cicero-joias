@@ -11,6 +11,7 @@ import { Heart, Gift, Star, Copy, Calendar, Trophy, Sparkles } from 'lucide-reac
 import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
 import Link from 'next/link';
+import { generatePortfolioSlug } from '@/lib/slug-utils';
 
 interface Coupon {
   id: string;
@@ -348,42 +349,46 @@ export default function MinhaAreaPage() {
                       whileHover={{ scale: 1.05 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <Card className="overflow-hidden">
-                        <div className="relative h-48">
-                          <Image
-                            src={favorite.portfolioItem.mainImage}
-                            alt={favorite.portfolioItem.title}
-                            fill
-                            className="object-cover"
-                          />
-                          <div className="absolute top-2 right-2">
-                            <div className="bg-white/90 backdrop-blur-sm rounded-full p-2">
-                              <Heart className="w-4 h-4 text-red-500 fill-current" />
+                      <Link href={`/portfolio/${generatePortfolioSlug({
+                        title: favorite.portfolioItem.title,
+                        category: favorite.portfolioItem.category,
+                        id: favorite.portfolioItem.id
+                      })}`}>
+                        <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
+                          <div className="relative h-48">
+                            <Image
+                              src={favorite.portfolioItem.mainImage}
+                              alt={favorite.portfolioItem.title}
+                              fill
+                              className="object-cover"
+                            />
+                            <div className="absolute top-2 right-2">
+                              <div className="bg-white/90 backdrop-blur-sm rounded-full p-2">
+                                <Heart className="w-4 h-4 text-red-500 fill-current" />
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <CardContent className="p-4">
-                          <Badge variant="outline" className="mb-2">
-                            {categoryLabels[favorite.portfolioItem.category as keyof typeof categoryLabels] || favorite.portfolioItem.category}
-                          </Badge>
-                          <h3 className="font-semibold text-gray-900 mb-2">
-                            {favorite.portfolioItem.title}
-                          </h3>
-                          <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-                            {favorite.portfolioItem.description}
-                          </p>
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs text-gray-500">
-                              Favoritado em {formatDate(favorite.createdAt)}
-                            </span>
-                            <Button variant="ghost" size="sm" asChild>
-                              <Link href={`/portfolio/${favorite.portfolioItem.id}`}>
-                                Ver Projeto
-                              </Link>
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
+                          <CardContent className="p-4">
+                            <Badge variant="outline" className="mb-2">
+                              {categoryLabels[favorite.portfolioItem.category as keyof typeof categoryLabels] || favorite.portfolioItem.category}
+                            </Badge>
+                            <h3 className="font-semibold text-gray-900 mb-2">
+                              {favorite.portfolioItem.title}
+                            </h3>
+                            <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                              {favorite.portfolioItem.description}
+                            </p>
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs text-gray-500">
+                                Favoritado em {formatDate(favorite.createdAt)}
+                              </span>
+                              <span className="text-xs text-esmeralda font-medium">
+                                Ver Projeto →
+                              </span>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </Link>
                     </motion.div>
                   ))
                 )}
