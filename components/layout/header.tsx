@@ -111,12 +111,6 @@ export function Header() {
                   </div>
                   <span className="font-medium hover:text-ouro transition-colors">contato@cicerojoias.com.br</span>
                 </div>
-
-                {/* Business Hours */}
-                <div className="flex items-center space-x-2 border-l border-marfim/20 pl-4">
-                  <Clock className="w-4 h-4" />
-                  <span className="text-sm">Seg-Sex: 8h-18h | Sáb: 8h-12h</span>
-                </div>
               </div>
 
               {/* Center - Features */}
