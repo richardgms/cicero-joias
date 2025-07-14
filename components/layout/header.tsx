@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, X, Gem, Phone, Mail, User } from 'lucide-react';
+import { Menu, X, Gem, Phone, Mail, User, Clock, Shield, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { HeaderAuth } from './header-auth';
@@ -72,23 +72,104 @@ export function Header() {
           : 'bg-transparent'
       )}
     >
-      {/* Top bar with contact info */}
-      <div className="bg-esmeralda text-marfim py-2 px-4 text-sm">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2">
-              <Phone className="w-4 h-4" />
-              <span>(83) 98807-3784</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Mail className="w-4 h-4" />
-              <span>contato@cicerojoias.com.br</span>
-            </div>
-          </div>
-          <div className="hidden md:flex items-center space-x-4">
-            <HeaderAuth />
+      {/* Enhanced Top bar with contact info and features */}
+      <div className="relative bg-gradient-to-r from-esmeralda via-esmeralda-dark to-esmeralda text-marfim overflow-hidden">
+        {/* Decorative Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="flex space-x-8 animate-pulse">
+            {[...Array(10)].map((_, i) => (
+              <div
+                key={i}
+                className="w-1 h-full bg-ouro transform rotate-12"
+                style={{ animationDelay: `${i * 0.1}s` }}
+              />
+            ))}
           </div>
         </div>
+
+        {/* Content */}
+        <div className="relative z-10 py-2 md:py-3 px-4">
+          <div className="max-w-7xl mx-auto">
+            {/* Desktop Layout */}
+            <div className="hidden md:flex justify-between items-center">
+              {/* Left Side - Contact & Hours */}
+              <div className="flex items-center space-x-6">
+                {/* Phone */}
+                <div className="flex items-center space-x-2 group">
+                  <div className="relative">
+                    <Phone className="w-4 h-4 transition-transform group-hover:scale-110" />
+                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-ouro rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </div>
+                  <span className="font-medium hover:text-ouro transition-colors">(83) 98807-3784</span>
+                </div>
+
+                {/* Email */}
+                <div className="flex items-center space-x-2 group">
+                  <div className="relative">
+                    <Mail className="w-4 h-4 transition-transform group-hover:scale-110" />
+                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-ouro rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </div>
+                  <span className="font-medium hover:text-ouro transition-colors">contato@cicerojoias.com.br</span>
+                </div>
+
+                {/* Business Hours */}
+                <div className="flex items-center space-x-2 border-l border-marfim/20 pl-4">
+                  <Clock className="w-4 h-4" />
+                  <span className="text-sm">Seg-Sex: 8h-18h | Sáb: 8h-12h</span>
+                </div>
+              </div>
+
+              {/* Center - Features */}
+              <div className="flex items-center space-x-6 text-xs">
+                <div className="flex items-center space-x-1 bg-marfim/10 px-3 py-1 rounded-full">
+                  <Shield className="w-3 h-3 text-ouro" />
+                  <span>Garantia Total</span>
+                </div>
+                <div className="flex items-center space-x-1 bg-marfim/10 px-3 py-1 rounded-full">
+                  <Gem className="w-3 h-3 text-ouro" />
+                  <span>40+ Anos</span>
+                </div>
+                <div className="flex items-center space-x-1 bg-marfim/10 px-3 py-1 rounded-full">
+                  <Star className="w-3 h-3 text-ouro" />
+                  <span>Atendimento VIP</span>
+                </div>
+              </div>
+
+              {/* Right Side - Auth */}
+              <div className="flex items-center space-x-4">
+                <HeaderAuth />
+              </div>
+            </div>
+
+            {/* Mobile Layout - Compact */}
+            <div className="md:hidden">
+              <div className="flex items-center justify-between">
+                {/* Left - Contact (simplified) */}
+                <div className="flex items-center space-x-3 text-xs">
+                  <div className="flex items-center space-x-1">
+                    <Phone className="w-3 h-3" />
+                    <span>(83) 98807-3784</span>
+                  </div>
+                </div>
+
+                {/* Right - Key Features (compact) */}
+                <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-1 bg-marfim/10 px-2 py-0.5 rounded-full">
+                    <Gem className="w-3 h-3 text-ouro" />
+                    <span className="text-xs">40+ Anos</span>
+                  </div>
+                  <div className="flex items-center space-x-1 bg-marfim/10 px-2 py-0.5 rounded-full">
+                    <Shield className="w-3 h-3 text-ouro" />
+                    <span className="text-xs">Garantia</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom border with shine effect */}
+        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-ouro to-transparent opacity-50" />
       </div>
 
       {/* Main navigation */}
