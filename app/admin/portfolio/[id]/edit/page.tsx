@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
 import {
   Select,
   SelectContent,
@@ -43,12 +44,12 @@ interface FormData {
   title: string;
   description: string;
   detailedDescription: string;
-  category: string;
+  category: 'WEDDING_RINGS' | 'REPAIRS_BEFORE_AFTER' | 'GOLD_PLATING' | 'CUSTOM_JEWELRY' | 'GRADUATION_RINGS' | '';
   customCategory: string;
   mainImage: string;
   images: string[];
   isActive: boolean;
-  status: string;
+  status: 'DRAFT' | 'PUBLISHED' | 'FEATURED';
   order: number;
   specifications: Specification[];
   seoTitle: string;
@@ -64,6 +65,8 @@ export default function EditPortfolioPage() {
   
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const { toast } = useToast();
   const [formData, setFormData] = useState<FormData>({
     title: '',
     description: '',
@@ -122,12 +125,20 @@ export default function EditPortfolioPage() {
           relatedProjects: item.relatedProjects || [],
         });
       } else {
-        alert('Erro ao carregar projeto');
+        toast({
+          title: "Erro ao carregar projeto",
+          description: "Não foi possível carregar os dados do projeto.",
+          variant: "destructive",
+        });
         router.push('/admin/portfolio');
       }
     } catch (error) {
       console.error('Erro ao carregar projeto:', error);
-      alert('Erro ao carregar projeto');
+      toast({
+        title: "Erro de conexão",
+        description: "Não foi possível conectar com o servidor.",
+        variant: "destructive",
+      });
       router.push('/admin/portfolio');
     } finally {
       setInitialLoading(false);
@@ -138,7 +149,11 @@ export default function EditPortfolioPage() {
     e.preventDefault();
     
     if (!formData.title || !formData.category || !formData.mainImage) {
-      alert('Por favor, preencha todos os campos obrigatórios');
+      toast({
+        title: "Campos obrigatórios",
+        description: "Por favor, preencha o título, categoria e imagem principal.",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -167,14 +182,28 @@ export default function EditPortfolioPage() {
       });
 
       if (response.ok) {
+        toast({
+          title: "Projeto atualizado!",
+          description: "O projeto foi atualizado com sucesso.",
+        });
         router.push('/admin/portfolio');
       } else {
         const error = await response.json();
-        alert(`Erro ao atualizar projeto: ${error.error}`);
+        toast({
+          title: "Erro ao atualizar projeto",
+          description: error.details ? 
+            `Problemas de validação: ${error.details.map((d: any) => d.message).join(', ')}` : 
+            error.error || "Erro desconhecido",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error('Erro ao atualizar projeto:', error);
-      alert('Erro ao atualizar projeto');
+      toast({
+        title: "Erro de conexão",
+        description: "Não foi possível conectar com o servidor. Tente novamente.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -183,6 +212,27 @@ export default function EditPortfolioPage() {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, isMain = false) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    // Validação de arquivo
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Arquivo inválido",
+        description: "Por favor, selecione apenas arquivos de imagem.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) { // 5MB
+      toast({
+        title: "Arquivo muito grande",
+        description: "A imagem deve ter no máximo 5MB.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setUploadingImage(true);
 
     const reader = new FileReader();
     reader.onload = (event) => {
@@ -196,7 +246,23 @@ export default function EditPortfolioPage() {
           images: [...prev.images, result] 
         }));
       }
+      
+      setUploadingImage(false);
+      toast({
+        title: "Imagem carregada",
+        description: `Imagem ${isMain ? 'principal' : 'adicional'} carregada com sucesso.`,
+      });
     };
+    
+    reader.onerror = () => {
+      setUploadingImage(false);
+      toast({
+        title: "Erro no upload",
+        description: "Não foi possível carregar a imagem. Tente novamente.",
+        variant: "destructive",
+      });
+    };
+    
     reader.readAsDataURL(file);
   };
 
@@ -323,7 +389,7 @@ export default function EditPortfolioPage() {
                     <Label htmlFor="category">Categoria *</Label>
                     <Select 
                       value={formData.category} 
-                      onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
+                      onValueChange={(value) => setFormData(prev => ({ ...prev, category: value as FormData['category'] }))}
                       required
                     >
                       <SelectTrigger>
@@ -569,7 +635,7 @@ export default function EditPortfolioPage() {
                   <Label htmlFor="status">Status</Label>
                   <Select 
                     value={formData.status} 
-                    onValueChange={(value) => setFormData(prev => ({ ...prev, status: value }))}
+                    onValueChange={(value) => setFormData(prev => ({ ...prev, status: value as FormData['status'] }))}
                   >
                     <SelectTrigger>
                       <SelectValue />

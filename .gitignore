@@ -13,7 +13,8 @@ node_modules/
 out/
 
 # Env
-
+.env
+.env.local
 
 # Misc
 .DS_Store

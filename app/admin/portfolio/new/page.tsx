@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
 import {
   Select,
   SelectContent,
@@ -42,12 +43,12 @@ interface FormData {
   title: string;
   description: string;
   detailedDescription: string;
-  category: string;
+  category: 'WEDDING_RINGS' | 'REPAIRS_BEFORE_AFTER' | 'GOLD_PLATING' | 'CUSTOM_JEWELRY' | 'GRADUATION_RINGS' | '';
   customCategory: string;
   mainImage: string;
   images: string[];
   isActive: boolean;
-  status: string;
+  status: 'DRAFT' | 'PUBLISHED' | 'FEATURED';
   order: number;
   specifications: Specification[];
   seoTitle: string;
@@ -59,6 +60,9 @@ interface FormData {
 export default function NewPortfolioPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const { toast } = useToast();
   const [formData, setFormData] = useState<FormData>({
     title: '',
     description: '',
@@ -78,11 +82,63 @@ export default function NewPortfolioPage() {
   });
   const [newKeyword, setNewKeyword] = useState('');
 
+  // Validação em tempo real
+  const validateField = (field: keyof FormData, value: any) => {
+    const newErrors = { ...errors };
+    
+    switch (field) {
+      case 'title':
+        if (!value.trim()) {
+          newErrors.title = 'Título é obrigatório';
+        } else if (value.length > 255) {
+          newErrors.title = 'Título muito longo (máx 255 caracteres)';
+        } else {
+          delete newErrors.title;
+        }
+        break;
+      case 'category':
+        if (!value) {
+          newErrors.category = 'Categoria é obrigatória';
+        } else {
+          delete newErrors.category;
+        }
+        break;
+      case 'mainImage':
+        if (!value) {
+          newErrors.mainImage = 'Imagem principal é obrigatória';
+        } else {
+          delete newErrors.mainImage;
+        }
+        break;
+      case 'seoTitle':
+        if (value && value.length > 60) {
+          newErrors.seoTitle = 'Título SEO deve ter no máximo 60 caracteres';
+        } else {
+          delete newErrors.seoTitle;
+        }
+        break;
+      case 'seoDescription':
+        if (value && value.length > 160) {
+          newErrors.seoDescription = 'Descrição SEO deve ter no máximo 160 caracteres';
+        } else {
+          delete newErrors.seoDescription;
+        }
+        break;
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.title || !formData.category || !formData.mainImage) {
-      alert('Por favor, preencha todos os campos obrigatórios');
+      toast({
+        title: "Campos obrigatórios",
+        description: "Por favor, preencha o título, categoria e imagem principal.",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -97,8 +153,14 @@ export default function NewPortfolioPage() {
         return acc;
       }, {} as Record<string, string>);
 
+      // Preparar payload com conversão de strings vazias para null
       const payload = {
         ...formData,
+        description: formData.description.trim() || null,
+        detailedDescription: formData.detailedDescription.trim() || null,
+        customCategory: formData.customCategory.trim() || null,
+        seoTitle: formData.seoTitle.trim() || null,
+        seoDescription: formData.seoDescription.trim() || null,
         specifications: Object.keys(specifications).length > 0 ? specifications : null,
       };
 
@@ -107,18 +169,33 @@ export default function NewPortfolioPage() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify(payload),
       });
 
       if (response.ok) {
+        toast({
+          title: "Projeto criado!",
+          description: "O projeto foi adicionado ao portfólio com sucesso.",
+        });
         router.push('/admin/portfolio');
       } else {
         const error = await response.json();
-        alert(`Erro ao criar projeto: ${error.error}`);
+        toast({
+          title: "Erro ao criar projeto",
+          description: error.details ? 
+            `Problemas de validação: ${error.details.map((d: any) => d.message).join(', ')}` : 
+            error.error || "Erro desconhecido",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error('Erro ao criar projeto:', error);
-      alert('Erro ao criar projeto');
+      toast({
+        title: "Erro de conexão",
+        description: "Não foi possível conectar com o servidor. Tente novamente.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -128,6 +205,27 @@ export default function NewPortfolioPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Validação de arquivo
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Arquivo inválido",
+        description: "Por favor, selecione apenas arquivos de imagem.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) { // 5MB
+      toast({
+        title: "Arquivo muito grande",
+        description: "A imagem deve ter no máximo 5MB.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setUploadingImage(true);
+
     // Simular upload - em produção usar UploadThing ou similar
     const reader = new FileReader();
     reader.onload = (event) => {
@@ -135,13 +233,30 @@ export default function NewPortfolioPage() {
       
       if (isMain) {
         setFormData(prev => ({ ...prev, mainImage: result }));
+        validateField('mainImage', result);
       } else {
         setFormData(prev => ({ 
           ...prev, 
           images: [...prev.images, result] 
         }));
       }
+      
+      setUploadingImage(false);
+      toast({
+        title: "Imagem carregada",
+        description: `Imagem ${isMain ? 'principal' : 'adicional'} carregada com sucesso.`,
+      });
     };
+    
+    reader.onerror = () => {
+      setUploadingImage(false);
+      toast({
+        title: "Erro no upload",
+        description: "Não foi possível carregar a imagem. Tente novamente.",
+        variant: "destructive",
+      });
+    };
+    
     reader.readAsDataURL(file);
   };
 
@@ -224,10 +339,18 @@ export default function NewPortfolioPage() {
                   <Input
                     id="title"
                     value={formData.title}
-                    onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setFormData(prev => ({ ...prev, title: value }));
+                      validateField('title', value);
+                    }}
                     placeholder="Nome do projeto"
+                    className={errors.title ? 'border-red-500' : ''}
                     required
                   />
+                  {errors.title && (
+                    <p className="text-sm text-red-500 mt-1">{errors.title}</p>
+                  )}
                 </div>
 
                 <div>
@@ -257,10 +380,13 @@ export default function NewPortfolioPage() {
                     <Label htmlFor="category">Categoria *</Label>
                     <Select 
                       value={formData.category} 
-                      onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
+                      onValueChange={(value) => {
+                        setFormData(prev => ({ ...prev, category: value as FormData['category'] }));
+                        validateField('category', value);
+                      }}
                       required
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className={errors.category ? 'border-red-500' : ''}>
                         <SelectValue placeholder="Selecione uma categoria" />
                       </SelectTrigger>
                       <SelectContent>
@@ -269,6 +395,9 @@ export default function NewPortfolioPage() {
                         ))}
                       </SelectContent>
                     </Select>
+                    {errors.category && (
+                      <p className="text-sm text-red-500 mt-1">{errors.category}</p>
+                    )}
                   </div>
 
                   <div>
@@ -415,6 +544,9 @@ export default function NewPortfolioPage() {
                 {/* Main Image */}
                 <div>
                   <Label>Imagem Principal *</Label>
+                  {errors.mainImage && (
+                    <p className="text-sm text-red-500 mt-1">{errors.mainImage}</p>
+                  )}
                   <div className="mt-2">
                     {formData.mainImage ? (
                       <div className="relative w-full h-48 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden">
@@ -422,6 +554,11 @@ export default function NewPortfolioPage() {
                           src={formData.mainImage}
                           alt="Imagem principal"
                           className="w-full h-full object-cover"
+                          loading="lazy"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = '/assets/images/placeholder-jewelry.svg';
+                          }}
                         />
                         <Button
                           type="button"
@@ -434,18 +571,28 @@ export default function NewPortfolioPage() {
                         </Button>
                       </div>
                     ) : (
-                      <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                      <label className={`flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 border-dashed rounded-lg ${uploadingImage ? 'cursor-not-allowed opacity-50' : 'cursor-pointer bg-gray-50 hover:bg-gray-100'}`}>
                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                          <Upload className="w-8 h-8 mb-4 text-gray-500" />
-                          <p className="mb-2 text-sm text-gray-500">
-                            <span className="font-semibold">Clique para fazer upload</span>
-                          </p>
-                          <p className="text-xs text-gray-500">PNG, JPG ou JPEG</p>
+                          {uploadingImage ? (
+                            <>
+                              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-500 mb-4"></div>
+                              <p className="mb-2 text-sm text-gray-500">Carregando imagem...</p>
+                            </>
+                          ) : (
+                            <>
+                              <Upload className="w-8 h-8 mb-4 text-gray-500" />
+                              <p className="mb-2 text-sm text-gray-500">
+                                <span className="font-semibold">Clique para fazer upload</span>
+                              </p>
+                              <p className="text-xs text-gray-500">PNG, JPG ou JPEG (máx 5MB)</p>
+                            </>
+                          )}
                         </div>
                         <input
                           type="file"
                           className="hidden"
                           accept="image/*"
+                          disabled={uploadingImage}
                           onChange={(e) => handleImageUpload(e, true)}
                         />
                       </label>
@@ -463,6 +610,11 @@ export default function NewPortfolioPage() {
                           src={image}
                           alt={`Imagem ${index + 1}`}
                           className="w-full h-24 object-cover rounded-lg"
+                          loading="lazy"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = '/assets/images/placeholder-jewelry.svg';
+                          }}
                         />
                         <Button
                           type="button"
@@ -503,7 +655,7 @@ export default function NewPortfolioPage() {
                   <Label htmlFor="status">Status</Label>
                   <Select 
                     value={formData.status} 
-                    onValueChange={(value) => setFormData(prev => ({ ...prev, status: value }))}
+                    onValueChange={(value) => setFormData(prev => ({ ...prev, status: value as FormData['status'] }))}
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -534,11 +686,16 @@ export default function NewPortfolioPage() {
                 <CardTitle>Ações</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button type="submit" className="w-full" disabled={loading || uploadingImage}>
                   {loading ? (
                     <div className="flex items-center">
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Salvando...
+                      Salvando projeto...
+                    </div>
+                  ) : uploadingImage ? (
+                    <div className="flex items-center">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Aguarde o upload...
                     </div>
                   ) : (
                     <>

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
+import { auth, clerkClient } from '@clerk/nextjs/server';
 import prisma from '@/lib/prisma';
 import { z } from 'zod';
 
@@ -28,7 +28,6 @@ async function checkAdminAuth() {
   }
 
   try {
-    const { clerkClient } = await import('@clerk/nextjs/server');
     const client = await clerkClient();
     const user = await client.users.getUser(userId);
     const userRole = (user.publicMetadata?.role as string)?.toLowerCase();

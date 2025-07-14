@@ -1,47 +1,43 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
+import { auth, clerkClient } from '@clerk/nextjs/server';
 import prisma from '@/lib/prisma';
 import { z } from 'zod';
+import { checkAdminAuth } from "@/lib/check-admin";
 
 // Schema de validação para criação de item do portfólio
 const createPortfolioSchema = z.object({
-  title: z.string().min(1, 'Título é obrigatório'),
-  description: z.string().optional(),
-  detailedDescription: z.string().optional(),
-  category: z.enum(['WEDDING_RINGS', 'REPAIRS_BEFORE_AFTER', 'GOLD_PLATING', 'CUSTOM_JEWELRY', 'GRADUATION_RINGS']),
-  customCategory: z.string().optional(),
+  title: z.string().min(1, 'Título é obrigatório').max(255, 'Título muito longo'),
+  description: z.string().optional().nullable(),
+  detailedDescription: z.string().optional().nullable(),
+  category: z.enum(['WEDDING_RINGS', 'REPAIRS_BEFORE_AFTER', 'GOLD_PLATING', 'CUSTOM_JEWELRY', 'GRADUATION_RINGS'], {
+    errorMap: () => ({ message: 'Categoria inválida' })
+  }),
+  customCategory: z.string().optional().nullable(),
   mainImage: z.string().min(1, 'Imagem principal é obrigatória'),
   images: z.array(z.string()).default([]),
   isActive: z.boolean().default(true),
-  status: z.enum(['DRAFT', 'PUBLISHED', 'FEATURED']).default('DRAFT'),
-  order: z.number().default(0),
+  status: z.string().regex(/^(DRAFT|PUBLISHED|FEATURED)$/, 'Status inválido').default('DRAFT'),
+  order: z.number().int('Ordem deve ser um número inteiro').min(0, 'Ordem não pode ser negativa').default(0),
   specifications: z.record(z.string()).optional().nullable(),
-  seoTitle: z.string().optional(),
-  seoDescription: z.string().optional(),
-  keywords: z.array(z.string()).default([]),
-  relatedProjects: z.array(z.string()).default([]),
-  productId: z.string().optional(),
+  seoTitle: z.string().optional().nullable().refine((val) => !val || val.length <= 60, {
+    message: 'Título SEO deve ter no máximo 60 caracteres'
+  }),
+  seoDescription: z.string().optional().nullable().refine((val) => !val || val.length <= 160, {
+    message: 'Descrição SEO deve ter no máximo 160 caracteres'
+  }),
+  keywords: z.array(z.string().min(1, 'Palavra-chave não pode estar vazia')).default([]),
+  relatedProjects: z.array(z.string().min(1, 'ID do projeto relacionado inválido')).default([]),
+  productId: z.string().optional().nullable(),
 });
 
 // GET /api/admin/portfolio - Listar itens do portfólio
 export async function GET() {
+  const authResult = await checkAdminAuth();
+  if ("error" in authResult) {
+    return NextResponse.json({ error: authResult.error }, { status: authResult.status });
+  }
+  const { userId } = authResult;
   try {
-    const { userId } = await auth();
-
-    if (!userId) {
-      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
-    }
-
-    // Verificar se é admin
-    const { clerkClient } = await import('@clerk/nextjs/server');
-    const client = await clerkClient();
-    const user = await client.users.getUser(userId);
-    const userRole = (user.publicMetadata?.role as string)?.toLowerCase();
-
-    if (userRole !== 'admin') {
-      return NextResponse.json({ error: 'Acesso negado' }, { status: 403 });
-    }
-
     // Buscar itens do portfólio
     const portfolioItems = await prisma.portfolioItem.findMany({
       include: {
@@ -70,23 +66,12 @@ export async function GET() {
 
 // POST /api/admin/portfolio - Criar item do portfólio
 export async function POST(request: Request) {
+  const authResult = await checkAdminAuth();
+  if ("error" in authResult) {
+    return NextResponse.json({ error: authResult.error }, { status: authResult.status });
+  }
+  const { userId } = authResult;
   try {
-    const { userId } = await auth();
-
-    if (!userId) {
-      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
-    }
-
-    // Verificar se é admin
-    const { clerkClient } = await import('@clerk/nextjs/server');
-    const client = await clerkClient();
-    const user = await client.users.getUser(userId);
-    const userRole = (user.publicMetadata?.role as string)?.toLowerCase();
-
-    if (userRole !== 'admin') {
-      return NextResponse.json({ error: 'Acesso negado' }, { status: 403 });
-    }
-
     const body = await request.json();
     const validatedData = createPortfolioSchema.parse(body);
 
@@ -125,16 +110,37 @@ export async function POST(request: Request) {
     return NextResponse.json({ portfolioItem }, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
+      console.error('Erro de validação ao criar portfolio:', {
+        userId,
+        errors: error.errors,
+        timestamp: new Date().toISOString(),
+      });
       return NextResponse.json(
         { error: 'Dados inválidos', details: error.errors },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    console.error('Erro ao criar item do portfólio:', error);
+    console.error('Erro ao criar item do portfólio:', {
+      error: error instanceof Error ? {
+        message: error.message,
+        stack: error.stack,
+        name: error.name,
+      } : error,
+      userId,
+      timestamp: new Date().toISOString(),
+    });
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
-      { status: 500 }
+      { status: 500 },
     );
   }
-} 
+}
+
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '16mb',
+    },
+  },
+}; 

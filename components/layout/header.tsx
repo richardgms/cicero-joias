@@ -136,7 +136,7 @@ export function Header() {
               </div>
 
               {/* Right Side - Auth */}
-              <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4">
                 <HeaderAuth />
               </div>
             </div>
@@ -153,7 +153,7 @@ export function Header() {
                 </div>
 
                 {/* Right - Key Features (compact) */}
-                <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2">
                   <div className="flex items-center space-x-1 bg-marfim/10 px-2 py-0.5 rounded-full">
                     <Gem className="w-3 h-3 text-ouro" />
                     <span className="text-xs">40+ Anos</span>

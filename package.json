@@ -7,10 +7,11 @@
     "build": "next build",
     "build:prod": "prisma generate && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "analyze": "cross-env ANALYZE=true npm run build"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.21.0",
+    "@clerk/nextjs": "^6.25.0",
     "@hookform/resolvers": "^3.9.0",
     "@next/swc-wasm-nodejs": "13.5.1",
     "@prisma/client": "^5.22.0",
@@ -45,20 +46,20 @@
     "@tanstack/react-query-devtools": "^5.80.6",
     "@tanstack/react-table": "^8.21.3",
     "@types/node": "20.6.2",
+    "@uploadthing/react": "^7.3.2",
     "autoprefixer": "10.4.15",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "1.1.1",
     "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.6.0",
-    "eslint": "8.49.0",
     "eslint-config-next": "15.3.3",
     "framer-motion": "^12.16.0",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.446.0",
     "next": "15.3.3",
     "next-themes": "^0.3.0",
-    "postcss": "8.4.30",
+    "postcss": "^8.5.6",
     "prisma": "^5.7.1",
     "react": "18.2.0",
     "react-countup": "^6.5.3",
@@ -75,13 +76,17 @@
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "5.2.2",
+    "uploadthing": "^7.7.3",
     "vaul": "^0.9.9",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@netlify/plugin-nextjs": "^5.11.3",
+    "@next/bundle-analyzer": "^15.3.5",
     "@types/node": "20.6.2",
     "@types/react": "18.2.0",
-    "@types/react-dom": "18.2.0"
+    "@types/react-dom": "18.2.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.57.0"
   }
 }
