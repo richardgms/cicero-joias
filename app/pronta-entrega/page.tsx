@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -84,7 +84,7 @@ function ProntaEntregaContent() {
 
   useEffect(() => {
     fetchProducts();
-  }, [categoryFilter, materialFilter, stockFilter, sortBy, currentPage]);
+  }, [categoryFilter, materialFilter, stockFilter, sortBy, currentPage, fetchProducts]);
 
   useEffect(() => {
     fetchCategories();
@@ -104,7 +104,7 @@ function ProntaEntregaContent() {
     }
   };
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams({
@@ -182,7 +182,7 @@ function ProntaEntregaContent() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [categoryFilter, materialFilter, stockFilter, sortBy, currentPage, priceRange]);
 
   // Filtrar produtos baseado na busca local
   const filteredProducts = products.filter(product =>

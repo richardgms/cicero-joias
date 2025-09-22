@@ -136,9 +136,9 @@ export function LazyImage({
         />
       )}
       {fill ? (
-        <Image fill {...imageProps} />
+        <Image fill alt={alt || ""} {...imageProps} />
       ) : (
-        <Image {...imageProps} />
+        <Image alt={alt || ""} {...imageProps} />
       )}
     </div>
   );

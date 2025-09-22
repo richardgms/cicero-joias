@@ -259,7 +259,7 @@ export default function PageVisibilityPage() {
                           )}
                           {log.changeReason && (
                             <div className="mt-1 italic">
-                              "{log.changeReason}"
+                              &quot;{log.changeReason}&quot;
                             </div>
                           )}
                         </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
@@ -72,9 +72,9 @@ export default function EditProductPage() {
     if (productId) {
       fetchProduct();
     }
-  }, [productId]);
+  }, [productId, fetchProduct]);
 
-  const fetchProduct = async () => {
+  const fetchProduct = useCallback(async () => {
     try {
       const response = await fetch(`/api/admin/products/${productId}`);
       if (response.ok) {
@@ -107,7 +107,7 @@ export default function EditProductPage() {
     } finally {
       setInitialLoading(false);
     }
-  };
+  }, [productId, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
@@ -90,9 +90,9 @@ export default function EditPortfolioPage() {
     if (portfolioId) {
       fetchPortfolioItem();
     }
-  }, [portfolioId]);
+  }, [portfolioId, fetchPortfolioItem]);
 
-  const fetchPortfolioItem = async () => {
+  const fetchPortfolioItem = useCallback(async () => {
     try {
       const response = await fetch(`/api/admin/portfolio/${portfolioId}`);
       if (response.ok) {
@@ -143,7 +143,7 @@ export default function EditPortfolioPage() {
     } finally {
       setInitialLoading(false);
     }
-  };
+  }, [portfolioId, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

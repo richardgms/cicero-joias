@@ -4,8 +4,8 @@ import prisma from '@/lib/prisma';
 import { z } from 'zod';
 import { checkAdminAuth } from "@/lib/check-admin";
 
-// Schema de validação para criação de item do portfólio
-const createPortfolioSchema = z.object({
+// Schema corrigido para debug
+const debugPortfolioSchema = z.object({
   title: z.string().min(1, 'Título é obrigatório').max(255, 'Título muito longo'),
   description: z.string().optional().nullable(),
   detailedDescription: z.string().optional().nullable(),
@@ -25,55 +25,26 @@ const createPortfolioSchema = z.object({
   seoDescription: z.string().optional().nullable().refine((val) => !val || val.length <= 160, {
     message: 'Descrição SEO deve ter no máximo 160 caracteres'
   }),
-  keywords: z.array(z.string()).default([]),
-  relatedProjects: z.array(z.string()).default([]),
+  keywords: z.array(z.string()).default([]), // Removido .min(1) que causava erro com array vazio
+  relatedProjects: z.array(z.string()).default([]), // Removido .min(1) que causava erro com array vazio
   productId: z.string().optional().nullable(),
 });
 
-// GET /api/admin/portfolio - Listar itens do portfólio
-export async function GET() {
-  const authResult = await checkAdminAuth();
-  if ("error" in authResult) {
-    return NextResponse.json({ error: authResult.error }, { status: authResult.status });
-  }
-  const { userId } = authResult;
-  try {
-    // Buscar itens do portfólio
-    const portfolioItems = await prisma.portfolioItem.findMany({
-      include: {
-        product: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-      orderBy: [
-        { order: 'asc' },
-        { createdAt: 'desc' },
-      ],
-    });
-
-    return NextResponse.json({ portfolioItems });
-  } catch (error) {
-    console.error('Erro ao buscar portfólio:', error);
-    return NextResponse.json(
-      { error: 'Erro interno do servidor' },
-      { status: 500 }
-    );
-  }
-}
-
-// POST /api/admin/portfolio - Criar item do portfólio
+// POST de debug para testar validação
 export async function POST(request: Request) {
   const authResult = await checkAdminAuth();
   if ("error" in authResult) {
     return NextResponse.json({ error: authResult.error }, { status: authResult.status });
   }
   const { userId } = authResult;
+
   try {
     const body = await request.json();
-    const validatedData = createPortfolioSchema.parse(body);
+    console.log('Dados recebidos:', body);
+
+    // Testar validação
+    const validatedData = debugPortfolioSchema.parse(body);
+    console.log('Dados validados:', validatedData);
 
     // Preparar dados para o Prisma
     const createData = {
@@ -82,6 +53,8 @@ export async function POST(request: Request) {
         specifications: validatedData.specifications as any,
       }),
     };
+
+    console.log('Dados para criação:', createData);
 
     // Criar item do portfólio
     const portfolioItem = await prisma.portfolioItem.create({
@@ -96,21 +69,28 @@ export async function POST(request: Request) {
       },
     });
 
+    console.log('Item criado:', portfolioItem);
+
     // Log da atividade
     await prisma.activityLog.create({
       data: {
         action: 'CREATE',
         entity: 'PortfolioItem',
         entityId: portfolioItem.id,
-        description: `Item "${portfolioItem.title}" criado no portfólio`,
+        description: `Item "${portfolioItem.title}" criado no portfólio (DEBUG)`,
         userId,
       },
     });
 
-    return NextResponse.json({ portfolioItem }, { status: 201 });
+    return NextResponse.json({
+      success: true,
+      portfolioItem,
+      message: 'Item criado com sucesso via debug API'
+    }, { status: 201 });
+
   } catch (error) {
     if (error instanceof z.ZodError) {
-      console.error('Erro de validação ao criar portfolio:', {
+      console.error('Erro de validação (DEBUG):', {
         userId,
         errors: error.errors,
         timestamp: new Date().toISOString(),
@@ -121,7 +101,7 @@ export async function POST(request: Request) {
       );
     }
 
-    console.error('Erro ao criar item do portfólio:', {
+    console.error('Erro ao criar item do portfólio (DEBUG):', {
       error: error instanceof Error ? {
         message: error.message,
         stack: error.stack,
@@ -131,16 +111,8 @@ export async function POST(request: Request) {
       timestamp: new Date().toISOString(),
     });
     return NextResponse.json(
-      { error: 'Erro interno do servidor' },
+      { error: 'Erro interno do servidor', details: error instanceof Error ? error.message : 'Erro desconhecido' },
       { status: 500 },
     );
   }
 }
-
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '16mb',
-    },
-  },
-}; 
