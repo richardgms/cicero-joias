@@ -1,95 +1,170 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { Sparkles, Calendar, MessageCircle, ArrowRight, ShieldCheck, Gem } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { MessageCircle, Calendar, ArrowRight } from 'lucide-react';
+import { AnimatedSection } from '@/components/ui/animated-section';
+
+const highlights = [
+  {
+    icon: ShieldCheck,
+    title: 'Garantia vitalícia',
+    description: 'Revisões, limpeza e ajustes incluídos para manter a peça impecável.',
+  },
+  {
+    icon: Gem,
+    title: 'Materiais certificados',
+    description: 'Metais nobres e gemas com laudos emitidos por especialistas do atelier.',
+  },
+  {
+    icon: Calendar,
+    title: 'Agenda transparente',
+    description: 'Planejamento claro de etapas e prazos, com vagas limitadas por mês.',
+  },
+];
+
+const infoBadges = [
+  'Resposta em até 2 horas úteis',
+  'Atelier próprio em Campina Grande',
+  'Projetos limitados por mês',
+];
 
 export function CTASection() {
   return (
-    <section className="py-24 relative overflow-hidden" style={{ backgroundColor: '#133629' }}>
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <div 
-          className="w-full h-full"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            backgroundSize: '60px 60px'
-          }}
-        />
-      </div>
+    <section className="relative overflow-hidden bg-[#F7F5F0] py-24">
+      <div className="pointer-events-none absolute -top-32 -left-20 h-64 w-64 rounded-full bg-ouro/20 blur-[120px]" />
+      <div className="pointer-events-none absolute -bottom-40 right-[-160px] h-80 w-80 rounded-full bg-esmeralda/15 blur-[140px]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(24,68,52,0.08),transparent_55%)]" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
-        <div className="max-w-4xl mx-auto">
-          {/* Main Title */}
-          <h2 className="font-playfair text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
-            Pronto para criar sua
-            <span className="text-ouro block">joia dos sonhos?</span>
-          </h2>
+      <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="grid items-center gap-16 lg:grid-cols-[1.05fr,0.95fr]">
+          <AnimatedSection className="space-y-10" delay={0.1}>
+            <motion.div
+              className="inline-flex items-center gap-2 rounded-full border border-esmeralda/20 bg-white px-5 py-2 text-esmeralda shadow-[0_10px_30px_-18px_rgba(24,68,52,0.5)]"
+              whileHover={{ scale: 1.05 }}
+            >
+              <Sparkles className="h-4 w-4" />
+              <span className="text-xs font-semibold uppercase tracking-[0.32em]">Atendimento exclusivo</span>
+            </motion.div>
 
-          {/* Subtitle */}
-          <p className="text-xl text-marfim-dark mb-12 leading-relaxed">
-            Nossa equipe especializada está pronta para transformar suas ideias em realidade. 
-            Solicite um orçamento sem compromisso e descubra como podemos tornar seu momento especial ainda mais único.
-          </p>
+            <div className="space-y-6">
+              <h2 className="font-playfair text-4xl sm:text-5xl lg:text-6xl font-semibold leading-tight text-esmeralda">
+                Reserve sua consultoria
+                <span className="block bg-gradient-to-r from-ouro via-ouro-light to-esmeralda-light bg-clip-text text-transparent">
+                  agenda limitada do atelier
+                </span>
+              </h2>
 
-          {/* CTA Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            {/* Orçamento Card */}
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 premium-card-hover">
-              <div className="w-16 h-16 bg-ouro rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <Calendar className="w-8 h-8 text-grafite" />
-              </div>
-              <h3 className="text-2xl font-bold mb-4">Solicitar Orçamento</h3>
-              <p className="text-marfim-dark mb-6 leading-relaxed">
-                Preencha nosso formulário e receba um orçamento personalizado para seu projeto em até 24 horas.
+              <p className="max-w-2xl text-base sm:text-lg font-light leading-relaxed text-grafite">
+                Nossa equipe dedica tempo exclusivo para cada projeto. Conte sua ideia e receba orientação especializada, com resposta em até 2 horas úteis.
               </p>
-              <Button size="lg" asChild className="w-full group bg-ouro text-grafite hover:bg-ouro-light">
-                <Link href="/orcamento">
-                  Solicitar Orçamento
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+            </div>
+
+            <ul className="grid gap-6">
+              {highlights.map((item) => (
+                <li key={item.title} className="flex gap-4 rounded-2xl bg-white/70 p-5 shadow-[0_18px_40px_-28px_rgba(24,68,52,0.35)]">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-esmeralda/10 text-esmeralda">
+                    <item.icon className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="font-playfair text-xl font-semibold text-esmeralda">
+                      {item.title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-relaxed text-grafite/80">
+                      {item.description}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </AnimatedSection>
+
+          <AnimatedSection className="space-y-8" delay={0.25}>
+            <motion.div
+              className="rounded-3xl border border-esmeralda/15 bg-white p-8 shadow-[0_30px_60px_-30px_rgba(24,68,52,0.35)]"
+              whileHover={{ y: -6 }}
+              transition={{ duration: 0.4, ease: 'easeOut' }}
+            >
+              <div className="mb-6 flex items-center gap-4">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-esmeralda-light to-esmeralda text-white shadow-lg shadow-esmeralda/30">
+                  <Calendar className="h-7 w-7" />
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.28em] text-esmeralda/70">Planejamento sob medida</p>
+                  <h3 className="font-playfair text-2xl font-semibold text-esmeralda">Agendar consultoria</h3>
+                </div>
+              </div>
+              <p className="text-sm leading-relaxed text-grafite/85">
+                Envie o formulário e receba cronograma, materiais sugeridos e investimento estimado em até 24 horas úteis.
+              </p>
+              <Button
+                size="lg"
+                asChild
+                className="mt-8 w-full bg-gradient-to-r from-esmeralda to-esmeralda-light text-white shadow-[0_18px_40px_-24px_rgba(24,68,52,0.45)] hover:shadow-[0_22px_44px_-20px_rgba(24,68,52,0.55)]"
+              >
+                <Link href="/orcamento" className="inline-flex w-full items-center justify-center gap-2">
+                  Agendar consultoria
+                  <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
-            </div>
+            </motion.div>
 
-            {/* WhatsApp Card */}
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 premium-card-hover">
-              <div className="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <MessageCircle className="w-8 h-8 text-white" />
+            <motion.div
+              className="rounded-3xl border border-green-500/30 bg-white p-8 shadow-[0_30px_60px_-32px_rgba(24,68,52,0.3)]"
+              whileHover={{ y: -6 }}
+              transition={{ duration: 0.4, ease: 'easeOut' }}
+            >
+              <div className="mb-6 flex items-center gap-4">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-green-500 text-white shadow-lg shadow-green-500/30">
+                  <MessageCircle className="h-7 w-7" />
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.28em] text-green-700/70">Conversa imediata</p>
+                  <h3 className="font-playfair text-2xl font-semibold text-esmeralda">Falar no WhatsApp</h3>
+                </div>
               </div>
-              <h3 className="text-2xl font-bold mb-4">Falar no WhatsApp</h3>
-              <p className="text-marfim-dark mb-6 leading-relaxed">
-                Prefere conversar diretamente? Entre em contato conosco pelo WhatsApp para tirar dúvidas ou agendar uma visita.
+              <p className="text-sm leading-relaxed text-grafite/85">
+                Prefere falar agora? Responda pelo WhatsApp para tirar dúvidas, receber sugestões e alinhar o próximo passo.
               </p>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                asChild 
-                className="w-full bg-green-500 border-green-500 text-white hover:bg-green-600 hover:border-green-600"
+              <Button
+                size="lg"
+                asChild
+                variant="outline"
+                className="mt-8 w-full border-green-500 bg-green-500 text-white hover:bg-green-600 hover:border-green-600"
               >
-                <a href="https://wa.me/5583988073784?text=Olá! Gostaria de mais informações sobre os serviços da Cícero Joias.">
-                  Chamar no WhatsApp
-                  <MessageCircle className="w-4 h-4 ml-2" />
+                <a
+                  href="https://wa.me/5583988073784?text=Olá! Quero falar com a equipe da Cícero Joias sobre um projeto personalizado."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex w-full items-center justify-center gap-2"
+                >
+                  Conversar no WhatsApp
+                  <MessageCircle className="h-4 w-4" />
                 </a>
               </Button>
-            </div>
-          </div>
+            </motion.div>
 
-          {/* Additional Info */}
-          <div className="bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/10">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-              <div>
-                <h4 className="font-semibold mb-2">Atendimento Rápido</h4>
-                <p className="text-sm text-marfim-dark">Resposta em até 2 horas</p>
+            <motion.div
+              className="rounded-3xl border border-esmeralda/10 bg-white/80 p-6 shadow-[0_20px_50px_-30px_rgba(24,68,52,0.35)]"
+              whileHover={{ y: -4 }}
+              transition={{ duration: 0.35, ease: 'easeOut' }}
+            >
+              <div className="grid gap-4 sm:grid-cols-3">
+                {infoBadges.map((badge) => (
+                  <div
+                    key={badge}
+                    className="flex min-h-[72px] items-center justify-center rounded-2xl border border-esmeralda/15 bg-white px-6 py-4 text-center shadow-sm"
+                  >
+                    <span className="text-[11px] sm:text-xs md:text-sm font-semibold uppercase tracking-[0.22em] sm:tracking-[0.18em] md:tracking-[0.12em] text-esmeralda/75 leading-tight">
+                      {badge}
+                    </span>
+                  </div>
+                ))}
               </div>
-              <div>
-                <h4 className="font-semibold mb-2">Orçamento Gratuito</h4>
-                <p className="text-sm text-marfim-dark">Sem compromisso</p>
-              </div>
-              <div>
-                <h4 className="font-semibold mb-2">Consultoria Especializada</h4>
-                <p className="text-sm text-marfim-dark">40+ anos de experiência</p>
-              </div>
-            </div>
-          </div>
+            </motion.div>
+          </AnimatedSection>
         </div>
       </div>
     </section>

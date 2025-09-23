@@ -13,7 +13,7 @@ const testimonials = [
     id: 1,
     name: 'Isabella Rodrigues',
     role: 'Noiva',
-    content: 'A Cícero Joias transformou nosso sonho em realidade! Nossas alianças de casamento ficaram absolutamente perfeitas. Cada detalhe foi pensado com carinho, desde a gravação especial até o acabamento impecável. O atendimento da equipe foi excepcional do início ao fim.',
+    content: 'A Cícero Joias traduziu nossa história nas alianças. Aprovamos cada detalhe e a entrega foi impecável.',
     rating: 5,
     image: 'https://images.unsplash.com/photo-1494790108755-2616b612b47c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&h=300&fit=facearea&facepad=2',
     project: 'Alianças de Casamento Personalizadas'
@@ -22,7 +22,7 @@ const testimonials = [
     id: 2,
     name: 'Carlos Eduardo Santos',
     role: 'Cliente há 12 anos',
-    content: 'Já confio minhas joias de família à Cícero Joias há mais de uma década. Seja para reparos delicados ou criação de peças novas, eles sempre superam minhas expectativas. A qualidade é incomparável e o preço sempre justo. Uma empresa familiar que realmente se importa!',
+    content: 'Confio minhas joias à Cícero Joias há 12 anos: restaurações impecáveis, preço justo e atenção transparente.',
     rating: 5,
     image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&h=300&fit=facearea&facepad=2',
     project: 'Restauração de Joias Antigas'
@@ -31,7 +31,7 @@ const testimonials = [
     id: 3,
     name: 'Ana Carolina Ferreira',
     role: 'Formanda em Medicina',
-    content: 'Meu anel de formatura é uma obra de arte! A equipe me ajudou a personalizar cada detalhe, desde o brasão da universidade até a gravação da data. É emocionante ver como eles transformaram minhas ideias em uma joia que vou usar com orgulho para sempre.',
+    content: 'Meu anel de formatura ficou exatamente como imaginei, com brasão, gravação e acabamento impecáveis.',
     rating: 5,
     image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&h=300&fit=facearea&facepad=2',
     project: 'Anel de Formatura Personalizado'
@@ -40,7 +40,7 @@ const testimonials = [
     id: 4,
     name: 'Roberto Oliveira',
     role: 'Empresário',
-    content: 'Presenteei minha esposa com um colar personalizado da Cícero Joias para nosso aniversário de 25 anos. A peça ficou simplesmente magnífica! O brilho das pedras e a delicadeza do trabalho artesanal mostram o nível de excelência que eles mantêm há décadas.',
+    content: 'O colar de bodas surpreendeu minha esposa; brilho e delicadeza mostram o cuidado artesanal da equipe.',
     rating: 5,
     image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&h=300&fit=facearea&facepad=2',
     project: 'Colar de Bodas de Prata'
@@ -49,7 +49,7 @@ const testimonials = [
     id: 5,
     name: 'Mariana Costa Lima',
     role: 'Arquiteta',
-    content: 'Escolhi a Cícero Joias para criar os brincos do meu casamento e não poderia estar mais feliz! Eles conseguiram capturar exatamente a elegância que eu buscava. O processo foi transparente, com várias provas e ajustes até ficar perfeito. Recomendo sem hesitar!',
+    content: 'Os brincos do meu casamento ficaram elegantes e confortáveis, com provas e ajustes até chegar ao ideal.',
     rating: 5,
     image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&h=300&fit=facearea&facepad=2',
     project: 'Joias para Casamento'
@@ -58,7 +58,7 @@ const testimonials = [
     id: 6,
     name: 'Francisco Almeida',
     role: 'Aposentado',
-    content: 'Trouxe o relógio do meu pai para restauração e fiquei impressionado com o cuidado e dedicação da equipe. Eles não apenas consertaram, mas devolveram a vida àquela peça cheia de memórias. É um trabalho que vai muito além da técnica - é arte e coração juntos.',
+    content: 'Meu relógio de família voltou a brilhar. O time cuidou de cada detalhe com técnica e carinho.',
     rating: 5,
     image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&h=300&fit=facearea&facepad=2',
     project: 'Restauração de Relógio Antigo'
@@ -131,20 +131,19 @@ export function TestimonialsSection() {
           >
             <Heart className="w-4 h-4 text-ouro animate-pulse" />
             <span className="text-sm font-medium text-marfim">
-              Depoimentos dos Nossos Clientes
+              Clientes que viveram a experiência
             </span>
           </motion.div>
 
           <h2 className="font-playfair text-4xl md:text-5xl lg:text-6xl font-bold text-marfim mb-6">
-            Histórias de
+            Histórias contadas em joias
             <span className="block bg-gradient-to-r from-ouro via-yellow-400 to-ouro bg-clip-text text-transparent">
-              Satisfação
+              relatadas por quem confia
             </span>
           </h2>
 
           <p className="text-xl text-marfim-dark max-w-3xl mx-auto leading-relaxed">
-            A confiança dos nossos clientes é nosso maior tesouro. Veja o que dizem aqueles que 
-            escolheram a Cícero Joias para momentos especiais.
+            Relatos curtos de casais, formandos e famílias que confiaram suas memórias ao nosso atelier.
           </p>
         </AnimatedSection>
 

@@ -103,19 +103,19 @@ export function PortfolioPreview() {
           >
             <Sparkles className="w-4 h-4 text-ouro animate-pulse" />
             <span className="text-sm font-medium text-esmeralda">
-              Trabalhos em Destaque
+              Casos reais em destaque
             </span>
           </motion.div>
 
           <h2 className="font-playfair text-4xl md:text-5xl font-bold text-esmeralda mb-6">
-            Nossas Criações
+            Personalização em cada detalhe
             <span className="block bg-gradient-to-r from-ouro to-yellow-400 bg-clip-text text-transparent">
-              Únicas
+              assinada pelo atelier
             </span>
           </h2>
 
           <p className="text-xl text-grafite-light max-w-3xl mx-auto leading-relaxed">
-            Cada peça conta uma história especial. Descubra algumas de nossas criações mais marcantes e se inspire para sua próxima joia.
+            Conheça projetos que traduzem histórias em joias únicas. Selecionamos casos com desafios reais, soluções criativas e resultados que encantaram nossos clientes.
           </p>
         </AnimatedSection>
 
@@ -265,4 +265,4 @@ export function PortfolioPreview() {
       </div>
     </section>
   );
-} 
+}

@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowLeft, Upload, X, Save, Plus, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -87,26 +88,42 @@ export default function EditPortfolioPage() {
   const [newKeyword, setNewKeyword] = useState('');
 
   useEffect(() => {
-    if (portfolioId) {
-      fetchPortfolioItem();
+    if (!portfolioId) {
+      return;
     }
-  }, [portfolioId, fetchPortfolioItem]);
 
-  const fetchPortfolioItem = useCallback(async () => {
-    try {
-      const response = await fetch(`/api/admin/portfolio/${portfolioId}`);
-      if (response.ok) {
+    let isMounted = true;
+
+    const loadPortfolioItem = async () => {
+      try {
+        const response = await fetch(`/api/admin/portfolio/${portfolioId}`);
+
+        if (!response.ok) {
+          if (isMounted) {
+            toast({
+              title: "Erro ao carregar projeto",
+              description: "N?o foi poss?vel carregar os dados do projeto.",
+              variant: "destructive",
+            });
+          }
+          router.push('/admin/portfolio');
+          return;
+        }
+
         const data = await response.json();
         const item = data.portfolioItem;
-        
-        // Converter especificações de JSON para array
+
         const specifications: Specification[] = [];
         if (item.specifications && typeof item.specifications === 'object') {
           Object.entries(item.specifications).forEach(([key, value]) => {
             specifications.push({ key, value: value as string });
           });
         }
-        
+
+        if (!isMounted) {
+          return;
+        }
+
         setFormData({
           title: item.title,
           description: item.description || '',
@@ -124,26 +141,29 @@ export default function EditPortfolioPage() {
           keywords: item.keywords || [],
           relatedProjects: item.relatedProjects || [],
         });
-      } else {
-        toast({
-          title: "Erro ao carregar projeto",
-          description: "Não foi possível carregar os dados do projeto.",
-          variant: "destructive",
-        });
+      } catch (error) {
+        console.error('Erro ao carregar projeto:', error);
+        if (isMounted) {
+          toast({
+            title: "Erro de conex?o",
+            description: "N?o foi poss?vel conectar com o servidor.",
+            variant: "destructive",
+          });
+        }
         router.push('/admin/portfolio');
+      } finally {
+        if (isMounted) {
+          setInitialLoading(false);
+        }
       }
-    } catch (error) {
-      console.error('Erro ao carregar projeto:', error);
-      toast({
-        title: "Erro de conexão",
-        description: "Não foi possível conectar com o servidor.",
-        variant: "destructive",
-      });
-      router.push('/admin/portfolio');
-    } finally {
-      setInitialLoading(false);
-    }
-  }, [portfolioId, router]);
+    };
+
+    void loadPortfolioItem();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [portfolioId, router, toast]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -550,10 +570,17 @@ export default function EditPortfolioPage() {
                   <div className="mt-2">
                     {formData.mainImage ? (
                       <div className="relative w-full h-48 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden">
-                        <img
+                        <Image
                           src={formData.mainImage}
                           alt="Imagem principal"
-                          className="w-full h-full object-cover"
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          unoptimized
+                          onError={({ currentTarget }) => {
+                            currentTarget.onerror = null;
+                            currentTarget.src = '/assets/images/placeholder-jewelry.svg';
+                          }}
                         />
                         <Button
                           type="button"
@@ -591,11 +618,20 @@ export default function EditPortfolioPage() {
                   <div className="mt-2 grid grid-cols-2 md:grid-cols-3 gap-4">
                     {formData.images.map((image, index) => (
                       <div key={index} className="relative">
-                        <img
-                          src={image}
-                          alt={`Imagem ${index + 1}`}
-                          className="w-full h-24 object-cover rounded-lg"
-                        />
+                        <div className="relative h-24 w-full">
+                          <Image
+                            src={image}
+                            alt={`Imagem ${index + 1}`}
+                            fill
+                            className="object-cover rounded-lg"
+                            sizes="(max-width: 768px) 50vw, 33vw"
+                            unoptimized
+                            onError={({ currentTarget }) => {
+                              currentTarget.onerror = null;
+                              currentTarget.src = '/assets/images/placeholder-jewelry.svg';
+                            }}
+                          />
+                        </div>
                         <Button
                           type="button"
                           variant="destructive"

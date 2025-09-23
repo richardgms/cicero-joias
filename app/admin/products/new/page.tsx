@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowLeft, Upload, X, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -298,10 +299,17 @@ export default function NewProductPage() {
                   <div className="mt-2">
                     {formData.mainImage ? (
                       <div className="relative w-full h-48 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden">
-                        <img
+                        <Image
                           src={formData.mainImage}
                           alt="Imagem principal"
-                          className="w-full h-full object-cover"
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          unoptimized
+                          onError={({ currentTarget }) => {
+                            currentTarget.onerror = null;
+                            currentTarget.src = '/assets/images/placeholder-jewelry.svg';
+                          }}
                         />
                         <Button
                           type="button"
@@ -338,11 +346,20 @@ export default function NewProductPage() {
                   <div className="mt-2 grid grid-cols-2 md:grid-cols-3 gap-4">
                     {formData.images.map((image, index) => (
                       <div key={index} className="relative">
-                        <img
-                          src={image}
-                          alt={`Imagem ${index + 1}`}
-                          className="w-full h-24 object-cover rounded-lg"
-                        />
+                        <div className="relative h-24 w-full">
+                          <Image
+                            src={image}
+                            alt={`Imagem ${index + 1}`}
+                            fill
+                            className="object-cover rounded-lg"
+                            sizes="(max-width: 768px) 50vw, 33vw"
+                            unoptimized
+                            onError={({ currentTarget }) => {
+                              currentTarget.onerror = null;
+                              currentTarget.src = '/assets/images/placeholder-jewelry.svg';
+                            }}
+                          />
+                        </div>
                         <Button
                           type="button"
                           variant="destructive"

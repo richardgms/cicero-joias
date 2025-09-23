@@ -113,76 +113,60 @@ export function HeroSection() {
         animate={inView ? "visible" : "hidden"}
       >
         {/* Badge */}
-        <motion.div 
+        <motion.div
           variants={badgeVariants}
-          className="inline-flex items-center space-x-2 bg-gradient-to-r from-esmeralda-light/20 to-ouro/20 backdrop-blur-md rounded-full px-6 py-3 mb-8 border border-ouro/20"
+          className="inline-flex items-center gap-2 rounded-full border border-ouro/20 bg-gradient-to-r from-esmeralda-light/20 to-ouro/20 px-6 py-3 backdrop-blur-md mb-8"
         >
           <Sparkles className="w-4 h-4 text-ouro animate-pulse" />
           <span className="text-sm font-medium bg-gradient-to-r from-marfim to-ouro bg-clip-text text-transparent">
-            Mais de 40 anos de tradição
+            40 anos de joalheria artesanal em Campina Grande
           </span>
         </motion.div>
 
         {/* Main Title */}
-        <motion.h1 
+        <motion.h1
           variants={itemVariants}
-          className="font-playfair text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold mb-4 md:mb-6 leading-tight"
+          className="font-playfair text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-4 md:mb-6"
         >
-          <span className="bg-gradient-to-r from-marfim via-marfim to-marfim-dark bg-clip-text text-transparent">
-            Tradição que se
-          </span>
-          <motion.span 
-            className="block bg-gradient-to-r from-ouro via-yellow-400 to-ouro bg-clip-text text-transparent"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
-            transition={{ delay: 1, duration: 0.8, ease: "easeOut" }}
-          >
-            Renova
-          </motion.span>
+          Joias autorais com assinatura Cícero.
         </motion.h1>
 
         {/* Subtitle */}
-        <motion.p 
+        <motion.p
           variants={itemVariants}
-          className="text-lg sm:text-xl md:text-2xl text-marfim-dark mb-8 md:mb-10 max-w-4xl mx-auto leading-relaxed px-4 sm:px-0"
+          className="text-lg sm:text-xl md:text-2xl text-marfim-dark max-w-4xl mx-auto leading-relaxed px-4 sm:px-0 mb-8 md:mb-10"
         >
-          Criamos momentos especiais através de joias únicas, alianças personalizadas e serviços de qualidade excepcional.
+          Do primeiro esboço à entrega em mãos, cada etapa é acompanhada por especialistas que traduzem memórias em joias exclusivas com atelier próprio e garantia vitalícia.
         </motion.p>
 
         {/* CTA Buttons */}
-        <motion.div 
+        <motion.div
           variants={itemVariants}
-          className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-12 md:mb-16 px-4 sm:px-0"
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-12 md:mb-16 px-4 sm:px-0"
         >
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Button size="lg" asChild className="group bg-gradient-to-r from-ouro to-yellow-400 text-grafite hover:from-yellow-400 hover:to-ouro shadow-lg shadow-ouro/25 transition-all duration-300">
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              size="lg"
+              asChild
+              className="group bg-gradient-to-r from-ouro to-yellow-400 text-grafite hover:from-yellow-400 hover:to-ouro shadow-lg shadow-ouro/25 transition-all duration-300"
+            >
               <Link href="/orcamento">
-                Solicitar Orçamento
-                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                Agendar consultoria
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </Button>
           </motion.div>
-          
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Button 
-              size="lg" 
-              variant="outline" 
-              asChild 
-              className="bg-esmeralda-light/10 backdrop-blur-md border-marfim/30 text-marfim hover:bg-esmeralda-light/20 hover:border-ouro/50 transition-all duration-300 shadow-lg"
+
+          <motion.div whileHover={{ x: 4 }} whileTap={{ scale: 0.98 }}>
+            <Link
+              href="/portfolio"
+              className="group inline-flex items-center gap-2 text-sm sm:text-base font-semibold text-marfim/90 hover:text-ouro transition-colors"
             >
-              <Link href="/portfolio">
-                Ver Nosso Trabalho
-              </Link>
-            </Button>
+              <span>Ver portfólio</span>
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
           </motion.div>
         </motion.div>
-
         {/* Animated Stats */}
         <motion.div 
           variants={itemVariants}
@@ -215,7 +199,7 @@ export function HeroSection() {
                 {(!inView || !mounted) && "1000+"}
               </span>
             </div>
-            <p className="text-marfim-dark font-medium text-sm md:text-base">Alianças Criadas</p>
+            <p className="text-marfim-dark font-medium text-sm md:text-base">Alianças personalizadas</p>
           </motion.div>
 
           <motion.div 
@@ -230,7 +214,7 @@ export function HeroSection() {
                 {(!inView || !mounted) && "500+"}
               </span>
             </div>
-            <p className="text-marfim-dark font-medium text-sm md:text-base">Clientes Satisfeitos</p>
+            <p className="text-marfim-dark font-medium text-sm md:text-base">Clientes acompanhados</p>
           </motion.div>
         </motion.div>
       </motion.div>
