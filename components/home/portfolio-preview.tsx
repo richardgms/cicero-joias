@@ -1,266 +1,303 @@
-'use client';
+﻿'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-import { ArrowRight, Eye, Calendar, Sparkles } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { AnimatedSection, GlassCard } from '@/components/ui/animated-section';
+import { ArrowRight, MessageCircle } from 'lucide-react';
+
+import { AnimatedSection } from '@/components/ui/animated-section';
+import { whatsappLinks } from './home-data';
 
 interface PortfolioItem {
   id: string;
   title: string;
-  description?: string;
-  category: string;
-  mainImage: string | null;
+  description?: string | null;
+  detailedDescription?: string | null;
+  specifications?: Record<string, unknown> | null;
+  category?: string | null;
+  mainImage?: string | null;
+  images?: string[] | null;
   createdAt: string;
-  status: string;
 }
 
-const categoryLabels = {
-  'WEDDING_RINGS': 'Alianças de Casamento',
-  'REPAIRS_BEFORE_AFTER': 'Restaurações',
-  'GOLD_PLATING': 'Banho de Ouro',
-  'CUSTOM_JEWELRY': 'Joias Personalizadas',
-  'GRADUATION_RINGS': 'Anéis de Formatura'
+interface PortfolioResponse {
+  portfolioItems: PortfolioItem[];
+}
+
+const FALLBACK_IMAGE = '/assets/home/portfolio/case-01.webp';
+
+const fieldKeys = {
+  challenge: ['challenge', 'desafio', 'problema', 'briefing'],
+  solution: ['solution', 'solucao', 'solução', 'processo'],
+  result: ['result', 'resultado', 'impacto'],
+} as const;
+
+type FieldKey = keyof typeof fieldKeys;
+
+type CaseSummary = {
+  challenge: string;
+  solution: string;
+  result: string;
 };
 
-export function PortfolioPreview() {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
+function normaliseSpecifications(specs?: Record<string, unknown> | null) {
+  if (!specs) {
+    return {} as Record<string, string>;
+  }
 
-  const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
+  return Object.entries(specs).reduce<Record<string, string>>((acc, [key, value]) => {
+    if (typeof value === 'string' && value.trim()) {
+      acc[key.toLowerCase()] = value.trim();
+    }
+    return acc;
+  }, {});
+}
+
+function extractField(
+  specs: Record<string, string>,
+  key: FieldKey,
+  fallbacks: Array<string | null | undefined>,
+) {
+  for (const candidate of fieldKeys[key]) {
+    const value = specs[candidate.toLowerCase()];
+    if (value) {
+      return value;
+    }
+  }
+
+  for (const candidate of fallbacks) {
+    if (candidate && candidate.trim()) {
+      return candidate.trim();
+    }
+  }
+
+  return 'Informações serão atualizadas em breve.';
+}
+
+function buildSummary(item: PortfolioItem): CaseSummary {
+  const specs = normaliseSpecifications(item.specifications);
+
+  return {
+    challenge: extractField(specs, 'challenge', [item.description ?? item.detailedDescription ?? null]),
+    solution: extractField(specs, 'solution', [item.detailedDescription ?? item.description ?? null]),
+    result: extractField(specs, 'result', [specs['resultado-final'], specs['beneficio'], specs['benefício'], null]),
+  };
+}
+
+function resolveImageSrc(item?: PortfolioItem) {
+  if (!item) {
+    return FALLBACK_IMAGE;
+  }
+  if (item.mainImage) {
+    return item.mainImage;
+  }
+  if (item.images?.length) {
+    return item.images[0] as string;
+  }
+  return FALLBACK_IMAGE;
+}
+
+export function PortfolioPreview() {
+  const [items, setItems] = useState<PortfolioItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchPortfolioItems();
+    let mounted = true;
+
+    const fetchPortfolio = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/public/portfolio?limit=3');
+        if (!response.ok) {
+          throw new Error('Erro ao carregar portfólio');
+        }
+
+        const data = (await response.json()) as PortfolioResponse;
+        if (mounted) {
+          setItems(Array.isArray(data.portfolioItems) ? data.portfolioItems : []);
+          setError(null);
+        }
+      } catch (err) {
+        if (!mounted) {
+          return;
+        }
+        console.error('PortfolioPreview - fetch error:', err);
+        setError('Não foi possível carregar os itens do portfólio.');
+        setItems([]);
+      } finally {
+        if (mounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchPortfolio();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
-  const fetchPortfolioItems = async () => {
-    try {
-      const response = await fetch('/api/public/portfolio?limit=6');
-      if (response.ok) {
-        const data = await response.json();
-        setPortfolioItems(data.portfolioItems || []);
-      }
-    } catch (error) {
-      console.error('Erro ao buscar portfólio:', error);
-      setPortfolioItems([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const hasItems = items.length > 0;
+  const highlight = hasItems ? items[0] : undefined;
+  const rest = hasItems ? items.slice(1) : [];
 
-  const filteredItems = selectedCategory === 'all' 
-    ? portfolioItems 
-    : portfolioItems.filter(item => item.category === selectedCategory);
-
-  const categories = ['all', ...Array.from(new Set(portfolioItems.map(item => item.category)))];
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        duration: 0.8,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30, scale: 0.95 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut",
-      },
-    },
-  };
+  const highlightSummary = useMemo(() => (highlight ? buildSummary(highlight) : null), [highlight]);
 
   return (
-    <section className="py-24 bg-gradient-to-br from-marfim via-marfim-light to-marfim relative overflow-hidden">
-      {/* Background Decoration */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-20 left-10 w-40 h-40 border border-esmeralda rounded-full animate-pulse" />
-        <div className="absolute bottom-20 right-20 w-32 h-32 border-2 border-ouro/60 transform rotate-45" />
-      </div>
+    <section className="relative overflow-hidden bg-[#F9F6EE] py-24">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_90%_10%,rgba(207,154,36,0.12),transparent_55%)]" />
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
-        {/* Section Header */}
-        <AnimatedSection className="text-center mb-16" delay={0.2}>
-          <motion.div
-            className="inline-flex items-center space-x-2 bg-gradient-to-r from-esmeralda/10 to-ouro/10 rounded-full px-6 py-3 mb-6 border border-ouro/20"
-            whileHover={{ scale: 1.05 }}
-          >
-            <Sparkles className="w-4 h-4 text-ouro animate-pulse" />
-            <span className="text-sm font-medium text-esmeralda">
-              Casos reais em destaque
-            </span>
-          </motion.div>
-
-          <h2 className="font-playfair text-4xl md:text-5xl font-bold text-esmeralda mb-6">
-            Personalização em cada detalhe
-            <span className="block bg-gradient-to-r from-ouro to-yellow-400 bg-clip-text text-transparent">
-              assinada pelo atelier
-            </span>
+      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-14 px-4 sm:px-6 lg:px-8">
+        <AnimatedSection className="space-y-6 text-center" delay={0.05}>
+          <span className="inline-flex items-center justify-center rounded-full border border-esmeralda/20 bg-white px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-esmeralda/80">
+            Portfólio real
+          </span>
+          <h2 className="font-playfair text-3xl sm:text-4xl lg:text-5xl font-semibold text-esmeralda">
+            Casos cuidadosamente executados
           </h2>
-
-          <p className="text-xl text-grafite-light max-w-3xl mx-auto leading-relaxed">
-            Conheça projetos que traduzem histórias em joias únicas. Selecionamos casos com desafios reais, soluções criativas e resultados que encantaram nossos clientes.
+          <p className="mx-auto max-w-3xl text-base sm:text-lg text-grafite/75">
+            Os projetos abaixo são atualizados diretamente pelo painel administrativo e representam os trabalhos mais recentes do atelier.
           </p>
         </AnimatedSection>
 
-        {/* Category Filters */}
-        <AnimatedSection className="flex flex-wrap justify-center gap-3 mb-12" delay={0.4}>
-          {categories.map((category) => (
-            <motion.button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 border ${
-                selectedCategory === category
-                  ? 'bg-gradient-to-r from-esmeralda to-esmeralda-light text-marfim border-esmeralda'
-                  : 'bg-white/50 backdrop-blur-sm text-esmeralda border-esmeralda/20 hover:border-ouro/40 hover:bg-ouro/10'
-              }`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {category === 'all' ? 'Todos' : categoryLabels[category as keyof typeof categoryLabels] || category}
-            </motion.button>
-          ))}
-        </AnimatedSection>
-
-        {/* Portfolio Grid */}
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[...Array(6)].map((_, index) => (
-              <div key={index} className="animate-pulse">
-                <div className="bg-white/50 backdrop-blur-sm rounded-2xl h-96" />
-              </div>
-            ))}
+          <div className="flex min-h-[280px] items-center justify-center text-grafite/60">
+            <span className="text-sm uppercase tracking-[0.28em]">Carregando portfólio…</span>
           </div>
-        ) : filteredItems.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-esmeralda/20 to-ouro/20 rounded-full flex items-center justify-center">
-              <Sparkles className="w-8 h-8 text-esmeralda" />
-            </div>
-            <h3 className="text-xl font-semibold text-esmeralda mb-2">
-              Em breve, novos projetos
-            </h3>
-            <p className="text-grafite-light max-w-md mx-auto">
-              Estamos trabalhando em projetos incríveis que serão adicionados ao nosso portfólio em breve.
+        ) : !hasItems ? (
+          <AnimatedSection className="rounded-3xl border border-esmeralda/15 bg-white/80 p-12 text-center" delay={0.12}>
+            <p className="text-base sm:text-lg text-grafite/70">
+              Ainda não temos itens cadastrados no portfólio. Assim que novas peças forem publicadas, elas aparecerão aqui automaticamente.
             </p>
-          </div>
+            {error && <p className="mt-4 text-sm text-ouro">{error}</p>}
+          </AnimatedSection>
         ) : (
-          <motion.div 
-            ref={ref}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-            variants={containerVariants}
-            initial="hidden"
-            animate={inView ? "visible" : "hidden"}
-          >
-            {filteredItems.slice(0, 6).map((item, index) => (
-              <motion.div key={item.id} variants={itemVariants}>
-                <GlassCard 
-                  className="group overflow-hidden h-full flex flex-col bg-gradient-to-br from-white/80 to-white/40 backdrop-blur-md"
-                  hover={true}
-                >
-                  <div className="relative h-64 overflow-hidden rounded-t-2xl">
-                    <Image
-                      src={item.mainImage || '/assets/images/home-hero.jpg'}
-                      alt={item.title}
-                      fill
-                      className="object-cover group-hover:scale-110 transition-transform duration-700"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    />
-                    
-                    {/* Overlay com gradiente */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-esmeralda/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    
-                    {/* Badge da categoria */}
-                    <motion.div 
-                      className="absolute top-4 right-4 bg-gradient-to-r from-ouro to-yellow-400 text-esmeralda text-xs font-bold px-3 py-1 rounded-full shadow-lg"
-                      whileHover={{ scale: 1.1 }}
-                    >
-                      {categoryLabels[item.category as keyof typeof categoryLabels] || item.category}
-                    </motion.div>
-
-                    {/* View button on hover */}
-                    <motion.div 
-                      className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                      initial={{ scale: 0 }}
-                      whileHover={{ scale: 1 }}
-                    >
-                      <motion.div
-                        className="bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-xl"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                      >
-                        <Eye className="w-6 h-6 text-esmeralda" />
-                      </motion.div>
-                    </motion.div>
+          <AnimatedSection className="grid gap-6 lg:grid-cols-[1.1fr,0.9fr]" delay={0.12} stagger>
+            {highlight && highlightSummary && (
+              <motion.article
+                className="group flex h-full flex-col overflow-hidden rounded-3xl border border-esmeralda/15 bg-white shadow-[0_24px_55px_-30px_rgba(24,68,52,0.32)]"
+                whileHover={{ y: -6 }}
+              >
+                <div className="relative h-72">
+                  <Image
+                    src={resolveImageSrc(highlight)}
+                    alt={highlight.title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 100vw, 60vw"
+                    priority
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+                  <div className="absolute bottom-4 left-4 right-4 space-y-2 text-marfim">
+                    <p className="text-xs uppercase tracking-[0.3em] text-marfim/80">Case destaque</p>
+                    <h3 className="font-playfair text-2xl font-semibold leading-snug">{highlight.title}</h3>
                   </div>
+                </div>
+                <div className="space-y-3 p-6 text-grafite/75">
+                  <p className="text-sm">
+                    <span className="font-semibold text-esmeralda">Desafio: </span>
+                    {highlightSummary.challenge}
+                  </p>
+                  <p className="text-sm">
+                    <span className="font-semibold text-esmeralda">Solução: </span>
+                    {highlightSummary.solution}
+                  </p>
+                  <p className="text-sm">
+                    <span className="font-semibold text-esmeralda">Resultado: </span>
+                    {highlightSummary.result}
+                  </p>
+                  <div className="flex flex-wrap items-center gap-3 pt-2">
+                    <Link
+                      href={whatsappLinks.primary}
+                      target="_blank"
+                      className="inline-flex items-center gap-2 text-sm font-semibold text-esmeralda transition-colors hover:text-ouro"
+                    >
+                      Quero um projeto similar
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </div>
+                </div>
+              </motion.article>
+            )}
 
-                  <div className="p-6 flex flex-col flex-grow">
-                    <h3 className="font-playfair text-xl font-bold text-esmeralda mb-3 group-hover:text-ouro transition-colors duration-300 line-clamp-2">
-                      {item.title}
-                    </h3>
-                    
-                    {item.description && (
-                      <p className="text-grafite-light text-sm mb-4 flex-grow line-clamp-3 leading-relaxed">
-                        {item.description}
-                      </p>
-                    )}
-
-                    <div className="flex items-center justify-between mt-auto">
-                      <div className="flex items-center text-xs text-grafite-light">
-                        <Calendar className="w-3 h-3 mr-1" />
-                        {new Date(item.createdAt).toLocaleDateString('pt-BR')}
+            <div className="grid gap-6">
+              {rest.map((item) => {
+                const summary = buildSummary(item);
+                return (
+                  <motion.article
+                    key={item.id}
+                    className="group flex h-full flex-col overflow-hidden rounded-3xl border border-esmeralda/15 bg-white shadow-[0_24px_55px_-32px_rgba(24,68,52,0.28)]"
+                    whileHover={{ y: -6 }}
+                  >
+                    <div className="relative h-56">
+                      <Image
+                        src={resolveImageSrc(item)}
+                        alt={item.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 1024px) 100vw, 40vw"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                      <div className="absolute bottom-4 left-4 right-4 text-marfim">
+                        <h3 className="font-playfair text-xl font-semibold leading-snug">{item.title}</h3>
+                        {item.category && (
+                          <p className="text-xs uppercase tracking-[0.28em] text-marfim/75">
+                            {item.category.replace(/_/g, ' ')}
+                          </p>
+                        )}
                       </div>
-                      
-                      <Link href={`/portfolio/${item.id}`}>
-                        <motion.div
-                          className="flex items-center text-esmeralda hover:text-ouro transition-colors duration-300 text-sm font-medium"
-                          whileHover={{ x: 5 }}
-                        >
-                          Ver Detalhes
-                          <ArrowRight className="ml-1 h-4 w-4" />
-                        </motion.div>
-                      </Link>
                     </div>
-                  </div>
-                </GlassCard>
-              </motion.div>
-            ))}
-          </motion.div>
+                    <div className="space-y-3 p-6 text-sm text-grafite/75">
+                      <p>
+                        <span className="font-semibold text-esmeralda">Desafio: </span>
+                        {summary.challenge}
+                      </p>
+                      <p>
+                        <span className="font-semibold text-esmeralda">Solução: </span>
+                        {summary.solution}
+                      </p>
+                      <p>
+                        <span className="font-semibold text-esmeralda">Resultado: </span>
+                        {summary.result}
+                      </p>
+                    </div>
+                  </motion.article>
+                );
+              })}
+            </div>
+          </AnimatedSection>
         )}
 
-        {/* CTA Section */}
-        <AnimatedSection className="text-center mt-16" delay={0.8}>
-          <motion.div
-            className="inline-block"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Button
-              asChild
-              size="lg"
-              className="bg-gradient-to-r from-esmeralda to-esmeralda-light text-marfim hover:from-ouro hover:to-yellow-400 shadow-xl shadow-esmeralda/25 transition-all duration-300 border border-ouro/20"
+        <AnimatedSection className="flex flex-col items-center justify-between gap-4 text-center sm:flex-row sm:text-left" delay={0.18}>
+          <div className="space-y-2 text-sm text-grafite/75">
+            <p className="font-semibold text-esmeralda">Quer ver outras combinações?</p>
+            <p>
+              Mandamos fotos adicionais ou agendamos uma visita para você provar os modelos na loja.
+            </p>
+          </div>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <motion.a
+              href={whatsappLinks.primary}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full bg-esmeralda px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-marfim shadow-[0_20px_40px_-22px_rgba(24,68,52,0.4)]"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
             >
-              <Link href="/portfolio" className="flex items-center">
-                Ver Portfólio Completo
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </motion.div>
+              <MessageCircle className="h-4 w-4" />
+              Falar pelo WhatsApp
+            </motion.a>
+            <Link
+              href="/portfolio"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-esmeralda transition-colors hover:text-ouro"
+            >
+              Ver portfólio completo
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
         </AnimatedSection>
       </div>
     </section>

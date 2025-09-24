@@ -51,3 +51,16 @@
 
 ---
 **Próximo passo (Etapa 6):** reforçar prova social e confiança com novos depoimentos, selos e dados aprofundados antes do go-live definitivo.
+
+## 5. Status desta etapa
+- [x] HeroSection refatorado com novos assets, copy e CTAs alinhados ao Stage 4.
+- [x] FeaturesSection reorganizado com provas rápidas e diferenciais usando dados centralizados.
+- [x] ProcessSection convertido em timeline responsiva (horizontal/vertical) sem dependência de imagens.
+- [x] PortfolioPreview utilizando cases estáticos fictícios e CTA para WhatsApp.
+- [x] TestimonialsSection simplificado com depoimentos curtos e imagens locais.
+- [x] CTASection atualizado com badges e mensagens de WhatsApp revisitadas.
+- [x] Dados compartilhados centralizados em `components/home/home-data.ts`.
+- [x] Assets em `public/assets/home` validados (hero, portfolio, depoimentos, badges).
+- [ ] Revisar FAQ e demais componentes auxiliares conforme a necessidade na etapa 6.
+- [ ] Verificar integrações de tracking (GA/Pixel) antes do deploy.
+

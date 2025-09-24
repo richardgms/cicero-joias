@@ -1,46 +1,44 @@
-﻿# Home Redesign – Etapa 1 · Diagnostico & Objetivos
+# Home Redesign - Etapa 1 · Diagnóstico & Objetivos
 
-## 1. Publico-alvo, personas e dores-chave
-**Personas prioritarias (validar com stakeholders):**
-- **Casais (noivos / aliancas)** – buscam pecas simbolicas, personalizacao, prazo confiavel.
-- **Profissionais e formandos** – querem joias sob medida (anel de formatura, presentes corporativos) com diferenciacao e garantia.
-- **Clientes de restauracao / manutencao** – possuem joias de valor emocional e procuram confianca tecnica.
+## 1. Público-alvo, personas e dores-chave
+**Personas prioritárias (validar com stakeholders):**
+- **Casais (noivos / alianças)** – procuram alianças simbólicas, com qualidade e atendimento próximo.
+- **Profissionais e formandos** – buscam joias sob medida para formatura ou presentes especiais.
+- **Clientes de restauração/manutenção** – têm peças com valor afetivo e querem confiança técnica para cuidar delas.
 
-**Dores que o site precisa enderecar (confirmar com entrevistas breves):**
-- Inseguranca quanto a qualidade do material e certificacoes.
-- Medo de prazos longos ou falta de transparencia no processo.
-- Duvidas sobre investimento minimo e etapas de personalizacao.
-- Necessidade de atendimento consultivo proximo (preferencia por WhatsApp / visita ao atelier).
+**Dores que o site precisa endereçar (confirmar com entrevistas breves):**
+- Insegurança sobre materiais, acabamento e autenticidade do trabalho.
+- Dúvidas sobre prazos, valores e como ocorre o atendimento (presencial ou à distância).
+- Necessidade de canal direto (WhatsApp) para combinar visita ou resolver tudo on-line.
+- Busca por manutenção futura (limpeza, polimento, ajustes).
 
-**Perguntas para validacao com stakeholders:**
-1. Quais personas geram maior ticket medio hoje? (ajusta ordem narrativa).
-2. Existe foco geografico prioritario (Campina Grande x outras cidades)?
-3. Qual objeção comercial mais comum nas conversas de venda?
-4. Ha servicos que a empresa quer escalar (ex.: aliancas) ou descontinuar?
+**Perguntas para validação com stakeholders:**
+1. Quais personas geram maior ticket hoje? (ordena a narrativa da home).
+2. Existe foco geográfico prioritário (João Pessoa x outras cidades)?
+3. Qual objeção comercial aparece com mais frequência nas conversas?
+4. Há serviços que a empresa quer destacar (ex.: alianças) ou reduzir?
 
-## 2. KPI principal e secundarios
-- **KPI primario:** taxa de conversao para lead qualificado (cliques em "Agendar consultoria" ou envio de formulario de orcamento).
-- **KPI secundarios:**
-  - Cliques no WhatsApp direto (medir intencao de contato imediato).
-  - Tempo medio na pagina + rolagem ate CTA final (sinal de engajamento com narrativa).
-  - Download/visualizacao de portfolio ou estudo de caso (caso seja criado).
+## 2. KPI principal e secundários
+- **KPI primário:** cliques no CTA “Falar no WhatsApp agora”.
+- **KPIs secundários:**
+  - Taxa de envio de mensagens pelo WhatsApp vindo da home.
+  - Tempo médio na página / scroll até CTA final.
+  - Visualizações dos cases de portfólio antes de iniciar contato.
 
-**Meta preliminar (ajustar apos benchmarking interno):** aumentar em 30% o volume de leads qualificados via pagina inicial nos proximos 90 dias apos o lancamento.
+**Meta preliminar:** aumentar em 30% o número de conversas iniciadas pelo WhatsApp nos próximos 90 dias após o lançamento.
 
-## 3. Conteudo indispensavel vs redundante
-| Secao | Conteudo indispensavel (manter/reforcar) | Conteudo redundante ou a reduzir |
+## 3. Conteúdo indispensável vs redundante
+| Seção | Conteúdo indispensável | Conteúdo a reduzir/evitar |
 | --- | --- | --- |
-| Hero | Proposta de valor clara, credencial "40 anos", CTA primario unico. | Paragrafos longos e multiplos CTAs concorrentes; particulas animadas repetitivas no mobile. |
-| Features (Por que Cicero) | Diferenciais tangiveis (consultoria, garantia vitalicia, co-criacao). | Textos extensos e repeticao de metricas ja usadas em outras secoes; seis cards podem ser agrupados. |
-| Processo | Jornada em 4–5 passos com linguagem simples e prazo medio. | Cards extras com mesmas metricas do hero; multiplos CTAs na mesma secao. |
-| Portfolio | Casos reais com foto + desafio/resultado, prova social visual. | Estado "Em breve" (perde credibilidade); filtros sem contexto. |
-| Depoimentos | Citacoes curtas + foto/nome + projeto resumido. | Depoimentos muito longos e metricas repetidas (ex.: 40+ anos). |
-| CTA final | Duas rotas de conversao (formulario e WhatsApp) + badges de confianca. | Longa lista de beneficios repetidos anteriormente; textos extensos.
+| Hero | Proposta de valor clara, badge “40 anos em João Pessoa”, CTA WhatsApp. | Formular ou link secundário para orçamento; jargões sobre “atelier” ou 3D. |
+| Provas rápidas | Microcards destacando ofício do ourives, modelos na loja, manutenção. | Mais de três cards, informações repetidas. |
+| Por que Cícero Joias | Texto sobre experiência do ourives, atendimento via WhatsApp e personalização simples com modelos da joalheria. | Termos como “briefing consultivo”, “renderização 3D”. |
+| Processo | Etapas simples: WhatsApp → escolha guiada → ourives → entrega/manutenção. | Descrições longas, promessa de etapas digitais que não existem. |
+| Portfólio | Fotos reais, desafio → solução → resultado + link para WhatsApp. | Estado “em breve” ou cases sem imagem. |
+| Depoimentos | Frases curtas citando atendimento/qualidade. | Textos muito longos ou repetindo métricas. |
+| CTA final | Botões “Falar no WhatsApp agora” e “Agendar visita presencial”, badges de confiança. | Formulário complexo ou CTA para canais secundários.
 
 **Itens adicionais a mapear com stakeholders:**
-- Necessidade de incluir mapa/enderecos, horarios ou premios/certificacoes.
-- Possiveis gatilhos de escassez (agenda limitada, poucas vagas por mes).
-- Conteudos de apoio (FAQ, blog) que possam ser linkados sem distrair do funil principal.
-
----
-**Resultado da Etapa 1:** publico-alvo e dores mapeados, KPI e metas definidos, prioridades de conteudo identificadas. Pronto para avancar a Etapa 2 (refinar mensagem e rewrites).
+- Mensagens prontas de WhatsApp (para visita, catálogo digital, manutenção).
+- Políticas de manutenção (polimento, ajustes) para comunicar na home.
+- Conteúdos complementares (sobre a joalheria, histórico do ourives) que ajudem no storytelling.

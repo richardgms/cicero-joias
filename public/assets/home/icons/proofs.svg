@@ -1,0 +1,19 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="192" height="64" viewBox="0 0 192 64" fill="none" stroke="#153f2b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <g id="proof-craft" transform="translate(0 0)">
+    <circle cx="32" cy="32" r="18" />
+    <path d="M42 22l-8 8" />
+    <path d="M24 26l12 12" />
+    <path d="M38 18l6-6" />
+    <path d="M40 16l6 6" />
+  </g>
+  <g id="proof-showroom" transform="translate(64 0)">
+    <rect x="20" y="18" width="24" height="28" rx="6" />
+    <circle cx="32" cy="24" r="6" />
+    <path d="M24 38h16" />
+    <path d="M24 44h16" />
+  </g>
+  <g id="proof-support" transform="translate(128 0)">
+    <path d="M32 16l16 8v10c0 9-6 17-16 20-10-3-16-11-16-20V24l16-8z" />
+    <path d="M26 34l4 4 8-8" />
+  </g>
+</svg>

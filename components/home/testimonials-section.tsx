@@ -1,285 +1,78 @@
-'use client';
+﻿'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import Image from 'next/image';
+import React from 'react';
 import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-import useEmblaCarousel from 'embla-carousel-react';
-import { Star, Quote, ChevronLeft, ChevronRight, Heart, Sparkles } from 'lucide-react';
-import { AnimatedSection, GlassCard } from '@/components/ui/animated-section';
-import CountUp from 'react-countup';
-
-const testimonials = [
-  {
-    id: 1,
-    name: 'Isabella Rodrigues',
-    role: 'Noiva',
-    content: 'A Cícero Joias traduziu nossa história nas alianças. Aprovamos cada detalhe e a entrega foi impecável.',
-    rating: 5,
-    image: 'https://images.unsplash.com/photo-1494790108755-2616b612b47c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&h=300&fit=facearea&facepad=2',
-    project: 'Alianças de Casamento Personalizadas'
-  },
-  {
-    id: 2,
-    name: 'Carlos Eduardo Santos',
-    role: 'Cliente há 12 anos',
-    content: 'Confio minhas joias à Cícero Joias há 12 anos: restaurações impecáveis, preço justo e atenção transparente.',
-    rating: 5,
-    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&h=300&fit=facearea&facepad=2',
-    project: 'Restauração de Joias Antigas'
-  },
-  {
-    id: 3,
-    name: 'Ana Carolina Ferreira',
-    role: 'Formanda em Medicina',
-    content: 'Meu anel de formatura ficou exatamente como imaginei, com brasão, gravação e acabamento impecáveis.',
-    rating: 5,
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&h=300&fit=facearea&facepad=2',
-    project: 'Anel de Formatura Personalizado'
-  },
-  {
-    id: 4,
-    name: 'Roberto Oliveira',
-    role: 'Empresário',
-    content: 'O colar de bodas surpreendeu minha esposa; brilho e delicadeza mostram o cuidado artesanal da equipe.',
-    rating: 5,
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&h=300&fit=facearea&facepad=2',
-    project: 'Colar de Bodas de Prata'
-  },
-  {
-    id: 5,
-    name: 'Mariana Costa Lima',
-    role: 'Arquiteta',
-    content: 'Os brincos do meu casamento ficaram elegantes e confortáveis, com provas e ajustes até chegar ao ideal.',
-    rating: 5,
-    image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&h=300&fit=facearea&facepad=2',
-    project: 'Joias para Casamento'
-  },
-  {
-    id: 6,
-    name: 'Francisco Almeida',
-    role: 'Aposentado',
-    content: 'Meu relógio de família voltou a brilhar. O time cuidou de cada detalhe com técnica e carinho.',
-    rating: 5,
-    image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&h=300&fit=facearea&facepad=2',
-    project: 'Restauração de Relógio Antigo'
-  }
-];
+import { Quote } from 'lucide-react';
+import { AnimatedSection } from '@/components/ui/animated-section';
+import { testimonials, whatsappLinks } from './home-data';
 
 export function TestimonialsSection() {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
-
-  const [emblaRef, emblaApi] = useEmblaCarousel({ 
-    loop: true,
-    align: 'start',
-    skipSnaps: false,
-    dragFree: true,
-  });
-
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [canScrollPrev, setCanScrollPrev] = useState(false);
-  const [canScrollNext, setCanScrollNext] = useState(false);
-
-  const scrollPrev = useCallback(() => {
-    if (emblaApi) emblaApi.scrollPrev();
-  }, [emblaApi]);
-
-  const scrollNext = useCallback(() => {
-    if (emblaApi) emblaApi.scrollNext();
-  }, [emblaApi]);
-
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return;
-    setSelectedIndex(emblaApi.selectedScrollSnap());
-    setCanScrollPrev(emblaApi.canScrollPrev());
-    setCanScrollNext(emblaApi.canScrollNext());
-  }, [emblaApi]);
-
-  useEffect(() => {
-    if (!emblaApi) return;
-    onSelect();
-    emblaApi.on('select', onSelect);
-    emblaApi.on('reInit', onSelect);
-  }, [emblaApi, onSelect]);
-
-  // Auto-scroll
-  useEffect(() => {
-    if (!emblaApi) return;
-    const autoScroll = setInterval(() => {
-      emblaApi.scrollNext();
-    }, 5000);
-    return () => clearInterval(autoScroll);
-  }, [emblaApi]);
-
   return (
-    <section className="py-24 bg-gradient-to-br from-esmeralda via-esmeralda-light to-esmeralda-dark relative overflow-hidden">
-      {/* Background Effects */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-10 left-10 w-32 h-32 border border-ouro rounded-full animate-pulse" />
-        <div className="absolute bottom-20 right-20 w-24 h-24 border-2 border-ouro/60 transform rotate-45" />
-        <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-gradient-to-r from-ouro/20 to-transparent rounded-full" />
-      </div>
+    <section className="relative overflow-hidden bg-gradient-to-br from-esmeralda via-esmeralda-light to-[#dbe7df] py-24">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_10%_20%,rgba(255,255,255,0.35),transparent_55%)]" />
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
-        {/* Section Header */}
-        <AnimatedSection className="text-center mb-16" delay={0.2}>
-          <motion.div
-            className="inline-flex items-center space-x-2 bg-gradient-to-r from-ouro/20 to-yellow-400/20 backdrop-blur-md rounded-full px-6 py-3 mb-6 border border-ouro/30"
-            whileHover={{ scale: 1.05 }}
-          >
-            <Heart className="w-4 h-4 text-ouro animate-pulse" />
-            <span className="text-sm font-medium text-marfim">
-              Clientes que viveram a experiência
-            </span>
-          </motion.div>
-
-          <h2 className="font-playfair text-4xl md:text-5xl lg:text-6xl font-bold text-marfim mb-6">
-            Histórias contadas em joias
-            <span className="block bg-gradient-to-r from-ouro via-yellow-400 to-ouro bg-clip-text text-transparent">
-              relatadas por quem confia
-            </span>
+      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 sm:px-6 lg:px-8">
+        <AnimatedSection className="space-y-6 text-center" delay={0.05}>
+          <span className="inline-flex items-center justify-center gap-2 rounded-full border border-esmeralda/30 bg-white/70 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-esmeralda/80">
+            <Quote className="h-4 w-4" />
+            Depoimentos
+          </span>
+          <h2 className="font-playfair text-3xl sm:text-4xl lg:text-5xl font-semibold text-esmeralda">
+            Clientes que confiaram no nosso cuidado artesanal
           </h2>
-
-          <p className="text-xl text-marfim-dark max-w-3xl mx-auto leading-relaxed">
-            Relatos curtos de casais, formandos e famílias que confiaram suas memórias ao nosso atelier.
+          <p className="mx-auto max-w-3xl text-base sm:text-lg text-grafite/75">
+            As historias abaixo mostram como o atendimento direto com o ourives da Cicero Joias traz tranquilidade do primeiro contato ate a manutencao.
           </p>
         </AnimatedSection>
 
-        {/* Testimonials Carousel */}
-        <div className="relative">
-          <div className="overflow-hidden" ref={emblaRef}>
-            <div className="flex">
-              {testimonials.map((testimonial, index) => (
-                <div key={testimonial.id} className="flex-none w-full md:w-1/2 lg:w-1/3 pl-4">
-                  <motion.div
-                    initial={{ opacity: 0, y: 50 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <GlassCard className="p-8 h-full bg-gradient-to-br from-marfim/10 to-marfim/5 backdrop-blur-md border border-ouro/20">
-                      {/* Quote Icon */}
-                      <div className="flex justify-between items-start mb-6">
-                        <div className="flex items-center">
-                          {[...Array(testimonial.rating)].map((_, i) => (
-                            <Star key={i} className="w-4 h-4 text-ouro fill-current" />
-                          ))}
-                        </div>
-                        <Quote className="w-8 h-8 text-ouro/30" />
-                      </div>
-
-                      {/* Content */}
-                      <p className="text-marfim-dark mb-6 leading-relaxed italic text-sm">
-                        &ldquo;{testimonial.content}&rdquo;
-                      </p>
-
-                      {/* Project */}
-                      <div className="mb-4">
-                        <span className="text-xs bg-ouro/20 text-ouro px-3 py-1 rounded-full">
-                          {testimonial.project}
-                        </span>
-                      </div>
-
-                      {/* Author */}
-                      <div className="flex items-center">
-                        <div className="relative">
-                          <img
-                            src={testimonial.image}
-                            alt={testimonial.name}
-                            className="w-12 h-12 rounded-full object-cover border-2 border-ouro/30"
-                          />
-                          <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-gradient-to-r from-ouro to-yellow-400 rounded-full flex items-center justify-center">
-                            <Sparkles className="w-2 h-2 text-esmeralda" />
-                          </div>
-                        </div>
-                        <div className="ml-4">
-                          <h4 className="font-semibold text-marfim text-sm">
-                            {testimonial.name}
-                          </h4>
-                          <p className="text-xs text-marfim-dark">
-                            {testimonial.role}
-                          </p>
-                        </div>
-                      </div>
-                    </GlassCard>
-                  </motion.div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Navigation Buttons */}
-          <div className="flex items-center justify-center mt-8 space-x-4">
-            <motion.button
-              onClick={scrollPrev}
-              className={`p-3 rounded-full bg-ouro/20 backdrop-blur-md border border-ouro/30 transition-all duration-300 ${canScrollPrev ? 'opacity-100 hover:bg-ouro/30' : 'opacity-50 cursor-not-allowed'}`}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              disabled={!canScrollPrev}
+        <AnimatedSection className="grid gap-6 sm:grid-cols-2" delay={0.12} stagger>
+          {testimonials.map((testimonial) => (
+            <motion.article
+              key={testimonial.name}
+              className="flex h-full flex-col gap-6 rounded-3xl border border-esmeralda/10 bg-white/90 p-6 shadow-[0_24px_55px_-34px_rgba(24,68,52,0.35)] backdrop-blur-sm"
+              whileHover={{ y: -4 }}
             >
-              <ChevronLeft className="w-5 h-5 text-ouro" />
-            </motion.button>
+              <p className="relative text-base leading-relaxed text-grafite/80">
+                <span className="absolute -left-2 -top-4 text-ouro/40">“</span>
+                {testimonial.quote}
+              </p>
+              <div className="flex items-center gap-4">
+                <div className="relative h-12 w-12 overflow-hidden rounded-full border border-esmeralda/20">
+                  <Image
+                    src={testimonial.image}
+                    alt={`Foto de ${testimonial.name}`}
+                    fill
+                    sizes="48px"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-semibold text-esmeralda">{testimonial.name}</p>
+                  <p className="text-xs uppercase tracking-[0.3em] text-esmeralda/60">
+                    {testimonial.location}
+                    {testimonial.role ? ` · ${testimonial.role}` : ''}
+                  </p>
+                </div>
+              </div>
+            </motion.article>
+          ))}
+        </AnimatedSection>
 
-            {/* Dots Indicator */}
-            <div className="flex space-x-2">
-              {testimonials.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => emblaApi?.scrollTo(index)}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    index === selectedIndex ? 'bg-ouro w-6' : 'bg-ouro/30'
-                  }`}
-                />
-              ))}
-            </div>
-
-            <motion.button
-              onClick={scrollNext}
-              className={`p-3 rounded-full bg-ouro/20 backdrop-blur-md border border-ouro/30 transition-all duration-300 ${canScrollNext ? 'opacity-100 hover:bg-ouro/30' : 'opacity-50 cursor-not-allowed'}`}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              disabled={!canScrollNext}
-            >
-              <ChevronRight className="w-5 h-5 text-ouro" />
-            </motion.button>
-          </div>
-        </div>
-
-        {/* Stats Section */}
-        <AnimatedSection className="mt-20" delay={0.8}>
-          <GlassCard className="p-8 bg-gradient-to-r from-marfim/10 to-marfim/5 backdrop-blur-md border border-ouro/20">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-              <div>
-                <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-ouro to-yellow-400 bg-clip-text text-transparent mb-2">
-                  {inView && <CountUp end={98} duration={2.5} suffix="%" />}
-                  {!inView && "98%"}
-                </div>
-                <p className="text-marfim-dark text-sm">Satisfação</p>
-              </div>
-              <div>
-                <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-ouro to-yellow-400 bg-clip-text text-transparent mb-2">
-                  {inView && <CountUp end={4.9} duration={2.5} decimals={1} />}
-                  {!inView && "4.9"}
-                </div>
-                <p className="text-marfim-dark text-sm">Avaliação</p>
-              </div>
-              <div>
-                <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-ouro to-yellow-400 bg-clip-text text-transparent mb-2">
-                  {inView && <CountUp end={500} duration={2.5} suffix="+" />}
-                  {!inView && "500+"}
-                </div>
-                <p className="text-marfim-dark text-sm">Clientes</p>
-              </div>
-              <div>
-                <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-ouro to-yellow-400 bg-clip-text text-transparent mb-2">
-                  {inView && <CountUp end={40} duration={2.5} suffix="+" />}
-                  {!inView && "40+"}
-                </div>
-                <p className="text-marfim-dark text-sm">Anos</p>
-              </div>
-            </div>
-          </GlassCard>
+        <AnimatedSection className="flex flex-col items-center gap-3 text-center" delay={0.18}>
+          <p className="text-sm sm:text-base text-grafite/70">
+            Quer conversar com a equipe? Estamos no WhatsApp para compartilhar novos cases e tirar duvidas rapidamente.
+          </p>
+          <motion.a
+            href={whatsappLinks.primary}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-full bg-esmeralda px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-marfim shadow-[0_20px_40px_-22px_rgba(24,68,52,0.4)]"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+          >
+            Falar com a joalheria
+          </motion.a>
         </AnimatedSection>
       </div>
     </section>

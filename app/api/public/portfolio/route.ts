@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+﻿import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
 export async function GET(request: Request) {
@@ -9,22 +9,19 @@ export async function GET(request: Request) {
     const limit = parseInt(searchParams.get('limit') || '12');
     const skip = (page - 1) * limit;
 
-    // Construir filtros
-    const where: any = {
-      isActive: true
+    const where: Record<string, unknown> = {
+      isActive: true,
     };
 
-    // Filtro por categoria
     if (category && category !== 'todos') {
       where.category = category.toUpperCase();
     }
 
-    // Buscar projetos com paginação
     const [portfolioItems, total] = await Promise.all([
       prisma.portfolioItem.findMany({
         where,
         orderBy: {
-          createdAt: 'desc'
+          createdAt: 'desc',
         },
         skip,
         take: limit,
@@ -32,16 +29,17 @@ export async function GET(request: Request) {
           id: true,
           title: true,
           description: true,
+          detailedDescription: true,
+          specifications: true,
           category: true,
           mainImage: true,
           images: true,
-          createdAt: true
-        }
+          createdAt: true,
+        },
       }),
-      prisma.portfolioItem.count({ where })
+      prisma.portfolioItem.count({ where }),
     ]);
 
-    // Calcular informações de paginação
     const totalPages = Math.ceil(total / limit);
     const hasNextPage = page < totalPages;
     const hasPrevPage = page > 1;
@@ -54,15 +52,14 @@ export async function GET(request: Request) {
         total,
         totalPages,
         hasNextPage,
-        hasPrevPage
-      }
+        hasPrevPage,
+      },
     });
-
   } catch (error) {
-    console.error('Erro ao buscar portfolio público:', error);
+    console.error('Erro ao buscar portfólio público:', error);
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
-      { status: 500 }
+      { status: 500 },
     );
   }
-} 
+}

@@ -1,33 +1,31 @@
-﻿# Home Redesign - Etapa 2 · Estrategia de Mensagem
+# Home Redesign - Etapa 2 · Estratégia de Mensagem
 
 ## 1. Pilares de mensagem e tom de voz
-**Promessa central:** alta joalheria artesanal guiada por consultoria personalizada, entregando pecas unicas com seguranca total.
+- **Artesanato com legado**: alianças feitas à mão pelo nosso ourives com mais de 40 anos de experiência.
+- **WhatsApp como porta de entrada**: todo contato começa pelo app, onde entendemos estilo, combinamos visita ou seguimos à distância.
+- **Escolha guiada com modelos reais**: a joalheria mantém um portfólio físico para o casal experimentar, tocar e adaptar.
 
-**Pilares (validar com o time comercial):**
-1. **Confianca tecnica** — materiais certificados, garantia vitalicia, atelier proprio.
-2. **Co-criacao premium** — processo consultivo, renderizacoes 3D, ajustes ilimitados ate aprovar.
-3. **Memoria afetiva** — joias que contam historias (casamentos, formaturas, restauracoes familiares).
+**Tom de voz**: acolhedor, direto e honesto. Fale como uma joalheria de bairro experiente: sem jargões técnicos, valorizando o relacionamento e o cuidado manual.
 
-**Tom de voz:** elegante, direto e consultivo. Frases curtas, verbos no imperativo gentil (“Descubra”, “Agende”). Sempre esclarecer proximo passo e evitar hiperlativos vazios.
-
-## 2. Estrutura de copy por secao
-| Secao | Objetivo | Mensagem-chave | Sugestoes de copy (rascunho) |
+## 2. Estrutura de copy por seção
+| Seção | Objetivo | Mensagem-chave | Sugestão de copy |
 | --- | --- | --- | --- |
-| Hero | Declarar proposta de valor, gerar primeira acao. | “Transformamos historias em joias unicas com 40 anos de oficio e consultoria dedicada.” | Headline: “Joias autorais com assinatura Cícero.” Sub: “Do primeiro esboco a entrega em mao, cada etapa e acompanhada por especialistas.” CTA primario: “Agendar consultoria.” Link secundario discreto: “Ver portifolio.” |
-| Features | Responder “Por que nos?” em 3-4 blocos. | Traduzir pilares em beneficios tangiveis e prova. | Agrupar em: Consultoria Imersiva, Produção Artesanal Certificada, Garantia e Suporte Vitalicio, Experiencias Exclusivas (alianças, joias personalizadas). Cada bloco com 2 frases: dor + solucao. |
-| Processo | Reduzir incerteza sobre etapas e prazos. | “Em 4 passos claros, acompanhamos voce ate a entrega.” | Etapas: Descoberta guiada, Design aprovado, Artesanato e Lapidacao, Entrega e cuidado continuo. Indicar prazos medios ou numero de iteracoes. CTA unico no final: “Comecar meu projeto.” |
-| Portifolio | Prova visual e social. | “Casos reais que mostram o nivel de detalhe e personalizacao.” | Selecionar 3 estudos: desafio, solucao, resultado + foto. Botao: “Ver mais projetos.” Inserir destaque fixo se nao houver API (ex.: “Colecao Alianças 2024”). |
-| Depoimentos | Reforcar confianca e empatia. | “Clientes que confiaram momentos unicos.” | Extrair frase de impacto (1-2 linhas) + dados do cliente. Opcional: destacar insight (“Alianca pronta em 30 dias”). Incluir selo media ou pontuacao se existir. |
-| CTA final | Converter lead quente. | “Agenda limitada para projetos personalizados; fale com o atelier.” | CTA primario: “Reservar consultoria.” CTA secundario: “Conversar no WhatsApp agora.” Repetir provas de credibilidade resumidas (tempo de mercado, equipe, local). |
+| Hero | Apresentar proposta de valor e levar ao WhatsApp. | “Alianças feitas à mão desde 1980 em João Pessoa.” | Headline: “Cícero Joias – alianças feitas à mão desde 1980.” Sub: “Atendemos pelo WhatsApp, mostramos modelos na joalheria e adaptamos cada detalhe com o nosso ourives experiente.” CTA primário: “Falar no WhatsApp agora”. Link secundário discreto: “Agendar visita presencial” (mesmo WhatsApp, texto diferente).
+| Provas rápidas | Sumarizar diferenciais logo abaixo da dobra. | “Experiência do ourives, modelos para experimentar, manutenção garantida.” | Cards curtos com ícone + frase (ex.: “40 anos de bancada”, “Modelos na loja”, “Polimento e ajustes na nossa joalheria”).
+| Por que Cícero Joias | Dar contexto sobre o serviço e o cuidado artesanal. | “Somos joalheria própria, com produção manual e atendimento próximo.” | Blocos: (1) Ofício do ourives; (2) Portfólio para experimentar; (3) Personalização com referência; (4) Manutenção garantida. Cada um com benefício claro e fechamento “Fale com a Cícero Joias pelo WhatsApp”.
+| Processo | Explicar as etapas simples e o papel do WhatsApp. | “Conversamos pelo WhatsApp, escolhemos juntos e o ourives executa.” | 1) Contato pelo WhatsApp. 2) Escolha guiada (na loja ou à distância). 3) Ourives em ação. 4) Entrega e manutenção. CTA reforço: “Começar agora pelo WhatsApp”.
+| Portfólio | Mostrar resultados reais. | “Casais que escolheram modelos da loja ou adaptaram a partir de fotos.” | Destaque 1 + dois cards: desafio → solução → resultado. CTA: “Quero ver mais modelos no WhatsApp”.
+| Depoimentos | Reforçar confiança com frases curtas. | “Clientes comentando atendimento e qualidade.” | 3-4 citações de 140 caracteres, com nome/cidade. Link final opcional: “Falar com a joalheria pelo WhatsApp”.
+| CTA final | Reforço do canal e próxima ação. | “Fale agora pelo WhatsApp para combinar visita ou resolver on-line.” | CTA primário: “Falar no WhatsApp agora”. CTA secundário outline: “Agendar visita presencial”. Texto de apoio explicando que tudo começa pelo app.
 
 ## 3. Diretrizes para CTAs e provas
-- **CTA primario unico na dobra inicial** e repetido em seções chaves (ao fim do processo e CTA final). Couro textual coeso: “Agendar consultoria.”
-- **CTA secundario** sempre com menor peso visual (link texto ou botao outline) direcionado para WhatsApp ou portifolio.
-- **Provas de qualidade**: mantenha “40 anos”, “Atelier proprio em Campina Grande”, “Garantia vitalicia”, “Clientes em mais de X cidades”. Distribuir sem repetir na mesma pagina.
-- **Urgencia suave**: mencionar que o atelier assume numero limitado de projetos simultaneos; reforcar disponibilidade de resposta ate 2 horas uteis.
-- **Microcopys complementares**: em formularios, explicar expectativas (“Retornamos com orcamento estimado em ate 24h uteis”).
+- CTA primário SEMPRE “Falar/Chamar no WhatsApp”. Use botões sólidos.
+- CTA secundário (outline) pode repetir o WhatsApp com texto “Agendar visita presencial”.
+- Metricas/provas: 40 anos de ofício, atendimento próprio, manutenção garantida. Distribuir sem repetir na mesma linha.
+- Fotos e textos precisam enfatizar o atendimento humano; evitar promessas de tecnologias não utilizadas (sem 3D render).
 
-## 4. Entregaveis esperados para a Etapa 3
-- Wireframe de baixa fidelidade aplicando as mensagens acima.
-- Lista de conteudos/ativos visuais a produzir (fotos, renders, selos, estudos de caso).
-- Checklist para revisar consistencia de CTA e distribuicao de provas antes do desenvolvimento.
+## 4. Entregáveis esperados para a Etapa 3
+- Wireframe atualizado com CTAs apontando ao WhatsApp.
+- Lista de fotos dos modelos disponíveis e imagens do ourives em ação.
+- Quotes de clientes reais (ou adaptados) para usarmos como prova social.
+- Revisão das mensagens prontas do WhatsApp (textos pré-prontos para contato iniciando visita, envio de catálogo etc.).
