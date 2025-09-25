@@ -6,18 +6,18 @@ import { z } from 'zod';
 // Schema de validação para atualização de produto
 const updateProductSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório').optional(),
-  description: z.string().optional(),
+  description: z.string().optional().nullable(),
   price: z.number().positive('Preço deve ser positivo').optional().nullable(),
   category: z.enum(['JEWELRY', 'RINGS', 'NECKLACES', 'EARRINGS', 'BRACELETS', 'WATCHES', 'ACCESSORIES']).optional(),
   isActive: z.boolean().optional(),
   isReadyDelivery: z.boolean().optional(),
-  mainImage: z.string().optional(),
+  mainImage: z.string().optional().nullable(),
   images: z.array(z.string()).optional(),
   stock: z.number().int().min(0, 'Estoque não pode ser negativo').optional(),
   weight: z.number().positive('Peso deve ser positivo').optional().nullable(),
-  material: z.string().optional(),
-  size: z.string().optional(),
-  code: z.string().optional(),
+  material: z.string().optional().nullable(),
+  size: z.string().optional().nullable(),
+  code: z.string().optional().nullable(),
 });
 
 async function checkAdminAuth() {

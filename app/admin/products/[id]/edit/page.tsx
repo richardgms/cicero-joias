@@ -139,16 +139,46 @@ export default function EditProductPage() {
     setLoading(true);
 
     try {
+      // Função auxiliar para converter valores numéricos
+      const toNumber = (value: any): number | undefined => {
+        if (value === null || value === undefined || value === '') {
+          return undefined;
+        }
+        const num = Number(value);
+        return isNaN(num) ? undefined : num;
+      };
+
       const submitData = {
         ...formData,
-        description: formData.description.trim() || undefined,
-        price: formData.price || undefined,
-        mainImage: formData.mainImage.trim() || undefined,
-        weight: formData.weight || undefined,
-        material: formData.material.trim() || undefined,
-        size: formData.size.trim() || undefined,
-        code: formData.code.trim() || undefined,
+        // Garantir que campos boolean sejam enviados corretamente
+        isActive: Boolean(formData.isActive),
+        isReadyDelivery: Boolean(formData.isReadyDelivery),
+        // Tratamento de strings - usar null para permitir limpeza de campos
+        description: formData.description.trim() || null,
+        mainImage: formData.mainImage.trim() || null,
+        material: formData.material.trim() || null,
+        size: formData.size.trim() || null,
+        code: formData.code.trim() || null,
+        // Tratamento de números - GARANTIR que sejam number ou undefined
+        price: toNumber(formData.price),
+        weight: toNumber(formData.weight),
+        stock: toNumber(formData.stock) || 0, // stock não pode ser undefined, default 0
       };
+
+      // Debug: log dos dados sendo enviados
+      console.log('Dados sendo enviados para API:', submitData);
+      console.log('Tipos dos campos numéricos:', {
+        price: `${typeof submitData.price} (${submitData.price})`,
+        weight: `${typeof submitData.weight} (${submitData.weight})`,
+        stock: `${typeof submitData.stock} (${submitData.stock})`
+      });
+      console.log('Campos de texto sendo limpos:', {
+        description: submitData.description === null ? 'LIMPANDO' : 'mantendo',
+        mainImage: submitData.mainImage === null ? 'LIMPANDO' : 'mantendo',
+        material: submitData.material === null ? 'LIMPANDO' : 'mantendo',
+        size: submitData.size === null ? 'LIMPANDO' : 'mantendo',
+        code: submitData.code === null ? 'LIMPANDO' : 'mantendo'
+      });
 
       const response = await fetch(`/api/admin/products/${productId}`, {
         method: 'PUT',
@@ -159,10 +189,19 @@ export default function EditProductPage() {
       });
 
       if (response.ok) {
+        console.log('Produto atualizado com sucesso');
         router.push('/admin/products');
       } else {
         const error = await response.json();
-        alert(`Erro ao atualizar produto: ${error.error}`);
+        console.error('Erro HTTP:', response.status, response.statusText);
+        console.error('Detalhes do erro:', error);
+
+        // Mostrar erro mais detalhado para o usuário
+        const errorMessage = error.details
+          ? `${error.error}: ${error.details}`
+          : error.error || 'Erro desconhecido';
+
+        alert(`Erro ao atualizar produto: ${errorMessage}`);
       }
     } catch (error) {
       console.error('Erro ao atualizar produto:', error);

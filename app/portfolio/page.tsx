@@ -1,1085 +1,393 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
-
 import Link from 'next/link';
-
 import Image from 'next/image';
-
-import { Button } from '@/components/ui/button';
-
-import { Input } from '@/components/ui/input';
-
-import { Badge } from '@/components/ui/badge';
-
-import { 
-
-  Search, 
-
-  Filter, 
-
-  Grid3X3, 
-
-  List, 
-
-  Eye,
-
-  Clock,
-
-  ChevronDown,
-
-  X
-
-} from 'lucide-react';
-
-import {
-
-  Select,
-
-  SelectContent,
-
-  SelectItem,
-
-  SelectTrigger,
-
-  SelectValue,
-
-} from '@/components/ui/select';
-
-import { generatePortfolioSlug } from '@/lib/slug-utils';
-
 import { motion, AnimatePresence } from 'framer-motion';
-
-// Mapeamento de categorias para exibição
+import {
+  Search,
+  Filter,
+  Grid3X3,
+  List,
+  Eye,
+  Clock,
+  ChevronDown,
+  X,
+  SlidersHorizontal,
+  Sparkles,
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { generatePortfolioSlug } from '@/lib/slug-utils';
+import { PageVisibilityGuard } from '@/components/page-visibility-guard';
 
 const categoryLabels = {
-
   WEDDING_RINGS: 'Alianças de Casamento',
-
   REPAIRS_BEFORE_AFTER: 'Consertos (Antes/Depois)',
-
   GOLD_PLATING: 'Banho de Ouro',
-
   CUSTOM_JEWELRY: 'Joias Personalizadas',
-
   GRADUATION_RINGS: 'Anéis de Formatura',
-
 };
 
 interface PortfolioItem {
-
   id: string;
-
   title: string;
-
   description?: string;
-
   category: string;
-
   mainImage: string | null;
-
   images: string[];
-
   createdAt: string;
-
 }
 
 interface ApiResponse {
-
   portfolioItems: PortfolioItem[];
-
   pagination: {
-
     page: number;
-
     limit: number;
-
     total: number;
-
     totalPages: number;
-
     hasNextPage: boolean;
-
     hasPrevPage: boolean;
-
   };
-
 }
 
 interface CategoriesResponse {
-
   categories?: {
-
     portfolio?: Array<{ id: string }>;
-
   };
-
 }
 
 const INITIAL_PAGINATION = {
-
   total: 0,
-
   totalPages: 0,
-
   hasNextPage: false,
-
   hasPrevPage: false,
-
 };
 
 export default function PortfolioPage() {
-
-  const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
-
-  const [loading, setLoading] = useState(true);
-
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const [activeCategory, setActiveCategory] = useState('todos');
-
-  const [currentPage, setCurrentPage] = useState(1);
-
+  const [items, setItems] = useState<PortfolioItem[]>([]);
+  const [filteredItems, setFilteredItems] = useState<PortfolioItem[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-
-  const [pagination, setPagination] = useState(() => INITIAL_PAGINATION);
-
-  const [availableCategories, setAvailableCategories] = useState<string[]>([]);
-
-  useEffect(() => {
-
-    let isMounted = true;
-
-    const loadCategories = async () => {
-
-      try {
-
-        const response = await fetch('/api/public/categories');
-
-        if (!isMounted) {
-
-          return;
-
-        }
-
-        if (response.ok) {
-
-          const data: CategoriesResponse = await response.json();
-
-          const portfolioCategories = (data.categories?.portfolio ?? []).map((cat) => cat.id);
-
-          setAvailableCategories(portfolioCategories);
-
-        }
-
-      } catch (error) {
-
-        console.error('Erro ao buscar categorias:', error);
-
-      }
-
-    };
-
-    void loadCategories();
-
-    return () => {
-
-      isMounted = false;
-
-    };
-
-  }, []);
+  const [dateFilter, setDateFilter] = useState<string>('recent');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pagination, setPagination] = useState(INITIAL_PAGINATION);
+  const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
 
   useEffect(() => {
-
-    let isMounted = true;
-
-    const loadPortfolioItems = async () => {
-
-      setLoading(true);
-
+    const fetchPortfolioItems = async () => {
       try {
+        setLoading(true);
+        setError(null);
 
-        const params = new URLSearchParams({
+        const [itemsResponse, categoriesResponse] = await Promise.all([
+          fetch(`/api/public/portfolio?page=${currentPage}&limit=9`),
+          fetch('/api/public/categories'),
+        ]);
 
-          page: currentPage.toString(),
-
-          limit: '12',
-
-        });
-
-        if (activeCategory !== 'todos') {
-
-          params.append('category', activeCategory);
-
+        if (!itemsResponse.ok) {
+          throw new Error('Não foi possível carregar o portfólio no momento.');
         }
 
-        const response = await fetch(`/api/public/portfolio?${params.toString()}`);
+        const itemsData: ApiResponse = await itemsResponse.json();
+        setItems(itemsData.portfolioItems || []);
+        setFilteredItems(itemsData.portfolioItems || []);
+        setPagination(itemsData.pagination || INITIAL_PAGINATION);
 
-        if (!isMounted) {
-
-          return;
-
+        if (categoriesResponse.ok) {
+          const categoriesData: CategoriesResponse = await categoriesResponse.json();
+          if (categoriesData.categories?.portfolio) {
+            const availableCategories = categoriesData.categories.portfolio
+              .map((category) => category.id)
+              .filter(Boolean);
+            setCategories(availableCategories);
+          }
         }
-
-        if (response.ok) {
-
-          const data: ApiResponse = await response.json();
-
-          setPortfolioItems(data.portfolioItems);
-
-          setPagination({
-
-            total: data.pagination.total,
-
-            totalPages: data.pagination.totalPages,
-
-            hasNextPage: data.pagination.hasNextPage,
-
-            hasPrevPage: data.pagination.hasPrevPage,
-
-          });
-
-        } else {
-
-          console.error('Erro ao buscar portfolio');
-
-          setPortfolioItems([]);
-
-          setPagination({ ...INITIAL_PAGINATION });
-
-        }
-
-      } catch (error) {
-
-        console.error('Erro ao buscar portfolio:', error);
-
-        if (isMounted) {
-
-          setPortfolioItems([]);
-
-          setPagination({ ...INITIAL_PAGINATION });
-
-        }
-
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Erro inesperado ao carregar o portfólio.');
       } finally {
-
-        if (isMounted) {
-
-          setLoading(false);
-
-        }
-
+        setLoading(false);
       }
-
     };
 
-    void loadPortfolioItems();
+    fetchPortfolioItems();
+  }, [currentPage]);
 
-    return () => {
+  const filteredAndSortedItems = useMemo(() => {
+    let result = [...items];
 
-      isMounted = false;
-
-    };
-
-  }, [activeCategory, currentPage]);
-
-  const filteredItems = useMemo(() => {
-
-    const lowerSearch = searchTerm.trim().toLowerCase();
-
-    if (!lowerSearch) {
-
-      return portfolioItems;
-
+    if (selectedCategory !== 'all') {
+      result = result.filter((item) => item.category === selectedCategory);
     }
 
-    return portfolioItems.filter((item) => {
+    if (searchTerm.trim().length > 0) {
+      const term = searchTerm.toLowerCase();
+      result = result.filter(
+        (item) =>
+          item.title.toLowerCase().includes(term) ||
+          item.description?.toLowerCase().includes(term)
+      );
+    }
 
-      const titleMatch = item.title.toLowerCase().includes(lowerSearch);
-
-      const descriptionMatch = item.description?.toLowerCase().includes(lowerSearch);
-
-      return titleMatch || Boolean(descriptionMatch);
-
+    result.sort((a, b) => {
+      const dateA = new Date(a.createdAt).getTime();
+      const dateB = new Date(b.createdAt).getTime();
+      return dateFilter === 'recent' ? dateB - dateA : dateA - dateB;
     });
 
-  }, [portfolioItems, searchTerm]);
+    return result;
+  }, [items, selectedCategory, searchTerm, dateFilter]);
 
-  // Criar lista de categorias para os filtros
-
-  const categories = useMemo(() => [
-
-    { id: 'todos', name: 'Todos os Projetos', count: pagination.total },
-
-    ...availableCategories.map((cat) => ({
-
-      id: cat,
-
-      name: categoryLabels[cat as keyof typeof categoryLabels] || cat,
-
-      count: 0, // TODO: Implementar contagem por categoria
-
-    })),
-
-  ], [availableCategories, pagination.total]);
+  useEffect(() => {
+    setFilteredItems(filteredAndSortedItems);
+  }, [filteredAndSortedItems]);
 
   const handleCategoryChange = (category: string) => {
-
-    setActiveCategory(category);
-
+    setSelectedCategory(category);
     setCurrentPage(1);
+  };
 
-    setIsFilterOpen(false);
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+    setCurrentPage(1);
+  };
 
+  const handleDateFilterChange = (value: string) => {
+    setDateFilter(value);
+    setCurrentPage(1);
   };
 
   const handlePageChange = (page: number) => {
-
-    setCurrentPage(page);
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-
+    if (page >= 1 && page <= pagination.totalPages) {
+      setCurrentPage(page);
+    }
   };
-
-  const generateSlugForItem = (item: PortfolioItem) => {
-
-    return generatePortfolioSlug({
-
-      title: item.title,
-
-      category: item.category,
-
-      id: item.id
-
-    });
-
-  };
-
-  // Skeleton loading component
-
-  const SkeletonCard = () => (
-
-    <div className="bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100">
-
-      <div className="relative h-64 bg-gray-200 animate-pulse" />
-
-      <div className="p-6 space-y-3">
-
-        <div className="h-4 bg-gray-200 rounded animate-pulse w-1/3" />
-
-        <div className="h-6 bg-gray-200 rounded animate-pulse w-3/4" />
-
-        <div className="h-4 bg-gray-200 rounded animate-pulse w-full" />
-
-      </div>
-
-    </div>
-
-  );
 
   return (
-
-    <div className="min-h-screen bg-gradient-to-br from-marfim via-gray-50 to-esmeralda/5">
-
-      {/* Hero Section Moderno */}
-
-      <section className="relative py-20 md:py-24 overflow-hidden">
-
-        {/* Background com overlay */}
-
-        <div className="absolute inset-0">
-
-          <div 
-
-            className="w-full h-full bg-cover bg-center bg-no-repeat"
-
-            style={{
-
-              backgroundImage: `
-
-                linear-gradient(
-
-                  135deg,
-
-                  rgba(19, 54, 41, 0.92) 0%,
-
-                  rgba(19, 54, 41, 0.88) 50%,
-
-                  rgba(19, 54, 41, 0.95) 100%
-
-                ),
-
-                url('/assets/images/portfolio-hero.png')`
-
-            }}
-
-          />
-
+    <PageVisibilityGuard pageSlug="portfolio">
+      <div className="min-h-screen bg-marfim">
+      <section className="relative overflow-hidden bg-gradient-to-br from-esmeralda via-esmeralda-dark to-[#04160f] py-20 text-marfim">
+        <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 text-center sm:px-6">
+          <span className="inline-flex mx-auto w-fit items-center gap-2 rounded-full border border-marfim/20 bg-white/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-marfim/70">
+            Nosso trabalho em foco
+          </span>
+          <h1 className="font-playfair text-4xl sm:text-5xl font-semibold leading-tight">
+            Portfólio de <span className="text-ouro">joias e restaurações</span>
+          </h1>
+          <p className="mx-auto max-w-2xl text-sm text-marfim/75">
+            Conheça projetos recentes: alianças personalizadas, restaurações com memória afetiva e renovações de peças queridas. Filtre por categoria para encontrar o que mais combina com você.
+          </p>
         </div>
-
-        
-
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-          <motion.div 
-
-            initial={{ opacity: 0, y: 30 }}
-
-            animate={{ opacity: 1, y: 0 }}
-
-            transition={{ duration: 0.8 }}
-
-            className="text-center max-w-4xl mx-auto"
-
-          >
-
-            <h1 className="font-playfair text-3xl md:text-5xl lg:text-6xl font-bold mb-6 text-marfim leading-tight">
-
-              Nosso 
-
-              <span className="bg-gradient-to-r from-ouro via-yellow-400 to-ouro bg-clip-text text-transparent"> Portfólio</span>
-
-            </h1>
-
-            <p className="text-lg md:text-xl text-marfim-dark leading-relaxed max-w-3xl mx-auto">
-
-              Conheça alguns dos nossos trabalhos mais recentes e descubra como podemos 
-
-              transformar suas ideias em joias que contam histórias únicas.
-
-            </p>
-
-          </motion.div>
-
-        </div>
-
       </section>
 
-      {/* Portfolio Section */}
-
-      <section className="py-12 md:py-20">
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-          {/* Header com Busca e Filtros */}
-
-          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-200 mb-8">
-
-            {/* Busca e Controles */}
-
-            <div className="flex flex-col md:flex-row gap-4 items-center justify-between mb-6">
-
-              {/* Busca */}
-
-              <div className="relative flex-1 max-w-md w-full">
-
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-
-                <Input
-
-                  placeholder="Buscar projetos..."
-
-                  value={searchTerm}
-
-                  onChange={(e) => setSearchTerm(e.target.value)}
-
-                  className="pl-10 h-12 rounded-xl border-gray-200 focus:border-esmeralda focus:ring-esmeralda"
-
-                />
-
-              </div>
-
-              {/* Controles de View Mode e Filtro Mobile */}
-
-              <div className="flex items-center gap-3">
-
-                {/* View Mode Toggle */}
-
-                <div className="hidden md:flex bg-gray-100 rounded-lg p-1">
-
-                  <button
-
-                    onClick={() => setViewMode('grid')}
-
-                    className={`p-2 rounded-md transition-colors ${
-
-                      viewMode === 'grid' 
-
-                        ? 'bg-white text-esmeralda shadow-sm' 
-
-                        : 'text-gray-600 hover:text-esmeralda'
-
-                    }`}
-
-                  >
-
-                    <Grid3X3 className="h-4 w-4" />
-
-                  </button>
-
-                  <button
-
-                    onClick={() => setViewMode('list')}
-
-                    className={`p-2 rounded-md transition-colors ${
-
-                      viewMode === 'list' 
-
-                        ? 'bg-white text-esmeralda shadow-sm' 
-
-                        : 'text-gray-600 hover:text-esmeralda'
-
-                    }`}
-
-                  >
-
-                    <List className="h-4 w-4" />
-
-                  </button>
-
-                </div>
-
-                {/* Filtro Mobile */}
-
-                <Button
-
-                  variant="outline"
-
-                  onClick={() => setIsFilterOpen(!isFilterOpen)}
-
-                  className="md:hidden border-gray-200 hover:border-esmeralda"
-
-                >
-
-                  <Filter className="h-4 w-4 mr-2" />
-
-                  Filtros
-
-                  <ChevronDown className={`h-4 w-4 ml-2 transition-transform ${isFilterOpen ? 'rotate-180' : ''}`} />
-
-                </Button>
-
-                {/* Contador de resultados */}
-
-                <div className="hidden md:block text-sm text-gray-600 bg-gray-100 px-3 py-2 rounded-lg">
-
-                  {loading ? 'Carregando...' : `${pagination.total} projeto${pagination.total !== 1 ? 's' : ''}`}
-
-                </div>
-
-              </div>
-
+      <section className="mx-auto max-w-6xl px-4 pb-24 pt-16 sm:px-6 lg:px-8">
+        <div className="flex flex-col gap-6 rounded-3xl border border-esmeralda/10 bg-white p-6 shadow-[0_25px_60px_-38px_rgba(24,68,52,0.35)]">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="flex flex-1 items-center gap-3 rounded-full border border-esmeralda/20 bg-esmeralda/5 px-4 py-2">
+              <Search className="h-4 w-4 text-esmeralda" />
+              <Input
+                value={searchTerm}
+                onChange={handleSearchChange}
+                placeholder="Busque por nome ou descrição"
+                className="border-none bg-transparent text-sm text-esmeralda placeholder:text-esmeralda/60 focus-visible:ring-0"
+              />
             </div>
-
-            {/* Filtros Desktop */}
-
-            <div className="hidden md:flex flex-wrap gap-2">
-
-              {categories.map((category) => (
-
-                <button
-
-                  key={category.id}
-
-                  onClick={() => handleCategoryChange(category.id)}
-
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-
-                    activeCategory === category.id
-
-                      ? 'bg-esmeralda text-marfim shadow-lg scale-105'
-
-                      : 'bg-white/60 text-gray-700 hover:bg-esmeralda/10 hover:text-esmeralda border border-gray-200'
-
-                  }`}
-
-                >
-
-                  {category.name}
-
-                  {category.count > 0 && (
-
-                    <span className="ml-2 text-xs opacity-75">({category.count})</span>
-
-                  )}
-
-                </button>
-
-              ))}
-
+            <div className="flex items-center gap-3">
+              <Button
+                variant={viewMode === 'grid' ? 'default' : 'outline'}
+                size="sm"
+                className={viewMode === 'grid' ? 'bg-esmeralda text-marfim' : 'border-esmeralda/30 text-esmeralda'}
+                onClick={() => setViewMode('grid')}
+              >
+                <Grid3X3 className="h-4 w-4" />
+              </Button>
+              <Button
+                variant={viewMode === 'list' ? 'default' : 'outline'}
+                size="sm"
+                className={viewMode === 'list' ? 'bg-esmeralda text-marfim' : 'border-esmeralda/30 text-esmeralda'}
+                onClick={() => setViewMode('list')}
+              >
+                <List className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-esmeralda/30 text-esmeralda"
+                onClick={() => setIsFilterDialogOpen(true)}
+              >
+                <SlidersHorizontal className="h-4 w-4" />
+                Filtros
+              </Button>
             </div>
-
-            {/* Filtros Mobile (Dropdown) */}
-
-            <AnimatePresence>
-
-              {isFilterOpen && (
-
-                <motion.div
-
-                  initial={{ opacity: 0, height: 0 }}
-
-                  animate={{ opacity: 1, height: 'auto' }}
-
-                  exit={{ opacity: 0, height: 0 }}
-
-                  className="md:hidden mt-4 pt-4 border-t border-gray-200"
-
-                >
-
-                  <div className="space-y-2">
-
-                    {categories.map((category) => (
-
-                      <button
-
-                        key={category.id}
-
-                        onClick={() => handleCategoryChange(category.id)}
-
-                        className={`w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 ${
-
-                          activeCategory === category.id
-
-                            ? 'bg-esmeralda text-marfim shadow-lg'
-
-                            : 'bg-white/60 text-gray-700 hover:bg-esmeralda/10 hover:text-esmeralda border border-gray-200'
-
-                        }`}
-
-                      >
-
-                        {category.name}
-
-                        {category.count > 0 && (
-
-                          <span className="ml-2 text-xs opacity-75">({category.count})</span>
-
-                        )}
-
-                      </button>
-
-                    ))}
-
-                  </div>
-
-                </motion.div>
-
-              )}
-
-            </AnimatePresence>
-
           </div>
 
-          {/* Grid de Projetos */}
-
-          {loading ? (
-
-            <div className={
-
-              viewMode === 'grid' 
-
-                ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" 
-
-                : "space-y-4"
-
-            }>
-
-              {Array.from({ length: 8 }).map((_, index) => (
-
-                <SkeletonCard key={index} />
-
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="flex flex-wrap gap-2">
+              <Badge
+                onClick={() => handleCategoryChange('all')}
+                className={`cursor-pointer border transition-colors duration-200 ${selectedCategory === 'all'
+                  ? 'bg-esmeralda text-marfim border-transparent hover:bg-esmeralda'
+                  : 'bg-white text-esmeralda border-esmeralda/20 hover:bg-white'}`}
+              >
+                Todos
+              </Badge>
+              {categories.map((category) => (
+                <Badge
+                  key={category}
+                  onClick={() => handleCategoryChange(category)}
+                  className={`cursor-pointer border transition-colors duration-200 ${selectedCategory === category
+                    ? 'bg-esmeralda text-marfim border-transparent hover:bg-esmeralda'
+                    : 'bg-white text-esmeralda border-esmeralda/20 hover:bg-white'}`}
+                >
+                  {categoryLabels[category as keyof typeof categoryLabels] || category}
+                </Badge>
               ))}
-
             </div>
 
-          ) : filteredItems.length === 0 ? (
+            <div className="flex items-center gap-2">
+              <span className="text-xs uppercase tracking-[0.28em] text-esmeralda/60">Organizar por</span>
+              <Select value={dateFilter} onValueChange={handleDateFilterChange}>
+                <SelectTrigger className="w-[160px] border-esmeralda/20 text-esmeralda">
+                  <SelectValue placeholder="Mais recentes" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="recent">Mais recentes</SelectItem>
+                  <SelectItem value="oldest">Mais antigas</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
-            <div className="text-center py-16">
-
-              <div className="text-6xl mb-4">💎</div>
-
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-
-                Nenhum projeto encontrado
-
-              </h3>
-
-              <p className="text-gray-600 mb-6">
-
-                {searchTerm 
-
-                  ? `Não encontramos projetos que correspondam a "${searchTerm}"`
-
-                  : 'Ainda não há projetos nesta categoria'
-
-                }
-
-              </p>
-
-              {(searchTerm || activeCategory !== 'todos') && (
-
-                <Button 
-
-                  onClick={() => {
-
-                    setSearchTerm('');
-
-                    setActiveCategory('todos');
-
-                  }}
-
-                  variant="outline"
-
-                  className="border-esmeralda text-esmeralda hover:bg-esmeralda hover:text-marfim"
-
-                >
-
-                  Limpar Filtros
-
-                </Button>
-
+            <div className="flex items-center justify-end text-sm text-esmeralda/70">
+              {pagination.total > 0 && (
+                <p>
+                  Exibindo {filteredItems.length} de {pagination.total} projetos
+                </p>
               )}
-
             </div>
-
-          ) : (
-
-            <motion.div 
-
-              initial={{ opacity: 0 }}
-
-              animate={{ opacity: 1 }}
-
-              transition={{ duration: 0.5 }}
-
-              className={
-
-                viewMode === 'grid' 
-
-                  ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" 
-
-                  : "space-y-4"
-
-              }
-
-            >
-
-              {filteredItems.map((item, index) => (
-
-                <motion.div
-
-                  key={item.id}
-
-                  initial={{ opacity: 0, y: 20 }}
-
-                  animate={{ opacity: 1, y: 0 }}
-
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-
-                >
-
-                  <Link 
-
-                    href={`/portfolio/${generateSlugForItem(item)}`} 
-
-                    className="group block"
-
-                  >
-
-                    {viewMode === 'grid' ? (
-
-                      <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-gray-100 group">
-
-                        <div className="relative h-64 overflow-hidden">
-
-                          <Image
-
-                            src={item.mainImage || '/assets/images/home-hero.jpg'}
-
-                            alt={item.title}
-
-                            fill
-
-                            className="object-cover group-hover:scale-110 transition-transform duration-700"
-
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-
-                            onError={(e) => {
-
-                              const target = e.target as HTMLImageElement;
-
-                              target.src = '/assets/images/home-hero.jpg';
-
-                            }}
-
-                          />
-
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                          
-
-                          {/* Badge de categoria */}
-
-                          <div className="absolute top-4 left-4">
-
-                            <Badge className="bg-esmeralda/90 text-marfim text-xs backdrop-blur-sm">
-
-                              {categoryLabels[item.category as keyof typeof categoryLabels] || item.category}
-
-                            </Badge>
-
-                          </div>
-
-                          
-
-                          {/* Ícone de visualização */}
-
-                          <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-
-                            <div className="bg-white/90 backdrop-blur-sm text-esmeralda p-2 rounded-full">
-
-                              <Eye className="h-4 w-4" />
-
-                            </div>
-
-                          </div>
-
-                        </div>
-
-                        
-
-                        <div className="p-6">
-
-                          <h3 className="font-semibold text-lg text-gray-900 group-hover:text-esmeralda transition-colors mb-2 line-clamp-2">
-
-                            {item.title}
-
-                          </h3>
-
-                          <p className="text-gray-600 text-sm line-clamp-3 mb-4">
-
-                            {item.description || 'Projeto exclusivo criado com atenção aos detalhes e qualidade excepcional.'}
-
-                          </p>
-
-                          
-
-                          <div className="flex items-center justify-between text-xs text-gray-500">
-
-                            <div className="flex items-center">
-
-                              <Clock className="h-3 w-3 mr-1" />
-
-                              {new Date(item.createdAt).toLocaleDateString('pt-BR')}
-
-                            </div>
-
-                            <div className="text-esmeralda font-medium group-hover:text-ouro transition-colors">
-
-                              Ver projeto →
-
-                            </div>
-
-                          </div>
-
-                        </div>
-
-                      </div>
-
-                    ) : (
-
-                      // List View
-
-                      <div className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100">
-
-                        <div className="flex">
-
-                          <div className="relative w-32 h-32 flex-shrink-0">
-
-                            <Image
-
-                              src={item.mainImage || '/assets/images/home-hero.jpg'}
-
-                              alt={item.title}
-
-                              fill
-
-                              className="object-cover"
-
-                              sizes="128px"
-
-                              onError={(e) => {
-
-                                const target = e.target as HTMLImageElement;
-
-                                target.src = '/assets/images/home-hero.jpg';
-
-                              }}
-
-                            />
-
-                          </div>
-
-                          <div className="flex-1 p-6">
-
-                            <div className="flex justify-between items-start">
-
-                              <div className="flex-1">
-
-                                <div className="flex items-center space-x-2 mb-2">
-
-                                  <Badge className="bg-esmeralda/10 text-esmeralda text-xs">
-
-                                    {categoryLabels[item.category as keyof typeof categoryLabels] || item.category}
-
-                                  </Badge>
-
-                                  <span className="text-xs text-gray-500">
-
-                                    {new Date(item.createdAt).toLocaleDateString('pt-BR')}
-
-                                  </span>
-
-                                </div>
-
-                                <h3 className="text-lg font-semibold text-gray-900 group-hover:text-esmeralda transition-colors mb-2">
-
-                                  {item.title}
-
-                                </h3>
-
-                                <p className="text-sm text-gray-600 line-clamp-2">
-
-                                  {item.description || 'Projeto exclusivo criado com atenção aos detalhes e qualidade excepcional.'}
-
-                                </p>
-
-                              </div>
-
-                              <div className="ml-4 text-right">
-
-                                <div className="text-esmeralda font-medium group-hover:text-ouro transition-colors text-sm">
-
-                                  Ver projeto →
-
-                                </div>
-
-                              </div>
-
-                            </div>
-
-                          </div>
-
-                        </div>
-
-                      </div>
-
-                    )}
-
-                  </Link>
-
-                </motion.div>
-
-              ))}
-
-            </motion.div>
-
-          )}
-
-          {/* Paginação Moderna */}
-
-          {pagination.totalPages > 1 && (
-
-            <div className="flex justify-center items-center space-x-2 mt-12">
-
-              <Button
-
-                variant="outline"
-
-                onClick={() => handlePageChange(currentPage - 1)}
-
-                disabled={!pagination.hasPrevPage}
-
-                className="border-gray-200 text-gray-700 hover:border-esmeralda hover:text-esmeralda disabled:opacity-50"
-
-              >
-
-                Anterior
-
-              </Button>
-
-              
-
-              <div className="flex items-center space-x-1">
-
-                {Array.from({ length: Math.min(pagination.totalPages, 5) }, (_, i) => {
-
-                  const page = i + 1;
-
-                  return (
-
-                    <Button
-
-                      key={page}
-
-                      variant={page === currentPage ? "default" : "outline"}
-
-                      onClick={() => handlePageChange(page)}
-
-                      className={page === currentPage 
-
-                        ? "bg-esmeralda text-marfim hover:bg-esmeralda-dark" 
-
-                        : "border-gray-200 text-gray-700 hover:border-esmeralda hover:text-esmeralda"
-
-                      }
-
-                      size="sm"
-
-                    >
-
-                      {page}
-
-                    </Button>
-
-                  );
-
-                })}
-
-              </div>
-
-              
-
-              <Button
-
-                variant="outline"
-
-                onClick={() => handlePageChange(currentPage + 1)}
-
-                disabled={!pagination.hasNextPage}
-
-                className="border-gray-200 text-gray-700 hover:border-esmeralda hover:text-esmeralda disabled:opacity-50"
-
-              >
-
-                Próxima
-
-              </Button>
-
-            </div>
-
-          )}
-
+          </div>
         </div>
 
+        <AnimatePresence initial={false}>
+          {loading ? (
+            <div className="flex h-48 items-center justify-center">
+              <span className="text-sm text-esmeralda/70">Carregando portfólio…</span>
+            </div>
+          ) : error ? (
+            <div className="flex h-48 flex-col items-center justify-center gap-3">
+              <p className="text-sm text-red-500">{error}</p>
+              <Button onClick={() => setCurrentPage(1)} variant="outline" className="border-red-200 text-red-600">
+                Tentar novamente
+              </Button>
+            </div>
+          ) : filteredItems.length === 0 ? (
+            <div className="flex h-48 flex-col items-center justify-center gap-3 text-center">
+              <p className="text-sm text-esmeralda/70">
+                Nenhum projeto encontrado com os filtros atuais.
+              </p>
+              <Button onClick={() => handleCategoryChange('all')} variant="outline" className="border-esmeralda/30 text-esmeralda">
+                Limpar filtros
+              </Button>
+            </div>
+          ) : (
+            <motion.div
+              key={viewMode + selectedCategory + searchTerm + dateFilter + currentPage}
+              className={viewMode === 'grid' ? 'mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3' : 'mt-10 space-y-6'}
+              layout
+            >
+              {filteredItems.map((item) => (
+                <motion.div key={item.id} layout>
+                  <Link href={`/portfolio/${generatePortfolioSlug(item, item.id)}`}>
+                    <div
+                      className={`group h-full rounded-3xl border border-esmeralda/10 bg-white/90 text-left shadow-[0_25px_60px_-40px_rgba(24,68,52,0.3)] transition-transform duration-500 hover:-translate-y-2 ${viewMode === 'list' ? 'flex flex-col md:flex-row' : ''}`}
+                    >
+                      <div className={viewMode === 'list' ? 'relative h-56 w-full md:w-64 overflow-hidden rounded-3xl md:rounded-l-3xl md:rounded-r-none' : 'relative h-64 overflow-hidden rounded-t-3xl'}>
+                        <Image
+                          src={item.mainImage || '/assets/images/placeholder-jewelry.svg'}
+                          alt={item.title}
+                          fill
+                          className="object-cover transition-transform duration-500 group-hover:scale-110"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                        <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.28em] text-white">
+                          <Clock className="h-3 w-3" />
+                          {new Date(item.createdAt).toLocaleDateString('pt-BR')}
+                        </div>
+                      </div>
+
+                      <div className={viewMode === 'list' ? 'flex flex-1 flex-col justify-between px-6 py-5' : 'space-y-4 px-6 py-6'}>
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-2">
+                            <Badge className="bg-esmeralda/10 text-esmeralda border-esmeralda/10 hover:bg-esmeralda/10">
+                              {categoryLabels[item.category as keyof typeof categoryLabels] || item.category}
+                            </Badge>
+                          </div>
+                          <h2 className="font-playfair text-xl font-semibold text-esmeralda group-hover:text-ouro transition-colors">
+                            {item.title}
+                          </h2>
+                          {item.description && (
+                            <p className="text-sm text-grafite/70 line-clamp-3">
+                              {item.description}
+                            </p>
+                          )}
+                        </div>
+
+                        <div className="flex items-center justify-between text-xs uppercase tracking-[0.3em] text-esmeralda/60">
+                          <span>Ver detalhes</span>
+                          <Eye className="h-4 w-4" />
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {pagination.totalPages > 1 && (
+          <div className="mt-12 flex items-center justify-center gap-2">
+            <Button
+              variant="outline"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={!pagination.hasPrevPage}
+              className="border-esmeralda/20 text-esmeralda hover:border-esmeralda hover:text-esmeralda disabled:opacity-50"
+            >
+              Anterior
+            </Button>
+            <div className="flex items-center gap-1">
+              {Array.from({ length: Math.min(pagination.totalPages, 5) }, (_, i) => i + 1).map((page) => (
+                <Button
+                  key={page}
+                  variant={page === currentPage ? 'default' : 'outline'}
+                  onClick={() => handlePageChange(page)}
+                  className={page === currentPage
+                    ? 'bg-esmeralda text-marfim hover:bg-esmeralda-dark'
+                    : 'border-esmeralda/20 text-esmeralda hover:border-esmeralda hover:text-esmeralda'}
+                  size="sm"
+                >
+                  {page}
+                </Button>
+              ))}
+            </div>
+            <Button
+              variant="outline"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={!pagination.hasNextPage}
+              className="border-esmeralda/20 text-esmeralda hover:border-esmeralda hover:text-esmeralda disabled:opacity-50"
+            >
+              Próxima
+            </Button>
+          </div>
+        )}
       </section>
-
-    </div>
-
+      </div>
+    </PageVisibilityGuard>
   );
-
-} 
+}

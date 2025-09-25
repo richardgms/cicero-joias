@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
-import prisma from '@/lib/prisma';
 import { z } from 'zod';
+import { checkAdminAuth } from '@/lib/check-admin';
 
 const categorySchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
@@ -12,10 +11,9 @@ const categorySchema = z.object({
 // GET - Listar todas as categorias
 export async function GET() {
   try {
-    const session = await auth();
-
-    if (!session.userId) {
-      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+    const authResult = await checkAdminAuth();
+    if ('error' in authResult) {
+      return NextResponse.json({ error: authResult.error }, { status: authResult.status });
     }
 
     // Por enquanto, vamos simular categorias até criarmos a tabela no banco
@@ -85,10 +83,9 @@ export async function GET() {
 // POST - Criar nova categoria
 export async function POST(request: Request) {
   try {
-    const session = await auth();
-
-    if (!session.userId) {
-      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+    const authResult = await checkAdminAuth();
+    if ('error' in authResult) {
+      return NextResponse.json({ error: authResult.error }, { status: authResult.status });
     }
 
     const body = await request.json();
@@ -96,7 +93,7 @@ export async function POST(request: Request) {
 
     // Por enquanto, simular criação
     const newCategory = {
-      id: Math.random().toString(36).substr(2, 9),
+      id: Math.random().toString(36).substring(2, 11),
       ...validatedData,
       order: 999, // Será calculado automaticamente
       isActive: true,
@@ -119,4 +116,4 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
-} 
+}

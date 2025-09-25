@@ -1,15 +1,15 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Search, Filter, Star, Clock, Package, 
-  SlidersHorizontal, Grid3X3, List 
+import {
+  Search, Filter, Star, Clock, Package,
+  SlidersHorizontal, Grid3X3, List, HelpCircle
 } from 'lucide-react';
 import {
   Select,
@@ -59,6 +59,23 @@ interface ApiResponse {
   };
 }
 
+// Hook customizado para debounce
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
 function ProntaEntregaContent() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -66,6 +83,7 @@ function ProntaEntregaContent() {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [materialFilter, setMaterialFilter] = useState('all');
   const [priceRange, setPriceRange] = useState([0, 10000]);
+  const [displayPriceRange, setDisplayPriceRange] = useState([0, 10000]);
   const [stockFilter, setStockFilter] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
   const [currentPage, setCurrentPage] = useState(1);
@@ -82,13 +100,13 @@ function ProntaEntregaContent() {
   const [availableMaterials, setAvailableMaterials] = useState<string[]>([]);
   const [priceStats, setPriceStats] = useState({ min: 0, max: 10000 });
 
-  useEffect(() => {
-    fetchProducts();
-  }, [categoryFilter, materialFilter, stockFilter, sortBy, currentPage, fetchProducts]);
+  // Debounce para o slider de preço (500ms de delay)
+  const debouncedPriceRange = useDebounce(displayPriceRange, 500);
 
+  // Sincronizar o filtro aplicado com o valor debounced
   useEffect(() => {
-    fetchCategories();
-  }, []);
+    setPriceRange(debouncedPriceRange);
+  }, [debouncedPriceRange]);
 
   const fetchCategories = async () => {
     try {
@@ -121,12 +139,6 @@ function ProntaEntregaContent() {
       if (stockFilter === 'inStock') {
         params.append('inStock', 'true');
       }
-      if (priceRange[0] > 0) {
-        params.append('minPrice', priceRange[0].toString());
-      }
-      if (priceRange[1] < 10000) {
-        params.append('maxPrice', priceRange[1].toString());
-      }
 
       const response = await fetch(`/api/public/products/ready-delivery?${params}`);
       if (response.ok) {
@@ -136,10 +148,10 @@ function ProntaEntregaContent() {
         let sortedProducts = [...data.products];
         switch (sortBy) {
           case 'priceAsc':
-            sortedProducts.sort((a, b) => a.price - b.price);
+            sortedProducts.sort((a, b) => (a.price || 0) - (b.price || 0));
             break;
           case 'priceDesc':
-            sortedProducts.sort((a, b) => b.price - a.price);
+            sortedProducts.sort((a, b) => (b.price || 0) - (a.price || 0));
             break;
           case 'name':
             sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
@@ -163,11 +175,27 @@ function ProntaEntregaContent() {
         setAvailableMaterials(materials as string[]);
 
         if (data.products.length > 0) {
-          const prices = data.products.map(p => p.price);
-          setPriceStats({
-            min: Math.min(...prices),
-            max: Math.max(...prices)
-          });
+          const prices = data.products.map(p => p.price || 0).filter(price => price > 0);
+          if (prices.length > 0) {
+            const minPrice = Math.min(...prices);
+            const maxPrice = Math.max(...prices);
+
+            // Adicionar padding se min e max são muito próximos
+            const padding = Math.max(100, (maxPrice - minPrice) * 0.1);
+            const safeMin = Math.max(0, minPrice - padding);
+            const safeMax = maxPrice + padding;
+
+            setPriceStats({
+              min: safeMin,
+              max: safeMax
+            });
+
+            // Atualizar ranges apenas na primeira carga (quando ainda estão nos valores padrão)
+            if (priceRange[0] === 0 && priceRange[1] === 10000) {
+              setPriceRange([safeMin, safeMax]);
+              setDisplayPriceRange([safeMin, safeMax]);
+            }
+          }
         }
       } else {
         const errorData = await response.json().catch(() => ({}));
@@ -182,14 +210,27 @@ function ProntaEntregaContent() {
     } finally {
       setLoading(false);
     }
-  }, [categoryFilter, materialFilter, stockFilter, sortBy, currentPage, priceRange]);
+  }, [categoryFilter, materialFilter, stockFilter, sortBy, currentPage]);
 
-  // Filtrar produtos baseado na busca local
-  const filteredProducts = products.filter(product =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.code.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  // Filtrar produtos baseado na busca local e faixa de preço
+  const filteredProducts = products.filter(product => {
+    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.code.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const productPrice = product.price || 0;
+    const matchesPrice = productPrice >= priceRange[0] && productPrice <= priceRange[1];
+
+    return matchesSearch && matchesPrice;
+  });
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -200,6 +241,7 @@ function ProntaEntregaContent() {
     setCategoryFilter('all');
     setMaterialFilter('all');
     setPriceRange([priceStats.min, priceStats.max]);
+    setDisplayPriceRange([priceStats.min, priceStats.max]);
     setStockFilter('all');
     setSortBy('newest');
     setSearchTerm('');
@@ -298,7 +340,8 @@ function ProntaEntregaContent() {
               <span>
                 {loading ? 'Carregando...' : `${pagination.total} produto${pagination.total !== 1 ? 's' : ''} encontrado${pagination.total !== 1 ? 's' : ''}`}
               </span>
-              {(categoryFilter !== 'all' || materialFilter !== 'all' || stockFilter !== 'all' || searchTerm) && (
+              {(categoryFilter !== 'all' || materialFilter !== 'all' || stockFilter !== 'all' || searchTerm ||
+                priceRange[0] !== priceStats.min || priceRange[1] !== priceStats.max) && (
                 <Button variant="ghost" size="sm" onClick={resetFilters}>
                   Limpar Filtros
                 </Button>
@@ -359,21 +402,42 @@ function ProntaEntregaContent() {
 
                   {/* Faixa de Preço */}
                   <div>
-                    <label className="text-sm font-medium text-gray-700 mb-2 block">
-                      Faixa de Preço
-                    </label>
-                    <div className="px-2">
+                    <div className="flex items-center mb-3">
+                      <label className="text-sm font-medium text-gray-700">
+                        Faixa de Preço
+                      </label>
+                      <div className="relative ml-2 group">
+                        <HelpCircle className="h-4 w-4 text-gray-400 cursor-help" />
+                        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                          Arraste as extremidades para definir preço mínimo e máximo
+                          <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="px-3">
                       <Slider
-                        value={priceRange}
-                        onValueChange={setPriceRange}
+                        value={displayPriceRange}
+                        onValueChange={setDisplayPriceRange}
                         max={priceStats.max}
                         min={priceStats.min}
                         step={50}
-                        className="mb-2"
+                        className="mb-4"
                       />
-                      <div className="flex justify-between text-xs text-gray-500">
-                        <span>R$ {priceRange[0].toLocaleString()}</span>
-                        <span>R$ {priceRange[1].toLocaleString()}</span>
+
+                      <div className="flex justify-between text-sm font-medium text-gray-700">
+                        <span>R$ {Math.round(displayPriceRange[0]).toLocaleString()}</span>
+                        <span>R$ {Math.round(displayPriceRange[1]).toLocaleString()}</span>
+                      </div>
+
+                      <div className="text-center mt-3">
+                        {(displayPriceRange[0] !== priceRange[0] || displayPriceRange[1] !== priceRange[1]) ? (
+                          <span className="text-xs text-blue-600">Filtrando...</span>
+                        ) : (
+                          <span className="text-xs text-green-600">
+                            {filteredProducts.length} produto{filteredProducts.length !== 1 ? 's' : ''} nesta faixa
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -474,7 +538,7 @@ function ProntaEntregaContent() {
                               <div className="flex items-center justify-between">
                                 <div>
                                   <p className="text-2xl font-bold text-esmeralda">
-                                    R$ {product.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                                    R$ {(product.price || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                                   </p>
                                   {product.material && (
                                     <p className="text-xs text-gray-500">{product.material}</p>
@@ -535,7 +599,7 @@ function ProntaEntregaContent() {
                                   </div>
                                   <div className="text-right ml-4">
                                     <p className="text-2xl font-bold text-esmeralda">
-                                      R$ {product.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                                      R$ {(product.price || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                                     </p>
                                     <Button 
                                       size="sm"

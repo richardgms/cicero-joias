@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Settings, Users, Package, BarChart3, TrendingUp, Clock, CheckCircle, AlertCircle, Star, ShoppingBag, Timer } from 'lucide-react';
+import { Users, Package, BarChart3, TrendingUp, Clock, CheckCircle, AlertCircle, Star, ShoppingBag, Timer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -165,12 +165,6 @@ export default function AdminPage() {
                 </Link>
               </Button>
               <Button asChild variant="outline" className="w-full justify-start">
-                <Link href="/admin/configuracoes">
-                  <Settings className="h-4 w-4 mr-2" />
-                  Configurações do Site
-                </Link>
-              </Button>
-              <Button asChild variant="outline" className="w-full justify-start">
                 <Link href="/admin/relatorios">
                   <BarChart3 className="h-4 w-4 mr-2" />
                   Ver Relatórios
@@ -307,35 +301,6 @@ export default function AdminPage() {
           </CardContent>
         </Card>
 
-        {/* System Status */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <CheckCircle className="h-5 w-5 mr-2" />
-              Status do Sistema
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center space-x-3 text-sm">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                <span className="text-gray-600">Sistema administrativo ativo</span>
-              </div>
-              <div className="flex items-center space-x-3 text-sm">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                <span className="text-gray-600">Banco de dados conectado</span>
-              </div>
-              <div className="flex items-center space-x-3 text-sm">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                <span className="text-gray-600">APIs funcionando</span>
-              </div>
-              <div className="flex items-center space-x-3 text-sm">
-                <Timer className="h-4 w-4 text-blue-500" />
-                <span className="text-gray-600">Plan-013 implementado com sucesso</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );

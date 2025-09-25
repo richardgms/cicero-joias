@@ -4,12 +4,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { 
-  Home, 
-  Package, 
-  Image as ImageIcon, 
-  Users, 
-  Settings, 
+import {
+  Home,
+  Package,
+  Image as ImageIcon,
+  Users,
   BarChart3,
   FileText,
   Gem,
@@ -57,21 +56,16 @@ const navigation = [
     href: '/admin/relatorios',
     icon: BarChart3,
   },
-  {
-    name: 'Configurações',
-    href: '/admin/configuracoes',
-    icon: Settings,
-  },
 ];
 
 export function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <div className="w-64 bg-white shadow-lg">
-      {/* Logo */}
-      <div className="flex items-center justify-center h-16 px-4 border-b border-gray-200">
-        <Link href="/" className="flex items-center space-x-3 group">
+    <div className="w-64 bg-white shadow-lg fixed top-0 left-0 h-screen flex flex-col z-50">
+      {/* Logo - Header fixo */}
+      <div className="flex items-center justify-center h-18 px-4 py-4 border-b border-gray-200 flex-shrink-0">
+        <Link href="/" className="flex items-center space-x-3 group h-10">
           <div className="relative">
             <Image
               src="/assets/logos/circle-monogram.png"
@@ -98,67 +92,38 @@ export function AdminSidebar() {
         </Link>
       </div>
 
-      {/* Navigation */}
-      <nav className="mt-6 px-3">
-        <div className="space-y-1">
-          {navigation.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  'group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors',
-                  isActive
-                    ? 'bg-esmeralda text-marfim shadow-md'
-                    : 'text-gray-700 hover:bg-esmeralda/10 hover:text-esmeralda'
-                )}
-              >
-                <item.icon
+      {/* Área de navegação com scroll */}
+      <div className="flex-1 overflow-y-auto">
+        {/* Navigation */}
+        <nav className="mt-6 px-3">
+          <div className="space-y-1">
+            {navigation.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
                   className={cn(
-                    'mr-3 h-5 w-5 flex-shrink-0',
-                    isActive 
-                      ? 'text-marfim' 
-                      : 'text-gray-400 group-hover:text-esmeralda'
+                    'group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors',
+                    isActive
+                      ? 'bg-esmeralda text-marfim shadow-md'
+                      : 'text-gray-700 hover:bg-esmeralda/10 hover:text-esmeralda'
                   )}
-                />
-                {item.name}
-              </Link>
-            );
-          })}
-        </div>
-      </nav>
-
-      {/* Quick Actions */}
-      <div className="mt-8 px-3">
-        <div className="bg-gradient-to-br from-esmeralda/5 to-ouro/5 rounded-lg p-4 border border-esmeralda/10">
-          <div className="flex items-center space-x-2 mb-3">
-            <Image
-              src="/assets/brand/shine.png"
-              alt=""
-              width={12}
-              height={12}
-              className="animate-pulse"
-            />
-            <h3 className="text-sm font-medium text-esmeralda">
-            Ações Rápidas
-          </h3>
+                >
+                  <item.icon
+                    className={cn(
+                      'mr-3 h-5 w-5 flex-shrink-0',
+                      isActive
+                        ? 'text-marfim'
+                        : 'text-gray-400 group-hover:text-esmeralda'
+                    )}
+                  />
+                  {item.name}
+                </Link>
+              );
+            })}
           </div>
-          <div className="space-y-2">
-            <Link
-              href="/admin/portfolio/new"
-              className="block w-full text-left px-3 py-2 text-sm text-esmeralda hover:bg-esmeralda/10 hover:shadow-sm rounded-md transition-all duration-300"
-            >
-              + Novo Projeto
-            </Link>
-            <Link
-              href="/admin/produtos/new"
-              className="block w-full text-left px-3 py-2 text-sm text-esmeralda hover:bg-esmeralda/10 hover:shadow-sm rounded-md transition-all duration-300"
-            >
-              + Novo Produto
-            </Link>
-          </div>
-        </div>
+        </nav>
       </div>
     </div>
   );

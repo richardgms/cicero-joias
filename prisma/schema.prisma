@@ -41,18 +41,19 @@ model Client {
   whatsapp    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  
+
   // Fidelidade simplificada
   loyaltyPoints Int         @default(0)
   loyaltyLevel  LoyaltyLevel @default(CLIENT)
-  
+
   // Relacionamentos essenciais
-  userId       String? @unique
+  clerkUserId  String? @unique @map("clerk_user_id")
+  userId       String? @unique // Manter temporariamente para migration
   user         User?   @relation(fields: [userId], references: [id])
-  
+
   quoteRequests QuoteRequest[]
   orders        Order[]
-  
+
   // Novos relacionamentos
   coupons             Coupon[]
   favorites           Favorite[]
@@ -319,17 +320,6 @@ model ActivityLog {
   @@map("activity_logs")
 }
 
-model SiteSettings {
-  id          String   @id @default(cuid())
-  key         String   @unique // ex: "portfolio_hero_title", "portfolio_hero_description"
-  value       String   @db.Text // Conteúdo editável
-  type        String   @default("TEXT") // TEXT, HTML, JSON, IMAGE
-  description String?  // Descrição para o admin
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@map("site_settings")
-}
 
 // ===== CONTROLE DE VISIBILIDADE DE PÁGINAS =====
 

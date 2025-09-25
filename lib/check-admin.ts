@@ -1,4 +1,4 @@
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import { auth, clerkClient } from '@clerk/nextjs/server';
 
 export interface AdminAuthSuccess {
   userId: string;
@@ -14,20 +14,20 @@ export async function checkAdminAuth(): Promise<AdminAuthSuccess | AdminAuthErro
   try {
     const { userId } = await auth();
     if (!userId) {
-      return { error: "Não autorizado", status: 401 };
+      return { error: 'Não autorizado', status: 401 };
     }
 
-    const client = await clerkClient();
-    const user = await client.users.getUser(userId);
+    const clerk = await clerkClient();
+    const user = await clerk.users.getUser(userId);
     const role = (user.publicMetadata?.role as string)?.toLowerCase();
 
-    if (role !== "admin") {
-      return { error: "Acesso negado", status: 403 };
+    if (role !== 'admin') {
+      return { error: 'Acesso negado', status: 403 };
     }
 
     return { userId };
   } catch (error) {
-    console.error("Erro de autenticação:", error);
-    return { error: "Erro de autenticação", status: 500 };
+    console.error('Erro de autenticação:', error);
+    return { error: 'Erro de autenticação', status: 500 };
   }
-} 
+}

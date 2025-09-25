@@ -72,44 +72,49 @@ export async function POST(req: Request) {
 // Função para processar criação de usuário
 async function handleUserCreated(userData: any) {
   try {
+    const clerkUserId = userData.id;
     const email = userData.email_addresses?.[0]?.email_address;
     const firstName = userData.first_name || '';
     const lastName = userData.last_name || '';
 
-    if (!email) {
-      console.error('Email não encontrado nos dados do usuário');
+    if (!email || !clerkUserId) {
+      console.error('Email ou ID do Clerk não encontrado nos dados do usuário');
       return;
     }
 
-    // Verificar se usuário já existe
-    const existingUser = await prisma.user.findUnique({
-      where: { email }
-    });
-
-    if (existingUser) {
-      console.log(`Usuário ${email} já existe no banco`);
-      return;
-    }
-
-    // Criar usuário no banco
-    const user = await prisma.user.create({
-      data: {
-        email,
-        password: '', // Clerk gerencia a autenticação
-        role: 'CLIENT', // Padrão é cliente
+    // Verificar se cliente já existe
+    const existingClient = await prisma.client.findFirst({
+      where: {
+        OR: [
+          { email },
+          { clerkUserId }
+        ]
       }
     });
 
-    // Criar cliente associado
+    if (existingClient) {
+      console.log(`Cliente ${email} já existe no banco`);
+      // Atualizar clerkUserId se não estiver definido
+      if (!existingClient.clerkUserId) {
+        await prisma.client.update({
+          where: { id: existingClient.id },
+          data: { clerkUserId }
+        });
+        console.log(`✅ ClerkUserId atualizado para cliente existente ${email}`);
+      }
+      return;
+    }
+
+    // Criar cliente diretamente (sem criar User na tabela local)
     await prisma.client.create({
       data: {
         name: `${firstName} ${lastName}`.trim() || email.split('@')[0],
         email,
-        userId: user.id,
+        clerkUserId,
       }
     });
 
-    console.log(`✅ Usuário ${email} sincronizado com sucesso!`);
+    console.log(`✅ Cliente ${email} criado e sincronizado com Clerk ID ${clerkUserId}!`);
   } catch (error) {
     console.error('Erro ao criar usuário:', error);
   }
@@ -118,21 +123,28 @@ async function handleUserCreated(userData: any) {
 // Função para processar atualização de usuário
 async function handleUserUpdated(userData: any) {
   try {
+    const clerkUserId = userData.id;
     const email = userData.email_addresses?.[0]?.email_address;
     const firstName = userData.first_name || '';
     const lastName = userData.last_name || '';
 
-    if (!email) return;
+    if (!email || !clerkUserId) return;
 
-    // Atualizar dados do cliente
+    // Atualizar dados do cliente usando clerkUserId ou email
     await prisma.client.updateMany({
-      where: { email },
+      where: {
+        OR: [
+          { clerkUserId },
+          { email }
+        ]
+      },
       data: {
         name: `${firstName} ${lastName}`.trim() || email.split('@')[0],
+        clerkUserId, // Garantir que o clerkUserId está atualizado
       }
     });
 
-    console.log(`✅ Usuário ${email} atualizado com sucesso!`);
+    console.log(`✅ Cliente ${email} (Clerk ID: ${clerkUserId}) atualizado com sucesso!`);
   } catch (error) {
     console.error('Erro ao atualizar usuário:', error);
   }
@@ -141,20 +153,27 @@ async function handleUserUpdated(userData: any) {
 // Função para processar exclusão de usuário
 async function handleUserDeleted(userData: any) {
   try {
+    const clerkUserId = userData.id;
     const email = userData.email_addresses?.[0]?.email_address;
-    
-    if (!email) return;
 
-    // Soft delete - atualiza data de modificação
-    await prisma.user.updateMany({
-      where: { email },
+    if (!email || !clerkUserId) return;
+
+    // Soft delete - remove clerkUserId do cliente mas mantém os dados
+    await prisma.client.updateMany({
+      where: {
+        OR: [
+          { clerkUserId },
+          { email }
+        ]
+      },
       data: {
+        clerkUserId: null, // Remove a conexão com Clerk
         updatedAt: new Date(),
       }
     });
 
-    console.log(`✅ Usuário ${email} processado para exclusão`);
+    console.log(`✅ Cliente ${email} (Clerk ID: ${clerkUserId}) desvinculado do Clerk`);
   } catch (error) {
-    console.error('Erro ao deletar usuário:', error);
+    console.error('Erro ao processar exclusão de usuário:', error);
   }
 } 

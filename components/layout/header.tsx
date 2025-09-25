@@ -1,24 +1,61 @@
-﻿'use client';
+'use client';
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, X } from 'lucide-react';
 import { useUser, UserButton } from '@clerk/nextjs';
-import { cn } from '@/lib/utils';
+import { usePageVisibility } from '@/hooks/use-page-visibility';
 
-const navigation = [
+const staticNavigation = [
   { name: 'Início', href: '/' },
-  { name: 'Sobre Nós', href: '/sobre' },
-  { name: 'Portfólio', href: '/portfolio' },
-  { name: 'Pronta Entrega', href: '/pronta-entrega' },
-  { name: 'Orçamento', href: '/orcamento' },
+  { name: 'Serviços', href: '/servicos' },
   { name: 'Minha Área', href: '/minha-area' },
 ];
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { isSignedIn, user } = useUser();
+  const { visiblePages, loading, isAdmin } = usePageVisibility();
+
+  const navigation = useMemo(() => {
+    let nav = [...staticNavigation];
+
+    // DEBUG: Log estado atual
+    console.log('[HEADER DEBUG]', {
+      loading,
+      visiblePagesLength: visiblePages.length,
+      visiblePages,
+      isAdmin
+    });
+
+    // Adicionar páginas visíveis do sistema de controle de visibilidade
+    if (!loading && visiblePages.length > 0) {
+      console.log('[HEADER DEBUG] Adding dynamic pages to navigation');
+      // Inserir as páginas dinâmicas entre 'Início' e 'Minha Área'
+      const dynamicPages = visiblePages
+        .filter(page => !nav.some(navItem => navItem.href === page.href)) // Evitar duplicatas
+        .map(page => ({
+          name: page.title,
+          href: page.href
+        }));
+
+      if (dynamicPages.length > 0) {
+        // Inserir após 'Início' (posição 1)
+        nav.splice(1, 0, ...dynamicPages);
+      }
+    } else {
+      console.log('[HEADER DEBUG] NOT adding dynamic pages - loading:', loading, 'length:', visiblePages.length);
+    }
+
+    // Adicionar painel admin se for admin
+    if (isAdmin) {
+      nav.push({ name: 'Painel Administrativo', href: '/admin' });
+    }
+
+    console.log('[HEADER DEBUG] Final navigation:', nav);
+    return nav;
+  }, [visiblePages, loading, isAdmin]);
 
   return (
     <header className="sticky top-0 z-50 bg-marfim/95 backdrop-blur-md border-b border-marfim-dark">

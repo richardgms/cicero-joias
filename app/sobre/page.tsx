@@ -1,273 +1,266 @@
-import React from 'react';
-import { Heart, Shield, Gem, Users, Clock, Award, Star, RotateCw } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+﻿import React from 'react';
 import Link from 'next/link';
-import { 
-  AliancasIcon, 
-  BanhoOuroIcon, 
-  ConsertosIcon, 
-  JoiasSobMedidaIcon, 
-  OculosIcon, 
-  QualidadeIcon 
+import Image from 'next/image';
+import {
+  Heart,
+  Shield,
+  Gem,
+  Users,
+  Clock,
+  Award,
+  Star,
+  RotateCw,
+  ArrowRight,
+  MessageCircle,
+  Quote,
+} from 'lucide-react';
+import {
+  AliancasIcon,
+  BanhoOuroIcon,
+  ConsertosIcon,
+  JoiasSobMedidaIcon,
+  OculosIcon,
+  QualidadeIcon,
 } from '@/components/icons';
-import { IconWrapper } from '@/components/icons';
+import { Button } from '@/components/ui/button';
+import { PageVisibilityGuard } from '@/components/page-visibility-guard';
+
+const legacyStats = [
+  {
+    value: '40+ anos',
+    label: 'de história',
+    description:
+      'Fundados em 1985, seguimos como referência em atendimento artesanal em João Pessoa e região.',
+    icon: Award,
+  },
+  {
+    value: '2 gerações',
+    label: 'da família',
+    description:
+      'O legado do mestre Cícero continua vivo com a participação ativa da segunda geração.',
+    icon: Users,
+  },
+  {
+    value: 'Atelier próprio',
+    label: 'com acompanhamento',
+    description:
+      'Todo o processo acontece dentro da nossa joalheria, com o ourives respondendo diretamente aos clientes.',
+    icon: Shield,
+  },
+];
+
+const timeline = [
+  {
+    year: '1985',
+    title: 'Primeira oficina',
+    description:
+      'O mestre joalheiro Cícero inaugura a primeira oficina em Santa Rita com foco em consertos e restaurações.',
+    icon: Star,
+  },
+  {
+    year: '2000',
+    title: 'Segunda loja em João Pessoa',
+    description:
+      'A confiança dos clientes permite a expansão para a capital, atendendo casais e famílias de toda a região.',
+    icon: Gem,
+  },
+  {
+    year: 'Hoje',
+    title: 'Tradição que se renova',
+    description:
+      'A segunda geração assume o atendimento mantendo o padrão artesanal e trazendo novas possibilidades aos projetos.',
+    icon: RotateCw,
+  },
+];
+
+const storyParagraphs = [
+  'A história da Cícero Joias começou em 1985, quando o mestre joalheiro Cícero fundou sua primeira oficina em Santa Rita, Paraíba. Movido pela paixão pela arte da joalheria e pelo desejo de criar peças que eternizassem momentos especiais, Cícero iniciou um legado que hoje completa 40 anos de tradição e excelência.',
+  'O que começou como uma pequena oficina especializada em consertos de joias e relógios, rapidamente ganhou reconhecimento pela qualidade excepcional do trabalho e pelo atendimento personalizado. A confiança dos clientes permitiu que o negócio crescesse organicamente, sempre mantendo os valores de honestidade, qualidade e dedicação que caracterizam a Cícero Joias até hoje.',
+  'Em meados de 2000, expandimos nossa presença com a abertura da segunda loja em João Pessoa, ampliando nosso alcance e permitindo atender um número maior de clientes na região. Ao longo das décadas, enfrentamos desafios e celebramos conquistas, sempre confiantes de que nosso trabalho fala por si mesmo.',
+  'Hoje, com o nosso fundador ainda presente na oficina e o suporte da segunda geração da família, continuamos a desenvolver peças sob medida, restaurações com memória afetiva e serviços de manutenção que acompanham as famílias ao longo de toda a vida.',
+];
+
+const specialties = [
+  {
+    icon: AliancasIcon,
+    title: 'Alianças Personalizadas',
+    description:
+      'Nossa principal especialidade é a criação de alianças exclusivas em ouro 16k, 18k e prata, cuidadosamente elaboradas para simbolizar compromissos duradouros.',
+  },
+  {
+    icon: BanhoOuroIcon,
+    title: 'Banho de Ouro Profissional',
+    description:
+      'Oferecemos serviço especializado de banho de ouro, permitindo renovar peças antigas ou transformar itens especiais com acabamento dourado de alta qualidade.',
+  },
+  {
+    icon: ConsertosIcon,
+    title: 'Consertos Especializados',
+    description:
+      'Nossa expertise técnica nos permite realizar consertos complexos em joias, relógios e óculos, devolvendo vida e funcionalidade a peças de valor.',
+  },
+  {
+    icon: JoiasSobMedidaIcon,
+    title: 'Joias Sob Medida',
+    description:
+      'Criamos joias personalizadas que contam histórias e eternizam momentos, trabalhando em estreita colaboração com nossos clientes do início ao fim.',
+  },
+  {
+    icon: OculosIcon,
+    title: 'Lentes de Óculos',
+    description:
+      'Oferecemos lentes de alta qualidade, com foco em conforto visual, durabilidade e estilo. Trabalhamos com diversos tipos de lentes para atender suas necessidades.',
+  },
+  {
+    icon: QualidadeIcon,
+    title: 'Compromisso com a Qualidade',
+    description:
+      'Na Cícero Joias, qualidade não é apenas um objetivo, mas um compromisso diário. Cada peça passa por rigorosos controles que garantem perfeição.',
+  },
+];
+
+const storyColumns = [storyParagraphs.slice(0, 2), storyParagraphs.slice(2)];
 
 export default function SobrePage() {
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="py-24 relative overflow-hidden" style={{ backgroundColor: '#133629' }}>
-        <div className="absolute inset-0 opacity-20">
-          <div 
-            className="w-full h-full bg-cover bg-center"
-            style={{
-              backgroundImage: `url('/assets/images/sobre-nos-hero.jpg')`
-            }}
+    <PageVisibilityGuard pageSlug="sobre">
+      <div className="min-h-screen bg-marfim">
+      <section className="relative overflow-hidden bg-gradient-to-br from-esmeralda via-esmeralda-dark to-[#0b1f18] py-24 text-marfim">
+        <div className="absolute inset-0">
+          <Image
+            src="/assets/images/sobre-nos-hero.jpg"
+            alt="Nossa história"
+            fill
+            className="object-cover opacity-30"
+            priority
           />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#04160f]/70 via-[#0b1f18]/60 to-[#0b1f18]/90" />
+          <div className="absolute -top-32 right-0 h-64 w-64 rounded-full bg-ouro/20 blur-[120px]" />
+          <div className="absolute -bottom-20 left-10 h-72 w-72 rounded-full bg-esmeralda-light/25 blur-[140px]" />
         </div>
-        
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-4xl mx-auto">
-            <h1 className="font-playfair text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-marfim">
-              Nossa
-              <span className="text-ouro"> História</span>
-            </h1>
-            <p className="text-xl text-marfim-dark leading-relaxed">
-              Mais de quatro décadas dedicadas à arte da joalheria, 
-              criando memórias preciosas e momentos inesquecíveis para famílias inteiras.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* História Section */}
-      <section className="py-24 bg-marfim">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-16 text-center">
-            <h2 className="font-playfair text-3xl md:text-4xl font-bold text-esmeralda mb-4">
-              40 Anos de 
-              <span className="text-ouro"> Tradição</span>
-            </h2>
-          </div>
-
-          <div className="prose prose-lg max-w-4xl mx-auto text-esmeralda-light">
-            <p className="mb-6">
-              A história da Cícero Joias começou em 1985, quando o mestre joalheiro Cícero fundou sua primeira oficina em Santa Rita, Paraíba. Movido pela paixão pela arte da joalheria e pelo desejo de criar peças que eternizassem momentos especiais, Cícero iniciou um legado que hoje completa 40 anos de tradição e excelência.
-            </p>
-            
-            <p className="mb-6">
-              O que começou como uma pequena oficina especializada em consertos de joias e relógios, rapidamente ganhou reconhecimento pela qualidade excepcional do trabalho e pelo atendimento personalizado. A confiança dos clientes permitiu que o negócio crescesse organicamente, sempre mantendo os valores de honestidade, qualidade e dedicação que caracterizam a Cícero Joias até hoje.
-            </p>
-
-            <div className="my-12 bg-white p-8 rounded-2xl elegant-shadow">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                <div>
-                  <div className="flex items-center justify-center mb-4">
-                    <div className="w-16 h-16 bg-esmeralda rounded-full flex items-center justify-center">
-                      <Star className="w-8 h-8 text-marfim" />
-                    </div>
-                  </div>
-                  <h3 className="text-xl font-bold text-esmeralda mb-2">1985</h3>
-                  <p className="text-esmeralda-light">Fundação da primeira oficina em Santa Rita, Paraíba</p>
-                </div>
-                
-                <div>
-                  <div className="flex items-center justify-center mb-4">
-                    <div className="w-16 h-16 bg-esmeralda rounded-full flex items-center justify-center">
-                      <Gem className="w-8 h-8 text-marfim" />
-                    </div>
-                  </div>
-                  <h3 className="text-xl font-bold text-esmeralda mb-2">2000</h3>
-                  <p className="text-esmeralda-light">Expansão com a abertura da segunda loja em João Pessoa</p>
-                </div>
-                
-                <div>
-                  <div className="flex items-center justify-center mb-4">
-                    <div className="w-16 h-16 bg-esmeralda rounded-full flex items-center justify-center">
-                      <RotateCw className="w-8 h-8 text-marfim" />
-                    </div>
-                  </div>
-                  <h3 className="text-xl font-bold text-esmeralda mb-2">Hoje</h3>
-                  <p className="text-esmeralda-light">Segunda geração da família integrando inovação ao negócio</p>
-                </div>
-              </div>
-            </div>
-
-            <p className="mb-6">
-              Em meados de 2000, expandimos nossa presença com a abertura da segunda loja em João Pessoa, ampliando nosso alcance e permitindo atender um número maior de clientes na região. Ao longo das décadas, enfrentamos desafios e celebramos conquistas, sempre com o compromisso inabalável de oferecer o melhor aos nossos clientes.
-            </p>
-            
-            <p className="mb-6">
-              A tradição familiar é um dos pilares mais importantes da Cícero Joias. Hoje, a segunda geração da família já integra o negócio, trazendo inovação e novas perspectivas, enquanto preserva a essência e os valores que construíram nossa reputação. Esta combinação de tradição e renovação nos permite evoluir constantemente, mantendo a qualidade artesanal que nos diferencia no mercado.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Missão, Visão e Valores */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="font-playfair text-3xl md:text-4xl font-bold text-esmeralda mb-4">
-              Missão, Visão e
-              <span className="text-ouro"> Valores</span>
-            </h2>
-            <p className="text-lg text-esmeralda-light max-w-3xl mx-auto">
-              Os princípios que nos guiam em cada projeto e nos conectam com nossos clientes há mais de 40 anos.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 mb-16">
-            <div className="bg-marfim p-8 rounded-2xl elegant-shadow premium-card-hover">
-              <div className="w-16 h-16 bg-esmeralda rounded-lg flex items-center justify-center mb-6">
-                <Heart className="w-8 h-8 text-ouro" />
-              </div>
-              <h3 className="text-xl font-bold text-esmeralda mb-4">Nossa Missão</h3>
-              <p className="text-esmeralda-light">
-                Transformar momentos especiais em memórias eternas através de joias e serviços de qualidade, acessíveis e personalizados, honrando a confiança depositada em nosso trabalho há quatro décadas.
-              </p>
-            </div>
-
-            <div className="bg-marfim p-8 rounded-2xl elegant-shadow premium-card-hover">
-              <div className="w-16 h-16 bg-esmeralda rounded-lg flex items-center justify-center mb-6">
-                <Gem className="w-8 h-8 text-ouro" />
-              </div>
-              <h3 className="text-xl font-bold text-esmeralda mb-4">Nossa Visão</h3>
-              <p className="text-esmeralda-light">
-                Ser reconhecida como a joalheria de referência em João Pessoa e Santa Rita para alianças personalizadas e serviços especializados, combinando tradição, confiança e inovação para criar experiências memoráveis para nossos clientes.
-              </p>
-            </div>
-
-            <div className="bg-marfim p-8 rounded-2xl elegant-shadow premium-card-hover">
-              <div className="w-16 h-16 bg-esmeralda rounded-lg flex items-center justify-center mb-6">
-                <Award className="w-8 h-8 text-ouro" />
-              </div>
-              <h3 className="text-xl font-bold text-esmeralda mb-4">Nossos Valores</h3>
-              <ul className="text-esmeralda-light space-y-2">
-                <li className="flex items-start">
-                  <span className="text-ouro mr-2">•</span>
-                  <span><strong>Tradição e Confiança:</strong> Honramos nossos 40 anos de história através de práticas éticas e transparentes.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-ouro mr-2">•</span>
-                  <span><strong>Qualidade Artesanal:</strong> Cada peça recebe atenção meticulosa aos detalhes.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-ouro mr-2">•</span>
-                  <span><strong>Personalização:</strong> Valorizamos a história única de cada cliente.</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Nossa Especialidade */}
-      <section className="py-24 bg-gradient-to-b from-marfim to-marfim-dark">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="font-playfair text-3xl md:text-4xl font-bold text-esmeralda mb-4">
-              Nossa
-              <span className="text-ouro"> Especialidade</span>
-            </h2>
-            <p className="text-lg text-esmeralda-light max-w-3xl mx-auto">
-              A Cícero Joias se destaca pela excelência em áreas específicas da joalheria, desenvolvidas e aperfeiçoadas ao longo de quatro décadas de dedicação.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                customIcon: AliancasIcon,
-                title: 'Alianças Personalizadas',
-                description: 'Nossa principal especialidade é a criação de alianças exclusivas em ouro 16k, 18k e prata, cuidadosamente elaboradas para simbolizar compromissos duradouros.'
-              },
-              {
-                customIcon: BanhoOuroIcon,
-                title: 'Banho de Ouro Profissional',
-                description: 'Oferecemos serviço especializado de banho de ouro, permitindo renovar peças antigas ou transformar itens especiais com acabamento dourado de alta qualidade.'
-              },
-              {
-                customIcon: ConsertosIcon,
-                title: 'Consertos Especializados',
-                description: 'Nossa expertise técnica nos permite realizar consertos complexos em joias, relógios e óculos, devolvendo vida e funcionalidade a peças de valor.'
-              },
-              {
-                customIcon: JoiasSobMedidaIcon,
-                title: 'Joias Sob Medida',
-                description: 'Criamos joias personalizadas que contam histórias e eternizam momentos, trabalhando em estreita colaboração com nossos clientes do início ao fim.'
-              },
-              {
-                customIcon: OculosIcon,
-                title: 'Lentes de Óculos',
-                description: 'Oferecemos lentes de alta qualidade, com foco em conforto visual, durabilidade e estilo. Trabalhamos com diversos tipos de lentes para atender suas necessidades.'
-              },
-              {
-                customIcon: QualidadeIcon,
-                title: 'Compromisso com a Qualidade',
-                description: 'Na Cícero Joias, qualidade não é apenas um objetivo, mas um compromisso diário. Cada peça passa por rigorosos controles que garantem perfeição.'
-              }
-            ].map((specialty, index) => (
-              <div key={index} className="bg-white p-8 rounded-2xl elegant-shadow premium-card-hover">
-                <div className="w-14 h-14 bg-esmeralda/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-esmeralda group-hover:scale-110 transition-all duration-300">
-                  {specialty.customIcon && (
-                    <specialty.customIcon className="w-7 h-7 text-esmeralda group-hover:text-marfim transition-colors duration-300" />
-                  )}
-                </div>
-                <h3 className="text-xl font-bold text-esmeralda mb-3 group-hover:text-ouro transition-colors duration-300">
-                  {specialty.title}
-                </h3>
-                <p className="text-esmeralda-light leading-relaxed">
-                  {specialty.description}
-                </p>
+        <div className="relative mx-auto flex max-w-6xl flex-col gap-10 px-4 text-center sm:px-6 lg:px-8">
+          <span className="mx-auto inline-flex items-center gap-2 rounded-full border border-marfim/30 bg-white/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-marfim/80">
+            Tradição desde 1985
+          </span>
+          <h1 className="font-playfair text-4xl sm:text-5xl lg:text-6xl font-semibold leading-tight">
+            Nossa <span className="text-ouro">História</span>
+          </h1>
+          <p className="mx-auto max-w-3xl text-base sm:text-lg text-marfim/80">
+            Mais de quatro décadas dedicadas à arte da joalheria, criando memórias preciosas e momentos inesquecíveis para famílias inteiras.
+          </p>
+          <div className="grid gap-4 sm:grid-cols-3">
+            {legacyStats.map((item) => (
+              <div
+                key={item.label}
+                className="rounded-2xl border border-marfim/10 bg-white/10 px-6 py-5 text-left backdrop-blur-sm transition-transform duration-300 hover:-translate-y-1"
+              >
+                <item.icon className="mb-3 h-6 w-6 text-ouro" />
+                <p className="font-playfair text-xl font-semibold text-marfim">{item.value}</p>
+                <p className="text-xs uppercase tracking-[0.28em] text-marfim/60">{item.label}</p>
+                <p className="mt-2 text-sm text-marfim/70">{item.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-24 relative overflow-hidden" style={{ backgroundColor: '#133629' }}>
-        <div className="absolute inset-0 opacity-10">
-          <div 
-            className="w-full h-full"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-              backgroundSize: '60px 60px'
-            }}
-          />
+      <section className="relative -mt-16 rounded-t-[48px] bg-marfim pb-24 pt-20">
+        <div className="mx-auto flex max-w-5xl flex-col gap-12 px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="font-playfair text-3xl sm:text-4xl font-semibold text-esmeralda">
+              40 Anos de <span className="text-ouro">Tradição</span>
+            </h2>
+          </div>
+
+          <div className="grid gap-10 md:grid-cols-2">
+            {storyColumns.map((column, columnIndex) => (
+              <div key={columnIndex} className="space-y-6 text-base text-grafite/80">
+                {column.map((paragraph, paragraphIndex) => (
+                  <p key={paragraphIndex} className="leading-relaxed">
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            ))}
+          </div>
+
+          <div className="rounded-3xl border border-esmeralda/10 bg-white/95 p-8 shadow-[0_25px_60px_-35px_rgba(24,68,52,0.25)]">
+            <div className="grid gap-8 md:grid-cols-3">
+              {timeline.map((item, index) => (
+                <div key={item.year} className="relative flex flex-col gap-4 text-left">
+                  {index < timeline.length - 1 && (
+                    <span className="absolute right-[-16px] top-8 hidden h-px w-8 bg-gradient-to-r from-esmeralda/40 to-transparent md:block" />
+                  )}
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-esmeralda/10 text-esmeralda">
+                    <item.icon className="h-6 w-6" />
+                  </div>
+                  <span className="text-xs uppercase tracking-[0.28em] text-esmeralda/60">{item.year}</span>
+                  <h3 className="text-lg font-semibold text-esmeralda">{item.title}</h3>
+                  <p className="text-sm text-grafite/70 leading-relaxed">{item.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-        
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="font-playfair text-3xl md:text-4xl font-bold mb-6 text-marfim">
-            Conecte-se
-            <span className="text-ouro"> Conosco</span>
+      </section>
+
+      <section className="bg-[#0b1f18] py-24 text-marfim">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="font-playfair text-3xl sm:text-4xl font-semibold">
+              Como <span className="text-ouro">podemos ajudar</span>
+            </h2>
+            <p className="mt-4 text-sm text-marfim/70">
+              A mesma dedicação se estende do conserto ao projeto sob medida. Conheça os serviços que evoluíram conosco ao longo das décadas.
+            </p>
+          </div>
+
+          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {specialties.map((specialty) => (
+              <div
+                key={specialty.title}
+                className="group flex h-full flex-col rounded-3xl border border-marfim/10 bg-white/10 p-8 shadow-[0_25px_60px_-40px_rgba(0,0,0,0.45)] backdrop-blur-sm transition-transform duration-300 hover:-translate-y-1"
+              >
+                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-ouro/10 text-ouro">
+                  <specialty.icon className="h-7 w-7" />
+                </div>
+                <h3 className="text-lg font-semibold text-marfim mb-3">{specialty.title}</h3>
+                <p className="text-sm text-marfim/70 leading-relaxed">{specialty.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="relative overflow-hidden bg-gradient-to-br from-esmeralda via-esmeralda-dark to-[#04160f] py-24 text-marfim">
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute -right-12 top-0 h-48 w-48 rounded-full bg-ouro/20 blur-[120px]" />
+          <div className="absolute -left-16 bottom-0 h-56 w-56 rounded-full bg-esmeralda-light/20 blur-[140px]" />
+        </div>
+        <div className="relative mx-auto flex max-w-4xl flex-col items-center gap-8 px-4 text-center sm:px-6">
+          <span className="inline-flex items-center gap-2 rounded-full border border-marfim/20 bg-white/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-marfim/70">
+            Conecte-se conosco
+          </span>
+          <Quote className="h-8 w-8 text-ouro" />
+          <h2 className="font-playfair text-3xl sm:text-4xl font-semibold">
+            Cícero Joias: tradição que se renova a cada momento especial
           </h2>
-          
-          <p className="text-xl text-marfim-dark mb-8 max-w-3xl mx-auto">
+          <p className="max-w-2xl text-sm text-marfim/75">
             Convidamos você a fazer parte da história da Cícero Joias. Visite nossas lojas, conheça nosso trabalho e descubra como podemos transformar seus momentos especiais em memórias eternas.
           </p>
-          
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Button asChild size="lg" className="bg-ouro text-grafite hover:bg-ouro-light">
-              <Link href="/orcamento">
-                Solicitar Orçamento
-              </Link>
+          <div className="flex flex-col gap-4 sm:flex-row">
+            <Button asChild size="lg" className="bg-ouro text-esmeralda hover:bg-ouro-light">
+              <Link href="/orcamento">Solicitar Orçamento</Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-marfim text-marfim hover:bg-esmeralda-light/20">
-              <Link href="https://wa.me/5583988073784">
+            <Button asChild size="lg" variant="outline" className="border-marfim text-marfim hover:bg-white/10">
+              <Link href="https://wa.me/5583988073784" target="_blank" rel="noopener noreferrer">
                 Falar no WhatsApp
               </Link>
             </Button>
           </div>
-
-          <div className="mt-16 text-marfim text-sm">
-            <p>
-              Cícero Joias: Tradição que se renova a cada momento especial.
-            </p>
-          </div>
         </div>
       </section>
-    </div>
+      </div>
+    </PageVisibilityGuard>
   );
 }

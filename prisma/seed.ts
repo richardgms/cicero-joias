@@ -19,21 +19,28 @@ async function main() {
       title: 'Portfólio',
       description: 'Galeria de trabalhos realizados pela Cícero Joias',
       isVisible: true,
-      priority: 2
+      priority: 3
     },
     {
       slug: 'sobre',
       title: 'Sobre Nós',
       description: 'História e informações sobre a Cícero Joias',
       isVisible: true,
-      priority: 3
+      priority: 4
+    },
+    {
+      slug: 'servicos',
+      title: 'Serviços',
+      description: 'Página com os serviços oferecidos pela Cícero Joias',
+      isVisible: true,
+      priority: 2
     },
     {
       slug: 'orcamento',
       title: 'Orçamento',
       description: 'Formulário para solicitação de orçamentos',
       isVisible: true,
-      priority: 4
+      priority: 5
     }
   ]
 
