@@ -24,10 +24,10 @@ export const whatsappLinks = {
 };
 
 export const heroContent = {
-  badge: '40 anos de joalheria artesanal em Joao Pessoa',
-  title: 'Cicero Joias - aliancas feitas a mao desde 1980.',
+  badge: '40 anos de joalheria artesanal na Paraíba',
+  title: 'Cícero Joias: 40 Anos de Amor em Alianças Feitas à Mão.',
   description:
-    'Atendemos pelo WhatsApp, mostramos modelos na joalheria e adaptamos cada detalhe com o nosso ourives experiente.',
+    'Crie suas alianças perfeitas: atendimento personalizado via WhatsApp ou presencial, com o toque único do nosso ourives especialista em cada detalhe.',
 };
 
 type WithIcon<T extends Record<string, unknown>> = T & { icon: LucideIcon };
@@ -76,18 +76,18 @@ export const authorityAffiliations: Array<{ label: string; description: string }
 
 export const quickProofs: Array<WithIcon<{ title: string; description: string }>> = [
   {
-    title: 'Oficio artesanal',
-    description: '40 anos de bancada artesanal garantindo brilho e seguranca.',
+    title: 'Maestria Artesanal',
+    description: 'Tradição de 40 anos em alianças, garantindo o brilho e a segurança da sua joia',
     icon: Hammer,
   },
   {
-    title: 'Modelos na loja',
-    description: 'Modelos reais para experimentar e definir medidas com conforto.',
-    icon: Store,
+    title: 'Nossa Garantia Vitalícia',
+    description: 'Garantimos para sempre a autenticidade e a pureza do metal nobre da sua aliança.',
+    icon: ShieldCheck,
   },
   {
-    title: 'Suporte continuo',
-    description: 'Polimento e ajustes na joalheria sempre que precisar.',
+    title: 'Suporte Inicial Completo',
+    description: 'Oferecemos polimentos e ajustes gratuitos nos primeiros 12 meses em nossas peças.',
     icon: Wrench,
   },
 ];
@@ -277,17 +277,17 @@ export const heroStats = [
   {
     value: '40+ anos',
     label: 'de experiencia artesanal',
-    description: 'Presenca continua desde 1980 com producao familiar e atendimento direto do nosso ourives fundador.',
+    description: 'Tradição que Transforma: Desde 1985, nossa família dedica-se à arte da joalheria, criando alianças com a mesma paixão e cuidado de 40 anos atrás.',
   },
   {
     value: '1200+',
     label: 'aliancas sob medida',
-    description: 'Modelos desenvolvidos para cada casal com medidas exatas, acabamentos exclusivos e gravacoes personalizadas.',
+    description: 'Mais de 1200 Histórias: Alianças personalizadas que eternizam seu amor, com design exclusivo, medidas exatas e gravações únicas para cada casal.',
   },
-  {
+   {
     value: '5 estrelas',
     label: 'qualidade profissional',
-    description: 'Joias feitas exclusivamente com o mestre ourives, com padrão de acabamento e qualidade reconhecido por há décadas na região.',
+    description: 'Padrão 5 Estrelas: Cada joia é criada exclusivamente pelo mestre ourives, garantindo um acabamento de excelência e a qualidade que nos tornou referência na região por anos.',
   },
 ];
 

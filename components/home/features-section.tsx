@@ -13,13 +13,13 @@ export function FeaturesSection() {
       <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-16 px-4 sm:px-6 lg:px-8">
         <AnimatedSection className="space-y-6 text-center" delay={0.05}>
           <span className="inline-flex items-center justify-center rounded-full border border-esmeralda/20 bg-white px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-esmeralda/80">
-            Provas rapidas
+            NOSSO COMPROMISSO
           </span>
-          <h2 className="font-playfair text-3xl sm:text-4xl lg:text-5xl font-semibold text-esmeralda">
-            Confie em quem acompanha cada etapa pessoalmente
+          <h2 className="font-playfair text-3xl sm:text-5xl lg:text-6xl font-semibold text-esmeralda">
+            A sua história, esculpida por nós em cada detalhe
           </h2>
           <p className="mx-auto max-w-3xl text-base sm:text-lg text-grafite/75">
-            Desde a primeira conversa, mostramos como funciona a producao artesanal, apresentamos modelos reais na loja e garantimos manutencao continua apos a entrega.
+            A promessa de uma aliança eterna. Selecionamos apenas materiais nobres e utilizamos uma técnica de produção sem emendas, garantindo uma joia de resistência incomparável.
           </p>
         </AnimatedSection>
 
