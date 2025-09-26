@@ -10,7 +10,10 @@
   Award,
   Users,
   Star,
-  Gem
+  Gem,
+  Gift,
+  PenLine,
+  Infinity
 } from 'lucide-react';
 
 const WHATSAPP_NUMBER = '5583988073784';
@@ -19,13 +22,13 @@ const createWhatsAppLink = (message: string) =>
   `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 
 export const whatsappLinks = {
-  primary: createWhatsAppLink('Ola! Quero falar com a Cicero Joias sobre aliancas.'),
-  visit: createWhatsAppLink('Ola! Quero agendar uma visita presencial na Cicero Joias.'),
+  primary: createWhatsAppLink('Olá! Quero falar com a Cícero Joias sobre alianças.'),
+  visit: createWhatsAppLink('Olá! Quero agendar uma visita presencial na Cícero Joias.'),
 };
 
 export const heroContent = {
-  badge: '40 anos de joalheria artesanal na Paraíba',
-  title: 'Cícero Joias: 40 Anos de Amor em Alianças Feitas à Mão.',
+  badge: 'JOIAS QUE CONTAM SUA HISTÓRIA',
+  title: '40 Anos Criando Alianças Sob Medida',
   description:
     'Crie suas alianças perfeitas: atendimento personalizado via WhatsApp ou presencial, com o toque único do nosso ourives especialista em cada detalhe.',
 };
@@ -34,43 +37,52 @@ type WithIcon<T extends Record<string, unknown>> = T & { icon: LucideIcon };
 
 export const authorityMetrics: Array<WithIcon<{ value: string; label: string; description: string }>> = [
   {
-    value: '40+',
+    value: '40',
     label: 'anos de legado',
-    description: 'Atuamos desde 1980 com producao artesanal e atendimento direto da familia Cicero.',
+    description: 'Atuamos desde 1985 com produção artesanal e atendimento direto da família Cícero.',
     icon: Award,
   },
   {
-    value: '1200+',
+    value: '+ 5 MIL',
     label: 'casais atendidos',
-    description: 'Alinhamos medidas, acabamentos e gravacoes para eventos em Joao Pessoa e regiao.',
+    description: 'Mais de 5 mil pares de alianças fabricados em nossa oficina, cada um representando o início de uma nova história.',
     icon: Users,
   },
   {
-    value: '4.9/5',
-    label: 'satisfacao media',
-    description: 'Notas coletadas nas visitas presenciais e acompanhamentos de manutencao anual.',
+    value: '7 DIAS',
+    label: 'PRODUÇÃO SOB MEDIDA',
+    description: 'É o prazo médio que levamos para transformar suas referências e ideias em uma aliança única e exclusiva.',
     icon: Star,
   },
   {
     value: '72h',
     label: 'resposta garantida',
-    description: 'Devolutiva com fotos e valores em ate 72 horas uteis para solicitacoes personalizadas.',
+    description: 'Receba um orçamento detalhado com valores e fotos em até 72h para suas solicitações de joias sob medida.',
     icon: Gem,
   },
 ];
 
-export const authorityAffiliations: Array<{ label: string; description: string }> = [
+export const authorityAffiliations: Array<WithIcon<{ tag: string; title: string; description: string }>> = [
   {
-    label: 'Associacao Brasileira de Joalheria Artesanal',
-    description: 'Participacao ativa em comite tecnico desde 2015 (registro ABJA-0578).',
+    tag: 'A APRESENTAÇÃO PERFEITA',
+    title: 'Estojo de Veludo Incluso',
+    description:
+      'Sua aliança é entregue em um estojo de veludo, garantindo uma apresentação à altura do seu momento especial.',
+    icon: Gift,
   },
   {
-    label: 'Programa Joia Segura',
-    description: 'Procedimentos de rastreabilidade e laudos de autenticidade para ouro 18k.',
+    tag: 'SEU TOQUE PESSOAL',
+    title: 'Gravação Personalizada Inclusa',
+    description:
+      'Eternize seu amor com a gravação de nomes ou de uma data especial, um detalhe que torna sua joia verdadeiramente única.',
+    icon: PenLine,
   },
   {
-    label: 'Parceria Cerimonialistas do Litoral',
-    description: 'Indicacao oficial de assessorias de casamento da Paraiba e Pernambuco.',
+    tag: 'QUALIDADE E SIMBOLISMO',
+    title: 'Alianças Feitas Sem Emendas',
+    description:
+      'Uma técnica de produção superior que cria um círculo perfeito, mais resistente e simbólico para o seu amor eterno.',
+    icon: Infinity,
   },
 ];
 
@@ -94,31 +106,31 @@ export const quickProofs: Array<WithIcon<{ title: string; description: string }>
 
 export const differentiators: Array<WithIcon<{ title: string; description: string; helper: string }>> = [
   {
-    title: 'Oficio do ourives',
+    title: 'Ofício do ourives',
     description:
-      'Seu Cicero executa corte, solda e polimento manualmente, garantindo acabamento seguro e brilho uniforme.',
+      'Seu Cícero executa corte, solda e polimento manualmente, garantindo acabamento seguro e brilho uniforme.',
     helper: 'Cuidado artesanal',
     icon: Hammer,
   },
   {
-    title: 'Portfolio na loja',
+    title: 'Portfólio na loja',
     description:
-      'Apresentamos aliancas reais na vitrine para definir largura, textura e gravacoes com orientacao presencial.',
+      'Apresentamos alianças reais na vitrine para definir largura, textura e gravações com orientação presencial.',
     helper: 'Experimente primeiro',
     icon: Store,
   },
   {
-    title: 'Personalizacao acessivel',
+    title: 'Personalização acessível',
     description:
-      'Adaptamos referencias enviadas pelo WhatsApp e orientamos o que e viavel com prazo medio de 7 dias uteis.',
-    helper: 'Sob medida pra voce',
+      'Adaptamos referências enviadas pelo WhatsApp e orientamos o que é viável com prazo médio de 7 dias úteis.',
+    helper: 'Sob medida para você',
     icon: ShieldCheck,
   },
   {
-    title: 'Manutencao garantida',
+    title: 'Manutenção garantida',
     description:
       'Oferecemos limpeza, ajuste de medida e polimento sem custo adicional durante os primeiros 12 meses.',
-    helper: 'Acompanhamento proximo',
+    helper: 'Acompanhamento próximo',
     icon: Wrench,
   },
 ];
@@ -134,14 +146,14 @@ export const processSteps: Array<WithIcon<{ title: string; description: string; 
   {
     title: 'Escolha guiada',
     description:
-      'Visita presencial ou acompanhamento on-line para definir metais, medidas e acabamento.',
+      'Visita presencial ou acompanhamento online para definir metais, medidas e acabamento.',
     time: 'Etapa 02',
     icon: HandHeart,
   },
   {
     title: 'Ourives em ação',
     description:
-      'Seu Cicero executa todo o processo de fabricação, desde a separação do metal até a entrega final.',
+      'Seu Cícero executa todo o processo de fabricação, desde a separação do metal até a entrega final.',
     time: 'Etapa 03',
     icon: Hammer,
   },
@@ -169,37 +181,37 @@ export const portfolioCases: PortfolioCase[] = [
     slug: 'ana-pedro',
     title: 'Ana & Pedro - acabamento fosco com bordas polidas',
     image: '/assets/home/portfolio/case-01.webp',
-    alt: 'Aliancas foscas com bordas polidas da Cicero Joias',
+    alt: 'Alianças foscas com bordas polidas da Cícero Joias',
     challenge:
-      'O casal queria aliancas foscas que resistissem ao uso diario sem perder brilho nas bordas.',
+      'O casal queria alianças foscas que resistissem ao uso diário sem perder brilho nas bordas.',
     solution:
       'Ouro 18k com textura acetinada, bordas polidas e prova presencial para ajustar medidas.',
     result:
-      'Entrega em 6 dias uteis com gravacao interna personalizada e kit de cuidado.',
+      'Entrega em 6 dias úteis com gravação interna personalizada e kit de cuidado.',
   },
   {
     slug: 'julia-marcos',
-    title: 'Julia & Marcos - gravacao interna personalizada',
+    title: 'Julia & Marcos - gravação interna personalizada',
     image: '/assets/home/portfolio/case-02.webp',
-    alt: 'Aliancas polidas com gravacao interna personalizada',
+    alt: 'Alianças polidas com gravação interna personalizada',
     challenge:
-      'Precisavam de gravacao longa com coordenadas e data sem comprometer conforto.',
+      'Precisavam de gravação longa com coordenadas e data sem comprometer conforto.',
     solution:
-      'Modelagem na loja, teste com aneis de prova e gravacao laser feita na bancada do ourives.',
+      'Modelagem na loja, teste com anéis de prova e gravação laser feita na bancada do ourives.',
     result:
-      'Par final entregue em 7 dias uteis com acabamento polido espelhado e certificado de autenticidade.',
+      'Par final entregue em 7 dias úteis com acabamento polido espelhado e certificado de autenticidade.',
   },
   {
     slug: 'familia-sousa',
-    title: 'Familia Sousa - restauracao de aliancas de 1985',
+    title: 'Família Sousa - restauração de alianças de 1985',
     image: '/assets/home/portfolio/case-03.webp',
-    alt: 'Aliancas restauradas com brilho renovado',
+    alt: 'Alianças restauradas com brilho renovado',
     challenge:
-      'Aliancas com riscos profundos e perda de textura original apos anos guardadas.',
+      'Alianças com riscos profundos e perda de textura original após anos guardadas.',
     solution:
-      'Limpeza ultrassom, reforco de solda e retexturizacao manual inspirada nas fotos antigas.',
+      'Limpeza ultrassom, reforço de solda e retexturização manual inspirada nas fotos antigas.',
     result:
-      'Entregues em 4 dias uteis com brilho recuperado e garantia de manutencao trimestral.',
+      'Entregues em 4 dias úteis com brilho recuperado e garantia de manutenção trimestral.',
   },
 ];
 
@@ -214,8 +226,7 @@ export type Testimonial = {
 export const testimonials: Testimonial[] = [
   {
     name: 'Helena M.',
-    location: 'Joao Pessoa',
-    role: 'Noiva',
+    location: 'João Pessoa',
     quote: 'Atendimento direto com o ourives nos deixou seguros desde a primeira conversa.',
     image: '/assets/home/testimonials/helena-melo.webp',
   },
@@ -227,62 +238,46 @@ export const testimonials: Testimonial[] = [
   },
   {
     name: 'Julia & Marcos',
-    location: 'Recife',
+    location: 'Santa Rita',
     quote: 'Agendamos pelo WhatsApp, ajustamos medidas e recebemos tudo no prazo.',
     image: '/assets/home/testimonials/julia-marcos.webp',
   },
   {
-    name: 'Familia Sousa',
-    location: 'Joao Pessoa',
-    quote: 'Voltamos depois de um ano para polir e as aliancas ficaram como novas.',
+    name: 'Josivaldo G.',
+    location: 'João Pessoa',
+    quote: 'Voltamos depois de um ano para polir e as alianças ficaram como novas.',
     image: '/assets/home/testimonials/familia-sousa.webp',
   },
 ];
 
 export const faqItems = [
   {
-    question: 'Qual o prazo medio para produzir as aliancas?',
+    question: 'Qual o prazo médio para produzir as alianças?',
     answer:
-      'De 5 a 7 dias uteis apos confirmarmos medidas e gravacoes. Avisamos caso o prazo varie em alta estacao.',
+      'De 5 a 7 dias úteis após confirmarmos medidas e gravações. Avisamos caso o prazo varie em alta estação.',
   },
   {
-    question: 'Posso personalizar sem ir ate a loja?',
+    question: 'Posso personalizar sem ir até a loja?',
     answer:
-      'Sim. Enviamos fotos, videos e catalogo pelo WhatsApp, alinhamos detalhes por chamada e enviamos aneis de prova quando necessario.',
+      'Sim. Enviamos fotos, vídeos e catálogo pelo WhatsApp, alinhamos detalhes por chamada e enviamos anéis de prova quando necessário.',
   },
   {
-    question: 'Como funciona a manutencao?',
+    question: 'Como funciona a manutenção?',
     answer:
       'Polimento e ajuste de medida inclusos nos primeiros 12 meses. Depois disso, oferecemos pacote preferencial. Chame no WhatsApp para agendar.',
   },
 ];
 
-export const badges = [
-  {
-    label: '40 anos de joalheria',
-    image: '/assets/home/badges/badge-40-anos.png',
-  },
-  {
-    label: 'Atendimento direto com o ourives',
-    image: '/assets/home/badges/badge-atendimento-direto.png',
-  },
-  {
-    label: 'Manutencao garantida',
-    image: '/assets/home/badges/badge-manutencao.png',
-  },
-];
-
-
 export const heroStats = [
   {
-    value: '40+ anos',
-    label: 'de experiencia artesanal',
+    value: '40 anos',
+    label: 'de experiência artesanal',
     description: 'Tradição que Transforma: Desde 1985, nossa família dedica-se à arte da joalheria, criando alianças com a mesma paixão e cuidado de 40 anos atrás.',
   },
   {
-    value: '1200+',
-    label: 'aliancas sob medida',
-    description: 'Mais de 1200 Histórias: Alianças personalizadas que eternizam seu amor, com design exclusivo, medidas exatas e gravações únicas para cada casal.',
+    value: '+10 mil',
+    label: 'alianças sob medida',
+    description: 'Mais de 10 Mil Histórias: Alianças personalizadas que eternizam seu amor, com design exclusivo, medidas exatas e gravações únicas para cada casal.',
   },
    {
     value: '5 estrelas',

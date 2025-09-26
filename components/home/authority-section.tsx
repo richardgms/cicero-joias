@@ -17,10 +17,10 @@ export function AuthoritySection() {
             Autoridade comprovada
           </span>
           <h2 className="font-playfair text-3xl sm:text-4xl lg:text-5xl font-semibold text-esmeralda">
-            Mais de quatro decadas lapidando historias reais
+          Nossa confiança, traduzida em números
           </h2>
           <p className="mx-auto max-w-3xl text-base sm:text-lg text-grafite/75">
-            A Cicero Joias combina legado familiar com processos certificados para garantir transparencia, rastreabilidade e excelencia em cada alianca entregue.
+          Mais que uma promessa, nossa excelência é garantida por processos transparentes, agilidade e a avaliação de quem mais importa: nossos clientes.
           </p>
         </AnimatedSection>
 
@@ -46,15 +46,15 @@ export function AuthoritySection() {
         <AnimatedSection className="grid gap-4 sm:grid-cols-3" delay={0.18}>
           {authorityAffiliations.map((item) => (
             <motion.div
-              key={item.label}
+              key={item.title}
               className="flex h-full flex-col gap-3 rounded-3xl border border-esmeralda/10 bg-white/95 p-5 text-left shadow-[0_18px_40px_-30px_rgba(24,68,52,0.28)]"
               whileHover={{ y: -4 }}
             >
               <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-esmeralda/70">
-                <CheckCircle2 className="h-4 w-4" />
-                Reconhecimento
+                <item.icon className="h-4 w-4" />
+                {item.tag}
               </span>
-              <p className="font-semibold text-esmeralda">{item.label}</p>
+              <p className="font-semibold text-esmeralda">{item.title}</p>
               <p className="text-sm leading-relaxed text-grafite/70">{item.description}</p>
             </motion.div>
           ))}

@@ -19,10 +19,10 @@ export function TestimonialsSection() {
             Depoimentos
           </span>
           <h2 className="font-playfair text-3xl sm:text-4xl lg:text-5xl font-semibold text-esmeralda">
-            Clientes que confiaram no nosso cuidado artesanal
+          O que nossos clientes dizem
           </h2>
           <p className="mx-auto max-w-3xl text-base sm:text-lg text-grafite/75">
-            As historias abaixo mostram como o atendimento direto com o ourives da Cicero Joias traz tranquilidade do primeiro contato ate a manutencao.
+          A tranquilidade de quem foi acompanhado de perto pelo nosso mestre ourives, do design ao cuidado contínuo.
           </p>
         </AnimatedSection>
 
@@ -30,7 +30,7 @@ export function TestimonialsSection() {
           {testimonials.map((testimonial) => (
             <motion.article
               key={testimonial.name}
-              className="flex h-full flex-col gap-6 rounded-3xl border border-esmeralda/10 bg-white/90 p-6 shadow-[0_24px_55px_-34px_rgba(24,68,52,0.35)] backdrop-blur-sm"
+              className="relative flex h-full flex-col gap-6 rounded-3xl border border-esmeralda/10 bg-white/90 p-6 shadow-[0_24px_55px_-34px_rgba(24,68,52,0.35)] backdrop-blur-sm overflow-hidden transition-shadow duration-300 ease-in-out hover:shadow-[0_20px_60px_-20px_rgba(24,68,52,0.3),0_0_25px_-5px_rgba(110,231,183,0.4)]"
               whileHover={{ y: -4 }}
             >
               <p className="relative text-base leading-relaxed text-grafite/80">
@@ -55,13 +55,18 @@ export function TestimonialsSection() {
                   </p>
                 </div>
               </div>
+              <Quote
+                aria-hidden="true"
+                className="pointer-events-none absolute -bottom-2 -right-4 h-16 w-16 text-esmeralda/10 sm:h-20 sm:w-20 lg:h-24 lg:w-24 transform -rotate-12"
+                strokeWidth={0.4}
+              />
             </motion.article>
           ))}
         </AnimatedSection>
 
         <AnimatedSection className="flex flex-col items-center gap-3 text-center" delay={0.18}>
           <p className="text-sm sm:text-base text-grafite/70">
-            Quer conversar com a equipe? Estamos no WhatsApp para compartilhar novos cases e tirar duvidas rapidamente.
+          Pronto para começar a sua história conosco? Estamos no WhatsApp para uma consultoria sem compromisso.
           </p>
           <motion.a
             href={whatsappLinks.primary}
