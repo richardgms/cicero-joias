@@ -1,6 +1,20 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { checkAdminAuth } from '@/lib/check-admin';
+import { clerkClient } from '@clerk/nextjs/server';
+
+// Helper function to get user count from Clerk
+async function getClerkUserCount() {
+  try {
+    const clerk = await clerkClient();
+    const clerkUsers = await clerk.users.getUserList({ limit: 1 }); // We only need the total count
+    return clerkUsers.totalCount;
+  } catch (error) {
+    console.warn('[STATS] Could not fetch user count from Clerk:', error);
+    // Fallback to local database count if Clerk fails
+    return await prisma.user.count();
+  }
+}
 
 export async function GET() {
   try {
@@ -27,8 +41,8 @@ export async function GET() {
       where: { stock: { lt: 5 } },
     });
 
-    // Buscar estatísticas dos usuários
-    const totalUsers = await prisma.user.count();
+    // Buscar estatísticas dos usuários (usando Clerk como fonte)
+    const totalUsers = await getClerkUserCount();
 
     // Buscar projetos recentes
     const recentProjects = await prisma.portfolioItem.findMany({
