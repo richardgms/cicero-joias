@@ -17,10 +17,10 @@ export function AuthoritySection() {
             Autoridade comprovada
           </span>
           <h2 className="font-playfair text-3xl sm:text-4xl lg:text-5xl font-semibold text-esmeralda">
-          Nossa confiança, traduzida em números
+          Credibilidade construída ao longo do tempo
           </h2>
           <p className="mx-auto max-w-3xl text-base sm:text-lg text-grafite/75">
-          Mais que uma promessa, nossa excelência é garantida por processos transparentes, agilidade e a avaliação de quem mais importa: nossos clientes.
+          Nossa reputação não é acaso: são décadas de compromisso, transparência e a aprovação de milhares de casais que escolheram confiar em nosso trabalho.
           </p>
         </AnimatedSection>
 

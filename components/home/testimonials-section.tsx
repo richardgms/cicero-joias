@@ -64,20 +64,10 @@ export function TestimonialsSection() {
           ))}
         </AnimatedSection>
 
-        <AnimatedSection className="flex flex-col items-center gap-3 text-center" delay={0.18}>
+        <AnimatedSection className="text-center" delay={0.18}>
           <p className="text-sm sm:text-base text-grafite/70">
-          Pronto para começar a sua história conosco? Estamos no WhatsApp para uma consultoria sem compromisso.
+          A tranquilidade de quem escolheu uma joalheria que acompanha cada casal de perto, do primeiro contato ao cuidado contínuo.
           </p>
-          <motion.a
-            href={whatsappLinks.primary}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-esmeralda px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-marfim shadow-[0_20px_40px_-22px_rgba(24,68,52,0.4)]"
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            Falar com a joalheria
-          </motion.a>
         </AnimatedSection>
       </div>
     </section>

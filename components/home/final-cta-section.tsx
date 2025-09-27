@@ -32,7 +32,7 @@ export function FinalCTASection() {
           whileTap={{ scale: 0.95 }}
         >
           <MessageCircle className="h-4 w-4" />
-          Chamar no WhatsApp
+          Solicitar orçamento
         </motion.a>
       </AnimatedSection>
     </section>

@@ -58,7 +58,7 @@ export function HeroSection() {
               className="group inline-flex items-center gap-2 rounded-full bg-ouro px-6 py-3 text-sm font-semibold uppercase tracking-[0.26em] text-esmeralda shadow-[0_25px_45px_-20px_rgba(207,154,36,0.45)] transition-transform hover:scale-[1.02]"
             >
               <a href={whatsappLinks.primary} target="_blank" rel="noopener noreferrer">
-                Falar no WhatsApp agora
+                Começar meu projeto
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </a>
             </Button>

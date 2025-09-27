@@ -28,18 +28,18 @@ export const whatsappLinks = {
 
 export const heroContent = {
   badge: 'JOIAS QUE CONTAM SUA HISTÓRIA',
-  title: '40 Anos Criando Alianças Sob Medida',
+  title: '4 Décadas Criando Alianças Únicas',
   description:
-    'Crie suas alianças perfeitas: atendimento personalizado via WhatsApp ou presencial, com o toque único do nosso ourives especialista em cada detalhe.',
+    'Transforme seu amor em uma joia única: Criamos suas alianças sob medida com acompanhamento pessoal em cada etapa. Quatro décadas de experiência garantem a qualidade que mais de 5 mil casais já confiaram em nós.',
 };
 
 type WithIcon<T extends Record<string, unknown>> = T & { icon: LucideIcon };
 
 export const authorityMetrics: Array<WithIcon<{ value: string; label: string; description: string }>> = [
   {
-    value: '40',
-    label: 'anos de legado',
-    description: 'Atuamos desde 1985 com produção artesanal e atendimento direto da família Cícero.',
+    value: 'Família',
+    label: 'legado geracional',
+    description: 'Tradição familiar que passa de geração em geração, mantendo vivos os valores e o cuidado no atendimento personalizado.',
     icon: Award,
   },
   {
@@ -86,52 +86,48 @@ export const authorityAffiliations: Array<WithIcon<{ tag: string; title: string;
   },
 ];
 
-export const quickProofs: Array<WithIcon<{ title: string; description: string }>> = [
+export const unifiedDifferentiators: Array<WithIcon<{ title: string; description: string; helper: string }>> = [
   {
-    title: 'Maestria Artesanal',
-    description: 'Tradição de 40 anos em alianças, garantindo o brilho e a segurança da sua joia',
+    title: 'Expertise Tradicional',
+    description:
+      'Décadas de especialização combinadas com técnicas manuais refinadas: moldagem, polimento e brilho que garantem qualidade e durabilidade.',
+    helper: 'Precisão consolidada',
     icon: Hammer,
   },
   {
-    title: 'Nossa Garantia Vitalícia',
-    description: 'Garantimos para sempre a autenticidade e a pureza do metal nobre da sua aliança.',
+    title: 'Certificado Vitalício',
+    description:
+      'Garantimos para sempre a autenticidade e a pureza do metal nobre da sua aliança.',
+    helper: 'Garantia eterna',
     icon: ShieldCheck,
   },
   {
-    title: 'Suporte Inicial Completo',
-    description: 'Oferecemos polimentos e ajustes gratuitos nos primeiros 12 meses em nossas peças.',
-    icon: Wrench,
-  },
-];
-
-export const differentiators: Array<WithIcon<{ title: string; description: string; helper: string }>> = [
-  {
-    title: 'Ofício do ourives',
-    description:
-      'Seu Cícero executa corte, solda e polimento manualmente, garantindo acabamento seguro e brilho uniforme.',
-    helper: 'Cuidado artesanal',
-    icon: Hammer,
-  },
-  {
-    title: 'Portfólio na loja',
+    title: 'Portfólio na Loja',
     description:
       'Apresentamos alianças reais na vitrine para definir largura, textura e gravações com orientação presencial.',
     helper: 'Experimente primeiro',
     icon: Store,
   },
   {
-    title: 'Personalização acessível',
+    title: 'Personalização Flexível',
     description:
       'Adaptamos referências enviadas pelo WhatsApp e orientamos o que é viável com prazo médio de 7 dias úteis.',
-    helper: 'Sob medida para você',
-    icon: ShieldCheck,
+    helper: 'Exclusivo para você',
+    icon: Gem,
   },
   {
-    title: 'Manutenção garantida',
+    title: 'Manutenção Completa',
     description:
-      'Oferecemos limpeza, ajuste de medida e polimento sem custo adicional durante os primeiros 12 meses.',
-    helper: 'Acompanhamento próximo',
+      'Polimentos e ajustes gratuitos nos primeiros 12 meses, com acompanhamento contínuo e cuidado especializado.',
+    helper: 'Cuidado duradouro',
     icon: Wrench,
+  },
+  {
+    title: 'Produção Exclusiva',
+    description:
+      'Joalheria própria com técnicas sem emendas, criando círculos perfeitos mais resistentes e simbólicos.',
+    helper: 'Qualidade superior',
+    icon: Infinity,
   },
 ];
 
@@ -151,9 +147,9 @@ export const processSteps: Array<WithIcon<{ title: string; description: string; 
     icon: HandHeart,
   },
   {
-    title: 'Ourives em ação',
+    title: 'Execução especializada',
     description:
-      'Seu Cícero executa todo o processo de fabricação, desde a separação do metal até a entrega final.',
+      'Nossa equipe executa todo o processo de fabricação, desde a separação do metal até a entrega final.',
     time: 'Etapa 03',
     icon: Hammer,
   },
@@ -271,8 +267,8 @@ export const faqItems = [
 export const heroStats = [
   {
     value: '40 anos',
-    label: 'de experiência artesanal',
-    description: 'Tradição que Transforma: Desde 1985, nossa família dedica-se à arte da joalheria, criando alianças com a mesma paixão e cuidado de 40 anos atrás.',
+    label: 'de expertise consolidada',
+    description: 'Experiência Comprovada: Quatro décadas refinando técnicas e criando alianças únicas, com a expertise que só o tempo pode construir.',
   },
   {
     value: '+10 mil',
@@ -282,7 +278,7 @@ export const heroStats = [
    {
     value: '5 estrelas',
     label: 'qualidade profissional',
-    description: 'Padrão 5 Estrelas: Cada joia é criada exclusivamente pelo mestre ourives, garantindo um acabamento de excelência e a qualidade que nos tornou referência na região por anos.',
+    description: 'Padrão 5 Estrelas: Cada joia é criada exclusivamente com técnicas refinadas, garantindo um acabamento de excelência que nos tornou referência na região.',
   },
 ];
 

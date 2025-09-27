@@ -14,13 +14,13 @@ export function ProcessSection() {
       <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-16 px-4 sm:px-6 lg:px-8">
         <AnimatedSection className="space-y-6 text-center" delay={0.05}>
           <span className="inline-flex items-center justify-center rounded-full border border-ouro/40 bg-white/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-ouro/90">
-            Nosso Processo
+            Como Trabalhamos
           </span>
           <h2 className="font-playfair text-3xl sm:text-4xl lg:text-5xl font-semibold">
-            Da primeira conversa a entrega das aliancas
+            Do primeiro contato à entrega das alianças
           </h2>
           <p className="mx-auto max-w-3xl text-base sm:text-lg text-marfim/80">
-            Desde o primeiro contato à visita em nossa loja, oferecemos atendimento personalizado com nosso mestre ourives, atento em cada detalhe da confecção, garantindo qualidade e beleza às suas joias.
+            Um processo pensado para sua tranquilidade: desde o primeiro contato até a entrega, cada etapa é acompanhada de perto, garantindo qualidade e beleza às suas joias.
           </p>
         </AnimatedSection>
 
@@ -80,7 +80,7 @@ export function ProcessSection() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.97 }}
           >
-            Começar agora pelo WhatsApp
+            Falar com especialista
             <span aria-hidden className="flex h-5 w-5 items-center justify-center rounded-full bg-esmeralda/10 text-esmeralda">
               <ArrowRight className="h-3 w-3" />
             </span>

@@ -51,7 +51,7 @@ export function Footer() {
               </div>
               <div className="flex flex-col leading-tight">
                 <span className="text-lg font-semibold">Cícero Joias</span>
-                <span className="text-xs uppercase tracking-[0.3em] text-marfim/60">Desde 1980</span>
+                <span className="text-xs uppercase tracking-[0.3em] text-marfim/60">Desde 1985</span>
               </div>
             </Link>
             <p className="text-sm leading-relaxed text-marfim/70">
