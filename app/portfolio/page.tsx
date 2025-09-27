@@ -302,7 +302,12 @@ export default function PortfolioPage() {
             >
               {filteredItems.map((item) => (
                 <motion.div key={item.id} layout>
-                  <Link href={`/portfolio/${generatePortfolioSlug(item, item.id)}`}>
+                  <Link href={`/portfolio/${generatePortfolioSlug({
+                    title: item.title,
+                    category: item.category,
+                    material: item.material,
+                    id: item.id
+                  })}`}>
                     <div
                       className={`group h-full rounded-3xl border border-esmeralda/10 bg-white/90 text-left shadow-[0_25px_60px_-40px_rgba(24,68,52,0.3)] transition-transform duration-500 hover:-translate-y-2 ${viewMode === 'list' ? 'flex flex-col md:flex-row' : ''}`}
                     >
