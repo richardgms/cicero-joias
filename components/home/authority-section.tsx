@@ -8,7 +8,7 @@ import { CheckCircle2 } from 'lucide-react';
 
 export function AuthoritySection() {
   return (
-    <section className="relative overflow-hidden bg-white py-24">
+    <section className="relative overflow-hidden bg-white py-12 sm:py-24">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_40%_0%,rgba(24,68,52,0.05),transparent_55%)]" />
 
       <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-14 px-4 sm:px-6 lg:px-8">

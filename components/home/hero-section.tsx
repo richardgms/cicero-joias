@@ -12,12 +12,27 @@ export function HeroSection() {
 
   return (
     <section className="relative overflow-hidden bg-esmeralda text-marfim">
-      <div className="absolute inset-0">
+      {/* Background gradients for desktop */}
+      <div className="absolute inset-0 hidden lg:block">
         <div className="absolute inset-0 bg-gradient-to-br from-esmeralda via-esmeralda/95 to-[#0b1f18]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_-10%,rgba(207,154,36,0.18),transparent_55%)]" />
       </div>
 
-      <div className="relative mx-auto grid min-h-[560px] w-full max-w-6xl gap-12 px-4 py-20 sm:px-6 sm:py-24 lg:grid-cols-[1.1fr,0.9fr] lg:items-center lg:px-8">
+      {/* Background image for mobile */}
+      <div className="absolute inset-0 lg:hidden">
+        <Image
+          src="/assets/home/hero-mobile.webp"
+          alt="Casal experimentando aliancas na Cicero Joias"
+          fill
+          priority
+          className="object-cover"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-esmeralda/90 via-esmeralda/85 to-esmeralda/95" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0b1f18]/60 via-transparent to-transparent" />
+      </div>
+
+      <div className="relative mx-auto grid min-h-[560px] w-full max-w-6xl gap-12 px-4 pb-10 pt-8 sm:px-6 sm:pb-24 sm:pt-10 lg:grid-cols-[1.1fr,0.9fr] lg:items-center lg:px-8">
         <motion.div
           className="space-y-8"
           initial={{ opacity: 0, y: 30 }}
@@ -93,22 +108,6 @@ export function HeroSection() {
           <div className="absolute inset-0 bg-gradient-to-t from-[#0b1f18]/70 via-transparent to-transparent" />
         </motion.div>
 
-        <motion.div
-          className="relative w-full overflow-hidden rounded-3xl border border-white/10 shadow-[0_35px_70px_-40px_rgba(0,0,0,0.5)] lg:hidden"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15, duration: 0.6, ease: 'easeOut' }}
-        >
-          <Image
-            src="/assets/home/hero-mobile.webp"
-            alt="Casal experimentando aliancas na Cicero Joias"
-            width={1600}
-            height={2000}
-            priority
-            className="h-full w-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0b1f18]/70 via-transparent to-transparent" />
-        </motion.div>
       </div>
     </section>
   );

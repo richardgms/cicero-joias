@@ -9,7 +9,7 @@ import { testimonials, whatsappLinks } from './home-data';
 
 export function TestimonialsSection() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-esmeralda via-esmeralda-light to-[#dbe7df] py-24">
+    <section className="relative overflow-hidden bg-gradient-to-br from-esmeralda via-esmeralda-light to-[#dbe7df] py-12 sm:py-24">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_10%_20%,rgba(255,255,255,0.35),transparent_55%)]" />
 
       <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 sm:px-6 lg:px-8">

@@ -263,3 +263,13 @@
   border-radius: 9999px;
   margin-left: 0.5rem;
 }
+
+/* Esconder scrollbar do carousel mobile */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
