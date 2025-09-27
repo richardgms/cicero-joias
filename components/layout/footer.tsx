@@ -31,7 +31,11 @@ const socials = [
   { icon: MessageCircle, label: 'WhatsApp', href: whatsappUrl, external: true },
 ];
 
-export function Footer() {
+interface FooterProps {
+  hideCtaSection?: boolean;
+}
+
+export function Footer({ hideCtaSection = false }: FooterProps) {
   const year = new Date().getFullYear();
 
   return (

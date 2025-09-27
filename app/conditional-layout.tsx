@@ -23,7 +23,7 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">{children}</main>
-      <Footer hideCtaSection={isServicosPage} />
+      <Footer />
     </div>
   );
 }
