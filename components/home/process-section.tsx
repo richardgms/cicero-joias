@@ -8,7 +8,7 @@ import { processSteps, whatsappLinks } from './home-data';
 
 export function ProcessSection() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-esmeralda via-esmeralda-dark to-[#071d17] py-12 text-marfim sm:py-24">
+    <section className="relative overflow-hidden bg-gradient-to-br from-esmeralda via-esmeralda-dark to-[#071d17] py-7 text-marfim sm:py-14">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_-10%,rgba(207,154,36,0.22),transparent_60%)]" />
 
       <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-16 px-4 sm:px-6 lg:px-8">

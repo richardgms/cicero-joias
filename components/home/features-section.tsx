@@ -38,7 +38,7 @@ export function FeaturesSection() {
   }, []);
 
   return (
-    <section className="relative overflow-hidden bg-[#F9F6EE] py-10 sm:py-24">
+    <section className="relative overflow-hidden bg-[#F9F6EE] py-6 sm:py-14">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(24,68,52,0.08),transparent_55%)]" />
 
       <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-16 px-4 sm:px-6 lg:px-8">

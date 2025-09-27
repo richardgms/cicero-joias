@@ -1,13 +1,13 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Inter, Playfair_Display } from 'next/font/google';
+import { Jost, Playfair_Display } from 'next/font/google';
 import { Toaster } from '@/components/ui/toaster';
 import { Providers } from './providers';
 import { ConditionalLayout } from './conditional-layout';
 
-const inter = Inter({ 
+const jost = Jost({ 
   subsets: ['latin'], 
-  variable: '--font-inter',
+  variable: '--font-sans',
   display: 'swap',
 });
 
@@ -66,7 +66,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR" className={`${inter.variable} ${playfair.variable}`}>
+    <html lang="pt-BR" className={`${jost.variable} ${playfair.variable}`}>
       <body suppressHydrationWarning className="min-h-screen bg-background font-sans antialiased">
         <Providers>
           <ConditionalLayout>{children}</ConditionalLayout>

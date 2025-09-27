@@ -8,7 +8,7 @@ import { authorityGroups } from './home-data';
 export function AuthoritySection() {
 
   return (
-    <section className="relative overflow-hidden bg-white py-12 sm:py-24">
+    <section className="relative overflow-hidden bg-white py-7 sm:py-14">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_40%_0%,rgba(24,68,52,0.05),transparent_55%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_100%,rgba(24,68,52,0.03),transparent_45%)]" />
 

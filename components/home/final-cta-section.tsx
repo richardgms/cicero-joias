@@ -7,7 +7,7 @@ import { whatsappLinks } from './home-data';
 
 export function FinalCTASection() {
   return (
-    <section className="relative overflow-hidden bg-esmeralda py-12 text-center text-white sm:py-24">
+    <section className="relative overflow-hidden bg-esmeralda py-7 text-center text-white sm:py-14">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.1),transparent_45%)]" />
 
       <AnimatedSection
