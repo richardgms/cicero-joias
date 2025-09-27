@@ -305,7 +305,6 @@ export default function PortfolioPage() {
                   <Link href={`/portfolio/${generatePortfolioSlug({
                     title: item.title,
                     category: item.category,
-                    material: item.material,
                     id: item.id
                   })}`}>
                     <div
