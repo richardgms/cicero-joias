@@ -210,7 +210,7 @@ function ProntaEntregaContent() {
     } finally {
       setLoading(false);
     }
-  }, [categoryFilter, materialFilter, stockFilter, sortBy, currentPage]);
+  }, [categoryFilter, materialFilter, stockFilter, sortBy, currentPage, priceRange]);
 
   useEffect(() => {
     fetchProducts();
