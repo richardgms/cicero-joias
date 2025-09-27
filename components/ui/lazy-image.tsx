@@ -97,7 +97,6 @@ export function LazyImage({
 
   const imageProps = {
     src: currentSrc,
-    alt,
     className: `transition-all duration-500 ${
       isLoading ? 'opacity-0 scale-105' : 'opacity-100 scale-100'
     } ${hasError ? 'opacity-50' : ''} ${className}`,
@@ -155,3 +154,5 @@ export function LazySection({ children, className = "", threshold = 0.1 }: LazyS
     </div>
   );
 }
+
+
