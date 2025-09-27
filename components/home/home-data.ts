@@ -1,10 +1,10 @@
-﻿import {
+﻿import React from 'react';
+import {
   type LucideIcon,
   Hammer,
   Store,
   ShieldCheck,
   Wrench,
-  MessageCircle,
   HandHeart,
   Sparkles,
   Award,
@@ -13,10 +13,15 @@
   Gem,
   Gift,
   PenLine,
-  Infinity
+  Infinity,
+  HeartHandshake,
+  Clock,
+  CalendarDays,
+  Crown,
 } from 'lucide-react';
+import { WhatsappIcon } from '@/components/icons';
 
-const WHATSAPP_NUMBER = '5583988073784';
+const WHATSAPP_NUMBER = '5583991180251';
 
 const createWhatsAppLink = (message: string) =>
   `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
@@ -33,8 +38,133 @@ export const heroContent = {
     'Transforme seu amor em uma joia única: Criamos suas alianças sob medida com acompanhamento pessoal em cada etapa. Quatro décadas de experiência garantem a qualidade que mais de 5 mil casais já confiaram em nós.',
 };
 
-type WithIcon<T extends Record<string, unknown>> = T & { icon: LucideIcon };
+type WithIcon<T extends Record<string, unknown>> = T & { icon: LucideIcon | React.ElementType };
 
+// Hierarchical cards data with main featured card and secondary supporting cards
+export const authorityHierarchy = {
+  // Main featured card (center/top)
+  featured: {
+    value: '+ 5 MIL',
+    label: 'casais atendidos',
+    description: 'Mais de 5 mil pares de alianças fabricados em nossa oficina, cada um representando o início de uma nova história.',
+    expandedDetails: 'Nossa jornada começou há quatro décadas com um sonho simples: criar alianças que representem o amor verdadeiro. Hoje, mais de 5 mil casais confiam em nosso trabalho artesanal, cada aliança carregando uma história única de amor e compromisso.',
+    stats: [
+      { label: 'Anos de experiência', value: '40+' },
+      { label: 'Casais atendidos', value: '5.000+' },
+      { label: 'Satisfação', value: '98%' },
+    ],
+    icon: Users,
+  },
+  // Supporting cards around the main one
+  supporting: [
+    {
+      value: 'FAMÍLIA',
+      label: 'legado geracional',
+      description: 'Tradição familiar que passa de geração em geração.',
+      expandedDetails: 'Nossa empresa é verdadeiramente familiar, com valores transmitidos através das gerações. Este legado garante que cada cliente receba o mesmo cuidado e atenção que dedicaríamos a nossa própria família.',
+      icon: HeartHandshake,
+    },
+    {
+      value: '72h',
+      label: 'resposta garantida',
+      description: 'Orçamento detalhado em até 72h.',
+      expandedDetails: 'Entendemos a ansiedade de planejar o momento perfeito. Por isso, garantimos resposta completa com valores, fotos e prazos em até 72 horas, para que vocês possam tomar decisões com tranquilidade.',
+      icon: Clock,
+    },
+    {
+      value: '7 DIAS',
+      label: 'produção sob medida',
+      description: 'Prazo médio para criar sua aliança única.',
+      expandedDetails: 'Nossa oficina própria permite controle total sobre prazos e qualidade. Em apenas 7 dias úteis, transformamos suas ideias em realidade, mantendo vocês informados sobre cada etapa do processo.',
+      icon: CalendarDays,
+    },
+    {
+      value: 'Gravação',
+      label: 'personalizada inclusa',
+      description: 'Eternize seu amor com gravações especiais.',
+      expandedDetails: 'Cada gravação é feita com técnicas artesanais tradicionais, garantindo durabilidade e beleza. Nomes, datas, símbolos especiais - tudo é possível para tornar sua aliança verdadeiramente única.',
+      icon: PenLine,
+    },
+    {
+      value: 'Sem Emendas',
+      label: 'técnica superior',
+      description: 'Círculo perfeito para o amor eterno.',
+      expandedDetails: 'Nossa técnica exclusiva cria alianças sem pontos de soldagem, resultando em um círculo perfeito e contínuo. Além de mais resistente, simboliza a eternidade do amor sem início nem fim.',
+      icon: Infinity,
+    },
+    {
+      value: 'Estojo Premium',
+      label: 'apresentação especial',
+      description: 'Entrega digna do momento especial.',
+      expandedDetails: 'Cada aliança é entregue em estojo de veludo premium, acompanhado de certificado de autenticidade e manual de cuidados, garantindo uma apresentação à altura da importância do momento.',
+      icon: Gift,
+    },
+  ],
+};
+
+// Keep grouped data for compatibility
+export const authorityGroups = {
+  trajectory: {
+    title: 'Nossa Trajetória',
+    subtitle: 'Décadas construindo confiança',
+    items: [
+      {
+        value: 'FAMÍLIA',
+        label: 'legado geracional',
+        description: 'Tradição familiar que passa de geração em geração, mantendo vivos os valores e o cuidado no atendimento personalizado.',
+        icon: HeartHandshake,
+      },
+      {
+        value: '+ 5 MIL',
+        label: 'casais atendidos',
+        description: 'Mais de 5 mil pares de alianças fabricados em nossa oficina, cada um representando o início de uma nova história.',
+        icon: Users,
+      },
+    ],
+  },
+  commitment: {
+    title: 'Nosso Compromisso',
+    subtitle: 'Agilidade e qualidade garantidas',
+    items: [
+      {
+        value: '72h',
+        label: 'resposta garantida',
+        description: 'Receba um orçamento detalhado com valores e fotos em até 72h para suas solicitações de joias sob medida.',
+        icon: Clock,
+      },
+      {
+        value: '7 DIAS',
+        label: 'produção sob medida',
+        description: 'É o prazo médio que levamos para transformar suas referências e ideias em uma aliança única e exclusiva.',
+        icon: CalendarDays,
+      },
+    ],
+  },
+  experience: {
+    title: 'Sua Experiência',
+    subtitle: 'Detalhes que fazem a diferença',
+    items: [
+      {
+        value: 'Gravação',
+        label: 'personalizada inclusa',
+        description: 'Eternize seu amor com a gravação de nomes ou de uma data especial, um detalhe que torna sua joia verdadeiramente única.',
+        icon: PenLine,
+      },
+      {
+        value: 'Sem Emendas',
+        label: 'técnica superior',
+        description: 'Uma técnica de produção superior que cria um círculo perfeito, mais resistente e simbólico para o seu amor eterno.',
+        icon: Infinity,
+      },
+      {
+        value: 'Estojo',
+        label: 'de veludo incluso',
+        description: 'Sua aliança é entregue em um estojo de veludo, garantindo uma apresentação à altura do seu momento especial.',
+        icon: Gift,
+      },
+    ],
+  },
+};
 export const authorityMetrics: Array<WithIcon<{ value: string; label: string; description: string }>> = [
   {
     value: 'Família',
@@ -52,7 +182,7 @@ export const authorityMetrics: Array<WithIcon<{ value: string; label: string; de
     value: '7 DIAS',
     label: 'PRODUÇÃO SOB MEDIDA',
     description: 'É o prazo médio que levamos para transformar suas referências e ideias em uma aliança única e exclusiva.',
-    icon: Star,
+    icon: CalendarDays,
   },
   {
     value: '72h',
@@ -127,7 +257,7 @@ export const unifiedDifferentiators: Array<WithIcon<{ title: string; description
     description:
       'Joalheria própria com técnicas sem emendas, criando círculos perfeitos mais resistentes e simbólicos.',
     helper: 'Qualidade superior',
-    icon: Infinity,
+    icon: Crown,
   },
 ];
 
@@ -137,7 +267,7 @@ export const processSteps: Array<WithIcon<{ title: string; description: string; 
     description:
       'Mensagem inicial para alinhar estilo, data especial e orçamento.',
     time: 'Etapa 01',
-    icon: MessageCircle,
+    icon: WhatsappIcon,
   },
   {
     title: 'Escolha guiada',

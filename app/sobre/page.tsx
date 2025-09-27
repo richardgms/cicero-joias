@@ -11,7 +11,6 @@ import {
   Star,
   RotateCw,
   ArrowRight,
-  MessageCircle,
   Quote,
 } from 'lucide-react';
 import {
@@ -253,7 +252,7 @@ export default function SobrePage() {
               <Link href="/orcamento">Solicitar Orçamento</Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="border-marfim text-marfim hover:bg-white/10">
-              <Link href="https://wa.me/5583988073784" target="_blank" rel="noopener noreferrer">
+              <Link href="https://wa.me/5583991180251" target="_blank" rel="noopener noreferrer">
                 Falar no WhatsApp
               </Link>
             </Button>

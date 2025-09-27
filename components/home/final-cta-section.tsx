@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { MessageCircle } from 'lucide-react';
+import { WhatsappIcon } from '@/components/icons';
 import { AnimatedSection } from '@/components/ui/animated-section';
 import { whatsappLinks } from './home-data';
 
@@ -31,7 +31,7 @@ export function FinalCTASection() {
           whileHover={{ scale: 1.05, y: -2 }}
           whileTap={{ scale: 0.95 }}
         >
-          <MessageCircle className="h-4 w-4" />
+          <WhatsappIcon className="h-4 w-4" />
           Solicitar orçamento
         </motion.a>
       </AnimatedSection>

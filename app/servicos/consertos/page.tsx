@@ -57,7 +57,7 @@ export default function ConsertosPage() {
               </div>
               <div className="flex flex-col gap-4 sm:flex-row">
                 <Button asChild size="lg" className="bg-ouro text-esmeralda hover:bg-ouro-light">
-                  <Link href="https://wa.me/5583988073784" target="_blank" rel="noopener noreferrer">
+                  <Link href="https://wa.me/5583991180251" target="_blank" rel="noopener noreferrer">
                     Falar no WhatsApp
                   </Link>
                 </Button>

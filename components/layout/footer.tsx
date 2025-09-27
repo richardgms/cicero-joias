@@ -6,7 +6,6 @@ import Image from 'next/image';
 import {
   Instagram,
   Facebook,
-  MessageCircle,
   MapPin,
   Phone,
   Mail,
@@ -14,9 +13,10 @@ import {
   ArrowRight,
   Sparkles,
 } from 'lucide-react';
+import { WhatsappIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 
-const whatsappUrl = 'https://wa.me/5583988073784?text=Ola! Quero falar com a Cicero Joias.';
+const whatsappUrl = 'https://wa.me/5583991180251?text=Ola! Quero falar com a Cicero Joias.';
 
 const services = [
   { name: 'Alianças personalizadas', href: '/orcamento?tipo=aliancas' },
@@ -28,7 +28,7 @@ const services = [
 const socials = [
   { icon: Instagram, label: 'Instagram', href: 'https://instagram.com', external: true },
   { icon: Facebook, label: 'Facebook', href: 'https://facebook.com', external: true },
-  { icon: MessageCircle, label: 'WhatsApp', href: whatsappUrl, external: true },
+  { icon: WhatsappIcon, label: 'WhatsApp', href: whatsappUrl, external: true },
 ];
 
 interface FooterProps {
@@ -88,8 +88,8 @@ export function Footer({ hideCtaSection = false }: FooterProps) {
               </div>
               <div className="flex gap-3">
                 <Phone className="h-4 w-4 flex-shrink-0 text-ouro" />
-                <Link href="tel:+5583988073784" className="hover:text-ouro">
-                  (83) 98807-3784
+                <Link href="tel:+5583991180251" className="hover:text-ouro">
+                  (83) 99118-0251
                 </Link>
               </div>
               <div className="flex gap-3">

@@ -82,7 +82,7 @@ export function HeroSection() {
               href={whatsappLinks.visit}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-ouro/50 px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-ouro/90 transition-colors hover:bg-ouro/10"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-ouro/50 px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-ouro/90 transition-colors hover:bg-ouro/10 sm:w-auto"
               whileHover={{ x: 3 }}
               whileTap={{ scale: 0.97 }}
             >

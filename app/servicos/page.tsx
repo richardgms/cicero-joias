@@ -132,7 +132,7 @@ export default function ServicosPage() {
             </p>
             <div className="flex flex-col gap-4 sm:flex-row">
               <Link
-                href="https://wa.me/5583988073784"
+                href="https://wa.me/5583991180251"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center rounded-full bg-ouro px-8 py-3 text-sm font-medium text-esmeralda transition-colors hover:bg-ouro-light"

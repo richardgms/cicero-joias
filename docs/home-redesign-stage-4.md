@@ -14,7 +14,7 @@
   1. "Converse pelo WhatsApp para alinhar estilo, prazos e visita." (74 caracteres).
   2. "Experimente aliancas reais na loja com apoio do nosso ourives." (78 caracteres).
   3. "Receba acompanhamento apos a entrega para polimento e ajustes." (78 caracteres).
-- CTA primario: Botao solido "Falar no WhatsApp agora" -> `https://wa.me/5583988073784?text=Ola! Quero falar com a Cicero Joias sobre aliancas.`
+- CTA primario: Botao solido "Falar no WhatsApp agora" -> `https://wa.me/5583991180251?text=Ola! Quero falar com a Cicero Joias sobre aliancas.`
 - CTA secundario: Link outline "Agendar visita presencial" -> mesmo link com texto `Ola! Quero agendar uma visita presencial na Cicero Joias.`
 - Assets esperados: `public/assets/home/hero-desktop.webp` (2400x1600, <=250 KB) e `public/assets/home/hero-mobile.webp` (1600x2000, <=220 KB).
 

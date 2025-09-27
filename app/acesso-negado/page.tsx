@@ -66,7 +66,7 @@ export default async function AcessoNegadoPage({
           <p className="text-sm text-gray-500">
             Quer saber quando estará disponível?{' '}
             <a 
-              href="https://wa.me/5583988073784?text=Olá! Gostaria de saber quando a página estará disponível." 
+              href="https://wa.me/5583991180251?text=Olá! Gostaria de saber quando a página estará disponível." 
               className="text-esmeralda hover:underline font-medium"
               target="_blank"
               rel="noopener noreferrer"

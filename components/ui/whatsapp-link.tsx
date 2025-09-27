@@ -16,7 +16,7 @@ export function WhatsAppLink({
   fallbackHref = '#'
 }: WhatsAppLinkProps) {
   // Número WhatsApp fixo da empresa
-  const whatsappNumber = '5583988073784';
+  const whatsappNumber = '5583991180251';
 
   const getWhatsAppLink = () => {
     const encodedMessage = encodeURIComponent(message);
