@@ -106,7 +106,7 @@ export async function GET() {
         setTimeout(() => reject(new Error('Database query timeout')), 10000)
       );
 
-      const pages = await Promise.race([queryPromise, timeoutPromise]);
+      const pages = await Promise.race([queryPromise, timeoutPromise]) as any[];
 
       console.log(`[PAGE-VISIBILITY] Successfully fetched ${pages.length} pages from database`);
       return NextResponse.json({ pages }, { status: 200 })
