@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
+import { auth, clerkClient } from '@clerk/nextjs/server';
 import { checkAdminAuth } from '@/lib/check-admin';
-import prisma from '@/lib/prisma';
+import prisma, { executeWithRetry } from '@/lib/prisma';
 
 export async function GET() {
   const healthCheck = {
@@ -76,30 +77,126 @@ export async function GET() {
       };
     }
 
-    // Teste 5: Verificar foreign keys que podem causar problemas
+    // Teste 5: executeWithRetry function
     try {
-      const fkConstraints = await prisma.$queryRaw`
-        SELECT
-          tc.table_name,
-          kcu.column_name,
-          ccu.table_name AS foreign_table_name,
-          ccu.column_name AS foreign_column_name
-        FROM information_schema.table_constraints AS tc
-        JOIN information_schema.key_column_usage AS kcu
-          ON tc.constraint_name = kcu.constraint_name
-        JOIN information_schema.constraint_column_usage AS ccu
-          ON ccu.constraint_name = tc.constraint_name
-        WHERE constraint_type = 'FOREIGN KEY'
-        AND tc.table_name = 'portfolio_items'
-      `;
-      healthCheck.checks.foreignKeys = {
+      const retryStart = Date.now();
+      await executeWithRetry(async () => {
+        return await prisma.$queryRaw`SELECT 1 as retry_test`;
+      });
+      const retryDuration = Date.now() - retryStart;
+      healthCheck.checks.executeWithRetry = {
         status: 'PASS',
-        constraints: fkConstraints
+        duration: retryDuration,
+        working: true
       };
-    } catch (fkError) {
-      healthCheck.checks.foreignKeys = {
+    } catch (retryError) {
+      healthCheck.checks.executeWithRetry = {
         status: 'FAIL',
-        error: fkError instanceof Error ? fkError.message : String(fkError)
+        error: retryError instanceof Error ? retryError.message : String(retryError)
+      };
+    }
+
+    // Teste 6: Teste da query exata da API portfolio
+    try {
+      const portfolioQueryStart = Date.now();
+      const portfolioItems = await executeWithRetry(async () => {
+        return await prisma.portfolioItem.findMany({
+          include: {
+            product: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+          orderBy: [
+            { order: 'asc' },
+            { createdAt: 'desc' },
+          ],
+          take: 1, // Limitar para teste
+        });
+      });
+      const portfolioQueryDuration = Date.now() - portfolioQueryStart;
+
+      healthCheck.checks.portfolioApiQuery = {
+        status: 'PASS',
+        duration: portfolioQueryDuration,
+        itemsFound: portfolioItems.length,
+        hasIncludes: true
+      };
+    } catch (portfolioApiError) {
+      healthCheck.checks.portfolioApiQuery = {
+        status: 'FAIL',
+        error: portfolioApiError instanceof Error ? portfolioApiError.message : String(portfolioApiError)
+      };
+    }
+
+    // Teste 7: Verificar variáveis de ambiente críticas
+    try {
+      const envVars = {
+        DATABASE_URL: !!process.env.DATABASE_URL,
+        NODE_ENV: process.env.NODE_ENV,
+        CLERK_SECRET_KEY: !!process.env.CLERK_SECRET_KEY,
+        NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+      };
+
+      const missingVars = Object.entries(envVars)
+        .filter(([key, value]) => key !== 'NODE_ENV' && !value)
+        .map(([key]) => key);
+
+      healthCheck.checks.environmentVariables = {
+        status: missingVars.length === 0 ? 'PASS' : 'FAIL',
+        variables: envVars,
+        missing: missingVars,
+        databaseUrlFormat: process.env.DATABASE_URL ?
+          (process.env.DATABASE_URL.startsWith('postgresql://') ? 'valid' : 'invalid') : 'missing'
+      };
+    } catch (envError) {
+      healthCheck.checks.environmentVariables = {
+        status: 'ERROR',
+        error: envError instanceof Error ? envError.message : String(envError)
+      };
+    }
+
+    // Teste 8: Verificar Clerk authentication mais detalhadamente
+    try {
+      const clerkStart = Date.now();
+      const { userId } = await auth();
+      const clerkDuration = Date.now() - clerkStart;
+
+      if (userId) {
+        try {
+          const clerk = await clerkClient();
+          const user = await clerk.users.getUser(userId);
+          const role = (user.publicMetadata?.role as string)?.toLowerCase();
+
+          healthCheck.checks.clerkDetailed = {
+            status: 'PASS',
+            duration: clerkDuration,
+            hasUserId: true,
+            userRole: role,
+            isAdmin: role === 'admin'
+          };
+        } catch (userError) {
+          healthCheck.checks.clerkDetailed = {
+            status: 'FAIL',
+            duration: clerkDuration,
+            hasUserId: true,
+            error: userError instanceof Error ? userError.message : String(userError)
+          };
+        }
+      } else {
+        healthCheck.checks.clerkDetailed = {
+          status: 'FAIL',
+          duration: clerkDuration,
+          hasUserId: false,
+          error: 'No user ID found in auth'
+        };
+      }
+    } catch (clerkError) {
+      healthCheck.checks.clerkDetailed = {
+        status: 'ERROR',
+        error: clerkError instanceof Error ? clerkError.message : String(clerkError)
       };
     }
 

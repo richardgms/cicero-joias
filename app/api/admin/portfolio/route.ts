@@ -82,64 +82,207 @@ const createPortfolioSchema = z.object({
 
 // GET /api/admin/portfolio - Listar itens do portfólio
 export async function GET() {
+  const requestId = Math.random().toString(36).substring(7);
+  const startTime = Date.now();
+  const debugInfo: string[] = [];
+
   try {
-    console.log('🔄 Portfolio GET: Starting request processing...');
+    debugInfo.push(`🔄 [${requestId}] Portfolio GET: Starting request processing at ${new Date().toISOString()}`);
+    console.log(debugInfo[debugInfo.length - 1]);
 
-    const authResult = await checkAdminAuth();
-    if ("error" in authResult) {
-      console.error('❌ Portfolio GET: Auth failed:', authResult.error);
-      return NextResponse.json({ error: authResult.error }, { status: authResult.status });
+    // Etapa 1: Teste de autenticação com timing
+    const authStart = Date.now();
+    let authResult;
+
+    try {
+      authResult = await checkAdminAuth();
+      const authDuration = Date.now() - authStart;
+      debugInfo.push(`✅ [${requestId}] Auth completed in ${authDuration}ms`);
+      console.log(debugInfo[debugInfo.length - 1]);
+    } catch (authError) {
+      const authDuration = Date.now() - authStart;
+      debugInfo.push(`❌ [${requestId}] Auth threw exception after ${authDuration}ms: ${authError instanceof Error ? authError.message : String(authError)}`);
+      console.error(debugInfo[debugInfo.length - 1]);
+      throw authError;
     }
-    const { userId } = authResult;
-    console.log('✅ Portfolio GET: Auth successful for userId:', userId);
 
-    // Verificar conexão com banco
-    await prisma.$connect();
-    console.log('🔗 Portfolio GET: Database connection successful');
-
-    // Buscar itens do portfólio
-    console.log('📊 Portfolio GET: Fetching portfolio items...');
-    const portfolioItems = await executeWithRetry(async () => {
-      return await prisma.portfolioItem.findMany({
-        include: {
-          product: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-        },
-        orderBy: [
-          { order: 'asc' },
-          { createdAt: 'desc' },
-        ],
-      });
-    });
-    console.log(`✅ Portfolio GET: Found ${portfolioItems.length} portfolio items`);
-
-    return NextResponse.json({ portfolioItems });
-  } catch (error) {
-    console.error('💥 Portfolio GET: Error occurred:', {
-      error: error instanceof Error ? {
-        message: error.message,
-        stack: error.stack,
-        name: error.name,
-      } : error,
-      timestamp: new Date().toISOString(),
-    });
-
-    // Verificar se é erro de banco de dados
-    if (error instanceof Error && (error.message.includes('connect') || error.message.includes('ECONNREFUSED'))) {
-      console.error('💾 Portfolio GET: Database connection error');
+    if ("error" in authResult) {
+      debugInfo.push(`❌ [${requestId}] Auth failed: ${authResult.error} (status: ${authResult.status})`);
+      console.error(debugInfo[debugInfo.length - 1]);
       return NextResponse.json(
-        { error: 'Erro de conexão com o banco de dados' },
-        { status: 500 },
+        { error: authResult.error, debug: debugInfo },
+        {
+          status: authResult.status,
+          headers: { 'X-Debug-Info': JSON.stringify(debugInfo), 'X-Request-ID': requestId }
+        }
       );
     }
 
+    const { userId } = authResult;
+    debugInfo.push(`✅ [${requestId}] Auth successful for userId: ${userId}`);
+    console.log(debugInfo[debugInfo.length - 1]);
+
+    // Etapa 2: Teste de conexão com banco
+    const dbConnectStart = Date.now();
+    try {
+      await prisma.$connect();
+      const dbConnectDuration = Date.now() - dbConnectStart;
+      debugInfo.push(`🔗 [${requestId}] Database connection successful in ${dbConnectDuration}ms`);
+      console.log(debugInfo[debugInfo.length - 1]);
+    } catch (dbConnectError) {
+      const dbConnectDuration = Date.now() - dbConnectStart;
+      debugInfo.push(`💾 [${requestId}] Database connection failed after ${dbConnectDuration}ms: ${dbConnectError instanceof Error ? dbConnectError.message : String(dbConnectError)}`);
+      console.error(debugInfo[debugInfo.length - 1]);
+      throw dbConnectError;
+    }
+
+    // Etapa 3: Teste de query simples primeiro
+    const simpleQueryStart = Date.now();
+    try {
+      await prisma.$queryRaw`SELECT 1 as test`;
+      const simpleQueryDuration = Date.now() - simpleQueryStart;
+      debugInfo.push(`✅ [${requestId}] Simple query test successful in ${simpleQueryDuration}ms`);
+      console.log(debugInfo[debugInfo.length - 1]);
+    } catch (simpleQueryError) {
+      const simpleQueryDuration = Date.now() - simpleQueryStart;
+      debugInfo.push(`❌ [${requestId}] Simple query failed after ${simpleQueryDuration}ms: ${simpleQueryError instanceof Error ? simpleQueryError.message : String(simpleQueryError)}`);
+      console.error(debugInfo[debugInfo.length - 1]);
+      throw simpleQueryError;
+    }
+
+    // Etapa 4: Teste de contagem da tabela
+    const countStart = Date.now();
+    let itemCount;
+    try {
+      itemCount = await prisma.portfolioItem.count();
+      const countDuration = Date.now() - countStart;
+      debugInfo.push(`📊 [${requestId}] Portfolio count query successful in ${countDuration}ms: ${itemCount} items`);
+      console.log(debugInfo[debugInfo.length - 1]);
+    } catch (countError) {
+      const countDuration = Date.now() - countStart;
+      debugInfo.push(`❌ [${requestId}] Portfolio count failed after ${countDuration}ms: ${countError instanceof Error ? countError.message : String(countError)}`);
+      console.error(debugInfo[debugInfo.length - 1]);
+      throw countError;
+    }
+
+    // Etapa 5: Query completa com executeWithRetry
+    const fullQueryStart = Date.now();
+    let portfolioItems;
+    try {
+      debugInfo.push(`📊 [${requestId}] Starting full portfolio query with executeWithRetry...`);
+      console.log(debugInfo[debugInfo.length - 1]);
+
+      portfolioItems = await executeWithRetry(async () => {
+        debugInfo.push(`🔄 [${requestId}] Executing portfolio findMany inside retry...`);
+        console.log(debugInfo[debugInfo.length - 1]);
+
+        return await prisma.portfolioItem.findMany({
+          include: {
+            product: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+          orderBy: [
+            { order: 'asc' },
+            { createdAt: 'desc' },
+          ],
+        });
+      });
+
+      const fullQueryDuration = Date.now() - fullQueryStart;
+      debugInfo.push(`✅ [${requestId}] Full portfolio query successful in ${fullQueryDuration}ms: Found ${portfolioItems.length} items`);
+      console.log(debugInfo[debugInfo.length - 1]);
+    } catch (fullQueryError) {
+      const fullQueryDuration = Date.now() - fullQueryStart;
+      debugInfo.push(`❌ [${requestId}] Full portfolio query failed after ${fullQueryDuration}ms: ${fullQueryError instanceof Error ? fullQueryError.message : String(fullQueryError)}`);
+      console.error(debugInfo[debugInfo.length - 1]);
+
+      // Log stack trace completo para debugging
+      if (fullQueryError instanceof Error && fullQueryError.stack) {
+        console.error(`🔍 [${requestId}] Full error stack:`, fullQueryError.stack);
+        debugInfo.push(`🔍 [${requestId}] Error stack: ${fullQueryError.stack.substring(0, 500)}...`);
+      }
+
+      throw fullQueryError;
+    }
+
+    const totalDuration = Date.now() - startTime;
+    debugInfo.push(`🎉 [${requestId}] Request completed successfully in ${totalDuration}ms`);
+    console.log(debugInfo[debugInfo.length - 1]);
+
     return NextResponse.json(
-      { error: 'Erro interno do servidor' },
-      { status: 500 }
+      { portfolioItems, debug: debugInfo },
+      {
+        headers: {
+          'X-Debug-Info': JSON.stringify(debugInfo),
+          'X-Request-ID': requestId,
+          'X-Total-Duration': `${totalDuration}ms`,
+          'X-Items-Count': portfolioItems.length.toString()
+        }
+      }
+    );
+
+  } catch (error) {
+    const totalDuration = Date.now() - startTime;
+    const errorInfo = {
+      message: error instanceof Error ? error.message : String(error),
+      name: error instanceof Error ? error.name : 'Unknown',
+      stack: error instanceof Error ? error.stack : undefined,
+      type: typeof error,
+      requestId,
+      duration: totalDuration,
+      timestamp: new Date().toISOString(),
+    };
+
+    debugInfo.push(`💥 [${requestId}] Request failed after ${totalDuration}ms: ${errorInfo.message}`);
+    console.error(debugInfo[debugInfo.length - 1]);
+    console.error(`💥 [${requestId}] Complete error details:`, errorInfo);
+
+    // Categorizar erro por tipo
+    let statusCode = 500;
+    let userMessage = 'Erro interno do servidor';
+
+    if (error instanceof Error) {
+      if (error.message.includes('connect') || error.message.includes('ECONNREFUSED')) {
+        statusCode = 503;
+        userMessage = 'Erro de conexão com o banco de dados';
+        debugInfo.push(`💾 [${requestId}] Categorized as database connection error`);
+      } else if (error.message.includes('timeout')) {
+        statusCode = 504;
+        userMessage = 'Timeout na operação';
+        debugInfo.push(`⏰ [${requestId}] Categorized as timeout error`);
+      } else if (error.message.includes('prepared statement')) {
+        statusCode = 503;
+        userMessage = 'Erro temporário do servidor - tente novamente';
+        debugInfo.push(`🔄 [${requestId}] Categorized as prepared statement error`);
+      } else if (error.message.includes('Não autorizado') || error.message.includes('Acesso negado')) {
+        statusCode = error.message.includes('Não autorizado') ? 401 : 403;
+        userMessage = error.message;
+        debugInfo.push(`🚫 [${requestId}] Categorized as auth error`);
+      }
+    }
+
+    console.error(`🔍 [${requestId}] Final error categorization: ${statusCode} - ${userMessage}`);
+
+    return NextResponse.json(
+      {
+        error: userMessage,
+        debug: debugInfo,
+        errorDetails: process.env.NODE_ENV === 'development' ? errorInfo : undefined,
+        requestId
+      },
+      {
+        status: statusCode,
+        headers: {
+          'X-Debug-Info': JSON.stringify(debugInfo),
+          'X-Request-ID': requestId,
+          'X-Error-Type': errorInfo.name,
+          'X-Total-Duration': `${totalDuration}ms`
+        }
+      }
     );
   }
 }
