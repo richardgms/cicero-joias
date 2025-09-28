@@ -159,44 +159,191 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const authResult = await checkAdminAuth();
-  if ('error' in authResult) {
-    return NextResponse.json({ error: authResult.error }, { status: authResult.status });
-  }
-  const { userId } = authResult;
-  const { id } = await params;
-  try {
-    // Verificar se o item existe
-    const existingItem = await prisma.portfolioItem.findUnique({
-      where: { id },
-    });
+  const debugInfo: string[] = [];
+  const startTime = Date.now();
 
-    if (!existingItem) {
-      return NextResponse.json({ error: 'Item não encontrado' }, { status: 404 });
+  try {
+    debugInfo.push(`DELETE started at ${new Date().toISOString()}`);
+
+    // Teste 1: Autenticação
+    const authResult = await checkAdminAuth();
+    if ('error' in authResult) {
+      debugInfo.push(`Auth failed: ${authResult.error}`);
+      return NextResponse.json(
+        { error: authResult.error, debug: debugInfo },
+        {
+          status: authResult.status,
+          headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
+        }
+      );
+    }
+    const { userId } = authResult;
+    debugInfo.push(`Auth successful for user: ${userId}`);
+
+    // Teste 2: Parâmetros
+    const { id } = await params;
+    if (!id || typeof id !== 'string') {
+      debugInfo.push(`Invalid ID parameter: ${id}`);
+      return NextResponse.json(
+        { error: 'ID inválido', debug: debugInfo },
+        {
+          status: 400,
+          headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
+        }
+      );
+    }
+    debugInfo.push(`Processing delete for ID: ${id}`);
+
+    // Teste 3: Conexão com banco
+    try {
+      await prisma.$connect();
+      debugInfo.push('Database connection successful');
+    } catch (dbConnectError) {
+      debugInfo.push(`Database connection failed: ${dbConnectError instanceof Error ? dbConnectError.message : String(dbConnectError)}`);
+      return NextResponse.json(
+        { error: 'Erro de conexão com banco de dados', debug: debugInfo },
+        {
+          status: 500,
+          headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
+        }
+      );
     }
 
-    // Deletar item do portfólio
-    await prisma.portfolioItem.delete({
-      where: { id },
-    });
+    // Teste 4: Verificar se o item existe
+    let existingItem;
+    try {
+      existingItem = await prisma.portfolioItem.findUnique({
+        where: { id },
+        include: {
+          favorites: true // Verificar dependências
+        }
+      });
+      debugInfo.push(`Find query executed for ID: ${id}`);
+    } catch (findError) {
+      debugInfo.push(`Find query failed: ${findError instanceof Error ? findError.message : String(findError)}`);
+      return NextResponse.json(
+        { error: 'Erro ao buscar item', debug: debugInfo },
+        {
+          status: 500,
+          headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
+        }
+      );
+    }
 
-    // Log da atividade
-    await prisma.activityLog.create({
-      data: {
-        action: 'DELETE',
-        entity: 'PortfolioItem',
-        entityId: id,
-        description: `Item "${existingItem.title}" deletado do portfólio`,
-        userId,
-      },
-    });
+    if (!existingItem) {
+      debugInfo.push('Item not found in database');
+      return NextResponse.json(
+        { error: 'Item não encontrado', debug: debugInfo },
+        {
+          status: 404,
+          headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
+        }
+      );
+    }
+    debugInfo.push(`Item found: "${existingItem.title}" with ${existingItem.favorites.length} favorites`);
 
-    return NextResponse.json({ message: 'Item deletado com sucesso' });
-  } catch (error) {
-    console.error('Erro ao deletar item do portfólio:', error);
+    // Teste 5: Verificar dependências antes de deletar
+    if (existingItem.favorites.length > 0) {
+      debugInfo.push(`Item has ${existingItem.favorites.length} favorites - removing them first`);
+      try {
+        await prisma.favorite.deleteMany({
+          where: { portfolioItemId: id }
+        });
+        debugInfo.push('Related favorites deleted successfully');
+      } catch (favDeleteError) {
+        debugInfo.push(`Failed to delete favorites: ${favDeleteError instanceof Error ? favDeleteError.message : String(favDeleteError)}`);
+        return NextResponse.json(
+          { error: 'Erro ao remover dependências', debug: debugInfo },
+          {
+            status: 500,
+            headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
+          }
+        );
+      }
+    }
+
+    // Teste 6: Deletar o item
+    try {
+      await prisma.portfolioItem.delete({
+        where: { id },
+      });
+      debugInfo.push('Portfolio item deleted successfully');
+    } catch (deleteError) {
+      debugInfo.push(`Delete failed: ${deleteError instanceof Error ? deleteError.message : String(deleteError)}`);
+
+      // Verificar tipo específico de erro
+      if (deleteError instanceof Error) {
+        if (deleteError.message.includes('Foreign key constraint')) {
+          return NextResponse.json(
+            { error: 'Não é possível excluir: item possui dependências', debug: debugInfo },
+            {
+              status: 409,
+              headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
+            }
+          );
+        }
+      }
+
+      return NextResponse.json(
+        { error: 'Erro ao deletar item', debug: debugInfo },
+        {
+          status: 500,
+          headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
+        }
+      );
+    }
+
+    // Teste 7: Log da atividade
+    try {
+      await prisma.activityLog.create({
+        data: {
+          action: 'DELETE',
+          entity: 'PortfolioItem',
+          entityId: id,
+          description: `Item "${existingItem.title}" deletado do portfólio`,
+          userId,
+        },
+      });
+      debugInfo.push('Activity log created successfully');
+    } catch (logError) {
+      debugInfo.push(`Activity log failed: ${logError instanceof Error ? logError.message : String(logError)}`);
+      // Não falhar a operação por causa do log
+    }
+
+    const endTime = Date.now();
+    debugInfo.push(`Delete completed successfully in ${endTime - startTime}ms`);
+
     return NextResponse.json(
-      { error: 'Erro interno do servidor' },
-      { status: 500 }
+      { message: 'Item deletado com sucesso', debug: debugInfo },
+      {
+        status: 200,
+        headers: {
+          'X-Debug-Info': JSON.stringify(debugInfo),
+          'X-Operation-Time': `${endTime - startTime}ms`
+        }
+      }
+    );
+
+  } catch (error) {
+    const endTime = Date.now();
+    debugInfo.push(`Unexpected error after ${endTime - startTime}ms: ${error instanceof Error ? error.message : String(error)}`);
+
+    return NextResponse.json(
+      {
+        error: 'Erro interno do servidor',
+        debug: debugInfo,
+        details: error instanceof Error ? {
+          message: error.message,
+          name: error.name
+        } : String(error)
+      },
+      {
+        status: 500,
+        headers: {
+          'X-Debug-Info': JSON.stringify(debugInfo),
+          'X-Operation-Time': `${endTime - startTime}ms`
+        }
+      }
     );
   }
 }

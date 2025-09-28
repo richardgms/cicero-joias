@@ -94,127 +94,216 @@ export async function GET() {
 
 // POST /api/admin/portfolio - Criar item do portfólio
 export async function POST(request: Request) {
-  console.log('🔄 Portfolio POST: Starting request processing...');
+  const debugInfo: string[] = [];
+  const startTime = Date.now();
 
   try {
-    // Teste básico primeiro
-    const body = await request.json();
-    console.log('📝 Portfolio POST: Request body keys:', Object.keys(body));
+    debugInfo.push(`POST started at ${new Date().toISOString()}`);
 
-    // Verificar auth
-    console.log('🔐 Portfolio POST: Checking auth...');
-    const authResult = await checkAdminAuth();
-    if ("error" in authResult) {
-      console.error('❌ Portfolio POST: Auth failed:', authResult.error);
-      return NextResponse.json({ error: authResult.error }, { status: authResult.status });
-    }
-    const { userId } = authResult;
-    console.log('✅ Portfolio POST: Auth successful for userId:', userId);
-
-    console.log('📝 Portfolio POST: Request body received:', {
-      title: body.title,
-      category: body.category,
-      mainImageExists: !!body.mainImage,
-      imagesCount: body.images?.length || 0
-    });
-
-    const validatedData = createPortfolioSchema.parse(body);
-    console.log('✅ Portfolio POST: Data validation successful');
-
-    // Preparar dados para o Prisma
-    const createData = {
-      ...validatedData,
-      ...(validatedData.specifications !== undefined && {
-        specifications: validatedData.specifications as any,
-      }),
-    };
-    console.log('📊 Portfolio POST: Prepared data for Prisma');
-
-    // Verificar conexão com banco
-    await prisma.$connect();
-    console.log('🔗 Portfolio POST: Database connection successful');
-
-    // Criar item do portfólio
-    console.log('💾 Portfolio POST: Creating portfolio item...');
-    const portfolioItem = await prisma.portfolioItem.create({
-      data: createData,
-      include: {
-        product: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-    });
-    console.log('✅ Portfolio POST: Portfolio item created with ID:', portfolioItem.id);
-
-    // Log da atividade
-    console.log('📝 Portfolio POST: Creating activity log...');
-    await prisma.activityLog.create({
-      data: {
-        action: 'CREATE',
-        entity: 'PortfolioItem',
-        entityId: portfolioItem.id,
-        description: `Item "${portfolioItem.title}" criado no portfólio`,
-        userId,
-      },
-    });
-    console.log('✅ Portfolio POST: Activity log created');
-
-    console.log('🎉 Portfolio POST: Request completed successfully');
-    return NextResponse.json({ portfolioItem }, { status: 201 });
-  } catch (error) {
-    console.error('💥 Portfolio POST: Error occurred:', {
-      error: error instanceof Error ? {
-        message: error.message,
-        stack: error.stack,
-        name: error.name,
-      } : error,
-      timestamp: new Date().toISOString(),
-    });
-
-    if (error instanceof z.ZodError) {
-      console.error('❌ Portfolio POST: Validation error:', {
-        errors: error.errors,
-        timestamp: new Date().toISOString(),
-      });
+    // Teste 1: Parse do request body
+    let body;
+    try {
+      body = await request.json();
+      debugInfo.push(`Request body parsed successfully - keys: ${Object.keys(body).join(', ')}`);
+    } catch (bodyError) {
+      debugInfo.push(`Request body parse failed: ${bodyError instanceof Error ? bodyError.message : String(bodyError)}`);
       return NextResponse.json(
-        { error: 'Dados inválidos', details: error.errors },
-        { status: 400 },
+        { error: 'Dados inválidos no corpo da requisição', debug: debugInfo },
+        {
+          status: 400,
+          headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
+        }
       );
     }
 
-    // Verificar se é erro de banco de dados
-    if (error instanceof Error) {
-      if (error.message.includes('connect') || error.message.includes('ECONNREFUSED')) {
-        console.error('💾 Portfolio POST: Database connection error');
-        return NextResponse.json(
-          { error: 'Erro de conexão com o banco de dados' },
-          { status: 500 },
-        );
-      }
+    // Teste 2: Autenticação
+    const authResult = await checkAdminAuth();
+    if ("error" in authResult) {
+      debugInfo.push(`Auth failed: ${authResult.error}`);
+      return NextResponse.json(
+        { error: authResult.error, debug: debugInfo },
+        {
+          status: authResult.status,
+          headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
+        }
+      );
+    }
+    const { userId } = authResult;
+    debugInfo.push(`Auth successful for user: ${userId}`);
 
-      if (error.message.includes('Unique constraint')) {
-        console.error('🔐 Portfolio POST: Unique constraint violation');
+    // Teste 3: Validação dos dados
+    let validatedData;
+    try {
+      validatedData = createPortfolioSchema.parse(body);
+      debugInfo.push(`Data validation successful - title: "${validatedData.title}", category: ${validatedData.category}`);
+    } catch (validationError) {
+      if (validationError instanceof z.ZodError) {
+        debugInfo.push(`Validation failed: ${validationError.errors.map(e => `${e.path.join('.')}: ${e.message}`).join(', ')}`);
         return NextResponse.json(
-          { error: 'Já existe um item com essas informações' },
-          { status: 409 },
+          { error: 'Dados inválidos', details: validationError.errors, debug: debugInfo },
+          {
+            status: 400,
+            headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
+          }
         );
       }
-
-      if (error.message.includes('Foreign key constraint')) {
-        console.error('🔗 Portfolio POST: Foreign key constraint violation');
-        return NextResponse.json(
-          { error: 'Produto relacionado não encontrado' },
-          { status: 400 },
-        );
-      }
+      debugInfo.push(`Unexpected validation error: ${validationError instanceof Error ? validationError.message : String(validationError)}`);
+      return NextResponse.json(
+        { error: 'Erro de validação', debug: debugInfo },
+        {
+          status: 400,
+          headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
+        }
+      );
     }
 
+    // Teste 4: Preparar dados para o Prisma
+    let createData;
+    try {
+      createData = {
+        ...validatedData,
+        ...(validatedData.specifications !== undefined && {
+          specifications: validatedData.specifications as any,
+        }),
+      };
+      debugInfo.push('Data preparation for Prisma successful');
+    } catch (prepError) {
+      debugInfo.push(`Data preparation failed: ${prepError instanceof Error ? prepError.message : String(prepError)}`);
+      return NextResponse.json(
+        { error: 'Erro na preparação dos dados', debug: debugInfo },
+        {
+          status: 500,
+          headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
+        }
+      );
+    }
+
+    // Teste 5: Conexão com banco
+    try {
+      await prisma.$connect();
+      debugInfo.push('Database connection successful');
+    } catch (dbConnectError) {
+      debugInfo.push(`Database connection failed: ${dbConnectError instanceof Error ? dbConnectError.message : String(dbConnectError)}`);
+      return NextResponse.json(
+        { error: 'Erro de conexão com banco de dados', debug: debugInfo },
+        {
+          status: 500,
+          headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
+        }
+      );
+    }
+
+    // Teste 6: Criar item do portfólio
+    let portfolioItem;
+    try {
+      portfolioItem = await prisma.portfolioItem.create({
+        data: createData,
+        include: {
+          product: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      });
+      debugInfo.push(`Portfolio item created successfully with ID: ${portfolioItem.id}`);
+    } catch (createError) {
+      debugInfo.push(`Portfolio creation failed: ${createError instanceof Error ? createError.message : String(createError)}`);
+
+      // Verificar tipos específicos de erro
+      if (createError instanceof Error) {
+        if (createError.message.includes('Unique constraint')) {
+          return NextResponse.json(
+            { error: 'Já existe um item com essas informações', debug: debugInfo },
+            {
+              status: 409,
+              headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
+            }
+          );
+        }
+
+        if (createError.message.includes('Foreign key constraint')) {
+          return NextResponse.json(
+            { error: 'Produto relacionado não encontrado', debug: debugInfo },
+            {
+              status: 400,
+              headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
+            }
+          );
+        }
+
+        if (createError.message.includes('Invalid')) {
+          return NextResponse.json(
+            { error: 'Dados inválidos para criação', debug: debugInfo },
+            {
+              status: 400,
+              headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
+            }
+          );
+        }
+      }
+
+      return NextResponse.json(
+        { error: 'Erro ao criar item do portfólio', debug: debugInfo },
+        {
+          status: 500,
+          headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
+        }
+      );
+    }
+
+    // Teste 7: Log da atividade
+    try {
+      await prisma.activityLog.create({
+        data: {
+          action: 'CREATE',
+          entity: 'PortfolioItem',
+          entityId: portfolioItem.id,
+          description: `Item "${portfolioItem.title}" criado no portfólio`,
+          userId,
+        },
+      });
+      debugInfo.push('Activity log created successfully');
+    } catch (logError) {
+      debugInfo.push(`Activity log failed: ${logError instanceof Error ? logError.message : String(logError)}`);
+      // Não falhar a operação por causa do log
+    }
+
+    const endTime = Date.now();
+    debugInfo.push(`Creation completed successfully in ${endTime - startTime}ms`);
+
     return NextResponse.json(
-      { error: 'Erro interno do servidor' },
-      { status: 500 },
+      { portfolioItem, debug: debugInfo },
+      {
+        status: 201,
+        headers: {
+          'X-Debug-Info': JSON.stringify(debugInfo),
+          'X-Operation-Time': `${endTime - startTime}ms`
+        }
+      }
+    );
+
+  } catch (error) {
+    const endTime = Date.now();
+    debugInfo.push(`Unexpected error after ${endTime - startTime}ms: ${error instanceof Error ? error.message : String(error)}`);
+
+    return NextResponse.json(
+      {
+        error: 'Erro interno do servidor',
+        debug: debugInfo,
+        details: error instanceof Error ? {
+          message: error.message,
+          name: error.name
+        } : String(error)
+      },
+      {
+        status: 500,
+        headers: {
+          'X-Debug-Info': JSON.stringify(debugInfo),
+          'X-Operation-Time': `${endTime - startTime}ms`
+        }
+      }
     );
   }
 }
