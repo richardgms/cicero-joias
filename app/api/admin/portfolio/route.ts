@@ -151,7 +151,7 @@ export async function POST(request: Request) {
     debugInfo.push(`POST started at ${new Date().toISOString()}`);
 
     // Teste 1: Parse do request body
-    let body;
+    let body: any;
     try {
       body = await request.json();
       debugInfo.push(`Request body parsed successfully - keys: ${Object.keys(body).join(', ')}`);
