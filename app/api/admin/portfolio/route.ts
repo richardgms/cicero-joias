@@ -94,9 +94,15 @@ export async function GET() {
 
 // POST /api/admin/portfolio - Criar item do portfólio
 export async function POST(request: Request) {
-  try {
-    console.log('🔄 Portfolio POST: Starting request processing...');
+  console.log('🔄 Portfolio POST: Starting request processing...');
 
+  try {
+    // Teste básico primeiro
+    const body = await request.json();
+    console.log('📝 Portfolio POST: Request body keys:', Object.keys(body));
+
+    // Verificar auth
+    console.log('🔐 Portfolio POST: Checking auth...');
     const authResult = await checkAdminAuth();
     if ("error" in authResult) {
       console.error('❌ Portfolio POST: Auth failed:', authResult.error);
@@ -105,7 +111,6 @@ export async function POST(request: Request) {
     const { userId } = authResult;
     console.log('✅ Portfolio POST: Auth successful for userId:', userId);
 
-    const body = await request.json();
     console.log('📝 Portfolio POST: Request body received:', {
       title: body.title,
       category: body.category,
