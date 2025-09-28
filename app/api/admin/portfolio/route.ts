@@ -32,13 +32,23 @@ const createPortfolioSchema = z.object({
 
 // GET /api/admin/portfolio - Listar itens do portfólio
 export async function GET() {
-  const authResult = await checkAdminAuth();
-  if ("error" in authResult) {
-    return NextResponse.json({ error: authResult.error }, { status: authResult.status });
-  }
-  const { userId } = authResult;
   try {
+    console.log('🔄 Portfolio GET: Starting request processing...');
+
+    const authResult = await checkAdminAuth();
+    if ("error" in authResult) {
+      console.error('❌ Portfolio GET: Auth failed:', authResult.error);
+      return NextResponse.json({ error: authResult.error }, { status: authResult.status });
+    }
+    const { userId } = authResult;
+    console.log('✅ Portfolio GET: Auth successful for userId:', userId);
+
+    // Verificar conexão com banco
+    await prisma.$connect();
+    console.log('🔗 Portfolio GET: Database connection successful');
+
     // Buscar itens do portfólio
+    console.log('📊 Portfolio GET: Fetching portfolio items...');
     const portfolioItems = await prisma.portfolioItem.findMany({
       include: {
         product: {
@@ -53,10 +63,28 @@ export async function GET() {
         { createdAt: 'desc' },
       ],
     });
+    console.log(`✅ Portfolio GET: Found ${portfolioItems.length} portfolio items`);
 
     return NextResponse.json({ portfolioItems });
   } catch (error) {
-    console.error('Erro ao buscar portfólio:', error);
+    console.error('💥 Portfolio GET: Error occurred:', {
+      error: error instanceof Error ? {
+        message: error.message,
+        stack: error.stack,
+        name: error.name,
+      } : error,
+      timestamp: new Date().toISOString(),
+    });
+
+    // Verificar se é erro de banco de dados
+    if (error instanceof Error && (error.message.includes('connect') || error.message.includes('ECONNREFUSED'))) {
+      console.error('💾 Portfolio GET: Database connection error');
+      return NextResponse.json(
+        { error: 'Erro de conexão com o banco de dados' },
+        { status: 500 },
+      );
+    }
+
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }
@@ -66,14 +94,27 @@ export async function GET() {
 
 // POST /api/admin/portfolio - Criar item do portfólio
 export async function POST(request: Request) {
-  const authResult = await checkAdminAuth();
-  if ("error" in authResult) {
-    return NextResponse.json({ error: authResult.error }, { status: authResult.status });
-  }
-  const { userId } = authResult;
   try {
+    console.log('🔄 Portfolio POST: Starting request processing...');
+
+    const authResult = await checkAdminAuth();
+    if ("error" in authResult) {
+      console.error('❌ Portfolio POST: Auth failed:', authResult.error);
+      return NextResponse.json({ error: authResult.error }, { status: authResult.status });
+    }
+    const { userId } = authResult;
+    console.log('✅ Portfolio POST: Auth successful for userId:', userId);
+
     const body = await request.json();
+    console.log('📝 Portfolio POST: Request body received:', {
+      title: body.title,
+      category: body.category,
+      mainImageExists: !!body.mainImage,
+      imagesCount: body.images?.length || 0
+    });
+
     const validatedData = createPortfolioSchema.parse(body);
+    console.log('✅ Portfolio POST: Data validation successful');
 
     // Preparar dados para o Prisma
     const createData = {
@@ -82,8 +123,14 @@ export async function POST(request: Request) {
         specifications: validatedData.specifications as any,
       }),
     };
+    console.log('📊 Portfolio POST: Prepared data for Prisma');
+
+    // Verificar conexão com banco
+    await prisma.$connect();
+    console.log('🔗 Portfolio POST: Database connection successful');
 
     // Criar item do portfólio
+    console.log('💾 Portfolio POST: Creating portfolio item...');
     const portfolioItem = await prisma.portfolioItem.create({
       data: createData,
       include: {
@@ -95,8 +142,10 @@ export async function POST(request: Request) {
         },
       },
     });
+    console.log('✅ Portfolio POST: Portfolio item created with ID:', portfolioItem.id);
 
     // Log da atividade
+    console.log('📝 Portfolio POST: Creating activity log...');
     await prisma.activityLog.create({
       data: {
         action: 'CREATE',
@@ -106,12 +155,22 @@ export async function POST(request: Request) {
         userId,
       },
     });
+    console.log('✅ Portfolio POST: Activity log created');
 
+    console.log('🎉 Portfolio POST: Request completed successfully');
     return NextResponse.json({ portfolioItem }, { status: 201 });
   } catch (error) {
+    console.error('💥 Portfolio POST: Error occurred:', {
+      error: error instanceof Error ? {
+        message: error.message,
+        stack: error.stack,
+        name: error.name,
+      } : error,
+      timestamp: new Date().toISOString(),
+    });
+
     if (error instanceof z.ZodError) {
-      console.error('Erro de validação ao criar portfolio:', {
-        userId,
+      console.error('❌ Portfolio POST: Validation error:', {
         errors: error.errors,
         timestamp: new Date().toISOString(),
       });
@@ -121,15 +180,33 @@ export async function POST(request: Request) {
       );
     }
 
-    console.error('Erro ao criar item do portfólio:', {
-      error: error instanceof Error ? {
-        message: error.message,
-        stack: error.stack,
-        name: error.name,
-      } : error,
-      userId,
-      timestamp: new Date().toISOString(),
-    });
+    // Verificar se é erro de banco de dados
+    if (error instanceof Error) {
+      if (error.message.includes('connect') || error.message.includes('ECONNREFUSED')) {
+        console.error('💾 Portfolio POST: Database connection error');
+        return NextResponse.json(
+          { error: 'Erro de conexão com o banco de dados' },
+          { status: 500 },
+        );
+      }
+
+      if (error.message.includes('Unique constraint')) {
+        console.error('🔐 Portfolio POST: Unique constraint violation');
+        return NextResponse.json(
+          { error: 'Já existe um item com essas informações' },
+          { status: 409 },
+        );
+      }
+
+      if (error.message.includes('Foreign key constraint')) {
+        console.error('🔗 Portfolio POST: Foreign key constraint violation');
+        return NextResponse.json(
+          { error: 'Produto relacionado não encontrado' },
+          { status: 400 },
+        );
+      }
+    }
+
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 },
