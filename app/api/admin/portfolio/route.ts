@@ -13,20 +13,70 @@ const createPortfolioSchema = z.object({
     errorMap: () => ({ message: 'Categoria inválida' })
   }),
   customCategory: z.string().optional().nullable(),
-  mainImage: z.string().min(1, 'Imagem principal é obrigatória'),
-  images: z.array(z.string()).default([]),
-  isActive: z.boolean().default(true),
+  mainImage: z.string().min(1, 'Imagem principal é obrigatória').refine((val) => {
+    // Accept both URLs and base64 images
+    return val.startsWith('http') || val.startsWith('data:image') || val.length > 0;
+  }, 'Formato de imagem inválido'),
+  images: z.union([z.array(z.string()), z.string()]).transform((val) => {
+    if (typeof val === 'string') {
+      try {
+        return JSON.parse(val);
+      } catch {
+        return [];
+      }
+    }
+    return val || [];
+  }),
+  isActive: z.union([z.boolean(), z.string()]).transform((val) => {
+    if (typeof val === 'string') {
+      return val === 'true' || val === '1';
+    }
+    return val !== false;
+  }).default(true),
   status: z.string().regex(/^(DRAFT|PUBLISHED|FEATURED)$/, 'Status inválido').default('DRAFT'),
-  order: z.number().int('Ordem deve ser um número inteiro').min(0, 'Ordem não pode ser negativa').default(0),
-  specifications: z.record(z.string()).optional().nullable(),
+  order: z.union([z.number(), z.string()]).transform((val) => {
+    if (typeof val === 'string') {
+      const parsed = parseInt(val, 10);
+      return isNaN(parsed) ? 0 : parsed;
+    }
+    return val || 0;
+  }).refine((val) => val >= 0, 'Ordem não pode ser negativa'),
+  specifications: z.union([z.record(z.string()), z.string()]).transform((val) => {
+    if (typeof val === 'string') {
+      try {
+        return JSON.parse(val);
+      } catch {
+        return null;
+      }
+    }
+    return val;
+  }).optional().nullable(),
   seoTitle: z.string().optional().nullable().refine((val) => !val || val.length <= 60, {
     message: 'Título SEO deve ter no máximo 60 caracteres'
   }),
   seoDescription: z.string().optional().nullable().refine((val) => !val || val.length <= 160, {
     message: 'Descrição SEO deve ter no máximo 160 caracteres'
   }),
-  keywords: z.array(z.string()).default([]),
-  relatedProjects: z.array(z.string()).default([]),
+  keywords: z.union([z.array(z.string()), z.string()]).transform((val) => {
+    if (typeof val === 'string') {
+      try {
+        return JSON.parse(val);
+      } catch {
+        return [];
+      }
+    }
+    return val || [];
+  }),
+  relatedProjects: z.union([z.array(z.string()), z.string()]).transform((val) => {
+    if (typeof val === 'string') {
+      try {
+        return JSON.parse(val);
+      } catch {
+        return [];
+      }
+    }
+    return val || [];
+  }),
   productId: z.string().optional().nullable(),
 });
 
@@ -138,9 +188,27 @@ export async function POST(request: Request) {
       debugInfo.push(`Data validation successful - title: "${validatedData.title}", category: ${validatedData.category}`);
     } catch (validationError) {
       if (validationError instanceof z.ZodError) {
-        debugInfo.push(`Validation failed: ${validationError.errors.map(e => `${e.path.join('.')}: ${e.message}`).join(', ')}`);
+        const validationDetails = validationError.errors.map(e => ({
+          field: e.path.join('.'),
+          message: e.message,
+          received: e.received,
+          code: e.code
+        }));
+
+        debugInfo.push(`Validation failed on fields: ${validationDetails.map(d => `${d.field} (${d.message})`).join(', ')}`);
+
         return NextResponse.json(
-          { error: 'Dados inválidos', details: validationError.errors, debug: debugInfo },
+          {
+            error: 'Dados inválidos para criação',
+            details: validationDetails,
+            debug: debugInfo,
+            receivedData: Object.keys(body).reduce((acc, key) => {
+              acc[key] = typeof body[key] === 'string' && body[key].length > 100
+                ? `${body[key].substring(0, 100)}... (${body[key].length} chars)`
+                : body[key];
+              return acc;
+            }, {} as any)
+          },
           {
             status: 400,
             headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
@@ -311,7 +379,7 @@ export async function POST(request: Request) {
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: '16mb',
+      sizeLimit: '50mb', // Increased for large base64 images
     },
   },
 }; 
