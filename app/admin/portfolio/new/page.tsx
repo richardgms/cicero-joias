@@ -11,6 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import { useCreatePortfolioItem } from '@/hooks/use-portfolio';
 import {
   Select,
   SelectContent,
@@ -60,10 +61,10 @@ interface FormData {
 
 export default function NewPortfolioPage() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { toast } = useToast();
+  const createPortfolioMutation = useCreatePortfolioItem();
   const [formData, setFormData] = useState<FormData>({
     title: '',
     description: '',
@@ -82,7 +83,6 @@ export default function NewPortfolioPage() {
     relatedProjects: [],
   });
   const [newKeyword, setNewKeyword] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Validação em tempo real
   const validateField = (field: keyof FormData, value: any) => {
@@ -136,7 +136,7 @@ export default function NewPortfolioPage() {
     e.preventDefault();
 
     // Prevenir submissões múltiplas
-    if (loading || isSubmitting) {
+    if (createPortfolioMutation.isPending) {
       return;
     }
 
@@ -148,9 +148,6 @@ export default function NewPortfolioPage() {
       });
       return;
     }
-
-    setLoading(true);
-    setIsSubmitting(true);
 
     try {
       // Converter especificações para JSON
@@ -172,65 +169,36 @@ export default function NewPortfolioPage() {
         specifications: Object.keys(specifications).length > 0 ? specifications : null,
       };
 
-      const response = await fetch('/api/admin/portfolio', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(payload),
+      await createPortfolioMutation.mutateAsync(payload);
+
+      toast({
+        title: "Projeto criado!",
+        description: "O projeto foi adicionado ao portfólio com sucesso.",
       });
 
-      if (response.ok) {
-        toast({
-          title: "Projeto criado!",
-          description: "O projeto foi adicionado ao portfólio com sucesso.",
-        });
-        router.push('/admin/portfolio');
-      } else {
-        const error = await response.json();
+      router.push('/admin/portfolio');
+    } catch (error: any) {
+      console.error('❌ Erro ao criar projeto:', error);
 
-        // Log detalhado do erro para debug
-        console.error('❌ Erro ao criar projeto:', {
-          status: response.status,
-          statusText: response.statusText,
-          errorResponse: error,
-          sentPayload: payload
-        });
+      // Tratamento específico para diferentes tipos de erro
+      let errorTitle = "Erro ao criar projeto";
+      let errorDescription = error.message || "Erro desconhecido";
 
-        // Tratamento específico para diferentes tipos de erro
-        let errorTitle = "Erro ao criar projeto";
-        let errorDescription = error.error || "Erro desconhecido";
-
-        if (response.status === 503) {
-          // Erro temporário - suggest retry
-          errorTitle = "Erro temporário";
-          errorDescription = "Servidor temporariamente indisponível. Tente novamente em alguns segundos.";
-        } else if (response.status === 409) {
-          // Conflito/duplicação
-          errorTitle = "Item duplicado";
-          errorDescription = error.error || "Já existe um item com essas informações";
-        } else if (error.details) {
-          // Erros de validação
-          errorDescription = `Problemas de validação: ${error.details.map((d: any) => d.message).join(', ')}`;
-        }
-
-        toast({
-          title: errorTitle,
-          description: errorDescription,
-          variant: "destructive",
-        });
+      if (error.status === 503) {
+        errorTitle = "Erro temporário";
+        errorDescription = "Servidor temporariamente indisponível. O sistema tentará novamente automaticamente.";
+      } else if (error.status === 409) {
+        errorTitle = "Item duplicado";
+        errorDescription = error.message || "Já existe um item com essas informações";
+      } else if (error.details) {
+        errorDescription = `Problemas de validação: ${error.details.map((d: any) => d.message).join(', ')}`;
       }
-    } catch (error) {
-      console.error('Erro ao criar projeto:', error);
+
       toast({
-        title: "Erro de conexão",
-        description: "Não foi possível conectar com o servidor. Tente novamente.",
+        title: errorTitle,
+        description: errorDescription,
         variant: "destructive",
       });
-    } finally {
-      setLoading(false);
-      setIsSubmitting(false);
     }
   };
 
@@ -725,11 +693,15 @@ export default function NewPortfolioPage() {
                 <CardTitle>Ações</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Button type="submit" className="w-full" disabled={loading || uploadingImage || isSubmitting}>
-                  {loading || isSubmitting ? (
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={createPortfolioMutation.isPending || uploadingImage}
+                >
+                  {createPortfolioMutation.isPending ? (
                     <div className="flex items-center">
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      {isSubmitting ? 'Processando...' : 'Salvando projeto...'}
+                      Salvando projeto...
                     </div>
                   ) : uploadingImage ? (
                     <div className="flex items-center">

@@ -1,13 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Plus, Search, Filter, Edit, Trash2, Eye, MoreHorizontal } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, Eye, MoreHorizontal, AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
+import { usePortfolio, useDeletePortfolioItem } from '@/hooks/use-portfolio';
 import {
   Table,
   TableBody,
@@ -30,22 +32,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-interface PortfolioItem {
-  id: string;
-  title: string;
-  description?: string;
-  category: string;
-  mainImage: string;
-  images: string[];
-  isActive: boolean;
-  order: number;
-  createdAt: string;
-  updatedAt: string;
-  product?: {
-    id: string;
-    name: string;
-  };
-}
 
 const categoryLabels = {
   WEDDING_RINGS: 'Alianças de Casamento',
@@ -56,31 +42,24 @@ const categoryLabels = {
 };
 
 export default function AdminPortfolioPage() {
-  const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const { toast } = useToast();
 
-  useEffect(() => {
-    fetchPortfolioItems();
-  }, []);
+  // React Query hooks
+  const {
+    data: portfolioItems = [],
+    isLoading,
+    isError,
+    error,
+    refetch,
+    isFetching,
+    isRefetching
+  } = usePortfolio();
 
-  const fetchPortfolioItems = async () => {
-    try {
-      const response = await fetch('/api/admin/portfolio');
-      if (response.ok) {
-        const data = await response.json();
-        setPortfolioItems(data.portfolioItems);
-      } else {
-        console.error('Erro ao carregar portfólio');
-      }
-    } catch (error) {
-      console.error('Erro ao carregar portfólio:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const deletePortfolioMutation = useDeletePortfolioItem();
+
 
   const handleDelete = async (id: string, title: string) => {
     if (!confirm(`Tem certeza que deseja deletar "${title}"?`)) {
@@ -88,35 +67,29 @@ export default function AdminPortfolioPage() {
     }
 
     try {
-      const response = await fetch(`/api/admin/portfolio/${id}`, {
-        method: 'DELETE',
+      await deletePortfolioMutation.mutateAsync(id);
+
+      toast({
+        title: "Projeto deletado",
+        description: `"${title}" foi removido do portfólio com sucesso.`,
       });
+    } catch (error: any) {
+      console.error('❌ Erro ao deletar projeto:', error);
 
-      if (response.ok) {
-        setPortfolioItems(prev => prev.filter(item => item.id !== id));
-      } else {
-        // Log detalhado do erro para debug
-        let errorDetails;
-        try {
-          errorDetails = await response.json();
-        } catch {
-          errorDetails = { error: 'Resposta inválida do servidor' };
-        }
-
-        console.error('❌ Erro ao deletar projeto:', {
-          id,
-          title,
-          status: response.status,
-          statusText: response.statusText,
-          errorResponse: errorDetails
-        });
-
-        alert(`Erro ao deletar item: ${errorDetails.error || 'Erro desconhecido'}`);
-      }
-    } catch (error) {
-      console.error('❌ Erro de conexão ao deletar:', error);
-      alert('Erro de conexão ao deletar item');
+      toast({
+        title: "Erro ao deletar",
+        description: error.message || "Não foi possível deletar o projeto. Tente novamente.",
+        variant: "destructive",
+      });
     }
+  };
+
+  const handleRefresh = () => {
+    refetch();
+    toast({
+      title: "Atualizando",
+      description: "Recarregando lista de projetos...",
+    });
   };
 
   const filteredItems = portfolioItems.filter(item => {
@@ -130,12 +103,46 @@ export default function AdminPortfolioPage() {
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
-  if (loading) {
+  // Estados de loading
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-96">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
           <p className="mt-2 text-gray-600">Carregando portfólio...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Estado de erro com opção de retry
+  if (isError) {
+    return (
+      <div className="flex items-center justify-center min-h-96">
+        <div className="text-center max-w-md">
+          <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Erro ao carregar portfólio</h3>
+          <p className="text-gray-600 mb-4">
+            {(error as any)?.message || 'Não foi possível carregar os projetos do portfólio.'}
+          </p>
+          <div className="space-y-2">
+            <Button onClick={handleRefresh} disabled={isFetching}>
+              {isFetching ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Tentando novamente...
+                </>
+              ) : (
+                <>
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Tentar novamente
+                </>
+              )}
+            </Button>
+            <p className="text-xs text-gray-500">
+              Se o problema persistir, tente recarregar a página ou contate o suporte.
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -151,12 +158,27 @@ export default function AdminPortfolioPage() {
             Gerencie os projetos do portfólio da Cícero Joias
           </p>
         </div>
-        <Button asChild>
-          <Link href="/admin/portfolio/new">
-            <Plus className="h-4 w-4 mr-2" />
-            Novo Projeto
-          </Link>
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={handleRefresh}
+            disabled={isFetching}
+            size="sm"
+          >
+            {isFetching ? (
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
+            ) : (
+              <RefreshCw className="h-4 w-4 mr-2" />
+            )}
+            {isRefetching ? 'Atualizando...' : 'Atualizar'}
+          </Button>
+          <Button asChild>
+            <Link href="/admin/portfolio/new">
+              <Plus className="h-4 w-4 mr-2" />
+              Novo Projeto
+            </Link>
+          </Button>
+        </div>
       </div>
 
       {/* Stats */}
@@ -309,9 +331,19 @@ export default function AdminPortfolioPage() {
                         <DropdownMenuItem
                           onClick={() => handleDelete(item.id, item.title)}
                           className="text-red-600"
+                          disabled={deletePortfolioMutation.isPending}
                         >
-                          <Trash2 className="h-4 w-4 mr-2" />
-                          Deletar
+                          {deletePortfolioMutation.isPending ? (
+                            <>
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-600 mr-2"></div>
+                              Deletando...
+                            </>
+                          ) : (
+                            <>
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              Deletar
+                            </>
+                          )}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
