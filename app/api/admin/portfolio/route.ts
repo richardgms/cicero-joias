@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { auth, clerkClient } from '@clerk/nextjs/server';
-import prisma from '@/lib/prisma';
+import prisma, { executeWithRetry } from '@/lib/prisma';
 import { z } from 'zod';
 import { checkAdminAuth } from "@/lib/check-admin";
 
@@ -261,14 +261,11 @@ export async function POST(request: Request) {
       );
     }
 
-    // Teste 6: Criar item do portfólio (com retry para prepared statement errors)
+    // Teste 6: Criar item do portfólio (com retry otimizado para prepared statement errors)
     let portfolioItem;
-    const maxRetries = 3;
-    let retryCount = 0;
-
-    while (retryCount <= maxRetries) {
-      try {
-        portfolioItem = await prisma.portfolioItem.create({
+    try {
+      portfolioItem = await executeWithRetry(async () => {
+        return await prisma.portfolioItem.create({
           data: createData,
           include: {
             product: {
@@ -279,46 +276,14 @@ export async function POST(request: Request) {
             },
           },
         });
-        debugInfo.push(`Portfolio item created successfully with ID: ${portfolioItem.id} (attempt ${retryCount + 1})`);
-        break; // Success, exit retry loop
-      } catch (createError) {
-        retryCount++;
-        const errorMessage = createError instanceof Error ? createError.message : String(createError);
+      });
+      debugInfo.push(`Portfolio item created successfully with ID: ${portfolioItem.id}`);
+    } catch (createError) {
+      const errorMessage = createError instanceof Error ? createError.message : String(createError);
+      debugInfo.push(`Creation failed: ${errorMessage}`);
 
-        // Check for prepared statement conflict error
-        const isPreparedStatementError = errorMessage.includes('prepared statement') &&
-                                        errorMessage.includes('already exists');
-
-        if (isPreparedStatementError && retryCount <= maxRetries) {
-          debugInfo.push(`Prepared statement conflict detected, retry ${retryCount}/${maxRetries}: ${errorMessage}`);
-
-          // Wait before retry with exponential backoff
-          const delay = Math.pow(2, retryCount) * 100; // 200ms, 400ms, 800ms
-          await new Promise(resolve => setTimeout(resolve, delay));
-
-          // Force disconnect and reconnect to clear prepared statements
-          try {
-            await prisma.$disconnect();
-            await prisma.$connect();
-            debugInfo.push(`Database reconnected for retry ${retryCount}`);
-          } catch (reconnectError) {
-            debugInfo.push(`Reconnection failed: ${reconnectError instanceof Error ? reconnectError.message : String(reconnectError)}`);
-          }
-
-          continue; // Try again
-        } else {
-          // Not a prepared statement error or max retries reached
-          break; // Exit retry loop with error
-        }
-      }
-    }
-
-    // Check if we failed after all retries
-    if (!portfolioItem) {
-      // Verificar tipos específicos de erro no último erro
-      const lastError = debugInfo[debugInfo.length - 1];
-
-      if (lastError.includes('Unique constraint')) {
+      // Verificar tipos específicos de erro
+      if (errorMessage.includes('Unique constraint')) {
         return NextResponse.json(
           { error: 'Já existe um item com essas informações', debug: debugInfo },
           {
@@ -328,7 +293,7 @@ export async function POST(request: Request) {
         );
       }
 
-      if (lastError.includes('Foreign key constraint')) {
+      if (errorMessage.includes('Foreign key constraint')) {
         return NextResponse.json(
           { error: 'Produto relacionado não encontrado', debug: debugInfo },
           {
@@ -338,7 +303,7 @@ export async function POST(request: Request) {
         );
       }
 
-      if (lastError.includes('prepared statement') && lastError.includes('already exists')) {
+      if (errorMessage.includes('prepared statement') && errorMessage.includes('already exists')) {
         return NextResponse.json(
           { error: 'Erro temporário do servidor. Tente novamente em alguns segundos.', debug: debugInfo },
           {
@@ -359,14 +324,16 @@ export async function POST(request: Request) {
 
     // Teste 7: Log da atividade
     try {
-      await prisma.activityLog.create({
-        data: {
-          action: 'CREATE',
-          entity: 'PortfolioItem',
-          entityId: portfolioItem.id,
-          description: `Item "${portfolioItem.title}" criado no portfólio`,
-          userId,
-        },
+      await executeWithRetry(async () => {
+        return await prisma.activityLog.create({
+          data: {
+            action: 'CREATE',
+            entity: 'PortfolioItem',
+            entityId: portfolioItem.id,
+            description: `Item "${portfolioItem.title}" criado no portfólio`,
+            userId,
+          },
+        });
       });
       debugInfo.push('Activity log created successfully');
     } catch (logError) {
