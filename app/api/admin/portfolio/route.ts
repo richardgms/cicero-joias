@@ -191,7 +191,7 @@ export async function POST(request: Request) {
         const validationDetails = validationError.errors.map(e => ({
           field: e.path.join('.'),
           message: e.message,
-          received: e.received,
+          received: 'received' in e ? e.received : undefined,
           code: e.code
         }));
 
