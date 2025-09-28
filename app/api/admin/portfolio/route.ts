@@ -99,19 +99,21 @@ export async function GET() {
 
     // Buscar itens do portfólio
     console.log('📊 Portfolio GET: Fetching portfolio items...');
-    const portfolioItems = await prisma.portfolioItem.findMany({
-      include: {
-        product: {
-          select: {
-            id: true,
-            name: true,
+    const portfolioItems = await executeWithRetry(async () => {
+      return await prisma.portfolioItem.findMany({
+        include: {
+          product: {
+            select: {
+              id: true,
+              name: true,
+            },
           },
         },
-      },
-      orderBy: [
-        { order: 'asc' },
-        { createdAt: 'desc' },
-      ],
+        orderBy: [
+          { order: 'asc' },
+          { createdAt: 'desc' },
+        ],
+      });
     });
     console.log(`✅ Portfolio GET: Found ${portfolioItems.length} portfolio items`);
 

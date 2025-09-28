@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { auth, clerkClient } from '@clerk/nextjs/server';
-import prisma from '@/lib/prisma';
+import prisma, { executeWithRetry } from '@/lib/prisma';
 import { z } from 'zod';
 import { checkAdminAuth } from '@/lib/check-admin';
 
@@ -41,17 +41,19 @@ export async function GET(
   }
   const { id } = await params;
   try {
-    const portfolioItem = await prisma.portfolioItem.findUnique({
-      where: { id },
-      include: {
-        product: {
-          select: {
-            id: true,
-            name: true,
-            price: true,
+    const portfolioItem = await executeWithRetry(async () => {
+      return await prisma.portfolioItem.findUnique({
+        where: { id },
+        include: {
+          product: {
+            select: {
+              id: true,
+              name: true,
+              price: true,
+            },
           },
         },
-      },
+      });
     });
 
     if (!portfolioItem) {
@@ -84,8 +86,10 @@ export async function PUT(
     const validatedData = updatePortfolioSchema.parse(body);
 
     // Verificar se o item existe
-    const existingItem = await prisma.portfolioItem.findUnique({
-      where: { id },
+    const existingItem = await executeWithRetry(async () => {
+      return await prisma.portfolioItem.findUnique({
+        where: { id },
+      });
     });
 
     if (!existingItem) {
@@ -101,29 +105,33 @@ export async function PUT(
     };
 
     // Atualizar item do portfólio
-    const portfolioItem = await prisma.portfolioItem.update({
-      where: { id },
-      data: updateData,
-      include: {
-        product: {
-          select: {
-            id: true,
-            name: true,
-            price: true,
+    const portfolioItem = await executeWithRetry(async () => {
+      return await prisma.portfolioItem.update({
+        where: { id },
+        data: updateData,
+        include: {
+          product: {
+            select: {
+              id: true,
+              name: true,
+              price: true,
+            },
           },
         },
-      },
+      });
     });
 
     // Log da atividade
-    await prisma.activityLog.create({
-      data: {
-        action: 'UPDATE',
-        entity: 'PortfolioItem',
-        entityId: portfolioItem.id,
-        description: `Item "${portfolioItem.title}" atualizado no portfólio`,
-        userId,
-      },
+    await executeWithRetry(async () => {
+      return await prisma.activityLog.create({
+        data: {
+          action: 'UPDATE',
+          entity: 'PortfolioItem',
+          entityId: portfolioItem.id,
+          description: `Item "${portfolioItem.title}" atualizado no portfólio`,
+          userId,
+        },
+      });
     });
 
     return NextResponse.json({ portfolioItem });
@@ -210,13 +218,15 @@ export async function DELETE(
     }
 
     // Teste 4: Verificar se o item existe
-    let existingItem;
+    let existingItem: any;
     try {
-      existingItem = await prisma.portfolioItem.findUnique({
-        where: { id },
-        include: {
-          favorites: true // Verificar dependências
-        }
+      existingItem = await executeWithRetry(async () => {
+        return await prisma.portfolioItem.findUnique({
+          where: { id },
+          include: {
+            favorites: true // Verificar dependências
+          }
+        });
       });
       debugInfo.push(`Find query executed for ID: ${id}`);
     } catch (findError) {
@@ -246,8 +256,10 @@ export async function DELETE(
     if (existingItem.favorites.length > 0) {
       debugInfo.push(`Item has ${existingItem.favorites.length} favorites - removing them first`);
       try {
-        await prisma.favorite.deleteMany({
-          where: { portfolioItemId: id }
+        await executeWithRetry(async () => {
+          return await prisma.favorite.deleteMany({
+            where: { portfolioItemId: id }
+          });
         });
         debugInfo.push('Related favorites deleted successfully');
       } catch (favDeleteError) {
@@ -264,8 +276,10 @@ export async function DELETE(
 
     // Teste 6: Deletar o item
     try {
-      await prisma.portfolioItem.delete({
-        where: { id },
+      await executeWithRetry(async () => {
+        return await prisma.portfolioItem.delete({
+          where: { id },
+        });
       });
       debugInfo.push('Portfolio item deleted successfully');
     } catch (deleteError) {
@@ -295,14 +309,16 @@ export async function DELETE(
 
     // Teste 7: Log da atividade
     try {
-      await prisma.activityLog.create({
-        data: {
-          action: 'DELETE',
-          entity: 'PortfolioItem',
-          entityId: id,
-          description: `Item "${existingItem.title}" deletado do portfólio`,
-          userId,
-        },
+      await executeWithRetry(async () => {
+        return await prisma.activityLog.create({
+          data: {
+            action: 'DELETE',
+            entity: 'PortfolioItem',
+            entityId: id,
+            description: `Item "${existingItem.title}" deletado do portfólio`,
+            userId,
+          },
+        });
       });
       debugInfo.push('Activity log created successfully');
     } catch (logError) {
