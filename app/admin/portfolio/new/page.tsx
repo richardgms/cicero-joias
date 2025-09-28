@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -84,15 +84,6 @@ export default function NewPortfolioPage() {
   const [newKeyword, setNewKeyword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Debounce para evitar cliques múltiplos
-  const debounce = useCallback((func: Function, delay: number) => {
-    let timeoutId: NodeJS.Timeout;
-    return (...args: any[]) => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => func(...args), delay);
-    };
-  }, []);
-
   // Validação em tempo real
   const validateField = (field: keyof FormData, value: any) => {
     const newErrors = { ...errors };
@@ -141,7 +132,7 @@ export default function NewPortfolioPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmitInternal = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Prevenir submissões múltiplas
@@ -242,12 +233,6 @@ export default function NewPortfolioPage() {
       setIsSubmitting(false);
     }
   };
-
-  // Versão com debounce do handleSubmit
-  const handleSubmit = useCallback(
-    debounce(handleSubmitInternal, 1000),
-    [handleSubmitInternal, debounce]
-  );
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, isMain = false) => {
     const file = e.target.files?.[0];
