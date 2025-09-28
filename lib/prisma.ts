@@ -14,12 +14,6 @@ const createPrismaClient = () => {
         url: process.env.DATABASE_URL,
       },
     },
-    // Configurações específicas para evitar conflitos de prepared statements
-    __internal: {
-      engine: {
-        allowTriggerPanic: false,
-      },
-    },
   })
 }
 

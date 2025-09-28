@@ -226,7 +226,8 @@ export async function POST(request: Request) {
     }
 
     // Teste 4: Preparar dados para o Prisma
-    let createData;
+    type CreatePortfolioData = z.infer<typeof createPortfolioSchema>;
+    let createData: CreatePortfolioData;
     try {
       createData = {
         ...validatedData,
@@ -262,7 +263,7 @@ export async function POST(request: Request) {
     }
 
     // Teste 6: Criar item do portfólio (com retry otimizado para prepared statement errors)
-    let portfolioItem;
+    let portfolioItem: any;
     try {
       portfolioItem = await executeWithRetry(async () => {
         return await prisma.portfolioItem.create({
