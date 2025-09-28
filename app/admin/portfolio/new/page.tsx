@@ -182,10 +182,19 @@ export default function NewPortfolioPage() {
         router.push('/admin/portfolio');
       } else {
         const error = await response.json();
+
+        // Log detalhado do erro para debug
+        console.error('❌ Erro ao criar projeto:', {
+          status: response.status,
+          statusText: response.statusText,
+          errorResponse: error,
+          sentPayload: payload
+        });
+
         toast({
           title: "Erro ao criar projeto",
-          description: error.details ? 
-            `Problemas de validação: ${error.details.map((d: any) => d.message).join(', ')}` : 
+          description: error.details ?
+            `Problemas de validação: ${error.details.map((d: any) => d.message).join(', ')}` :
             error.error || "Erro desconhecido",
           variant: "destructive",
         });

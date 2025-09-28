@@ -95,11 +95,27 @@ export default function AdminPortfolioPage() {
       if (response.ok) {
         setPortfolioItems(prev => prev.filter(item => item.id !== id));
       } else {
-        alert('Erro ao deletar item');
+        // Log detalhado do erro para debug
+        let errorDetails;
+        try {
+          errorDetails = await response.json();
+        } catch {
+          errorDetails = { error: 'Resposta inválida do servidor' };
+        }
+
+        console.error('❌ Erro ao deletar projeto:', {
+          id,
+          title,
+          status: response.status,
+          statusText: response.statusText,
+          errorResponse: errorDetails
+        });
+
+        alert(`Erro ao deletar item: ${errorDetails.error || 'Erro desconhecido'}`);
       }
     } catch (error) {
-      console.error('Erro ao deletar:', error);
-      alert('Erro ao deletar item');
+      console.error('❌ Erro de conexão ao deletar:', error);
+      alert('Erro de conexão ao deletar item');
     }
   };
 
