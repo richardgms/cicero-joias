@@ -78,25 +78,6 @@ export function QueryProvider({ children }: QueryProviderProps) {
         },
       },
     },
-    // Logger customizado para produção
-    logger: {
-      log: (...args) => {
-        if (process.env.NODE_ENV === 'development') {
-          console.log('[React Query]', ...args);
-        }
-      },
-      warn: (...args) => {
-        console.warn('[React Query Warning]', ...args);
-      },
-      error: (...args) => {
-        console.error('[React Query Error]', ...args);
-
-        // Em produção, poderia enviar erros para serviço de monitoramento
-        if (process.env.NODE_ENV === 'production') {
-          // TODO: Implementar envio para Sentry, LogRocket, etc.
-        }
-      },
-    },
   }))
 
   return (
