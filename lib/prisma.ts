@@ -5,10 +5,29 @@ declare global {
   var prisma: PrismaClient | undefined
 }
 
-export const prisma = globalThis.prisma || new PrismaClient()
+// Configuração otimizada para evitar conflitos de prepared statements
+const createPrismaClient = () => {
+  return new PrismaClient({
+    log: process.env.NODE_ENV === 'development' ? ['warn', 'error'] : ['error'],
+    datasources: {
+      db: {
+        url: process.env.DATABASE_URL,
+      },
+    },
+  })
+}
+
+export const prisma = globalThis.prisma || createPrismaClient()
 
 if (process.env.NODE_ENV !== 'production') {
   globalThis.prisma = prisma
+}
+
+// Graceful shutdown para limpeza adequada de conexões
+if (process.env.NODE_ENV === 'production') {
+  process.on('beforeExit', async () => {
+    await prisma.$disconnect()
+  })
 }
 
 export default prisma 

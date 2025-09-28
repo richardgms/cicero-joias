@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -82,6 +82,16 @@ export default function NewPortfolioPage() {
     relatedProjects: [],
   });
   const [newKeyword, setNewKeyword] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Debounce para evitar cliques múltiplos
+  const debounce = useCallback((func: Function, delay: number) => {
+    let timeoutId: NodeJS.Timeout;
+    return (...args: any[]) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => func(...args), delay);
+    };
+  }, []);
 
   // Validação em tempo real
   const validateField = (field: keyof FormData, value: any) => {
@@ -131,9 +141,14 @@ export default function NewPortfolioPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmitInternal = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
+    // Prevenir submissões múltiplas
+    if (loading || isSubmitting) {
+      return;
+    }
+
     if (!formData.title || !formData.category || !formData.mainImage) {
       toast({
         title: "Campos obrigatórios",
@@ -144,6 +159,7 @@ export default function NewPortfolioPage() {
     }
 
     setLoading(true);
+    setIsSubmitting(true);
 
     try {
       // Converter especificações para JSON
@@ -191,11 +207,26 @@ export default function NewPortfolioPage() {
           sentPayload: payload
         });
 
+        // Tratamento específico para diferentes tipos de erro
+        let errorTitle = "Erro ao criar projeto";
+        let errorDescription = error.error || "Erro desconhecido";
+
+        if (response.status === 503) {
+          // Erro temporário - suggest retry
+          errorTitle = "Erro temporário";
+          errorDescription = "Servidor temporariamente indisponível. Tente novamente em alguns segundos.";
+        } else if (response.status === 409) {
+          // Conflito/duplicação
+          errorTitle = "Item duplicado";
+          errorDescription = error.error || "Já existe um item com essas informações";
+        } else if (error.details) {
+          // Erros de validação
+          errorDescription = `Problemas de validação: ${error.details.map((d: any) => d.message).join(', ')}`;
+        }
+
         toast({
-          title: "Erro ao criar projeto",
-          description: error.details ?
-            `Problemas de validação: ${error.details.map((d: any) => d.message).join(', ')}` :
-            error.error || "Erro desconhecido",
+          title: errorTitle,
+          description: errorDescription,
           variant: "destructive",
         });
       }
@@ -208,8 +239,15 @@ export default function NewPortfolioPage() {
       });
     } finally {
       setLoading(false);
+      setIsSubmitting(false);
     }
   };
+
+  // Versão com debounce do handleSubmit
+  const handleSubmit = useCallback(
+    debounce(handleSubmitInternal, 1000),
+    [handleSubmitInternal, debounce]
+  );
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, isMain = false) => {
     const file = e.target.files?.[0];
@@ -702,11 +740,11 @@ export default function NewPortfolioPage() {
                 <CardTitle>Ações</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Button type="submit" className="w-full" disabled={loading || uploadingImage}>
-                  {loading ? (
+                <Button type="submit" className="w-full" disabled={loading || uploadingImage || isSubmitting}>
+                  {loading || isSubmitting ? (
                     <div className="flex items-center">
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Salvando projeto...
+                      {isSubmitting ? 'Processando...' : 'Salvando projeto...'}
                     </div>
                   ) : uploadingImage ? (
                     <div className="flex items-center">

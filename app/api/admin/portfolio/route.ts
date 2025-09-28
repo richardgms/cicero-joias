@@ -261,55 +261,91 @@ export async function POST(request: Request) {
       );
     }
 
-    // Teste 6: Criar item do portfólio
+    // Teste 6: Criar item do portfólio (com retry para prepared statement errors)
     let portfolioItem;
-    try {
-      portfolioItem = await prisma.portfolioItem.create({
-        data: createData,
-        include: {
-          product: {
-            select: {
-              id: true,
-              name: true,
+    const maxRetries = 3;
+    let retryCount = 0;
+
+    while (retryCount <= maxRetries) {
+      try {
+        portfolioItem = await prisma.portfolioItem.create({
+          data: createData,
+          include: {
+            product: {
+              select: {
+                id: true,
+                name: true,
+              },
             },
           },
-        },
-      });
-      debugInfo.push(`Portfolio item created successfully with ID: ${portfolioItem.id}`);
-    } catch (createError) {
-      debugInfo.push(`Portfolio creation failed: ${createError instanceof Error ? createError.message : String(createError)}`);
+        });
+        debugInfo.push(`Portfolio item created successfully with ID: ${portfolioItem.id} (attempt ${retryCount + 1})`);
+        break; // Success, exit retry loop
+      } catch (createError) {
+        retryCount++;
+        const errorMessage = createError instanceof Error ? createError.message : String(createError);
 
-      // Verificar tipos específicos de erro
-      if (createError instanceof Error) {
-        if (createError.message.includes('Unique constraint')) {
-          return NextResponse.json(
-            { error: 'Já existe um item com essas informações', debug: debugInfo },
-            {
-              status: 409,
-              headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
-            }
-          );
-        }
+        // Check for prepared statement conflict error
+        const isPreparedStatementError = errorMessage.includes('prepared statement') &&
+                                        errorMessage.includes('already exists');
 
-        if (createError.message.includes('Foreign key constraint')) {
-          return NextResponse.json(
-            { error: 'Produto relacionado não encontrado', debug: debugInfo },
-            {
-              status: 400,
-              headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
-            }
-          );
-        }
+        if (isPreparedStatementError && retryCount <= maxRetries) {
+          debugInfo.push(`Prepared statement conflict detected, retry ${retryCount}/${maxRetries}: ${errorMessage}`);
 
-        if (createError.message.includes('Invalid')) {
-          return NextResponse.json(
-            { error: 'Dados inválidos para criação', debug: debugInfo },
-            {
-              status: 400,
-              headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
-            }
-          );
+          // Wait before retry with exponential backoff
+          const delay = Math.pow(2, retryCount) * 100; // 200ms, 400ms, 800ms
+          await new Promise(resolve => setTimeout(resolve, delay));
+
+          // Force disconnect and reconnect to clear prepared statements
+          try {
+            await prisma.$disconnect();
+            await prisma.$connect();
+            debugInfo.push(`Database reconnected for retry ${retryCount}`);
+          } catch (reconnectError) {
+            debugInfo.push(`Reconnection failed: ${reconnectError instanceof Error ? reconnectError.message : String(reconnectError)}`);
+          }
+
+          continue; // Try again
+        } else {
+          // Not a prepared statement error or max retries reached
+          break; // Exit retry loop with error
         }
+      }
+    }
+
+    // Check if we failed after all retries
+    if (!portfolioItem) {
+      // Verificar tipos específicos de erro no último erro
+      const lastError = debugInfo[debugInfo.length - 1];
+
+      if (lastError.includes('Unique constraint')) {
+        return NextResponse.json(
+          { error: 'Já existe um item com essas informações', debug: debugInfo },
+          {
+            status: 409,
+            headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
+          }
+        );
+      }
+
+      if (lastError.includes('Foreign key constraint')) {
+        return NextResponse.json(
+          { error: 'Produto relacionado não encontrado', debug: debugInfo },
+          {
+            status: 400,
+            headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
+          }
+        );
+      }
+
+      if (lastError.includes('prepared statement') && lastError.includes('already exists')) {
+        return NextResponse.json(
+          { error: 'Erro temporário do servidor. Tente novamente em alguns segundos.', debug: debugInfo },
+          {
+            status: 503,
+            headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
+          }
+        );
       }
 
       return NextResponse.json(
