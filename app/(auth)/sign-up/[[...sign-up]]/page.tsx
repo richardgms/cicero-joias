@@ -3,12 +3,13 @@ import { SignUp } from "@clerk/nextjs";
 export default function SignUpPage() {
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <SignUp 
+      <SignUp
         appearance={{
           elements: {
             formButtonPrimary: 'bg-amber-600 hover:bg-amber-700',
           }
         }}
+        fallbackRedirectUrl="/"
         localization={{
           socialButtonsBlockButton: "Continuar com {{provider}}",
           dividerText: "ou",
