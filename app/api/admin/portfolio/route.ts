@@ -87,7 +87,7 @@ export async function GET() {
   const debugInfo: string[] = [];
 
   try {
-    debugInfo.push(`🔄 [${requestId}] Portfolio GET: Starting request processing at ${new Date().toISOString()}`);
+    debugInfo.push(`[INFO] [${requestId}] Portfolio GET: Starting request processing at ${new Date().toISOString()}`);
     console.log(debugInfo[debugInfo.length - 1]);
 
     // Etapa 1: Teste de autenticação com timing
@@ -97,20 +97,24 @@ export async function GET() {
     try {
       authResult = await checkAdminAuth();
       const authDuration = Date.now() - authStart;
-      debugInfo.push(`✅ [${requestId}] Auth completed in ${authDuration}ms`);
+      debugInfo.push(`[OK] [${requestId}] Auth completed in ${authDuration}ms`);
       console.log(debugInfo[debugInfo.length - 1]);
     } catch (authError) {
       const authDuration = Date.now() - authStart;
-      debugInfo.push(`❌ [${requestId}] Auth threw exception after ${authDuration}ms: ${authError instanceof Error ? authError.message : String(authError)}`);
+      debugInfo.push(`[ERROR] [${requestId}] Auth threw exception after ${authDuration}ms: ${authError instanceof Error ? authError.message : String(authError)}`);
       console.error(debugInfo[debugInfo.length - 1]);
       throw authError;
     }
 
     if ("error" in authResult) {
-      debugInfo.push(`❌ [${requestId}] Auth failed: ${authResult.error} (status: ${authResult.status})`);
+      debugInfo.push(`[ERROR] [${requestId}] Auth failed: ${authResult.error} (status: ${authResult.status})`);
       console.error(debugInfo[debugInfo.length - 1]);
       return NextResponse.json(
-        { error: authResult.error, debug: debugInfo },
+        {
+          error: authResult.error,
+          debug: debugInfo,
+          details: authResult.details
+        },
         {
           status: authResult.status,
           headers: { 'X-Debug-Info': JSON.stringify(debugInfo), 'X-Request-ID': requestId }
@@ -119,7 +123,7 @@ export async function GET() {
     }
 
     const { userId } = authResult;
-    debugInfo.push(`✅ [${requestId}] Auth successful for userId: ${userId}`);
+    debugInfo.push(`[OK] [${requestId}] Auth successful for userId: ${userId}`);
     console.log(debugInfo[debugInfo.length - 1]);
 
     // Etapa 2: Teste de conexão com banco
@@ -127,11 +131,11 @@ export async function GET() {
     try {
       await prisma.$connect();
       const dbConnectDuration = Date.now() - dbConnectStart;
-      debugInfo.push(`🔗 [${requestId}] Database connection successful in ${dbConnectDuration}ms`);
+      debugInfo.push(`[DB] [${requestId}] Database connection successful in ${dbConnectDuration}ms`);
       console.log(debugInfo[debugInfo.length - 1]);
     } catch (dbConnectError) {
       const dbConnectDuration = Date.now() - dbConnectStart;
-      debugInfo.push(`💾 [${requestId}] Database connection failed after ${dbConnectDuration}ms: ${dbConnectError instanceof Error ? dbConnectError.message : String(dbConnectError)}`);
+      debugInfo.push(`[DB] [${requestId}] Database connection failed after ${dbConnectDuration}ms: ${dbConnectError instanceof Error ? dbConnectError.message : String(dbConnectError)}`);
       console.error(debugInfo[debugInfo.length - 1]);
       throw dbConnectError;
     }
@@ -141,11 +145,11 @@ export async function GET() {
     try {
       await prisma.$queryRaw`SELECT 1 as test`;
       const simpleQueryDuration = Date.now() - simpleQueryStart;
-      debugInfo.push(`✅ [${requestId}] Simple query test successful in ${simpleQueryDuration}ms`);
+      debugInfo.push(`[OK] [${requestId}] Simple query test successful in ${simpleQueryDuration}ms`);
       console.log(debugInfo[debugInfo.length - 1]);
     } catch (simpleQueryError) {
       const simpleQueryDuration = Date.now() - simpleQueryStart;
-      debugInfo.push(`❌ [${requestId}] Simple query failed after ${simpleQueryDuration}ms: ${simpleQueryError instanceof Error ? simpleQueryError.message : String(simpleQueryError)}`);
+      debugInfo.push(`[ERROR] [${requestId}] Simple query failed after ${simpleQueryDuration}ms: ${simpleQueryError instanceof Error ? simpleQueryError.message : String(simpleQueryError)}`);
       console.error(debugInfo[debugInfo.length - 1]);
       throw simpleQueryError;
     }
@@ -156,11 +160,11 @@ export async function GET() {
     try {
       itemCount = await prisma.portfolioItem.count();
       const countDuration = Date.now() - countStart;
-      debugInfo.push(`📊 [${requestId}] Portfolio count query successful in ${countDuration}ms: ${itemCount} items`);
+      debugInfo.push(`[QUERY] [${requestId}] Portfolio count query successful in ${countDuration}ms: ${itemCount} items`);
       console.log(debugInfo[debugInfo.length - 1]);
     } catch (countError) {
       const countDuration = Date.now() - countStart;
-      debugInfo.push(`❌ [${requestId}] Portfolio count failed after ${countDuration}ms: ${countError instanceof Error ? countError.message : String(countError)}`);
+      debugInfo.push(`[ERROR] [${requestId}] Portfolio count failed after ${countDuration}ms: ${countError instanceof Error ? countError.message : String(countError)}`);
       console.error(debugInfo[debugInfo.length - 1]);
       throw countError;
     }
@@ -169,11 +173,11 @@ export async function GET() {
     const fullQueryStart = Date.now();
     let portfolioItems;
     try {
-      debugInfo.push(`📊 [${requestId}] Starting full portfolio query with executeWithRetry...`);
+      debugInfo.push(`[QUERY] [${requestId}] Starting full portfolio query with executeWithRetry...`);
       console.log(debugInfo[debugInfo.length - 1]);
 
       portfolioItems = await executeWithRetry(async () => {
-        debugInfo.push(`🔄 [${requestId}] Executing portfolio findMany inside retry...`);
+        debugInfo.push(`[INFO] [${requestId}] Executing portfolio findMany inside retry...`);
         console.log(debugInfo[debugInfo.length - 1]);
 
         return await prisma.portfolioItem.findMany({
@@ -193,24 +197,24 @@ export async function GET() {
       });
 
       const fullQueryDuration = Date.now() - fullQueryStart;
-      debugInfo.push(`✅ [${requestId}] Full portfolio query successful in ${fullQueryDuration}ms: Found ${portfolioItems.length} items`);
+      debugInfo.push(`[OK] [${requestId}] Full portfolio query successful in ${fullQueryDuration}ms: Found ${portfolioItems.length} items`);
       console.log(debugInfo[debugInfo.length - 1]);
     } catch (fullQueryError) {
       const fullQueryDuration = Date.now() - fullQueryStart;
-      debugInfo.push(`❌ [${requestId}] Full portfolio query failed after ${fullQueryDuration}ms: ${fullQueryError instanceof Error ? fullQueryError.message : String(fullQueryError)}`);
+      debugInfo.push(`[ERROR] [${requestId}] Full portfolio query failed after ${fullQueryDuration}ms: ${fullQueryError instanceof Error ? fullQueryError.message : String(fullQueryError)}`);
       console.error(debugInfo[debugInfo.length - 1]);
 
       // Log stack trace completo para debugging
       if (fullQueryError instanceof Error && fullQueryError.stack) {
-        console.error(`🔍 [${requestId}] Full error stack:`, fullQueryError.stack);
-        debugInfo.push(`🔍 [${requestId}] Error stack: ${fullQueryError.stack.substring(0, 500)}...`);
+        console.error(`[DEBUG] [${requestId}] Full error stack:`, fullQueryError.stack);
+        debugInfo.push(`[DEBUG] [${requestId}] Error stack: ${fullQueryError.stack.substring(0, 500)}...`);
       }
 
       throw fullQueryError;
     }
 
     const totalDuration = Date.now() - startTime;
-    debugInfo.push(`🎉 [${requestId}] Request completed successfully in ${totalDuration}ms`);
+    debugInfo.push(`[SUCCESS] [${requestId}] Request completed successfully in ${totalDuration}ms`);
     console.log(debugInfo[debugInfo.length - 1]);
 
     return NextResponse.json(
@@ -237,9 +241,9 @@ export async function GET() {
       timestamp: new Date().toISOString(),
     };
 
-    debugInfo.push(`💥 [${requestId}] Request failed after ${totalDuration}ms: ${errorInfo.message}`);
+    debugInfo.push(`[FAIL] [${requestId}] Request failed after ${totalDuration}ms: ${errorInfo.message}`);
     console.error(debugInfo[debugInfo.length - 1]);
-    console.error(`💥 [${requestId}] Complete error details:`, errorInfo);
+    console.error(`[FAIL] [${requestId}] Complete error details:`, errorInfo);
 
     // Categorizar erro por tipo
     let statusCode = 500;
@@ -249,23 +253,23 @@ export async function GET() {
       if (error.message.includes('connect') || error.message.includes('ECONNREFUSED')) {
         statusCode = 503;
         userMessage = 'Erro de conexão com o banco de dados';
-        debugInfo.push(`💾 [${requestId}] Categorized as database connection error`);
+        debugInfo.push(`[DB] [${requestId}] Categorized as database connection error`);
       } else if (error.message.includes('timeout')) {
         statusCode = 504;
         userMessage = 'Timeout na operação';
-        debugInfo.push(`⏰ [${requestId}] Categorized as timeout error`);
+        debugInfo.push(`[TIMEOUT] [${requestId}] Categorized as timeout error`);
       } else if (error.message.includes('prepared statement')) {
         statusCode = 503;
         userMessage = 'Erro temporário do servidor - tente novamente';
-        debugInfo.push(`🔄 [${requestId}] Categorized as prepared statement error`);
+        debugInfo.push(`[INFO] [${requestId}] Categorized as prepared statement error`);
       } else if (error.message.includes('Não autorizado') || error.message.includes('Acesso negado')) {
         statusCode = error.message.includes('Não autorizado') ? 401 : 403;
         userMessage = error.message;
-        debugInfo.push(`🚫 [${requestId}] Categorized as auth error`);
+        debugInfo.push(`[AUTH] [${requestId}] Categorized as auth error`);
       }
     }
 
-    console.error(`🔍 [${requestId}] Final error categorization: ${statusCode} - ${userMessage}`);
+    console.error(`[DEBUG] [${requestId}] Final error categorization: ${statusCode} - ${userMessage}`);
 
     return NextResponse.json(
       {
@@ -316,7 +320,11 @@ export async function POST(request: Request) {
     if ("error" in authResult) {
       debugInfo.push(`Auth failed: ${authResult.error}`);
       return NextResponse.json(
-        { error: authResult.error, debug: debugInfo },
+        {
+          error: authResult.error,
+          debug: debugInfo,
+          details: authResult.details
+        },
         {
           status: authResult.status,
           headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }

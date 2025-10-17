@@ -1,0 +1,62 @@
+# ===========================================
+# CÍCERO JOIAS - VARIÁVEIS DE AMBIENTE
+# ===========================================
+
+# Ambiente de desenvolvimento
+NODE_ENV=development
+
+# ===========================================
+# BANCO DE DADOS (Supabase PostgreSQL)
+# ===========================================
+# Substitua pela Connection String do seu projeto Supabase
+# Exemplo: postgresql://postgres:[SENHA]@db.[PROJETO].supabase.co:5432/postgres
+DATABASE_URL="postgresql://postgres:[SENHA]@db.[PROJETO].supabase.co:5432/postgres"
+
+# ===========================================
+# CLERK - AUTENTICAÇÃO
+# ===========================================
+# Chaves do Clerk (obtenha no dashboard após reivindicar o app)
+# Substitua pelos valores reais do seu projeto Clerk
+
+# Chave pública (visível no frontend)
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="pk_test_SUBSTITUA_PELA_CHAVE_REAL"
+
+# Chave secreta (apenas no servidor)
+CLERK_SECRET_KEY="sk_test_SUBSTITUA_PELA_CHAVE_REAL"
+
+# Webhook secret (para sincronização de usuários)
+CLERK_WEBHOOK_SECRET="whsec_SUBSTITUA_PELO_SECRET_REAL"
+
+# ===========================================
+# CLERK - URLs DE AUTENTICAÇÃO
+# ===========================================
+# URLs das páginas de autenticação (podem manter os valores padrão)
+NEXT_PUBLIC_CLERK_SIGN_IN_URL="/sign-in"
+NEXT_PUBLIC_CLERK_SIGN_UP_URL="/sign-up"
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL="/minha-area"
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL="/minha-area"
+
+# ===========================================
+# CONFIGURAÇÕES OPCIONAIS
+# ===========================================
+# Para debug do Prisma (descomente se necessário)
+# DEBUG_PRISMA=true
+
+# Para análise de bundle (descomente se necessário)
+# ANALYZE=true
+
+# ===========================================
+# INSTRUÇÕES:
+# ===========================================
+# 1. Copie este arquivo para .env: cp env-template.txt .env
+# 2. Configure o Supabase:
+#    - Acesse: https://supabase.com/dashboard
+#    - Vá em Settings → Database
+#    - Copie a Connection String
+#    - Substitua [SENHA] e [PROJETO] pelos valores reais
+# 3. Configure o Clerk:
+#    - Reivindique o app no Clerk
+#    - Copie as chaves reais do dashboard
+#    - Substitua os valores que contêm "SUBSTITUA_PELA_CHAVE_REAL"
+# 4. Execute as migrações: npx prisma migrate deploy
+# 5. Gere o cliente: npx prisma generate

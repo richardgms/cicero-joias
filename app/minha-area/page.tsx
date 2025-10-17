@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
 import Link from 'next/link';
 import { generatePortfolioSlug } from '@/lib/slug-utils';
+import { PageVisibilityGuard } from '@/components/page-visibility-guard';
 
 interface Coupon {
   id: string;
@@ -160,8 +161,9 @@ export default function MinhaAreaPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-marfim via-gray-50 to-esmeralda/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <PageVisibilityGuard pageSlug="minha-area">
+      <div className="min-h-screen bg-gradient-to-br from-marfim via-gray-50 to-esmeralda/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
@@ -406,7 +408,8 @@ export default function MinhaAreaPage() {
             </TabsContent>
           </Tabs>
         </motion.div>
+        </div>
       </div>
-    </div>
+    </PageVisibilityGuard>
   );
 } 

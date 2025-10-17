@@ -20,6 +20,9 @@ out/
 .DS_Store
 *.pem
 *.bak
+*.old
+*.tmp
+tsconfig.tsbuildinfo
 
 # Tooling folders
 .bolt/

@@ -7,12 +7,6 @@ import { Menu, X } from 'lucide-react';
 import { useUser, UserButton } from '@clerk/nextjs';
 import { usePageVisibility } from '@/hooks/use-page-visibility';
 
-// Links essenciais que sempre aparecem na navegação
-const essentialLinks = [
-  { name: 'Início', href: '/' },
-  { name: 'Minha Área', href: '/minha-area' },
-];
-
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { isSignedIn, user } = useUser();
@@ -20,7 +14,7 @@ export function Header() {
 
   const navigation = useMemo(() => {
     // Começar com link de Início
-    let nav = [essentialLinks[0]]; // { name: 'Início', href: '/' }
+    let nav = [{ name: 'Início', href: '/' }];
 
     // Adicionar páginas visíveis do banco de dados
     if (!loading && visiblePages.length > 0) {
@@ -30,9 +24,6 @@ export function Header() {
       }));
       nav.push(...dynamicPages);
     }
-
-    // Adicionar link de Minha Área
-    nav.push(essentialLinks[1]); // { name: 'Minha Área', href: '/minha-area' }
 
     // Adicionar painel admin se for admin
     if (isAdmin) {

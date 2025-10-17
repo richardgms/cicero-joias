@@ -41,6 +41,13 @@ async function main() {
       description: 'Formulário para solicitação de orçamentos',
       isVisible: true,
       priority: 5
+    },
+    {
+      slug: 'minha-area',
+      title: 'Minha Área',
+      description: 'Área pessoal do usuário com cupons, favoritos e fidelidade',
+      isVisible: true,
+      priority: 6
     }
   ]
 

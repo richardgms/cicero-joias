@@ -13,14 +13,6 @@ import {
   ArrowRight,
   Quote,
 } from 'lucide-react';
-import {
-  AliancasIcon,
-  BanhoOuroIcon,
-  ConsertosIcon,
-  JoiasSobMedidaIcon,
-  OculosIcon,
-  QualidadeIcon,
-} from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { PageVisibilityGuard } from '@/components/page-visibility-guard';
 
@@ -77,45 +69,6 @@ const storyParagraphs = [
   'O que começou como uma pequena oficina especializada em consertos de joias e relógios, rapidamente ganhou reconhecimento pela qualidade excepcional do trabalho e pelo atendimento personalizado. A confiança dos clientes permitiu que o negócio crescesse organicamente, sempre mantendo os valores de honestidade, qualidade e dedicação que caracterizam a Cícero Joias até hoje.',
   'Em meados de 2000, expandimos nossa presença com a abertura da segunda loja em João Pessoa, ampliando nosso alcance e permitindo atender um número maior de clientes na região. Ao longo das décadas, enfrentamos desafios e celebramos conquistas, sempre confiantes de que nosso trabalho fala por si mesmo.',
   'Hoje, com o nosso fundador ainda presente na oficina e o suporte da segunda geração da família, continuamos a desenvolver peças sob medida, restaurações com memória afetiva e serviços de manutenção que acompanham as famílias ao longo de toda a vida.',
-];
-
-const specialties = [
-  {
-    icon: AliancasIcon,
-    title: 'Alianças Personalizadas',
-    description:
-      'Nossa principal especialidade é a criação de alianças exclusivas em ouro 16k, 18k e prata, cuidadosamente elaboradas para simbolizar compromissos duradouros.',
-  },
-  {
-    icon: BanhoOuroIcon,
-    title: 'Banho de Ouro Profissional',
-    description:
-      'Oferecemos serviço especializado de banho de ouro, permitindo renovar peças antigas ou transformar itens especiais com acabamento dourado de alta qualidade.',
-  },
-  {
-    icon: ConsertosIcon,
-    title: 'Consertos Especializados',
-    description:
-      'Nossa expertise técnica nos permite realizar consertos complexos em joias, relógios e óculos, devolvendo vida e funcionalidade a peças de valor.',
-  },
-  {
-    icon: JoiasSobMedidaIcon,
-    title: 'Joias Sob Medida',
-    description:
-      'Criamos joias personalizadas que contam histórias e eternizam momentos, trabalhando em estreita colaboração com nossos clientes do início ao fim.',
-  },
-  {
-    icon: OculosIcon,
-    title: 'Lentes de Óculos',
-    description:
-      'Oferecemos lentes de alta qualidade, com foco em conforto visual, durabilidade e estilo. Trabalhamos com diversos tipos de lentes para atender suas necessidades.',
-  },
-  {
-    icon: QualidadeIcon,
-    title: 'Compromisso com a Qualidade',
-    description:
-      'Na Cícero Joias, qualidade não é apenas um objetivo, mas um compromisso diário. Cada peça passa por rigorosos controles que garantem perfeição.',
-  },
 ];
 
 const storyColumns = [storyParagraphs.slice(0, 2), storyParagraphs.slice(2)];
@@ -199,34 +152,6 @@ export default function SobrePage() {
                 </div>
               ))}
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-[#0b1f18] py-24 text-marfim">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="font-playfair text-3xl sm:text-4xl font-semibold">
-              Como <span className="text-ouro">podemos ajudar</span>
-            </h2>
-            <p className="mt-4 text-sm text-marfim/70">
-              A mesma dedicação se estende do conserto ao projeto sob medida. Conheça os serviços que evoluíram conosco ao longo das décadas.
-            </p>
-          </div>
-
-          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {specialties.map((specialty) => (
-              <div
-                key={specialty.title}
-                className="group flex h-full flex-col rounded-3xl border border-marfim/10 bg-white/10 p-8 shadow-[0_25px_60px_-40px_rgba(0,0,0,0.45)] backdrop-blur-sm transition-transform duration-300 hover:-translate-y-1"
-              >
-                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-ouro/10 text-ouro">
-                  <specialty.icon className="h-7 w-7" />
-                </div>
-                <h3 className="text-lg font-semibold text-marfim mb-3">{specialty.title}</h3>
-                <p className="text-sm text-marfim/70 leading-relaxed">{specialty.description}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>

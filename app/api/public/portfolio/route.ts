@@ -4,7 +4,18 @@ import prisma from '@/lib/prisma';
 export async function GET(request: Request) {
   try {
     // Verificar conexão com o banco primeiro
-    await prisma.$connect();
+    try {
+      await prisma.$connect();
+    } catch (connectError) {
+      console.error('Database connection failed:', connectError);
+      return NextResponse.json(
+        {
+          error: 'Não foi possível conectar ao banco de dados. Por favor, verifique se o serviço está disponível.',
+          details: connectError instanceof Error ? connectError.message : 'Unknown connection error'
+        },
+        { status: 503 }, // Service Unavailable
+      );
+    }
 
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category');
@@ -42,11 +53,11 @@ export async function GET(request: Request) {
         },
       }).catch((error) => {
         console.error('Error querying portfolioItem:', error);
-        return [];
+        throw new Error(`Erro ao buscar itens do portfólio: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
       }),
       prisma.portfolioItem.count({ where }).catch((error) => {
         console.error('Error counting portfolioItem:', error);
-        return 0;
+        throw new Error(`Erro ao contar itens do portfólio: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
       }),
     ]);
 
@@ -74,17 +85,39 @@ export async function GET(request: Request) {
       console.error('Error stack:', error.stack);
     }
 
-    // Verificar se é erro de conexão do banco
-    if (error instanceof Error && error.message.includes('connect')) {
+    // Verificar tipos específicos de erro
+    const errorMessage = error instanceof Error ? error.message.toLowerCase() : '';
+
+    if (errorMessage.includes('connect') || errorMessage.includes('econnrefused') || errorMessage.includes('enotfound')) {
       console.error('Database connection error detected');
       return NextResponse.json(
-        { error: 'Erro de conexão com o banco de dados' },
+        {
+          error: 'Não foi possível conectar ao banco de dados. O serviço pode estar temporariamente indisponível.',
+          hint: 'Se você está usando Supabase, verifique se o projeto não foi pausado por inatividade.'
+        },
+        { status: 503 },
+      );
+    }
+
+    if (errorMessage.includes('timeout')) {
+      return NextResponse.json(
+        { error: 'A conexão com o banco de dados expirou. Tente novamente.' },
+        { status: 504 },
+      );
+    }
+
+    if (errorMessage.includes('does not exist') || errorMessage.includes('relation')) {
+      return NextResponse.json(
+        { error: 'Erro de estrutura do banco de dados. Execute as migrations do Prisma.' },
         { status: 500 },
       );
     }
 
     return NextResponse.json(
-      { error: 'Erro interno do servidor' },
+      {
+        error: 'Erro interno do servidor ao buscar portfólio',
+        details: error instanceof Error ? error.message : 'Erro desconhecido'
+      },
       { status: 500 },
     );
   }

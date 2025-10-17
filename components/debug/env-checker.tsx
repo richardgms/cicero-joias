@@ -7,8 +7,6 @@ export function EnvChecker() {
     publishableKey: '',
     signInUrl: '',
     signUpUrl: '',
-    afterSignInUrl: '',
-    afterSignUpUrl: '',
   });
 
   useEffect(() => {
@@ -16,8 +14,6 @@ export function EnvChecker() {
       publishableKey: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'não definido',
       signInUrl: process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL || 'não definido',
       signUpUrl: process.env.NEXT_PUBLIC_CLERK_SIGN_UP_URL || 'não definido',
-      afterSignInUrl: process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL || 'não definido',
-      afterSignUpUrl: process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL || 'não definido',
     });
   }, []);
 
@@ -37,13 +33,9 @@ export function EnvChecker() {
           <span className="font-semibold">NEXT_PUBLIC_CLERK_SIGN_UP_URL: </span>
           <span>{envVars.signUpUrl}</span>
         </div>
-        <div>
-          <span className="font-semibold">NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL: </span>
-          <span>{envVars.afterSignInUrl}</span>
-        </div>
-        <div>
-          <span className="font-semibold">NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL: </span>
-          <span>{envVars.afterSignUpUrl}</span>
+        <div className="mt-2 p-2 bg-blue-50 rounded text-sm text-blue-800">
+          <span className="font-semibold">Nota: </span>
+          <span>As variáveis AFTER_SIGN_IN_URL e AFTER_SIGN_UP_URL foram descontinuadas. Use o prop `fallbackRedirectUrl` diretamente nos componentes.</span>
         </div>
       </div>
     </div>

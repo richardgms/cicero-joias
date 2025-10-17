@@ -1,6 +1,3 @@
-// Schema Prisma Otimizado para Vibe Coding - Cícero Joias
-// Focado em MVP e desenvolvimento ágil
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,8 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ===== USUÁRIOS E AUTENTICAÇÃO (SIMPLIFICADO) =====
-
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
@@ -19,56 +14,32 @@ model User {
   role      UserRole @default(CLIENT)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  // Relacionamento direto com cliente
-  client Client?
+  client    Client?
 
   @@map("users")
 }
 
-enum UserRole {
-  ADMIN
-  CLIENT
-}
-
-// ===== CLIENTES (CORE) =====
-
 model Client {
-  id          String   @id @default(cuid())
-  name        String
-  email       String   @unique
-  phone       String?
-  whatsapp    String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  // Fidelidade simplificada
-  loyaltyPoints Int         @default(0)
-  loyaltyLevel  LoyaltyLevel @default(CLIENT)
-
-  // Relacionamentos essenciais
-  clerkUserId  String? @unique @map("clerk_user_id")
-  userId       String? @unique // Manter temporariamente para migration
-  user         User?   @relation(fields: [userId], references: [id])
-
-  quoteRequests QuoteRequest[]
-  orders        Order[]
-
-  // Novos relacionamentos
+  id                  String               @id @default(cuid())
+  name                String
+  email               String               @unique
+  phone               String?
+  whatsapp            String?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  loyaltyPoints       Int                  @default(0)
+  loyaltyLevel        LoyaltyLevel         @default(CLIENT)
+  clerkUserId         String?              @unique @map("clerk_user_id")
+  userId              String?              @unique
+  user                User?                @relation(fields: [userId], references: [id])
   coupons             Coupon[]
   favorites           Favorite[]
   loyaltyTransactions LoyaltyTransaction[]
+  orders              Order[]
+  quoteRequests       QuoteRequest[]
 
   @@map("clients")
 }
-
-enum LoyaltyLevel {
-  CLIENT
-  SPECIAL
-  VIP
-}
-
-// ===== ORÇAMENTOS (CORE - MVP) =====
 
 model QuoteRequest {
   id          String      @id @default(cuid())
@@ -81,16 +52,237 @@ model QuoteRequest {
   status      QuoteStatus @default(NEW)
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
-  
-  // Relacionamento simplificado
-  clientId String?
-  client   Client? @relation(fields: [clientId], references: [id])
-  
-  // Link direto para pedido (sem orçamento formal no MVP)
-  orderId String? @unique
-  order   Order?  @relation(fields: [orderId], references: [id])
+  clientId    String?
+  orderId     String?     @unique
+  client      Client?     @relation(fields: [clientId], references: [id])
+  order       Order?      @relation(fields: [orderId], references: [id])
 
   @@map("quote_requests")
+}
+
+model Order {
+  id            String               @id @default(cuid())
+  orderNumber   String               @unique @default(cuid())
+  status        OrderStatus          @default(PENDING)
+  totalValue    Decimal              @db.Decimal(10, 2)
+  category      OrderCategory
+  description   String?
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  clientId      String
+  attachments   OrderAttachment[]
+  statusHistory OrderStatusHistory[]
+  client        Client               @relation(fields: [clientId], references: [id])
+  quoteRequest  QuoteRequest?
+
+  @@map("orders")
+}
+
+model OrderStatusHistory {
+  id          String      @id @default(cuid())
+  status      OrderStatus
+  description String?
+  createdAt   DateTime    @default(now())
+  orderId     String
+  order       Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("order_status_history")
+}
+
+model OrderAttachment {
+  id          String         @id @default(cuid())
+  fileName    String
+  filePath    String
+  fileType    AttachmentType
+  description String?
+  createdAt   DateTime       @default(now())
+  orderId     String
+  order       Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("order_attachments")
+}
+
+model Product {
+  id               String          @id @default(cuid())
+  name             String
+  description      String?
+  price            Decimal?        @db.Decimal(10, 2)
+  category         ProductCategory @default(JEWELRY)
+  isActive         Boolean         @default(true)
+  isReadyDelivery  Boolean         @default(false)
+  mainImage        String?
+  images           String[]
+  stock            Int             @default(0)
+  weight           Decimal?        @db.Decimal(8, 2)
+  material         String?
+  size             String?
+  code             String?         @unique
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  deliveryTime     String?
+  promotionalPrice Decimal?        @db.Decimal(10, 2)
+  seoTitle         String?
+  seoDescription   String?
+  tags             String[]
+  portfolioItems   PortfolioItem[]
+
+  @@map("products")
+}
+
+model PortfolioItem {
+  id                  String            @id @default(cuid())
+  title               String
+  description         String?
+  category            PortfolioCategory
+  mainImage           String
+  images              String[]
+  isActive            Boolean           @default(true)
+  order               Int               @default(0)
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  detailedDescription String?
+  specifications      Json?
+  seoTitle            String?
+  seoDescription      String?
+  keywords            String[]
+  status              String            @default("DRAFT")
+  relatedProjects     String[]
+  customCategory      String?
+  productId           String?
+  favorites           Favorite[]
+  product             Product?          @relation(fields: [productId], references: [id])
+
+  @@map("portfolio_items")
+}
+
+model SiteContent {
+  id        String   @id @default(cuid())
+  page      SitePage
+  section   String
+  title     String?
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([page, section])
+  @@map("site_content")
+}
+
+model SystemConfig {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  description String?
+  updatedAt   DateTime @updatedAt
+
+  @@map("system_config")
+}
+
+model ActivityLog {
+  id          String   @id @default(cuid())
+  action      String
+  entity      String
+  entityId    String
+  description String?
+  userId      String?
+  createdAt   DateTime @default(now())
+
+  @@map("activity_logs")
+}
+
+model PageVisibility {
+  id             String              @id @default(cuid())
+  slug           String              @unique
+  title          String
+  isVisible      Boolean             @default(true)
+  description    String?
+  priority       Int                 @default(0)
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  visibilityLogs PageVisibilityLog[]
+
+  @@map("page_visibility")
+}
+
+model PageVisibilityLog {
+  id             String         @id @default(cuid())
+  pageSlug       String
+  previousStatus Boolean
+  newStatus      Boolean
+  adminUserId    String?
+  adminEmail     String?
+  changeReason   String?
+  createdAt      DateTime       @default(now())
+  pageVisibility PageVisibility @relation(fields: [pageSlug], references: [slug], onDelete: Cascade)
+
+  @@map("page_visibility_logs")
+}
+
+model Coupon {
+  id          String     @id @default(cuid())
+  code        String     @unique
+  type        CouponType
+  value       Decimal    @db.Decimal(10, 2)
+  percentage  Int?
+  maxDiscount Decimal?   @db.Decimal(10, 2)
+  isActive    Boolean    @default(true)
+  isUsed      Boolean    @default(false)
+  expiresAt   DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  usedAt      DateTime?
+  clientId    String?
+  orderId     String?
+  client      Client?    @relation(fields: [clientId], references: [id])
+
+  @@map("coupons")
+}
+
+model Favorite {
+  id              String        @id @default(cuid())
+  clientId        String
+  portfolioItemId String
+  createdAt       DateTime      @default(now())
+  client          Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  portfolioItem   PortfolioItem @relation(fields: [portfolioItemId], references: [id], onDelete: Cascade)
+
+  @@unique([clientId, portfolioItemId])
+  @@map("favorites")
+}
+
+model LoyaltyTransaction {
+  id          String      @id @default(cuid())
+  clientId    String
+  type        LoyaltyType
+  points      Int
+  orderId     String?
+  couponId    String?
+  description String?
+  createdAt   DateTime    @default(now())
+  client      Client      @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@map("loyalty_transactions")
+}
+
+model site_settings {
+  id          String   @id
+  key         String   @unique
+  value       String
+  type        String   @default("TEXT")
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+}
+
+enum UserRole {
+  ADMIN
+  CLIENT
+}
+
+enum LoyaltyLevel {
+  CLIENT
+  SPECIAL
+  VIP
 }
 
 enum QuoteType {
@@ -111,29 +303,6 @@ enum QuoteStatus {
   CANCELLED
 }
 
-// ===== PEDIDOS (CORE) =====
-
-model Order {
-  id          String      @id @default(cuid())
-  orderNumber String      @unique @default(cuid())
-  status      OrderStatus @default(PENDING)
-  totalValue  Decimal     @db.Decimal(10, 2)
-  category    OrderCategory
-  description String?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  
-  // Relacionamentos essenciais
-  clientId String
-  client   Client @relation(fields: [clientId], references: [id])
-  
-  quoteRequest QuoteRequest?
-  statusHistory OrderStatusHistory[]
-  attachments   OrderAttachment[]
-
-  @@map("orders")
-}
-
 enum OrderStatus {
   PENDING
   DESIGN_APPROVED
@@ -152,116 +321,20 @@ enum OrderCategory {
   WEDDING_RINGS
 }
 
-// ===== HISTÓRICO DE STATUS (SIMPLIFICADO) =====
-
-model OrderStatusHistory {
-  id          String      @id @default(cuid())
-  status      OrderStatus
-  description String?
-  createdAt   DateTime    @default(now())
-  
-  orderId String
-  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
-
-  @@map("order_status_history")
-}
-
-// ===== ANEXOS (SIMPLIFICADO) =====
-
-model OrderAttachment {
-  id          String          @id @default(cuid())
-  fileName    String
-  filePath    String
-  fileType    AttachmentType
-  description String?
-  createdAt   DateTime        @default(now())
-  
-  orderId String
-  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
-
-  @@map("order_attachments")
-}
-
 enum AttachmentType {
   IMAGE
   VIDEO
   DOCUMENT
 }
 
-// ===== PRODUTOS (PRONTA ENTREGA) =====
-
-model Product {
-  id              String         @id @default(cuid())
-  name            String
-  description     String?
-  price           Decimal?       @db.Decimal(10, 2)
-  category        ProductCategory @default(JEWELRY)
-  isActive        Boolean        @default(true)
-  isReadyDelivery Boolean        @default(false)
-  mainImage       String?        // URL da imagem principal
-  images          String[]       // Array de URLs das imagens
-  stock           Int            @default(0)
-  weight          Decimal?       @db.Decimal(8, 2) // em gramas
-  material        String?        // ouro, prata, etc.
-  size           String?        // tamanho/medida
-  code           String?        @unique // código do produto
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-  
-  // Novos campos adicionados na etapa 2
-  deliveryTime        String?    // Tempo estimado de entrega (ex: "24h", "3 dias")
-  promotionalPrice    Decimal?   @db.Decimal(10, 2) // Preço promocional, se aplicável
-  seoTitle            String?    // Título otimizado para SEO
-  seoDescription      String?    // Descrição otimizada para SEO
-  tags                String[]   // Array de tags para categorização
-  
-  // Relacionamento com portfólio
-  portfolioItems PortfolioItem[]
-
-  @@map("products")
-}
-
 enum ProductCategory {
-  JEWELRY       // Joias em geral
-  RINGS         // Anéis
-  NECKLACES     // Colares
-  EARRINGS      // Brincos
-  BRACELETS     // Pulseiras
-  WATCHES       // Relógios
-  ACCESSORIES   // Acessórios
-}
-
-// ===== PORTFÓLIO (EXPANDIDO) =====
-
-model PortfolioItem {
-  id          String        @id @default(cuid())
-  title       String
-  description String?
-  category    PortfolioCategory
-  mainImage   String        // URL da imagem principal
-  images      String[]      // Array de URLs das imagens
-  isActive    Boolean       @default(true)
-  order       Int           @default(0)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  
-  // Novos campos adicionados na etapa 1
-  detailedDescription String?    // Descrição detalhada do projeto
-  specifications      Json?      // Especificações técnicas em formato JSON
-  seoTitle            String?    // Título otimizado para SEO
-  seoDescription      String?    // Descrição otimizada para SEO 
-  keywords            String[]   // Palavras-chave para SEO
-  status              String     @default("DRAFT") // Valores: DRAFT, PUBLISHED, FEATURED
-  relatedProjects     String[]   // Array de IDs de projetos relacionados
-  customCategory      String?    // Categoria personalizada definida pelo admin
-  
-  productId String?
-  product   Product? @relation(fields: [productId], references: [id])
-  
-  // Relacionamento com favoritos
-  favorites Favorite[]
-
-  @@map("portfolio_items")
+  JEWELRY
+  RINGS
+  NECKLACES
+  EARRINGS
+  BRACELETS
+  WATCHES
+  ACCESSORIES
 }
 
 enum PortfolioCategory {
@@ -272,21 +345,6 @@ enum PortfolioCategory {
   GRADUATION_RINGS
 }
 
-// ===== CONTEÚDO DO SITE (SIMPLIFICADO) =====
-
-model SiteContent {
-  id        String      @id @default(cuid())
-  page      SitePage
-  section   String
-  title     String?
-  content   String
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-
-  @@unique([page, section])
-  @@map("site_content")
-}
-
 enum SitePage {
   HOME
   ABOUT
@@ -294,132 +352,14 @@ enum SitePage {
   CONTACT
 }
 
-// ===== CONFIGURAÇÕES DO SISTEMA =====
-
-model SystemConfig {
-  id          String   @id @default(cuid())
-  key         String   @unique
-  value       String
-  description String?
-  updatedAt   DateTime @updatedAt
-
-  @@map("system_config")
-}
-
-// ===== LOGS ESSENCIAIS =====
-
-model ActivityLog {
-  id          String   @id @default(cuid())
-  action      String
-  entity      String
-  entityId    String
-  description String?
-  userId      String?
-  createdAt   DateTime @default(now())
-
-  @@map("activity_logs")
-}
-
-
-// ===== CONTROLE DE VISIBILIDADE DE PÁGINAS =====
-
-model PageVisibility {
-  id          String   @id @default(cuid())
-  slug        String   @unique // ex: "pronta-entrega", "portfolio", "sobre", "orcamento"
-  title       String             // Nome amigável da página
-  isVisible   Boolean  @default(true)
-  description String?            // Descrição da página para o admin
-  priority    Int      @default(0) // Ordem de exibição no admin
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
-  // Logs de alteração
-  visibilityLogs PageVisibilityLog[]
-
-  @@map("page_visibility")
-}
-
-model PageVisibilityLog {
-  id              String         @id @default(cuid())
-  pageSlug        String
-  previousStatus  Boolean
-  newStatus       Boolean
-  adminUserId     String?        // ID do admin que fez a alteração
-  adminEmail      String?        // Email do admin para auditoria
-  changeReason    String?        // Motivo da alteração (opcional)
-  createdAt       DateTime       @default(now())
-  
-  pageVisibility  PageVisibility @relation(fields: [pageSlug], references: [slug], onDelete: Cascade)
-
-  @@map("page_visibility_logs")
-}
-
-// ===== SISTEMA DE CUPONS =====
-
-model Coupon {
-  id          String      @id @default(cuid())
-  code        String      @unique
-  type        CouponType
-  value       Decimal     @db.Decimal(10, 2) // Valor em reais
-  percentage  Int?        // Percentual de desconto (1-100)
-  maxDiscount Decimal?    @db.Decimal(10, 2) // Desconto máximo em reais
-  isActive    Boolean     @default(true)
-  isUsed      Boolean     @default(false)
-  expiresAt   DateTime?   // Data de expiração (opcional)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  usedAt      DateTime?   // Data que foi usado
-  
-  // Relacionamentos
-  clientId    String?
-  client      Client?     @relation(fields: [clientId], references: [id])
-  orderId     String?     // Pedido onde foi usado
-  
-  @@map("coupons")
-}
-
 enum CouponType {
-  NEW_USER       // Cupom de R$10 para novos usuários
-  LOYALTY        // Cupom de fidelidade (100% até R$40)
-  PROMOTIONAL    // Cupons promocionais
-}
-
-// ===== SISTEMA DE FAVORITOS =====
-
-model Favorite {
-  id              String    @id @default(cuid())
-  clientId        String
-  portfolioItemId String
-  createdAt       DateTime  @default(now())
-  
-  // Relacionamentos
-  client          Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  portfolioItem   PortfolioItem @relation(fields: [portfolioItemId], references: [id], onDelete: Cascade)
-  
-  @@unique([clientId, portfolioItemId])
-  @@map("favorites")
-}
-
-// ===== PROGRAMA DE FIDELIDADE =====
-
-model LoyaltyTransaction {
-  id            String      @id @default(cuid())
-  clientId      String
-  type          LoyaltyType
-  points        Int         // Pontos ganhos ou perdidos
-  orderId       String?     // Pedido relacionado
-  couponId      String?     // Cupom relacionado
-  description   String?     // Descrição da transação
-  createdAt     DateTime    @default(now())
-  
-  // Relacionamentos
-  client        Client      @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  
-  @@map("loyalty_transactions")
+  NEW_USER
+  LOYALTY
+  PROMOTIONAL
 }
 
 enum LoyaltyType {
-  EARNED        // Pontos ganhos
-  REDEEMED      // Pontos resgatados
-  EXPIRED       // Pontos expirados
+  EARNED
+  REDEEMED
+  EXPIRED
 }

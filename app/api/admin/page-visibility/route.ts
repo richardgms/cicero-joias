@@ -66,6 +66,17 @@ const DEFAULT_PAGES = [
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     visibilityLogs: []
+  },
+  {
+    id: 'default-6',
+    slug: 'minha-area',
+    title: 'Minha Área',
+    description: 'Área pessoal do usuário com cupons, favoritos e fidelidade',
+    isVisible: true,
+    priority: 6,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    visibilityLogs: []
   }
 ];
 
