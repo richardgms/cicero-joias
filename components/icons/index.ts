@@ -4,5 +4,6 @@ export * from './banho-ouro-icon';
 export * from './consertos-icon';
 export * from './joias-sob-medida-icon';
 export * from './oculos-icon';
+export * from './limpeza-icon';
 export * from './qualidade-icon';
 export * from './whatsapp-icon'; 

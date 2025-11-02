@@ -1,10 +1,10 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { AnimatedSection } from '@/components/ui/animated-section';
-import { processSteps, whatsappLinks } from './home-data';
+import { processSteps, whatsappLinks } from './data';
 
 export function ProcessSection() {
   return (
@@ -13,13 +13,13 @@ export function ProcessSection() {
 
       <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-16 px-4 sm:px-6 lg:px-8">
         <AnimatedSection className="space-y-6 text-center" delay={0.05}>
-          <span className="inline-flex items-center justify-center rounded-full border border-ouro/40 bg-white/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-ouro/90">
+          <span className="font-jost inline-flex items-center justify-center rounded-full border border-ouro/40 bg-white/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-ouro/90">
             Como Trabalhamos
           </span>
-          <h2 className="font-playfair text-3xl sm:text-4xl lg:text-5xl font-semibold">
+          <h2 className="font-philosopher text-3xl sm:text-4xl lg:text-5xl font-bold">
             Do primeiro contato à entrega das alianças
           </h2>
-          <p className="mx-auto max-w-3xl text-base sm:text-lg text-marfim/80">
+          <p className="font-montserrat mx-auto max-w-3xl text-base sm:text-lg text-marfim/80">
             Um processo pensado para sua tranquilidade: desde o primeiro contato até a entrega, cada etapa é acompanhada de perto, garantindo qualidade e beleza às suas joias.
           </p>
         </AnimatedSection>
@@ -34,14 +34,25 @@ export function ProcessSection() {
               {index < processSteps.length - 1 && (
                 <span className="absolute right-[-40px] top-1/2 hidden h-[2px] w-10 -translate-y-1/2 bg-gradient-to-r from-ouro/60 to-transparent lg:block" />
               )}
-              <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.28em] text-ouro/80">
+              <span className="font-jost inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.28em] text-ouro/80">
                 {step.time}
               </span>
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-ouro/15 text-ouro">
                 <step.icon className="h-6 w-6" />
               </div>
-              <h3 className="font-semibold text-lg text-marfim">{step.title}</h3>
-              <p className="text-sm leading-relaxed text-marfim/75">{step.description}</p>
+              <h3 className="font-philosopher font-semibold text-lg text-marfim">{step.title}</h3>
+              <p className="font-montserrat text-sm leading-relaxed text-marfim/75">{step.description}</p>
+              {step.cta && (
+                <a
+                  href={step.cta.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-ouro/90 transition-colors hover:text-ouro"
+                >
+                  {step.cta.label}
+                  <ArrowRight className="h-3 w-3" />
+                </a>
+              )}
             </motion.article>
           ))}
         </AnimatedSection>
@@ -60,20 +71,31 @@ export function ProcessSection() {
                 <step.icon className="h-6 w-6" />
               </div>
               <div className="space-y-2">
-                <span className="text-xs font-semibold uppercase tracking-[0.28em] text-ouro/80">{step.time}</span>
-                <h3 className="font-semibold text-base text-marfim">{step.title}</h3>
-                <p className="text-sm leading-relaxed text-marfim/75">{step.description}</p>
+                <span className="font-jost text-xs font-semibold uppercase tracking-[0.28em] text-ouro/80">{step.time}</span>
+                <h3 className="font-philosopher font-semibold text-base text-marfim">{step.title}</h3>
+                <p className="font-montserrat text-sm leading-relaxed text-marfim/75">{step.description}</p>
+                {step.cta && (
+                  <a
+                    href={step.cta.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs font-medium text-ouro/90 transition-colors hover:text-ouro"
+                  >
+                    {step.cta.label}
+                    <ArrowRight className="h-3 w-3" />
+                  </a>
+                )}
               </div>
             </motion.article>
           ))}
         </AnimatedSection>
 
         <AnimatedSection className="flex flex-col items-center gap-4 text-center" delay={0.2}>
-          <p className="max-w-2xl text-sm sm:text-base text-marfim/75">
+          <p className="font-montserrat max-w-2xl text-sm sm:text-base text-marfim/75">
             Pronto para dar o proximo passo? Podemos combinar a visita na joalheria ou seguir à distancia com o mesmo cuidado artesanal.
           </p>
           <motion.a
-            href={whatsappLinks.primary}
+            href={whatsappLinks}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-3 rounded-full bg-ouro px-6 py-3 text-sm font-semibold uppercase tracking-[0.26em] text-esmeralda shadow-[0_25px_45px_-20px_rgba(207,154,36,0.45)]"
@@ -90,10 +112,3 @@ export function ProcessSection() {
     </section>
   );
 }
-
-
-
-
-
-
-

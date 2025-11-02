@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Plus, Search, Edit, Trash2, Eye, MoreHorizontal, Package } from 'lucide-react';
@@ -113,23 +113,31 @@ export default function AdminProductsPage() {
     }
   };
 
-  const filteredProducts = products.filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         product.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         product.code?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = categoryFilter === 'all' || product.category === categoryFilter;
-    const matchesStatus = statusFilter === 'all' || 
-                         (statusFilter === 'active' && product.isActive) ||
-                         (statusFilter === 'inactive' && !product.isActive);
-    const matchesStock = stockFilter === 'all' ||
-                        (stockFilter === 'in_stock' && product.stock > 0) ||
-                        (stockFilter === 'out_of_stock' && product.stock === 0);
-    
-    return matchesSearch && matchesCategory && matchesStatus && matchesStock;
-  });
+  // Memoize filtered products to avoid recalculating on every render
+  const filteredProducts = useMemo(() => {
+    return products.filter(product => {
+      const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           product.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           product.code?.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = categoryFilter === 'all' || product.category === categoryFilter;
+      const matchesStatus = statusFilter === 'all' ||
+                           (statusFilter === 'active' && product.isActive) ||
+                           (statusFilter === 'inactive' && !product.isActive);
+      const matchesStock = stockFilter === 'all' ||
+                          (stockFilter === 'in_stock' && product.stock > 0) ||
+                          (stockFilter === 'out_of_stock' && product.stock === 0);
 
-  const totalValue = products.reduce((sum, product) => sum + (product.price || 0) * product.stock, 0);
-  const lowStockProducts = products.filter(product => product.stock > 0 && product.stock <= 5);
+      return matchesSearch && matchesCategory && matchesStatus && matchesStock;
+    });
+  }, [products, searchTerm, categoryFilter, statusFilter, stockFilter]);
+
+  // Memoize expensive calculations for stats
+  const stats = useMemo(() => ({
+    totalValue: products.reduce((sum, product) => sum + (product.price || 0) * product.stock, 0),
+    lowStockProducts: products.filter(product => product.stock > 0 && product.stock <= 5).length,
+    totalActive: products.filter(p => p.isActive).length,
+    totalStock: products.reduce((sum, p) => sum + p.stock, 0),
+  }), [products]);
 
   if (loading) {
     return (
@@ -160,7 +168,7 @@ export default function AdminProductsPage() {
         </Button>
       </div>
 
-      {/* Stats */}
+      {/* Stats - Memoized for performance */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <Card>
           <CardContent className="pt-6">
@@ -170,32 +178,26 @@ export default function AdminProductsPage() {
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <div className="text-2xl font-bold">
-              {products.filter(p => p.isActive).length}
-            </div>
+            <div className="text-2xl font-bold">{stats.totalActive}</div>
             <p className="text-xs text-muted-foreground">Ativos</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <div className="text-2xl font-bold">
-              {products.reduce((sum, p) => sum + p.stock, 0)}
-            </div>
+            <div className="text-2xl font-bold">{stats.totalStock}</div>
             <p className="text-xs text-muted-foreground">Itens em Estoque</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <div className="text-2xl font-bold text-red-600">
-              {lowStockProducts.length}
-            </div>
+            <div className="text-2xl font-bold text-red-600">{stats.lowStockProducts}</div>
             <p className="text-xs text-muted-foreground">Estoque Baixo</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold">
-              R$ {totalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+              R$ {stats.totalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
             </div>
             <p className="text-xs text-muted-foreground">Valor Total</p>
           </CardContent>

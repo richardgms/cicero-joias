@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Plus, Search, Edit, Trash2, Eye, MoreHorizontal, AlertCircle, RefreshCw } from 'lucide-react';
@@ -60,6 +60,20 @@ export default function AdminPortfolioPage() {
 
   const deletePortfolioMutation = useDeletePortfolioItem();
 
+  const portfolioStats = useMemo(() => {
+    const total = portfolioItems.length;
+    const totalActive = portfolioItems.filter(item => item.isActive).length;
+    const totalInactive = total - totalActive;
+    const totalCategories = new Set(portfolioItems.map(item => item.category)).size;
+
+    return {
+      total,
+      totalActive,
+      totalInactive,
+      totalCategories,
+    };
+  }, [portfolioItems]);
+
 
   const handleDelete = async (id: string, title: string) => {
     if (!confirm(`Tem certeza que deseja deletar "${title}"?`)) {
@@ -92,16 +106,19 @@ export default function AdminPortfolioPage() {
     });
   };
 
-  const filteredItems = portfolioItems.filter(item => {
-    const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         item.description?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = categoryFilter === 'all' || item.category === categoryFilter;
-    const matchesStatus = statusFilter === 'all' || 
-                         (statusFilter === 'active' && item.isActive) ||
-                         (statusFilter === 'inactive' && !item.isActive);
-    
-    return matchesSearch && matchesCategory && matchesStatus;
-  });
+  // Memoize filtered items to avoid recalculating on every render
+  const filteredItems = useMemo(() => {
+    return portfolioItems.filter(item => {
+      const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           item.description?.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = categoryFilter === 'all' || item.category === categoryFilter;
+      const matchesStatus = statusFilter === 'all' ||
+                           (statusFilter === 'active' && item.isActive) ||
+                           (statusFilter === 'inactive' && !item.isActive);
+
+      return matchesSearch && matchesCategory && matchesStatus;
+    });
+  }, [portfolioItems, searchTerm, categoryFilter, statusFilter]);
 
   // Estados de loading
   if (isLoading) {
@@ -182,34 +199,28 @@ export default function AdminPortfolioPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
         <Card>
           <CardContent className="pt-6">
-            <div className="text-2xl font-bold">{portfolioItems.length}</div>
+            <div className="text-2xl font-bold">{portfolioStats.total}</div>
             <p className="text-xs text-muted-foreground">Total de Projetos</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <div className="text-2xl font-bold">
-              {portfolioItems.filter(item => item.isActive).length}
-            </div>
+            <div className="text-2xl font-bold">{portfolioStats.totalActive}</div>
             <p className="text-xs text-muted-foreground">Ativos</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <div className="text-2xl font-bold">
-              {portfolioItems.filter(item => !item.isActive).length}
-            </div>
+            <div className="text-2xl font-bold">{portfolioStats.totalInactive}</div>
             <p className="text-xs text-muted-foreground">Inativos</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
-            <div className="text-2xl font-bold">
-              {new Set(portfolioItems.map(item => item.category)).size}
-            </div>
+            <div className="text-2xl font-bold">{portfolioStats.totalCategories}</div>
             <p className="text-xs text-muted-foreground">Categorias</p>
           </CardContent>
         </Card>
@@ -266,6 +277,7 @@ export default function AdminPortfolioPage() {
                 <TableHead>Título</TableHead>
                 <TableHead>Categoria</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>Destaque</TableHead>
                 <TableHead>Ordem</TableHead>
                 <TableHead>Data</TableHead>
                 <TableHead className="w-16">Ações</TableHead>
@@ -303,6 +315,15 @@ export default function AdminPortfolioPage() {
                     <Badge variant={item.isActive ? "default" : "secondary"}>
                       {item.isActive ? "Ativo" : "Inativo"}
                     </Badge>
+                  </TableCell>
+                  <TableCell>
+                    {item.isFeatured ? (
+                      <Badge className="bg-amber-100 text-amber-900 border-amber-300">
+                        ⭐ Destaque
+                      </Badge>
+                    ) : (
+                      <span className="text-gray-400 text-xs">-</span>
+                    )}
                   </TableCell>
                   <TableCell>{item.order}</TableCell>
                   <TableCell>

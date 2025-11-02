@@ -19,6 +19,7 @@ export async function GET(request: Request) {
 
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category');
+    const featured = searchParams.get('featured');
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '12');
     const skip = (page - 1) * limit;
@@ -29,6 +30,10 @@ export async function GET(request: Request) {
 
     if (category && category !== 'todos') {
       where.category = category.toUpperCase();
+    }
+
+    if (featured === 'true') {
+      where.isFeatured = true;
     }
 
     // Verificar se a tabela existe e executar query

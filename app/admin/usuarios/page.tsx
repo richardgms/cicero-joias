@@ -177,7 +177,7 @@ export default function AdminUsersPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-semibold text-esmeralda">{card.value}</div>
-                <p className="text-xs text-esmeralda/60">{card.highlight}</p>
+                <p className="text-xs text-esmeralda/80">{card.highlight}</p>
               </CardContent>
             </Card>
           ))}
@@ -255,7 +255,7 @@ export default function AdminUsersPage() {
                             <Mail className="mr-1 h-3 w-3" />
                             {user.email}
                           </div>
-                          <div className="text-xs text-esmeralda/60">Criado em {createdAt}</div>
+                          <div className="text-xs text-esmeralda/80">Criado em {createdAt}</div>
                         </TableCell>
 
                         <TableCell className="space-y-2">
@@ -292,7 +292,7 @@ export default function AdminUsersPage() {
                               </div>
                             </div>
                           ) : (
-                            <div className="text-xs text-esmeralda/60">
+                            <div className="text-xs text-esmeralda/80">
                               Sem perfil de cliente vinculado
                             </div>
                           )}

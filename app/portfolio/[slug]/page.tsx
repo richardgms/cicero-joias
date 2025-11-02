@@ -1246,7 +1246,7 @@ portfolioItem.description ||
 
 
 
-`Confira este projeto da Cicero Joias: ${portfolioItem.title}`,
+`Confira este projeto da Cícero Joias: ${portfolioItem.title}`,
 
 
 
@@ -3714,7 +3714,7 @@ className="space-y-6 lg:pl-8"
 
 
 
-<p className="text-sm text-esmeralda/60">
+<p className="text-sm text-esmeralda/80">
 
 
 
@@ -4162,7 +4162,7 @@ Solicitar Orçamento Similar
 
 
 
-<p className="text-sm text-esmeralda/60 text-center">
+<p className="text-sm text-esmeralda/80 text-center">
 
 
 

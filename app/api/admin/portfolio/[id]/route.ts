@@ -16,6 +16,7 @@ const updatePortfolioSchema = z.object({
   mainImage: z.string().optional(),
   images: z.array(z.string()).optional(),
   isActive: z.boolean().optional(),
+  isFeatured: z.boolean().optional(),
   status: z.string().regex(/^(DRAFT|PUBLISHED|FEATURED)$/, 'Status inválido').optional(),
   order: z.number().int('Ordem deve ser um número inteiro').min(0, 'Ordem não pode ser negativa').optional(),
   specifications: z.record(z.string()).optional().nullable(),
@@ -103,6 +104,19 @@ export async function PUT(
         specifications: validatedData.specifications as any,
       }),
     };
+
+    // Validar limite de itens destacados (se tentando marcar como featured)
+    if (updateData.isFeatured && !existingItem.isFeatured) {
+      const featuredCount = await prisma.portfolioItem.count({
+        where: { isFeatured: true },
+      });
+      if (featuredCount >= 3) {
+        return NextResponse.json(
+          { error: 'Limite de 3 destaques atingido. Desmarque um item para adicionar outro.' },
+          { status: 400 }
+        );
+      }
+    }
 
     // Atualizar item do portfólio
     const portfolioItem = await executeWithRetry(async () => {

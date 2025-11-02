@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 
-interface AnimatedSectionProps {
+interface AnimatedSectionProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   className?: string;
   delay?: number;
@@ -13,13 +13,14 @@ interface AnimatedSectionProps {
   stagger?: boolean;
 }
 
-export function AnimatedSection({ 
-  children, 
-  className = "", 
-  delay = 0, 
+export function AnimatedSection({
+  children,
+  className = "",
+  delay = 0,
   duration = 0.8,
   direction = 'up',
-  stagger = false 
+  stagger = false,
+  ...rest
 }: AnimatedSectionProps) {
   const [ref, inView] = useInView({
     triggerOnce: true,
@@ -82,6 +83,7 @@ export function AnimatedSection({
       {...(!stagger && {
         variants: containerVariants,
       })}
+      {...rest}
     >
       {stagger ? (
         React.Children.map(children, (child, index) => (

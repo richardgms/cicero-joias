@@ -1,19 +1,47 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Jost, Playfair_Display } from 'next/font/google';
+import { Inter, Playfair_Display, Jost, Philosopher, Montserrat } from 'next/font/google';
 import { Toaster } from '@/components/ui/toaster';
 import { Providers } from './providers';
 import { ConditionalLayout } from './conditional-layout';
 
-const jost = Jost({ 
-  subsets: ['latin'], 
-  variable: '--font-sans',
+// Fonte sans-serif para corpo de texto
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-inter',
   display: 'swap',
 });
 
-const playfair = Playfair_Display({ 
-  subsets: ['latin'], 
+// Fonte serifada para títulos (h1, h2, h3)
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  weight: ['400', '600', '700'],
   variable: '--font-playfair',
+  display: 'swap',
+});
+
+// Fonte Jost para Hero Section
+const jost = Jost({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-jost',
+  display: 'swap',
+});
+
+// Fonte Philosopher para títulos principais e textos importantes
+const philosopher = Philosopher({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-philosopher',
+  display: 'swap',
+});
+
+// Fonte Montserrat para parágrafos e textos menores
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-montserrat',
   display: 'swap',
 });
 
@@ -66,8 +94,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR" className={`${jost.variable} ${playfair.variable}`}>
-      <body suppressHydrationWarning className="min-h-screen bg-background font-sans antialiased">
+    <html lang="pt-BR" className={`${inter.variable} ${playfair.variable} ${jost.variable} ${philosopher.variable} ${montserrat.variable}`}>
+      <body suppressHydrationWarning className="min-h-screen bg-background font-inter antialiased">
         <Providers>
           <ConditionalLayout>{children}</ConditionalLayout>
           <Toaster />

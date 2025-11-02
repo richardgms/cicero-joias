@@ -3,7 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { AnimatedSection } from '@/components/ui/animated-section';
-import { authorityGroups } from './home-data';
+import { authorityGroups } from './data';
 
 export function AuthoritySection() {
 
@@ -14,13 +14,13 @@ export function AuthoritySection() {
 
       <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-14 px-4 sm:px-6 lg:px-8">
         <AnimatedSection className="space-y-6 text-center" delay={0.05}>
-          <span className="inline-flex items-center justify-center rounded-full border border-esmeralda/20 bg-esmeralda/5 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-esmeralda/80">
+          <span className="font-jost inline-flex items-center justify-center rounded-full border border-esmeralda/20 bg-esmeralda/5 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-esmeralda/80">
             Autoridade comprovada
           </span>
-          <h2 className="font-playfair text-3xl sm:text-4xl lg:text-5xl font-semibold text-esmeralda">
+          <h2 className="font-philosopher text-3xl sm:text-4xl lg:text-5xl font-bold text-esmeralda">
             Credibilidade construída ao longo do tempo
           </h2>
-          <p className="mx-auto max-w-3xl text-base sm:text-lg text-grafite/75">
+          <p className="font-montserrat mx-auto max-w-3xl text-base sm:text-lg text-grafite/75">
             Nossa reputação não é acaso: são décadas de compromisso, transparência e a aprovação de milhares de casais que escolheram confiar em nosso trabalho.
           </p>
         </AnimatedSection>
@@ -31,10 +31,10 @@ export function AuthoritySection() {
             <AnimatedSection key={key} delay={0.12 + groupIndex * 0.1}>
               {/* Group Header */}
               <div className="mb-6 text-center">
-                <h3 className="font-playfair text-2xl sm:text-3xl font-semibold text-esmeralda mb-2">
+                <h3 className="font-philosopher text-2xl sm:text-3xl font-bold text-esmeralda mb-2">
                   {group.title}
                 </h3>
-                <p className="text-sm text-grafite/60 uppercase tracking-[0.2em]">
+                <p className="font-jost text-sm text-grafite/60 uppercase tracking-[0.2em]">
                   {group.subtitle}
                 </p>
               </div>
@@ -61,13 +61,13 @@ export function AuthoritySection() {
                         {React.createElement(item.icon, { className: "h-4 w-4" })}
                       </span>
                       <div className="min-w-0 flex-1">
-                        <p className="font-playfair text-xl sm:text-2xl font-semibold text-esmeralda leading-tight">{item.value}</p>
-                        <p className="text-xs uppercase tracking-[0.2em] text-esmeralda/60 mt-0.5">{item.label}</p>
+                        <p className="font-philosopher text-xl sm:text-2xl font-bold text-esmeralda leading-tight">{item.value}</p>
+                        <p className="font-jost text-xs uppercase tracking-[0.2em] text-esmeralda/80 mt-0.5">{item.label}</p>
                       </div>
                     </div>
 
                     {/* Descrição */}
-                    <p className="text-sm leading-relaxed text-grafite/70">{item.description}</p>
+                    <p className="font-montserrat text-sm leading-relaxed text-grafite/70">{item.description}</p>
                   </motion.article>
                 ))}
               </div>

@@ -2,7 +2,7 @@
 
 import { ReactNode } from 'react';
 import { usePageVisibility } from '@/hooks/use-page-visibility';
-import { Eye, Shield } from 'lucide-react';
+import { Eye, Shield, Loader2 } from 'lucide-react';
 
 interface PageVisibilityGuardProps {
   pageSlug: string;
@@ -22,8 +22,8 @@ export function PageVisibilityGuard({
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-marfim via-gray-50 to-esmeralda/5">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-esmeralda mx-auto mb-4"></div>
-          <p className="text-gray-600">Verificando disponibilidade...</p>
+          <Loader2 className="h-12 w-12 text-esmeralda animate-spin mx-auto mb-4" />
+          <p className="font-montserrat text-gray-600">Verificando disponibilidade...</p>
         </div>
       </div>
     );

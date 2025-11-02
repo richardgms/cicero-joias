@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -50,6 +50,7 @@ interface FormData {
   mainImage: string;
   images: string[];
   isActive: boolean;
+  isFeatured: boolean;
   status: 'DRAFT' | 'PUBLISHED' | 'FEATURED';
   order: number;
   specifications: Specification[];
@@ -74,6 +75,7 @@ export default function NewPortfolioPage() {
     mainImage: '',
     images: [],
     isActive: true,
+    isFeatured: false,
     status: 'DRAFT',
     order: 0,
     specifications: [],
@@ -83,6 +85,15 @@ export default function NewPortfolioPage() {
     relatedProjects: [],
   });
   const [newKeyword, setNewKeyword] = useState('');
+  const [featuredCount, setFeaturedCount] = useState(0);
+
+  // Buscar contagem de itens destacados
+  useEffect(() => {
+    fetch('/api/public/portfolio?featured=true')
+      .then(res => res.json())
+      .then(data => setFeaturedCount(data.pagination?.total || 0))
+      .catch(() => setFeaturedCount(0));
+  }, []);
 
   // Validação em tempo real
   const validateField = (field: keyof FormData, value: any) => {
@@ -684,6 +695,43 @@ export default function NewPortfolioPage() {
                     checked={formData.isActive}
                     onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isActive: checked }))}
                   />
+                </div>
+
+                <Separator />
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label htmlFor="isFeatured">Destacar na Home</Label>
+                      <p className="text-xs text-muted-foreground">
+                        ({featuredCount}/3 destaques utilizados)
+                      </p>
+                    </div>
+                    <Switch
+                      id="isFeatured"
+                      checked={formData.isFeatured}
+                      disabled={featuredCount >= 3 && !formData.isFeatured}
+                      onCheckedChange={(checked) => {
+                        if (checked && featuredCount >= 3) {
+                          toast({
+                            title: "Limite atingido",
+                            description: "Você já tem 3 itens em destaque. Desmarque um para adicionar outro.",
+                            variant: "destructive",
+                          });
+                          return;
+                        }
+                        setFormData(prev => ({ ...prev, isFeatured: checked }));
+                      }}
+                    />
+                  </div>
+                  {featuredCount >= 3 && !formData.isFeatured && (
+                    <p className="text-xs text-destructive">
+                      Limite de destaques atingido. Desmarque um item existente primeiro.
+                    </p>
+                  )}
+                  <p className="text-xs text-muted-foreground">
+                    Apenas 3 itens podem ser destacados simultaneamente na página inicial.
+                  </p>
                 </div>
               </CardContent>
             </Card>

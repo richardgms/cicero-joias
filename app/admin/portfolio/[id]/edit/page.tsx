@@ -50,6 +50,7 @@ interface FormData {
   mainImage: string;
   images: string[];
   isActive: boolean;
+  isFeatured: boolean;
   status: 'DRAFT' | 'PUBLISHED' | 'FEATURED';
   order: number;
   specifications: Specification[];
@@ -77,6 +78,7 @@ export default function EditPortfolioPage() {
     mainImage: '',
     images: [],
     isActive: true,
+    isFeatured: false,
     status: 'DRAFT',
     order: 0,
     specifications: [],
@@ -86,6 +88,8 @@ export default function EditPortfolioPage() {
     relatedProjects: [],
   });
   const [newKeyword, setNewKeyword] = useState('');
+  const [featuredCount, setFeaturedCount] = useState(0);
+  const [isLoadingFeaturedCount, setIsLoadingFeaturedCount] = useState(false);
 
   useEffect(() => {
     if (!portfolioId) {
@@ -133,6 +137,7 @@ export default function EditPortfolioPage() {
           mainImage: item.mainImage,
           images: item.images || [],
           isActive: item.isActive,
+          isFeatured: item.isFeatured || false,
           status: item.status || 'DRAFT',
           order: item.order || 0,
           specifications,
@@ -164,6 +169,25 @@ export default function EditPortfolioPage() {
       isMounted = false;
     };
   }, [portfolioId, router, toast]);
+
+  // Buscar contagem de destaques
+  useEffect(() => {
+    const fetchFeaturedCount = async () => {
+      setIsLoadingFeaturedCount(true);
+      try {
+        const response = await fetch('/api/public/portfolio?featured=true');
+        const data = await response.json();
+        setFeaturedCount(data.pagination?.total || 0);
+      } catch (error) {
+        console.error('Erro ao buscar contagem de destaques:', error);
+        setFeaturedCount(0);
+      } finally {
+        setIsLoadingFeaturedCount(false);
+      }
+    };
+
+    void fetchFeaturedCount();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -693,6 +717,47 @@ export default function EditPortfolioPage() {
                     checked={formData.isActive}
                     onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isActive: checked }))}
                   />
+                </div>
+
+                <Separator />
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-col gap-1">
+                      <Label htmlFor="isFeatured">Destacar na Home</Label>
+                      <span className="text-xs text-gray-500">
+                        {isLoadingFeaturedCount ? (
+                          'Carregando...'
+                        ) : (
+                          `${featuredCount}/3 destaques utilizados`
+                        )}
+                      </span>
+                    </div>
+                    <Switch
+                      id="isFeatured"
+                      checked={formData.isFeatured}
+                      disabled={isLoadingFeaturedCount || (featuredCount >= 3 && !formData.isFeatured)}
+                      onCheckedChange={(checked) => {
+                        if (checked && featuredCount >= 3 && !formData.isFeatured) {
+                          toast({
+                            title: "Limite atingido",
+                            description: "Você já tem 3 itens em destaque. Desmarque um para adicionar outro.",
+                            variant: "destructive",
+                          });
+                          return;
+                        }
+                        setFormData(prev => ({ ...prev, isFeatured: checked }));
+                      }}
+                    />
+                  </div>
+                  {featuredCount >= 3 && !formData.isFeatured && (
+                    <p className="text-xs text-red-600">
+                      Limite de destaques atingido. Desmarque outro item primeiro.
+                    </p>
+                  )}
+                  <p className="text-xs text-gray-600">
+                    Apenas 3 itens podem ser destacados na página inicial.
+                  </p>
                 </div>
               </CardContent>
             </Card>

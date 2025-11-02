@@ -33,6 +33,12 @@ const createPortfolioSchema = z.object({
     }
     return val !== false;
   }).default(true),
+  isFeatured: z.union([z.boolean(), z.string()]).transform((val) => {
+    if (typeof val === 'string') {
+      return val === 'true' || val === '1';
+    }
+    return val !== false;
+  }).default(false).optional(),
   status: z.string().regex(/^(DRAFT|PUBLISHED|FEATURED)$/, 'Status inválido').default('DRAFT'),
   order: z.union([z.number(), z.string()]).transform((val) => {
     if (typeof val === 'string') {
@@ -413,6 +419,28 @@ export async function POST(request: Request) {
           headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
         }
       );
+    }
+
+    // Teste 5.5: Validar limite de itens destacados
+    if (createData.isFeatured) {
+      try {
+        const featuredCount = await prisma.portfolioItem.count({
+          where: { isFeatured: true },
+        });
+        if (featuredCount >= 3) {
+          debugInfo.push(`Featured limit reached: ${featuredCount}/3`);
+          return NextResponse.json(
+            { error: 'Limite de 3 destaques atingido. Desmarque um item para adicionar outro.', debug: debugInfo },
+            {
+              status: 400,
+              headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
+            }
+          );
+        }
+        debugInfo.push(`Featured count check passed: ${featuredCount}/3`);
+      } catch (countError) {
+        debugInfo.push(`Featured count check failed: ${countError instanceof Error ? countError.message : String(countError)}`);
+      }
     }
 
     // Teste 6: Criar item do portfólio (com retry otimizado para prepared statement errors)

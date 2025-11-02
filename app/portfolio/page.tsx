@@ -174,13 +174,14 @@ export default function PortfolioPage() {
       <div className="min-h-screen bg-marfim">
       <section className="relative overflow-hidden bg-gradient-to-br from-esmeralda via-esmeralda-dark to-[#04160f] py-20 text-marfim">
         <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 text-center sm:px-6">
-          <span className="inline-flex mx-auto w-fit items-center gap-2 rounded-full border border-marfim/20 bg-white/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-marfim/70">
+          <span className="inline-flex mx-auto w-fit items-center gap-2 rounded-full border border-marfim/20 bg-white/10 px-4 py-1 font-jost text-xs font-semibold uppercase tracking-[0.3em] text-marfim/70">
             Nosso trabalho em foco
           </span>
-          <h1 className="font-playfair text-4xl sm:text-5xl font-semibold leading-tight">
-            Portfólio de <span className="text-ouro">joias e restaurações</span>
+          <h1 className="font-philosopher font-bold leading-none">
+            <span className="block text-[clamp(32px,4vw+12px,56px)]">Portfólio de</span>
+            <span className="block text-[clamp(28px,4vw+10px,48px)] text-ouro">Joias e Restaurações</span>
           </h1>
-          <p className="mx-auto max-w-2xl text-sm text-marfim/75">
+          <p className="mx-auto max-w-2xl font-montserrat text-sm text-marfim/75">
             Conheça projetos recentes: alianças personalizadas, restaurações com memória afetiva e renovações de peças queridas. Filtre por categoria para encontrar o que mais combina com você.
           </p>
         </div>
@@ -195,7 +196,7 @@ export default function PortfolioPage() {
                 value={searchTerm}
                 onChange={handleSearchChange}
                 placeholder="Busque por nome ou descrição"
-                className="border-none bg-transparent text-sm text-esmeralda placeholder:text-esmeralda/60 focus-visible:ring-0"
+                className="border-none bg-transparent text-sm text-esmeralda placeholder:text-esmeralda/80 focus-visible:ring-0"
               />
             </div>
             <div className="flex items-center gap-3">
@@ -251,7 +252,7 @@ export default function PortfolioPage() {
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-xs uppercase tracking-[0.28em] text-esmeralda/60">Organizar por</span>
+              <span className="font-jost text-xs font-semibold uppercase tracking-wide text-esmeralda/80">Organizar por</span>
               <Select value={dateFilter} onValueChange={handleDateFilterChange}>
                 <SelectTrigger className="w-[160px] border-esmeralda/20 text-esmeralda">
                   <SelectValue placeholder="Mais recentes" />
@@ -263,7 +264,7 @@ export default function PortfolioPage() {
               </Select>
             </div>
 
-            <div className="flex items-center justify-end text-sm text-esmeralda/70">
+            <div className="flex items-center justify-end font-montserrat text-sm text-esmeralda/70">
               {pagination.total > 0 && (
                 <p>
                   Exibindo {filteredItems.length} de {pagination.total} projetos
@@ -276,21 +277,21 @@ export default function PortfolioPage() {
         <AnimatePresence initial={false}>
           {loading ? (
             <div className="flex h-48 items-center justify-center">
-              <span className="text-sm text-esmeralda/70">Carregando portfólio…</span>
+              <span className="font-montserrat text-sm text-esmeralda/70">Carregando portfólio…</span>
             </div>
           ) : error ? (
             <div className="flex h-48 flex-col items-center justify-center gap-3">
-              <p className="text-sm text-red-500">{error}</p>
-              <Button onClick={() => setCurrentPage(1)} variant="outline" className="border-red-200 text-red-600">
+              <p className="font-montserrat text-sm text-red-500">{error}</p>
+              <Button onClick={() => setCurrentPage(1)} variant="outline" className="font-montserrat border-red-200 text-red-600">
                 Tentar novamente
               </Button>
             </div>
           ) : filteredItems.length === 0 ? (
             <div className="flex h-48 flex-col items-center justify-center gap-3 text-center">
-              <p className="text-sm text-esmeralda/70">
+              <p className="font-montserrat text-sm text-esmeralda/70">
                 Nenhum projeto encontrado com os filtros atuais.
               </p>
-              <Button onClick={() => handleCategoryChange('all')} variant="outline" className="border-esmeralda/30 text-esmeralda">
+              <Button onClick={() => handleCategoryChange('all')} variant="outline" className="font-montserrat border-esmeralda/30 text-esmeralda">
                 Limpar filtros
               </Button>
             </div>
@@ -319,30 +320,25 @@ export default function PortfolioPage() {
                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-                        <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.28em] text-white">
+                        <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-1 font-jost text-xs font-semibold uppercase tracking-wide text-white">
                           <Clock className="h-3 w-3" />
                           {new Date(item.createdAt).toLocaleDateString('pt-BR')}
                         </div>
                       </div>
 
-                      <div className={viewMode === 'list' ? 'flex flex-1 flex-col justify-between px-6 py-5' : 'space-y-4 px-6 py-6'}>
+                      <div className={viewMode === 'list' ? 'flex flex-1 flex-col justify-between px-6 py-5' : 'flex flex-col justify-between px-6 pt-6 pb-6 min-h-[180px]'}>
                         <div className="space-y-3">
                           <div className="flex items-center gap-2">
                             <Badge className="bg-esmeralda/10 text-esmeralda border-esmeralda/10 hover:bg-esmeralda/10">
                               {categoryLabels[item.category as keyof typeof categoryLabels] || item.category}
                             </Badge>
                           </div>
-                          <h2 className="font-playfair text-xl font-semibold text-esmeralda group-hover:text-ouro transition-colors">
+                          <h2 className="font-philosopher text-xl font-bold text-esmeralda group-hover:text-ouro transition-colors line-clamp-2">
                             {item.title}
                           </h2>
-                          {item.description && (
-                            <p className="text-sm text-grafite/70 line-clamp-3">
-                              {item.description}
-                            </p>
-                          )}
                         </div>
 
-                        <div className="flex items-center justify-between text-xs uppercase tracking-[0.3em] text-esmeralda/60">
+                        <div className="flex items-center justify-between font-jost text-xs font-semibold uppercase tracking-wide text-esmeralda/80">
                           <span>Ver detalhes</span>
                           <Eye className="h-4 w-4" />
                         </div>
@@ -361,7 +357,7 @@ export default function PortfolioPage() {
               variant="outline"
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={!pagination.hasPrevPage}
-              className="border-esmeralda/20 text-esmeralda hover:border-esmeralda hover:text-esmeralda disabled:opacity-50"
+              className="font-montserrat border-esmeralda/20 text-esmeralda hover:border-esmeralda hover:text-esmeralda disabled:opacity-50"
             >
               Anterior
             </Button>
@@ -372,8 +368,8 @@ export default function PortfolioPage() {
                   variant={page === currentPage ? 'default' : 'outline'}
                   onClick={() => handlePageChange(page)}
                   className={page === currentPage
-                    ? 'bg-esmeralda text-marfim hover:bg-esmeralda-dark'
-                    : 'border-esmeralda/20 text-esmeralda hover:border-esmeralda hover:text-esmeralda'}
+                    ? 'font-montserrat bg-esmeralda text-marfim hover:bg-esmeralda-dark'
+                    : 'font-montserrat border-esmeralda/20 text-esmeralda hover:border-esmeralda hover:text-esmeralda'}
                   size="sm"
                 >
                   {page}
@@ -384,7 +380,7 @@ export default function PortfolioPage() {
               variant="outline"
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={!pagination.hasNextPage}
-              className="border-esmeralda/20 text-esmeralda hover:border-esmeralda hover:text-esmeralda disabled:opacity-50"
+              className="font-montserrat border-esmeralda/20 text-esmeralda hover:border-esmeralda hover:text-esmeralda disabled:opacity-50"
             >
               Próxima
             </Button>

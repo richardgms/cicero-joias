@@ -23,53 +23,49 @@ export async function GET() {
       return NextResponse.json({ error: authResult.error }, { status: authResult.status });
     }
 
-    // Buscar estatísticas básicas do portfólio
-    const totalPortfolio = await prisma.portfolioItem.count();
-    const activePortfolio = await prisma.portfolioItem.count({
-      where: { isActive: true },
-    });
-
-    // Buscar estatísticas dos produtos
-    const totalProducts = await prisma.product.count();
-    const activeProducts = await prisma.product.count({
-      where: { isActive: true },
-    });
-    const readyDeliveryProducts = await prisma.product.count({
-      where: { isReadyDelivery: true },
-    });
-    const lowStockProducts = await prisma.product.count({
-      where: { stock: { lt: 5 } },
-    });
-
-    // Buscar estatísticas dos usuários (usando Clerk como fonte)
-    const totalUsers = await getClerkUserCount();
-
-    // Buscar projetos recentes
-    const recentProjects = await prisma.portfolioItem.findMany({
-      take: 5,
-      orderBy: { createdAt: 'desc' },
-      select: {
-        id: true,
-        title: true,
-        mainImage: true,
-        createdAt: true,
-        isActive: true,
-      },
-    });
-
-    // Buscar produtos recentes
-    const recentProducts = await prisma.product.findMany({
-      take: 5,
-      orderBy: { createdAt: 'desc' },
-      select: {
-        id: true,
-        name: true,
-        mainImage: true,
-        price: true,
-        stock: true,
-        isActive: true,
-      },
-    });
+    // Executar todas as queries em paralelo usando Promise.all para máxima performance
+    const [
+      totalPortfolio,
+      activePortfolio,
+      totalProducts,
+      activeProducts,
+      readyDeliveryProducts,
+      lowStockProducts,
+      totalUsers,
+      recentProjects,
+      recentProducts,
+    ] = await Promise.all([
+      prisma.portfolioItem.count(),
+      prisma.portfolioItem.count({ where: { isActive: true } }),
+      prisma.product.count(),
+      prisma.product.count({ where: { isActive: true } }),
+      prisma.product.count({ where: { isReadyDelivery: true } }),
+      prisma.product.count({ where: { stock: { lt: 5 } } }),
+      getClerkUserCount(),
+      prisma.portfolioItem.findMany({
+        take: 5,
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true,
+          title: true,
+          mainImage: true,
+          createdAt: true,
+          isActive: true,
+        },
+      }),
+      prisma.product.findMany({
+        take: 5,
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true,
+          name: true,
+          mainImage: true,
+          price: true,
+          stock: true,
+          isActive: true,
+        },
+      }),
+    ]);
 
     // Converter preços para números para evitar problemas com Decimal
     const productsWithConvertedPrices = recentProducts.map((product) => ({

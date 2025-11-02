@@ -263,14 +263,15 @@ function ProntaEntregaContent() {
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="font-playfair text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-marfim">
-              <span className="text-ouro">Pronta</span> Entrega
+            <h1 className="font-philosopher font-bold leading-none mb-6 text-marfim">
+              <span className="block text-[clamp(40px,5vw+16px,64px)] text-ouro">Pronta</span>
+              <span className="block text-[clamp(32px,4vw+12px,56px)]">Entrega</span>
             </h1>
-            <p className="text-xl text-marfim-dark leading-relaxed">
-              Peças exclusivas prontas para entrega imediata. Joias de alta qualidade 
+            <p className="font-montserrat text-xl text-marfim-dark leading-relaxed">
+              Peças exclusivas prontas para entrega imediata. Joias de alta qualidade
               que você pode levar hoje mesmo.
             </p>
-            <div className="mt-8 flex items-center justify-center space-x-6 text-marfim-dark">
+            <div className="mt-8 flex items-center justify-center space-x-6 font-montserrat text-marfim-dark">
               <div className="flex items-center">
                 <Clock className="h-5 w-5 mr-2 text-ouro" />
                 <span>Entrega Rápida</span>
@@ -336,13 +337,13 @@ function ProntaEntregaContent() {
               </div>
             </div>
 
-            <div className="mt-4 text-sm text-gray-600 flex items-center justify-between">
+            <div className="mt-4 font-montserrat text-sm text-gray-600 flex items-center justify-between">
               <span>
                 {loading ? 'Carregando...' : `${pagination.total} produto${pagination.total !== 1 ? 's' : ''} encontrado${pagination.total !== 1 ? 's' : ''}`}
               </span>
               {(categoryFilter !== 'all' || materialFilter !== 'all' || stockFilter !== 'all' || searchTerm ||
                 priceRange[0] !== priceStats.min || priceRange[1] !== priceStats.max) && (
-                <Button variant="ghost" size="sm" onClick={resetFilters}>
+                <Button variant="ghost" size="sm" onClick={resetFilters} className="font-montserrat">
                   Limpar Filtros
                 </Button>
               )}
@@ -354,7 +355,7 @@ function ProntaEntregaContent() {
             <div className="lg:col-span-1">
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center">
+                  <CardTitle className="flex items-center font-jost font-semibold">
                     <SlidersHorizontal className="h-4 w-4 mr-2" />
                     Filtros
                   </CardTitle>
@@ -362,7 +363,7 @@ function ProntaEntregaContent() {
                 <CardContent className="space-y-6">
                   {/* Categoria */}
                   <div>
-                    <label className="text-sm font-medium text-gray-700 mb-2 block">
+                    <label className="font-jost text-sm font-semibold text-gray-700 mb-2 block">
                       Categoria
                     </label>
                     <Select value={categoryFilter} onValueChange={setCategoryFilter}>
@@ -382,7 +383,7 @@ function ProntaEntregaContent() {
 
                   {/* Material */}
                   <div>
-                    <label className="text-sm font-medium text-gray-700 mb-2 block">
+                    <label className="font-jost text-sm font-semibold text-gray-700 mb-2 block">
                       Material
                     </label>
                     <Select value={materialFilter} onValueChange={setMaterialFilter}>
@@ -403,7 +404,7 @@ function ProntaEntregaContent() {
                   {/* Faixa de Preço */}
                   <div>
                     <div className="flex items-center mb-3">
-                      <label className="text-sm font-medium text-gray-700">
+                      <label className="font-jost text-sm font-semibold text-gray-700">
                         Faixa de Preço
                       </label>
                       <div className="relative ml-2 group">
@@ -430,7 +431,7 @@ function ProntaEntregaContent() {
                         <span>R$ {Math.round(displayPriceRange[1]).toLocaleString()}</span>
                       </div>
 
-                      <div className="text-center mt-3">
+                      <div className="text-center mt-3 font-montserrat">
                         {(displayPriceRange[0] !== priceRange[0] || displayPriceRange[1] !== priceRange[1]) ? (
                           <span className="text-xs text-blue-600">Filtrando...</span>
                         ) : (
@@ -444,7 +445,7 @@ function ProntaEntregaContent() {
 
                   {/* Disponibilidade */}
                   <div>
-                    <label className="text-sm font-medium text-gray-700 mb-2 block">
+                    <label className="font-jost text-sm font-semibold text-gray-700 mb-2 block">
                       Disponibilidade
                     </label>
                     <Select value={stockFilter} onValueChange={setStockFilter}>
@@ -467,22 +468,22 @@ function ProntaEntregaContent() {
                 <div className="flex items-center justify-center min-h-96">
                   <div className="text-center">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-esmeralda mx-auto"></div>
-                    <p className="mt-2 text-gray-600">Carregando produtos...</p>
+                    <p className="mt-2 font-montserrat text-gray-600">Carregando produtos...</p>
                   </div>
                 </div>
               ) : filteredProducts.length === 0 ? (
                 <div className="text-center py-12">
                   <Filter className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  <h3 className="font-philosopher text-lg font-bold text-gray-900 mb-2">
                     Nenhum produto encontrado
                   </h3>
-                  <p className="text-gray-600 mb-4">
-                    {searchTerm 
+                  <p className="font-montserrat text-gray-600 mb-4">
+                    {searchTerm
                       ? `Não encontramos produtos que correspondam a "${searchTerm}"`
                       : 'Ainda não há produtos disponíveis para pronta entrega'
                     }
                   </p>
-                  <Button onClick={resetFilters} variant="outline">
+                  <Button onClick={resetFilters} variant="outline" className="font-montserrat">
                     Limpar Filtros
                   </Button>
                 </div>
@@ -528,32 +529,32 @@ function ProntaEntregaContent() {
                             </div>
                             
                             <CardContent className="p-6">
-                              <h3 className="text-lg font-semibold text-esmeralda mb-2 group-hover:text-ouro transition-colors">
+                              <h3 className="font-philosopher text-lg font-bold text-esmeralda mb-2 group-hover:text-ouro transition-colors">
                                 {product.name}
                               </h3>
-                              <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                              <p className="font-montserrat text-sm text-gray-600 mb-3 line-clamp-2">
                                 {product.description || 'Produto de alta qualidade disponível para pronta entrega.'}
                               </p>
-                              
+
                               <div className="flex items-center justify-between">
                                 <div>
-                                  <p className="text-2xl font-bold text-esmeralda">
+                                  <p className="font-philosopher text-2xl font-bold text-esmeralda">
                                     R$ {(product.price || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                                   </p>
                                   {product.material && (
-                                    <p className="text-xs text-gray-500">{product.material}</p>
+                                    <p className="font-montserrat text-xs text-gray-500">{product.material}</p>
                                   )}
                                 </div>
-                                <div className="text-right">
+                                <div className="text-right font-montserrat">
                                   <p className="text-xs text-gray-500">Código: {product.code}</p>
                                   <p className="text-xs text-gray-500">
                                     Estoque: {product.stock} {product.stock === 1 ? 'unidade' : 'unidades'}
                                   </p>
                                 </div>
                               </div>
-                              
-                              <Button 
-                                className="w-full mt-4 bg-ouro text-esmeralda hover:bg-ouro-light"
+
+                              <Button
+                                className="w-full mt-4 font-montserrat bg-ouro text-esmeralda hover:bg-ouro-light"
                                 disabled={product.stock === 0}
                               >
                                 {product.stock === 0 ? 'Sem Estoque' : 'Ver Detalhes'}
@@ -581,29 +582,29 @@ function ProntaEntregaContent() {
                                 <div className="flex justify-between items-start">
                                   <div className="flex-1">
                                     <div className="flex items-center space-x-2 mb-2">
-                                      <h3 className="text-lg font-semibold text-esmeralda group-hover:text-ouro transition-colors">
+                                      <h3 className="font-philosopher text-lg font-bold text-esmeralda group-hover:text-ouro transition-colors">
                                         {product.name}
                                       </h3>
                                       <Badge variant="secondary" className="bg-ouro text-esmeralda text-xs">
                                         {categoryLabels[product.category as keyof typeof categoryLabels] || product.category}
                                       </Badge>
                                     </div>
-                                    <p className="text-sm text-gray-600 mb-2">
+                                    <p className="font-montserrat text-sm text-gray-600 mb-2">
                                       {product.description || 'Produto de alta qualidade disponível para pronta entrega.'}
                                     </p>
-                                    <div className="flex items-center space-x-4 text-xs text-gray-500">
+                                    <div className="flex items-center space-x-4 font-montserrat text-xs text-gray-500">
                                       <span>Código: {product.code}</span>
                                       {product.material && <span>Material: {product.material}</span>}
                                       <span>Estoque: {product.stock}</span>
                                     </div>
                                   </div>
                                   <div className="text-right ml-4">
-                                    <p className="text-2xl font-bold text-esmeralda">
+                                    <p className="font-philosopher text-2xl font-bold text-esmeralda">
                                       R$ {(product.price || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                                     </p>
-                                    <Button 
+                                    <Button
                                       size="sm"
-                                      className="mt-2 bg-ouro text-esmeralda hover:bg-ouro-light"
+                                      className="mt-2 font-montserrat bg-ouro text-esmeralda hover:bg-ouro-light"
                                       disabled={product.stock === 0}
                                     >
                                       {product.stock === 0 ? 'Sem Estoque' : 'Ver Detalhes'}
@@ -625,20 +626,20 @@ function ProntaEntregaContent() {
                         variant="outline"
                         onClick={() => handlePageChange(currentPage - 1)}
                         disabled={!pagination.hasPrevPage}
-                        className="border-esmeralda text-esmeralda hover:bg-esmeralda hover:text-marfim"
+                        className="font-montserrat border-esmeralda text-esmeralda hover:bg-esmeralda hover:text-marfim"
                       >
                         Anterior
                       </Button>
-                      
+
                       <div className="flex items-center space-x-2">
                         {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map((page) => (
                           <Button
                             key={page}
                             variant={page === currentPage ? "default" : "outline"}
                             onClick={() => handlePageChange(page)}
-                            className={page === currentPage 
-                              ? "bg-esmeralda text-marfim" 
-                              : "border-esmeralda text-esmeralda hover:bg-esmeralda hover:text-marfim"
+                            className={page === currentPage
+                              ? "font-montserrat bg-esmeralda text-marfim"
+                              : "font-montserrat border-esmeralda text-esmeralda hover:bg-esmeralda hover:text-marfim"
                             }
                             size="sm"
                           >
@@ -646,12 +647,12 @@ function ProntaEntregaContent() {
                           </Button>
                         ))}
                       </div>
-                      
+
                       <Button
                         variant="outline"
                         onClick={() => handlePageChange(currentPage + 1)}
                         disabled={!pagination.hasNextPage}
-                        className="border-esmeralda text-esmeralda hover:bg-esmeralda hover:text-marfim"
+                        className="font-montserrat border-esmeralda text-esmeralda hover:bg-esmeralda hover:text-marfim"
                       >
                         Próxima
                       </Button>

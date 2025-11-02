@@ -3,6 +3,8 @@
 import { usePathname } from 'next/navigation';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
+import { ScrollProgress } from '@/components/ui/scroll-progress';
+import { FloatingWhatsAppButton } from '@/components/ui/floating-whatsapp-button';
 
 interface ConditionalLayoutProps {
   children: React.ReactNode;
@@ -11,7 +13,9 @@ interface ConditionalLayoutProps {
 export function ConditionalLayout({ children }: ConditionalLayoutProps) {
   const pathname = usePathname();
   const isAdminRoute = pathname?.startsWith('/admin');
-  const isServicosPage = pathname === '/servicos';
+  const normalizedPath = pathname ?? '/';
+  const showEngagementWidgets =
+    normalizedPath === '/' || normalizedPath.startsWith('/servicos');
 
   if (isAdminRoute) {
     // Layout para páginas admin (sem header/footer público)
@@ -20,10 +24,18 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
 
   // Layout para páginas públicas (com header/footer)
   return (
-    <div className="flex min-h-screen flex-col">
-      <Header />
-      <main className="flex-1">{children}</main>
-      <Footer />
-    </div>
+    <>
+      {showEngagementWidgets && (
+        <>
+          <ScrollProgress />
+          <FloatingWhatsAppButton threshold={15} />
+        </>
+      )}
+      <div className="flex min-h-screen flex-col">
+        <Header />
+        <main className="flex-1">{children}</main>
+        <Footer />
+      </div>
+    </>
   );
 }

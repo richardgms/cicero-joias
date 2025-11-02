@@ -11,6 +11,11 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: ['var(--font-sans)'],
+        playfair: ['var(--font-playfair)', 'serif'],
+        inter: ['var(--font-inter)', 'sans-serif'],
+        jost: ['var(--font-jost)', 'sans-serif'],
+        philosopher: ['var(--font-philosopher)', 'serif'],
+        montserrat: ['var(--font-montserrat)', 'sans-serif'],
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
@@ -22,6 +27,13 @@ const config: Config = {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
       },
+      boxShadow: {
+        'card-sm': '0 15px 35px -20px rgba(24, 68, 52, 0.15)',
+        'card-sm-hover': '0 25px 50px -25px rgba(24, 68, 52, 0.25)',
+        'card-md': '0 24px 55px -34px rgba(24, 68, 52, 0.35)',
+        'button-gold': '0 10px 25px -10px rgba(200, 155, 60, 0.2)',
+        'button-gold-strong': '0 10px 25px -10px rgba(200, 155, 60, 0.3)',
+      },
       colors: {
         // Paleta Esmeralda Solar
         esmeralda: {
@@ -30,9 +42,9 @@ const config: Config = {
           dark: '#0F2A20',
         },
         ouro: {
-          DEFAULT: '#C79A34', // Ouro Âmbar (realce metálico)
+          DEFAULT: '#C89B3C', // Ouro WCAG AA (4.52:1 contraste)
           light: '#E1B959',
-          dark: '#9E7A29',
+          dark: '#B08935',
         },
         marfim: {
           DEFAULT: '#F7F5F0', // Marfim Clássico (complementar claro)
@@ -111,11 +123,22 @@ const config: Config = {
             transform: 'translateX(200%) skewX(-12deg)',
           },
         },
+        bounce: {
+          '0%, 100%': {
+            transform: 'translateY(-25%)',
+            animationTimingFunction: 'cubic-bezier(0.8, 0, 1, 1)',
+          },
+          '50%': {
+            transform: 'translateY(0)',
+            animationTimingFunction: 'cubic-bezier(0, 0, 0.2, 1)',
+          },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         shimmer: 'shimmer 2s ease-in-out infinite',
+        bounce: 'bounce 1s infinite',
       },
     },
   },

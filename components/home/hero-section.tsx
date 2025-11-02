@@ -1,112 +1,140 @@
-﻿'use client';
+'use client';
 
-import Image from 'next/image';
 import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { ArrowRight, Sparkles } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { heroContent, heroStats, whatsappLinks } from './home-data';
+import { ArrowRight } from 'lucide-react';
+import { heroStats, whatsappLinks } from './home-data';
+import CountUp from '@/components/ui/count-up';
 
 export function HeroSection() {
-  const metrics = heroStats;
-
   return (
-    <section className="relative overflow-hidden bg-esmeralda text-marfim">
-      {/* Background gradients for desktop */}
-      <div className="absolute inset-0 hidden lg:block">
-        <div className="absolute inset-0 bg-gradient-to-br from-esmeralda via-esmeralda/95 to-[#0b1f18]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_-10%,rgba(207,154,36,0.18),transparent_55%)]" />
-      </div>
-
-      {/* Background image for mobile */}
-      <div className="absolute inset-0 lg:hidden">
+    <section className="relative min-h-screen flex items-start justify-center overflow-hidden pt-6 md:pt-8 lg:pt-10 pb-6 md:pb-8 lg:pb-10">
+      {/* Background Image - 100% opacity */}
+      <div className="absolute inset-0 z-0">
         <Image
-          src="/assets/home/hero-mobile.webp"
-          alt="Casal experimentando aliancas na Cicero Joias"
+          src="/assets/images/home-hero.jpg"
+          alt="Cícero Joias"
           fill
           priority
           className="object-cover"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-esmeralda/90 via-esmeralda/85 to-esmeralda/95" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0b1f18]/60 via-transparent to-transparent" />
       </div>
 
-      <div className="relative mx-auto grid min-h-[560px] w-full max-w-6xl gap-12 px-4 pb-10 pt-8 sm:px-6 sm:pb-24 sm:pt-10 lg:grid-cols-[1.1fr,0.9fr] lg:items-center lg:px-8">
-        <motion.div
-          className="space-y-8"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
+      {/* Background Base - Overlay verde com 90% opacidade (20% mais escuro) */}
+      <div className="absolute inset-0 z-[1] bg-gradient-to-br from-[#1E5445]/90 via-esmeralda/90 to-esmeralda-dark/90" />
+
+      {/* Organic Blob 1 - Superior esquerdo (mais claro) */}
+      <div className="absolute -top-40 -left-40 w-[500px] h-[500px] z-[2] bg-gradient-to-br from-esmeralda-light/60 via-esmeralda-light/30 to-transparent rounded-full blur-3xl" />
+
+      {/* Organic Blob 2 - Inferior direito (ouro mais visível) */}
+      <div className="absolute -bottom-40 -right-40 w-[700px] h-[700px] z-[2] bg-gradient-to-tl from-ouro/20 via-esmeralda-light/40 to-transparent rounded-full blur-3xl" />
+
+      {/* Blob adicional - Centro direita (ponto de luz) */}
+      <div className="absolute top-1/3 right-0 w-[300px] h-[300px] z-[2] bg-gradient-radial from-esmeralda-light/50 to-transparent rounded-full blur-3xl" />
+
+      {/* Preset Background Esmeralda - Overlays adicionais - Ver docs/style-presets.md */}
+      <div className="pointer-events-none absolute inset-0 z-[3] bg-[radial-gradient(circle_at_50%_0%,rgba(207,154,36,0.15),transparent_50%)]" />
+      <div className="pointer-events-none absolute inset-0 z-[3] bg-[radial-gradient(circle_at_20%_80%,rgba(255,255,255,0.08),transparent_40%)]" />
+
+      {/* Content Container */}
+      <div className="relative z-10 container mx-auto px-4 md:px-8 text-center text-white">
+
+        {/* 1. Título H1 */}
+        <h1 className="font-philosopher font-bold leading-none mb-3 md:mb-4">
+          <span className="block text-[clamp(40px,6vw+20px,80px)]">Desde 1985</span>
+          <span className="block text-[clamp(28px,4vw+12px,56px)] text-ouro">criando e cuidando de joias</span>
+        </h1>
+
+        {/* 2. Subtítulo */}
+        <p className="font-montserrat text-[clamp(16px,2vw+8px,20px)] text-white/90 mb-6 md:mb-12 max-w-2xl mx-auto">
+          Oficina própria, ourives especializados e atendimento personalizado para transformar seus sonhos em realidade
+        </p>
+
+        {/* 3. Cards de Métricas - Grid com solução para 3 cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 max-w-[66rem] mx-auto
+          [&>*:nth-child(3)]:md:col-span-2
+          [&>*:nth-child(3)]:md:justify-self-center
+          [&>*:nth-child(3)]:md:max-w-[50%]
+          [&>*:nth-child(3)]:lg:col-span-1
+          [&>*:nth-child(3)]:lg:max-w-full">
+
+          {heroStats.map((stat) => (
+            <div key={stat.number}
+              className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6
+                shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)]
+                hover:bg-white/10 hover:border-white/20 hover:-translate-y-0.5
+                transition-all">
+              <h3 className="font-philosopher text-[clamp(28px,3.5vw+10px,42px)] font-bold text-ouro mb-0.5 mt-0 tracking-tight">
+                <CountUp
+                  to={stat.number}
+                  from={0}
+                  duration={2}
+                  prefix={stat.prefix}
+                  suffix={stat.suffix}
+                />
+              </h3>
+              <p className="font-jost text-sm md:text-base font-semibold text-white/95 mb-3 uppercase tracking-wide">
+                {stat.label}
+              </p>
+              {/* Linha divisora */}
+              <div className="w-25 h-[1px] bg-ouro/40 rounded-full mb-3 mx-auto" />
+              <p className="font-montserrat text-xs md:text-sm text-white/70 leading-snug mb-0">
+                {stat.description}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* 4. Seta de Scroll Animada */}
+        <a
+          href="#servicos"
+          className="flex justify-center my-8 md:my-10 z-10
+            text-white/70 hover:text-white hover:scale-110 transition-all duration-500
+            animate-bounce"
+          aria-label="Rolar para serviços"
         >
-          <span className="inline-flex items-center gap-2 rounded-full border border-ouro/30 bg-esmeralda-dark/40 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-ouro/90">
-            <Sparkles className="h-4 w-4" />
-            {heroContent.badge}
-          </span>
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </a>
 
-          <div className="space-y-4">
-            <h1 className="font-playfair text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-semibold leading-tight">
-              {heroContent.title}
-            </h1>
-            <p className="max-w-xl text-base sm:text-lg text-marfim/85">
-              {heroContent.description}
-            </p>
-          </div>
+        {/* 5. Botões CTA - 2 botões validados */}
+        <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 mb-8 md:mb-10">
+          {/* CTA Primário - Preset Botão Principal */}
+          <motion.a
+            href={whatsappLinks.primary}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-jost group inline-flex w-full items-center justify-center gap-2 rounded-full bg-ouro px-6 py-3 md:py-4 text-sm font-semibold uppercase tracking-[0.26em] text-esmeralda shadow-[0_25px_45px_-20px_rgba(207,154,36,0.45)] transition-colors hover:bg-ouro/90 sm:w-auto md:w-auto"
+            whileHover={{ x: 3 }}
+            whileTap={{ scale: 0.97 }}
+          >
+            Como podemos ajudar?
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </motion.a>
 
-          <div className="grid gap-3 sm:grid-cols-3">
-            {metrics.map((metric) => (
-              <div
-                key={metric.label}
-                className="rounded-2xl border border-ouro/20 bg-esmeralda-dark/40 px-4 py-3 text-left"
-              >
-                <p className="font-playfair text-2xl font-semibold text-ouro">{metric.value}</p>
-                <p className="text-xs uppercase tracking-[0.28em] text-ouro/80">{metric.label}</p>
-                <p className="mt-1 text-[11px] leading-relaxed text-marfim/70">{metric.description}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <Button
-              asChild
-              size="lg"
-              className="group inline-flex items-center gap-2 rounded-full bg-ouro px-6 py-3 text-sm font-semibold uppercase tracking-[0.26em] text-esmeralda shadow-[0_25px_45px_-20px_rgba(207,154,36,0.45)] transition-transform hover:scale-[1.02]"
-            >
-              <a href={whatsappLinks.primary} target="_blank" rel="noopener noreferrer">
-                Começar meu projeto
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </a>
-            </Button>
-
-            <motion.a
-              href={whatsappLinks.visit}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-ouro/50 px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-ouro/90 transition-colors hover:bg-ouro/10 sm:w-auto"
-              whileHover={{ x: 3 }}
-              whileTap={{ scale: 0.97 }}
-            >
-              Agendar visita presencial
-            </motion.a>
-          </div>
-        </motion.div>
-
-        <motion.div
-          className="relative hidden aspect-[4/5] w-full overflow-hidden rounded-3xl border border-white/10 shadow-[0_40px_80px_-40px_rgba(0,0,0,0.55)] lg:block"
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.2, duration: 0.6, ease: 'easeOut' }}
-        >
-          <Image
-            src="/assets/home/hero-desktop.webp"
-            alt="Ourives trabalhando na bancada da Cicero Joias"
-            fill
-            priority
-            className="object-cover"
-            sizes="(max-width: 1024px) 100vw, 480px"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0b1f18]/70 via-transparent to-transparent" />
-        </motion.div>
+          {/* CTA Secundário - Preset Botão Secundário */}
+          <motion.a
+            href="#servicos"
+            className="font-jost inline-flex w-full items-center justify-center gap-2 rounded-full border border-ouro/50 px-6 py-3 md:py-4 text-sm font-semibold uppercase tracking-[0.26em] text-ouro/90 transition-colors hover:bg-ouro/10 sm:w-auto md:w-auto"
+            whileHover={{ x: 3 }}
+            whileTap={{ scale: 0.97 }}
+          >
+            Ver serviços
+            <ArrowRight className="h-4 w-4" />
+          </motion.a>
+        </div>
 
       </div>
     </section>

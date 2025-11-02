@@ -9,6 +9,7 @@ export interface PortfolioItem {
   mainImage: string
   images: string[]
   isActive: boolean
+  isFeatured: boolean
   order: number
   createdAt: string
   updatedAt: string
