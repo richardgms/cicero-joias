@@ -1,6 +1,7 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { HeroSection } from '@/components/home/hero-section';
+import { AliancasHeroSection } from '@/components/services/aliancas/hero-section';
+import { MetalOptionsSection } from '@/components/services/aliancas/metal-options-section';
 import { FeaturesSection } from '@/components/services/aliancas/features-section';
 
 // Lazy load below-fold sections for better initial page load performance
@@ -27,7 +28,8 @@ const FinalCTASection = dynamic(() => import('@/components/home/final-cta-sectio
 export default function AliancasPersonalizadasPage() {
   return (
     <div className="min-h-screen">
-      <HeroSection />
+      <AliancasHeroSection />
+      <MetalOptionsSection />
       <FeaturesSection />
       <ProcessSection />
       <PortfolioPreviewSection />
