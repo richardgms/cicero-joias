@@ -10,11 +10,8 @@ import {
   Phone,
   Mail,
   Clock,
-  ArrowRight,
-  Sparkles,
 } from 'lucide-react';
 import { WhatsappIcon } from '@/components/icons';
-import { Button } from '@/components/ui/button';
 
 const whatsappUrl = 'https://wa.me/5583991180251?text=Ola! Quero falar com a Cícero Joias.';
 
@@ -31,43 +28,49 @@ const socials = [
   { icon: WhatsappIcon, label: 'WhatsApp', href: whatsappUrl, external: true },
 ];
 
-interface FooterProps {
-  hideCtaSection?: boolean;
-}
-
-export function Footer({ hideCtaSection = false }: FooterProps) {
+export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#04160f] text-marfim">
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid gap-10 lg:grid-cols-[1.2fr,1fr]">
-          <div className="space-y-5">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="relative h-12 w-12 overflow-hidden rounded-full border border-marfim/10">
-                <Image
-                  src="/assets/logos/circle-monogram.png"
-                  alt="Cícero Joias"
-                  fill
-                  sizes="48px"
-                  className="object-cover"
-                />
-              </div>
-              <div className="flex flex-col leading-tight">
-                <span className="font-philosopher text-lg font-bold">Cícero Joias</span>
-                <span className="font-jost text-xs font-semibold uppercase tracking-[0.3em] text-marfim/60">Desde 1985</span>
-              </div>
-            </Link>
-            <p className="font-montserrat text-sm leading-relaxed text-marfim/70">
-              Mais de quatro décadas criando joias sob medida, com atendimento direto do ourives e acompanhamento após a entrega. Nosso atelier em João Pessoa mantém o padrão artesanal que nos trouxe até aqui.
-            </p>
-            <div className="border-t border-marfim/10" />
+    <footer className="w-full bg-[#04160f] text-marfim pt-16 pb-8">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-[1.2fr,1fr] md:gap-16">
+
+          {/* Coluna 1: Marca e Navegação */}
+          <div className="space-y-8">
+            <div className="space-y-6">
+              <Link href="/" className="inline-flex items-center gap-3 group">
+                <div className="relative h-12 w-12 overflow-hidden rounded-full border border-marfim/10 transition-colors group-hover:border-ouro/50">
+                  <Image
+                    src="/assets/logos/circle-monogram.png"
+                    alt="Cícero Joias"
+                    fill
+                    sizes="48px"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="flex flex-col leading-tight">
+                  <span className="font-philosopher text-xl font-bold tracking-wide">Cícero Joias</span>
+                  <span className="font-jost text-xs font-semibold uppercase tracking-[0.3em] text-marfim/60">Desde 1985</span>
+                </div>
+              </Link>
+
+              <p className="font-montserrat text-sm leading-relaxed text-marfim/70 max-w-md">
+                Mais de quatro décadas criando joias sob medida, com atendimento direto do ourives e acompanhamento após a entrega. Nosso atelier em João Pessoa mantém o padrão artesanal que nos trouxe até aqui.
+              </p>
+            </div>
+
+            <div className="h-px w-full max-w-md bg-gradient-to-r from-marfim/10 to-transparent" />
+
             <div>
-              <h3 className="font-jost text-sm font-semibold uppercase tracking-[0.25em] text-marfim/60">Serviços</h3>
-              <ul className="mt-3 space-y-2" aria-label="Serviços">
+              <h3 className="font-jost text-sm font-semibold uppercase tracking-[0.25em] text-marfim/60 mb-4">Serviços</h3>
+              <ul className="space-y-3">
                 {services.map((item) => (
                   <li key={item.name}>
-                    <Link href={item.href} className="font-montserrat text-sm text-marfim/75 transition-colors hover:text-ouro">
+                    <Link
+                      href={item.href}
+                      className="font-montserrat text-sm text-marfim/75 transition-colors hover:text-ouro block w-max"
+                    >
                       {item.name}
                     </Link>
                   </li>
@@ -76,60 +79,71 @@ export function Footer({ hideCtaSection = false }: FooterProps) {
             </div>
           </div>
 
-          <div className="space-y-6">
-            <h3 className="font-jost text-sm font-semibold uppercase tracking-[0.25em] text-marfim/60">Contato</h3>
-            <div className="space-y-4 font-montserrat text-sm text-marfim/75">
-              <div className="flex gap-3">
-                <MapPin className="mt-1 h-4 w-4 flex-shrink-0 text-ouro" />
-                <p>
-                  Galeria Jardim · Rua Duque de Caxias, 516<br />
-                  Centro · João Pessoa – PB · CEP 58010-821
-                </p>
-              </div>
-              <div className="flex gap-3">
-                <Phone className="h-4 w-4 flex-shrink-0 text-ouro" />
-                <Link href="tel:+5583991180251" className="hover:text-ouro">
-                  (83) 99118-0251
-                </Link>
-              </div>
-              <div className="flex gap-3">
-                <Mail className="h-4 w-4 flex-shrink-0 text-ouro" />
-                <Link href="mailto:contato@cicerojoias.com.br" className="hover:text-ouro">
-                  contato@cicerojoias.com.br
-                </Link>
-              </div>
-              <div className="flex gap-3">
-                <Clock className="mt-1 h-4 w-4 flex-shrink-0 text-ouro" />
-                <p>
-                  Seg a Sex · 10h às 17h<br />
-                  Sábado · 10h às 14h
-                </p>
+          {/* Coluna 2: Contato e Social */}
+          <div className="space-y-8 md:pl-8 md:border-l md:border-marfim/5">
+            <div>
+              <h3 className="font-jost text-xs font-medium uppercase tracking-[0.3em] text-marfim/50 mb-8">Contato</h3>
+              <div className="space-y-6 font-montserrat text-sm text-marfim/60">
+                <div className="flex items-start gap-4">
+                  <MapPin className="mt-1 h-4 w-4 flex-shrink-0 text-ouro/70" />
+                  <p className="leading-relaxed">
+                    Galeria Jardim · Rua Duque de Caxias, 516<br />
+                    Centro · João Pessoa – PB<br />
+                    CEP 58010-821
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <Phone className="h-4 w-4 flex-shrink-0 text-ouro/70" />
+                  <Link href="tel:+5583991180251" className="hover:text-white transition-colors duration-300">
+                    (83) 99118-0251
+                  </Link>
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <Mail className="h-4 w-4 flex-shrink-0 text-ouro/70" />
+                  <Link href="mailto:contato@cicerojoias.com.br" className="hover:text-white transition-colors duration-300">
+                    contato@cicerojoias.com.br
+                  </Link>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <Clock className="mt-1 h-4 w-4 flex-shrink-0 text-ouro/70" />
+                  <p className="leading-relaxed">
+                    Seg a Sex · 10h às 17h<br />
+                    Sábado · 10h às 14h
+                  </p>
+                </div>
               </div>
             </div>
-            <div className="flex gap-4">
+
+            <div className="flex gap-5">
               {socials.map((item) => (
                 <Link
                   key={item.label}
                   href={item.href}
                   target={item.external ? '_blank' : undefined}
                   rel={item.external ? 'noopener noreferrer' : undefined}
-                  className="rounded-full border border-marfim/10 p-2 text-marfim/70 transition-colors hover:border-ouro hover:text-ouro"
+                  className="group relative flex h-11 w-11 items-center justify-center rounded-full border border-marfim/10 bg-marfim/5 text-marfim/60 transition-all duration-300 hover:border-ouro/50 hover:bg-ouro/10 hover:text-ouro"
                   aria-label={item.label}
                 >
-                  <item.icon className="h-4 w-4" />
+                  <item.icon className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
                 </Link>
               ))}
             </div>
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col gap-4 border-t border-marfim/10 pt-6 font-montserrat text-sm text-marfim/60 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {year} Cícero Joias. Todos os direitos reservados.</p>
-          <div className="flex gap-6">
-            <Link href="/termos-uso" className="hover:text-ouro">
+        {/* Copyright e Links Legais */}
+        <div className="mt-16 pt-8 border-t border-marfim/10 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+          <p className="font-montserrat text-xs text-marfim/50">
+            © {year} Cícero Joias. Todos os direitos reservados.
+          </p>
+          <div className="flex gap-6 font-montserrat text-xs text-marfim/50">
+            <Link href="/termos-uso" className="hover:text-ouro transition-colors">
               Termos de Uso
             </Link>
-            <Link href="/politica-privacidade" className="hover:text-ouro">
+            <Link href="/politica-privacidade" className="hover:text-ouro transition-colors">
               Política de Privacidade
             </Link>
           </div>

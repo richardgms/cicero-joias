@@ -8,9 +8,15 @@ NODE_ENV=development
 # ===========================================
 # BANCO DE DADOS (Supabase PostgreSQL)
 # ===========================================
-# Substitua pela Connection String do seu projeto Supabase
-# Exemplo: postgresql://postgres:[SENHA]@db.[PROJETO].supabase.co:5432/postgres
-DATABASE_URL="postgresql://postgres:[SENHA]@db.[PROJETO].supabase.co:5432/postgres"
+# URL para o Transaction Pooler (Porta 6543) - ALTA PERFORMANCE
+# Ideal para acesso via aplicação (Server Components, API Routes)
+# Exemplo: ...:6543/postgres?pgbouncer=true
+DATABASE_URL="postgresql://postgres:[SENHA]@db.[PROJETO].supabase.co:6543/postgres?pgbouncer=true"
+
+# URL Direta / Session Pooler (Porta 5432) - MIGRAÇÔES
+# Obrigatória para rodar 'npx prisma migrate deploy'
+# Exemplo: ...:5432/postgres
+DIRECT_URL="postgresql://postgres:[SENHA]@db.[PROJETO].supabase.co:5432/postgres"
 
 # ===========================================
 # CLERK - AUTENTICAÇÃO

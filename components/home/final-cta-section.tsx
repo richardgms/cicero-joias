@@ -13,14 +13,17 @@ export function FinalCTASection() {
   ];
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-esmeralda via-esmeralda-dark to-[#0b1f18] py-8 text-center text-marfim md:py-12 lg:py-14">
-      {/* Preset Background Esmeralda - Ver docs/style-presets.md */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(207,154,36,0.15),transparent_50%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(255,255,255,0.08),transparent_40%)]" />
+    <section className="relative z-0 overflow-hidden bg-[#04160f] py-8 text-center text-marfim md:py-12 lg:py-14">
+      {/* Background Decorativo com suave gradiente apenas no topo, morrendo para a cor sólida do footer */}
+      <div className="absolute inset-0 bg-gradient-to-b from-esmeralda to-[#04160f] opacity-90" />
 
-      <AnimatedSection
+      {/* Preset Background Esmeralda */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(207,154,36,0.15),transparent_50%)]" />
+      </div>
+
+      <div
         className="relative mx-auto flex w-full max-w-3xl flex-col items-center gap-8 px-4 sm:px-6 lg:px-8"
-        delay={0.1}
       >
         {/* Título */}
         <h2 className="font-philosopher text-3xl font-bold text-marfim sm:text-4xl lg:text-5xl">
@@ -57,7 +60,7 @@ export function FinalCTASection() {
           Falar no WhatsApp
           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
         </motion.a>
-      </AnimatedSection>
+      </div>
     </section>
   );
 }

@@ -8,18 +8,21 @@
 
 /* Focus Visible - WCAG 2.1 Level AAA */
 :focus-visible {
-  outline: 2px solid #184438; /* esmeralda */
+  outline: 2px solid #184438;
+  /* esmeralda */
   outline-offset: 2px;
 }
 
 /* Scroll suave nativo (fallback) */
 html {
   scroll-behavior: smooth;
+  background-color: #04160f;
 }
 
 /* Reduzir animações complexas para usuários que preferem reduzir movimento */
 /* Mas manter transições de hover para feedback essencial de UI */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -52,33 +55,37 @@ html {
   --background-end-rgb: 255, 255, 255;
   --background: 36 33% 97%;
   --foreground: 162 60% 14%;
-  
+
   --muted: 162 30% 95%;
   --muted-foreground: 162 25% 30%;
-  
+
   --popover: 0 0% 100%;
   --popover-foreground: 162 60% 14%;
-  
+
   --card: 0 0% 100%;
   --card-foreground: 162 60% 14%;
-  
+
   --border: 166 12% 80%;
   --input: 166 12% 80%;
-  
-  --primary: 162 57% 15%; /* Esmeralda */
-  --primary-foreground: 36 33% 97%; /* Marfim */
-  
-  --secondary: 39 81% 57%; /* Ouro */
-  --secondary-foreground: 162 60% 14%; /* Esmeralda (texto em fundos ouro) */
-  
+
+  --primary: 162 57% 15%;
+  /* Esmeralda */
+  --primary-foreground: 36 33% 97%;
+  /* Marfim */
+
+  --secondary: 39 81% 57%;
+  /* Ouro */
+  --secondary-foreground: 162 60% 14%;
+  /* Esmeralda (texto em fundos ouro) */
+
   --accent: 166 40% 80%;
   --accent-foreground: 162 60% 14%;
-  
+
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 98%;
-  
+
   --ring: 36 33% 88%;
-  
+
   --radius: 0.5rem;
 
   /* Cores do tema */
@@ -103,8 +110,9 @@ html {
   * {
     border-color: hsl(var(--border));
   }
+
   body {
-    background-color: hsl(var(--background));
+    background-color: #04160f;
     color: hsl(var(--foreground));
     font-family: var(--font-sans);
     font-feature-settings: "rlig" 1, "calt" 1;
@@ -123,6 +131,7 @@ html {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -133,6 +142,7 @@ html {
   0% {
     background-position: -200px 0;
   }
+
   100% {
     background-position: calc(200px + 100%) 0;
   }
@@ -186,12 +196,10 @@ html {
 
 /* Animação de loading para imagens */
 .image-placeholder {
-  background: linear-gradient(
-    90deg,
-    hsl(var(--marfim-dark) / 0.5) 25%,
-    hsl(var(--marfim-dark) / 0.7) 50%,
-    hsl(var(--marfim-dark) / 0.5) 75%
-  );
+  background: linear-gradient(90deg,
+      hsl(var(--marfim-dark) / 0.5) 25%,
+      hsl(var(--marfim-dark) / 0.7) 50%,
+      hsl(var(--marfim-dark) / 0.5) 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
 }
@@ -200,6 +208,7 @@ html {
   0% {
     background-position: 200% 0;
   }
+
   100% {
     background-position: -200% 0;
   }

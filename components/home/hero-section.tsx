@@ -43,8 +43,8 @@ export function HeroSection() {
 
         {/* 1. Título H1 */}
         <h1 className="font-philosopher font-bold leading-none mb-3 md:mb-4">
-          <span className="block text-[clamp(40px,6vw+20px,80px)]">Desde 1985</span>
-          <span className="block text-[clamp(28px,4vw+12px,56px)] text-ouro">criando e cuidando de joias</span>
+          <span className="block text-[clamp(36px,6vw+20px,80px)]">Desde 1985</span>
+          <span className="block text-[clamp(24px,4vw+10px,56px)] text-ouro">criando e cuidando de joias</span>
         </h1>
 
         {/* 2. Subtítulo */}
@@ -53,7 +53,7 @@ export function HeroSection() {
         </p>
 
         {/* 3. Cards de Métricas - Grid com solução para 3 cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 max-w-[66rem] mx-auto
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 lg:gap-16 max-w-[66rem] mx-auto
           [&>*:nth-child(3)]:md:col-span-2
           [&>*:nth-child(3)]:md:justify-self-center
           [&>*:nth-child(3)]:md:max-w-[50%]

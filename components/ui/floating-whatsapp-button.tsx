@@ -73,13 +73,13 @@ export function FloatingWhatsAppButton({
             href={whatsappLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] shadow-lg shadow-black/20 transition-all duration-300 hover:shadow-xl hover:shadow-[#25D366]/40 md:h-16 md:w-16 animate-bounce"
+            className="group relative flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] shadow-lg shadow-black/20 transition-all duration-300 hover:shadow-xl hover:shadow-[#25D366]/40 md:h-16 md:w-16"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             aria-label="Conversar no WhatsApp"
           >
-            {/* Pulso de atenção */}
-            <span className="absolute inset-0 animate-ping rounded-full bg-[#25D366] opacity-20" />
+            {/* Pulso de atenção - Mais lento (3s) */}
+            <span className="absolute inset-0 animate-[ping_3s_cubic-bezier(0,0,0.2,1)_infinite] rounded-full bg-[#25D366] opacity-20" />
 
             {/* Ícone do WhatsApp */}
             <WhatsappIcon className="relative z-10 h-7 w-7 text-white md:h-8 md:w-8" />

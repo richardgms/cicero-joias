@@ -95,7 +95,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR" className={`${inter.variable} ${playfair.variable} ${jost.variable} ${philosopher.variable} ${montserrat.variable}`}>
-      <body suppressHydrationWarning className="min-h-screen bg-background font-inter antialiased">
+      <body suppressHydrationWarning className="min-h-screen bg-[#04160f] font-inter antialiased">
         <Providers>
           <ConditionalLayout>{children}</ConditionalLayout>
           <Toaster />

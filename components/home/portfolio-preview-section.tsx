@@ -88,7 +88,7 @@ export function PortfolioPreviewSection() {
             lg:[&>*:nth-child(3)]:justify-self-auto
             lg:[&>*:nth-child(3)]:w-full">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="aspect-[3/4] rounded-3xl bg-grafite/10 animate-pulse" />
+              <div key={i} className="aspect-[4/5] sm:aspect-[3/4] rounded-3xl bg-grafite/10 animate-pulse" />
             ))}
           </div>
         ) : error ? (
@@ -124,7 +124,7 @@ export function PortfolioPreviewSection() {
                     category: item.category,
                     id: item.id
                   })}`} className="block group">
-                    <div className="relative aspect-[3/4] overflow-hidden rounded-3xl">
+                    <div className="relative aspect-[4/5] sm:aspect-[3/4] overflow-hidden rounded-3xl">
                       {/* Imagem */}
                       <Image
                         src={item.mainImage || '/assets/images/placeholder-jewelry.svg'}
