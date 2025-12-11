@@ -1,0 +1,10 @@
+export { ConsertosHeroSection } from './hero-section';
+export { ConsertosAboutSection } from './about-section';
+export { ConsertosDifferentialsSection } from './differentials-section';
+export { ConsertosProcessSection } from './process-section';
+export { ConsertosServicesSection } from './services-section';
+export { ConsertosTestimonialsSection } from './testimonials-section';
+export { ConsertosGuaranteesSection } from './guarantees-section';
+export { ConsertosPostCareSection } from './post-care-section';
+export { ConsertosFAQSection } from './faq-section';
+export { ConsertosFinalCTASection } from './final-cta-section';
