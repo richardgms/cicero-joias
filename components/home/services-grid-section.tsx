@@ -71,17 +71,19 @@ export function ServicesGridSection() {
             return (
               <motion.div
                 key={service.title}
-                className="group relative w-[85vw] flex-shrink-0 snap-center sm:w-full"
+                className="group relative w-[85vw] flex-shrink-0 snap-center sm:w-full select-none touch-pan-x"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 viewport={{ once: true }}
                 role="listitem"
+                onContextMenu={(e: React.MouseEvent) => e.preventDefault()}
               >
                 <Link
                   href={service.href}
-                  className="block h-full"
+                  className="block h-full select-none [-webkit-touch-callout:none]"
                   aria-label={`Saiba mais sobre ${service.title}`}
+                  draggable={false}
                 >
                   <div className="relative flex h-full min-h-[280px] flex-col justify-start overflow-hidden rounded-3xl border border-white/60 bg-white/60 backdrop-blur-[2px] p-8 shadow-[0_4px_20px_-4px_rgba(24,68,52,0.05)] transition-all duration-500 hover:border-esmeralda/30 hover:bg-white hover:shadow-[0_20px_40px_-12px_rgba(24,68,52,0.15)] hover:-translate-y-1">
                     {/* Ícone Background Grande - Decorativo */}
