@@ -71,7 +71,7 @@ export function ServicesGridSection() {
             return (
               <motion.div
                 key={service.title}
-                className="group relative w-[85vw] flex-shrink-0 snap-center sm:w-full select-none touch-pan-x"
+                className="group relative w-[85vw] flex-shrink-0 snap-center sm:w-full select-none"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
@@ -81,7 +81,7 @@ export function ServicesGridSection() {
               >
                 <Link
                   href={service.href}
-                  className="block h-full select-none [-webkit-touch-callout:none]"
+                  className="block h-full select-none [-webkit-touch-callout:none] [-webkit-tap-highlight-color:transparent]"
                   aria-label={`Saiba mais sobre ${service.title}`}
                   draggable={false}
                 >
