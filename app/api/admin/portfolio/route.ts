@@ -275,8 +275,10 @@ export async function GET() {
       }
     }
 
+
     console.error(`[DEBUG] [${requestId}] Final error categorization: ${statusCode} - ${userMessage}`);
 
+    // GARANTIA: Sempre retornar JSON válido mesmo em caso de erro fatal
     return NextResponse.json(
       {
         error: userMessage,
