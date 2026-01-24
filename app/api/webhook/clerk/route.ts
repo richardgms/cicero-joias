@@ -81,33 +81,21 @@ async function handleUserCreated(userData: UserJSON) {
       return;
     }
 
-    // Verificar se cliente já existe
-    const existingClient = await prisma.client.findFirst({
-      where: {
-        OR: [
-          { email },
-          { clerkUserId }
-        ]
-      }
+    // Verificar se cliente já existe pelo email
+    const existingClient = await prisma.client.findUnique({
+      where: { email }
     });
 
     if (existingClient) {
-      // Atualizar clerkUserId se não estiver definido
-      if (!existingClient.clerkUserId) {
-        await prisma.client.update({
-          where: { id: existingClient.id },
-          data: { clerkUserId }
-        });
-      }
+      // Cliente já existe, nada a fazer pois não temos clerkUserId no banco
       return;
     }
 
-    // Criar cliente diretamente (sem criar User na tabela local)
+    // Criar cliente diretamente
     await prisma.client.create({
       data: {
         name: `${firstName} ${lastName}`.trim() || email.split('@')[0],
         email,
-        clerkUserId,
       }
     });
 
@@ -119,24 +107,17 @@ async function handleUserCreated(userData: UserJSON) {
 // Função para processar atualização de usuário
 async function handleUserUpdated(userData: UserJSON) {
   try {
-    const clerkUserId = userData.id;
     const email = userData.email_addresses?.[0]?.email_address;
     const firstName = userData.first_name || '';
     const lastName = userData.last_name || '';
 
-    if (!email || !clerkUserId) return;
+    if (!email) return;
 
-    // Atualizar dados do cliente usando clerkUserId ou email
-    await prisma.client.updateMany({
-      where: {
-        OR: [
-          { clerkUserId },
-          { email }
-        ]
-      },
+    // Atualizar dados do cliente usando apenas o email
+    await prisma.client.update({
+      where: { email },
       data: {
         name: `${firstName} ${lastName}`.trim() || email.split('@')[0],
-        clerkUserId, // Garantir que o clerkUserId está atualizado
       }
     });
 
@@ -148,26 +129,14 @@ async function handleUserUpdated(userData: UserJSON) {
 // Função para processar exclusão de usuário
 async function handleUserDeleted(userData: UserJSON | { id?: string; deleted?: boolean; object?: string }) {
   try {
-    const clerkUserId = userData.id;
-    // Em eventos de delete, o email pode não vir, depende da interface. 
-    // UserJSON tem email_addresses, mas DeletedObjectJSON tem apenas id e deleted.
-    // Vamos assumir que tentamos buscar pelo ID.
-
-    if (!clerkUserId) return;
-
-    // Soft delete - remove clerkUserId do cliente mas mantém os dados
-    // Busca apenas pelo ID pois o email pode não estar disponível
-    await prisma.client.updateMany({
-      where: {
-        clerkUserId
-      },
-      data: {
-        clerkUserId: null, // Remove a conexão com Clerk
-        updatedAt: new Date(),
-      }
-    });
-
+    const id = userData.id;
+    console.log(`[WEBHOOK] Usuário deletado no Clerk: ${id}. Ação no banco ignorada (sem vinculo de ID).`);
   } catch (error) {
     console.error('Erro ao processar exclusão de usuário:', error);
   }
+}
+
+  } catch (error) {
+  console.error('Erro ao processar exclusão de usuário:', error);
+}
 } 
