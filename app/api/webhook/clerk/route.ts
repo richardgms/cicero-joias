@@ -135,8 +135,3 @@ async function handleUserDeleted(userData: UserJSON | { id?: string; deleted?: b
     console.error('Erro ao processar exclusão de usuário:', error);
   }
 }
-
-  } catch (error) {
-  console.error('Erro ao processar exclusão de usuário:', error);
-}
-} 
