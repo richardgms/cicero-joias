@@ -21,6 +21,7 @@ import { Switch } from '@/components/ui/switch';
 
 const categoryOptions = {
   JEWELRY: 'Joias',
+  WEDDING_RINGS: 'Alianças',
   RINGS: 'Anéis',
   NECKLACES: 'Colares',
   EARRINGS: 'Brincos',
@@ -66,7 +67,7 @@ export default function NewProductPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.name || !formData.category) {
       alert('Por favor, preencha todos os campos obrigatórios');
       return;
@@ -115,13 +116,13 @@ export default function NewProductPage() {
     const reader = new FileReader();
     reader.onload = (event) => {
       const result = event.target?.result as string;
-      
+
       if (isMain) {
         setFormData(prev => ({ ...prev, mainImage: result }));
       } else {
-        setFormData(prev => ({ 
-          ...prev, 
-          images: [...prev.images, result] 
+        setFormData(prev => ({
+          ...prev,
+          images: [...prev.images, result]
         }));
       }
     };
@@ -184,8 +185,8 @@ export default function NewProductPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="category">Categoria *</Label>
-                    <Select 
-                      value={formData.category} 
+                    <Select
+                      value={formData.category}
                       onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
                       required
                     >
@@ -371,7 +372,7 @@ export default function NewProductPage() {
                         </Button>
                       </div>
                     ))}
-                    
+
                     <label className="flex flex-col items-center justify-center h-24 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
                       <Upload className="w-6 h-6 text-gray-400" />
                       <span className="text-xs text-gray-500 mt-1">Adicionar</span>
@@ -432,7 +433,7 @@ export default function NewProductPage() {
                     </>
                   )}
                 </Button>
-                
+
                 <Button type="button" variant="outline" className="w-full" asChild>
                   <Link href="/admin/products">
                     Cancelar

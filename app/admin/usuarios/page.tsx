@@ -27,11 +27,7 @@ interface AdminUserClientInfo {
   name: string;
   phone: string | null;
   whatsapp: string | null;
-  loyaltyLevel: 'CLIENT' | 'SPECIAL' | 'VIP';
-  loyaltyPoints: number;
   createdAt: string;
-  ordersCount: number;
-  quotesCount: number;
 }
 
 interface AdminUser {
@@ -60,11 +56,7 @@ const roleLabels: Record<AdminUser['role'], string> = {
   CLIENT: 'Cliente',
 };
 
-const loyaltyLabels: Record<AdminUserClientInfo['loyaltyLevel'], string> = {
-  CLIENT: 'Cliente',
-  SPECIAL: 'Especial',
-  VIP: 'VIP',
-};
+
 
 function formatDate(value: string) {
   return new Date(value).toLocaleDateString('pt-BR', {
@@ -277,19 +269,7 @@ export default function AdminUsersPage() {
                         <TableCell>
                           {user.client ? (
                             <div className="space-y-2 text-sm text-esmeralda">
-                              <div className="flex items-center gap-2 text-xs">
-                                <Badge variant="outline" className="border-esmeralda/40 text-esmeralda">
-                                  {loyaltyLabels[user.client.loyaltyLevel]}
-                                </Badge>
-                                <span className="text-esmeralda/70">{user.client.loyaltyPoints} pontos</span>
-                              </div>
-                              <div className="text-xs text-esmeralda/70">
-                                Cliente desde {clientSince}
-                              </div>
-                              <div className="flex gap-4 text-xs text-esmeralda/70">
-                                <span>{user.client.ordersCount} pedidos</span>
-                                <span>{user.client.quotesCount} orçamentos</span>
-                              </div>
+
                             </div>
                           ) : (
                             <div className="text-xs text-esmeralda/80">

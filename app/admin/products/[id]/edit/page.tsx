@@ -22,6 +22,7 @@ import { Switch } from '@/components/ui/switch';
 
 const categoryOptions = {
   JEWELRY: 'Joias',
+  WEDDING_RINGS: 'Alianças',
   RINGS: 'Anéis',
   NECKLACES: 'Colares',
   EARRINGS: 'Brincos',
@@ -50,7 +51,7 @@ export default function EditProductPage() {
   const router = useRouter();
   const params = useParams();
   const productId = params.id as string;
-  
+
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [formData, setFormData] = useState<FormData>({
@@ -130,7 +131,7 @@ export default function EditProductPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.name || !formData.category) {
       alert('Por favor, preencha todos os campos obrigatórios');
       return;
@@ -140,7 +141,7 @@ export default function EditProductPage() {
 
     try {
       // Função auxiliar para converter valores numéricos
-      const toNumber = (value: any): number | undefined => {
+      const toNumber = (value: string | number | null | undefined): number | undefined => {
         if (value === null || value === undefined || value === '') {
           return undefined;
         }
@@ -164,21 +165,6 @@ export default function EditProductPage() {
         weight: toNumber(formData.weight),
         stock: toNumber(formData.stock) || 0, // stock não pode ser undefined, default 0
       };
-
-      // Debug: log dos dados sendo enviados
-      console.log('Dados sendo enviados para API:', submitData);
-      console.log('Tipos dos campos numéricos:', {
-        price: `${typeof submitData.price} (${submitData.price})`,
-        weight: `${typeof submitData.weight} (${submitData.weight})`,
-        stock: `${typeof submitData.stock} (${submitData.stock})`
-      });
-      console.log('Campos de texto sendo limpos:', {
-        description: submitData.description === null ? 'LIMPANDO' : 'mantendo',
-        mainImage: submitData.mainImage === null ? 'LIMPANDO' : 'mantendo',
-        material: submitData.material === null ? 'LIMPANDO' : 'mantendo',
-        size: submitData.size === null ? 'LIMPANDO' : 'mantendo',
-        code: submitData.code === null ? 'LIMPANDO' : 'mantendo'
-      });
 
       const response = await fetch(`/api/admin/products/${productId}`, {
         method: 'PUT',
@@ -218,13 +204,13 @@ export default function EditProductPage() {
     const reader = new FileReader();
     reader.onload = (event) => {
       const result = event.target?.result as string;
-      
+
       if (isMain) {
         setFormData(prev => ({ ...prev, mainImage: result }));
       } else {
-        setFormData(prev => ({ 
-          ...prev, 
-          images: [...prev.images, result] 
+        setFormData(prev => ({
+          ...prev,
+          images: [...prev.images, result]
         }));
       }
     };
@@ -298,8 +284,8 @@ export default function EditProductPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="category">Categoria *</Label>
-                    <Select 
-                      value={formData.category} 
+                    <Select
+                      value={formData.category}
                       onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
                       required
                     >
@@ -485,7 +471,7 @@ export default function EditProductPage() {
                         </Button>
                       </div>
                     ))}
-                    
+
                     <label className="flex flex-col items-center justify-center h-24 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
                       <Upload className="w-6 h-6 text-gray-400" />
                       <span className="text-xs text-gray-500 mt-1">Adicionar</span>
@@ -546,7 +532,7 @@ export default function EditProductPage() {
                     </>
                   )}
                 </Button>
-                
+
                 <Button type="button" variant="outline" className="w-full" asChild>
                   <Link href="/admin/products">
                     Cancelar

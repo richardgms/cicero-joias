@@ -39,3 +39,12 @@ tsconfig.tsbuildinfo
 !.vscode/extensions.json
 # clerk configuration (can include secrets)
 /.clerk/
+
+# Antigravity Agent
+.agent/
+!.agent/agents/
+!.agent/scripts/
+!.agent/skills/
+!.agent/workflows/
+!.agent/rules/
+!.agent/ARCHITECTURE.md

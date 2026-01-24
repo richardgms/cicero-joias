@@ -26,14 +26,11 @@ export async function checkAdminAuth(): Promise<AdminAuthSuccess | AdminAuthErro
       };
     }
 
-    console.log(`✓ [Auth Check] User authenticated: ${userId}`);
-
     // Step 2: Fetch user from Clerk
     let user;
     try {
       const clerk = await clerkClient();
       user = await clerk.users.getUser(userId);
-      console.log(`✓ [Auth Check] User fetched from Clerk: ${user.id}`);
     } catch (clerkError: any) {
       console.error('❌ [Auth Check] Failed to fetch user from Clerk:', {
         userId,
@@ -51,7 +48,6 @@ export async function checkAdminAuth(): Promise<AdminAuthSuccess | AdminAuthErro
 
     // Step 3: Check if user has admin role
     const role = (user.publicMetadata?.role as string)?.toLowerCase();
-    console.log(`📋 [Auth Check] User role: ${role || 'none'}`);
 
     if (role !== 'admin') {
       console.warn(`🚫 [Auth Check] Access denied for user ${userId} - role: ${role || 'none'}`);
@@ -62,7 +58,6 @@ export async function checkAdminAuth(): Promise<AdminAuthSuccess | AdminAuthErro
       };
     }
 
-    console.log(`✅ [Auth Check] Admin access granted for user ${userId}`);
     return { userId };
 
   } catch (error: any) {

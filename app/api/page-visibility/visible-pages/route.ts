@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 
 // Mapeamento das páginas com seus slugs para fallback
 const PAGE_MAPPING = [
@@ -7,7 +7,7 @@ const PAGE_MAPPING = [
   { slug: 'sobre', title: 'Sobre Nós', href: '/sobre' },
   { slug: 'portfolio', title: 'Portfólio', href: '/portfolio' },
   { slug: 'pronta-entrega', title: 'Pronta Entrega', href: '/pronta-entrega' },
-  { slug: 'orcamento', title: 'Orçamento', href: '/orcamento' },
+
   { slug: 'minha-area', title: 'Minha Área', href: '/minha-area' }
 ]
 

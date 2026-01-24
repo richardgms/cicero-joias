@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { Prisma, ProductCategory } from '@prisma/client';
 
 export async function GET(request: Request) {
   try {
@@ -14,14 +15,14 @@ export async function GET(request: Request) {
     const skip = (page - 1) * limit;
 
     // Construir filtros
-    const where: any = {
+    const where: Prisma.ProductWhereInput = {
       isActive: true
       // Temporariamente sem filtro isReadyDelivery até ser aplicado ao banco
     };
 
     // Filtro por categoria
     if (category && category !== 'all') {
-      where.category = category.toUpperCase();
+      where.category = category.toUpperCase() as ProductCategory;
     }
 
     // Filtro por faixa de preço
@@ -79,7 +80,7 @@ export async function GET(request: Request) {
     const hasPrevPage = page > 1;
 
     // Adicionar imagem placeholder para produtos sem imagem
-    const productsWithPlaceholder = products.map((product: any) => ({
+    const productsWithPlaceholder = products.map((product) => ({
       ...product,
       mainImage: product.mainImage || '/assets/images/placeholder-jewelry.svg',
       images: product.images.length > 0 ? product.images : ['/assets/images/placeholder-jewelry.svg']
@@ -99,7 +100,7 @@ export async function GET(request: Request) {
 
   } catch (error) {
     console.error('Erro ao buscar produtos pronta entrega:', error);
-    
+
     // Log detalhado do erro
     if (error instanceof Error) {
       console.error('Erro detalhado:', {
@@ -108,9 +109,9 @@ export async function GET(request: Request) {
         name: error.name
       });
     }
-    
+
     return NextResponse.json(
-      { 
+      {
         error: 'Erro interno do servidor',
         details: error instanceof Error ? error.message : 'Erro desconhecido'
       },

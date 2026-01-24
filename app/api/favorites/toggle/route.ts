@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import prisma from '@/lib/prisma';
 import { currentUser } from '@clerk/nextjs/server';
 
 export async function POST(request: NextRequest) {
   try {
     const user = await currentUser();
-    
+
     if (!user) {
       return NextResponse.json({ error: 'Usuário não autenticado' }, { status: 401 });
     }
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     }
 
     const email = user.emailAddresses?.[0]?.emailAddress || user.primaryEmailAddress?.emailAddress;
-    
+
     if (!email) {
       return NextResponse.json({ error: 'Email do usuário não encontrado' }, { status: 400 });
     }
@@ -53,9 +53,9 @@ export async function POST(request: NextRequest) {
         where: { id: existingFavorite.id }
       });
 
-      return NextResponse.json({ 
+      return NextResponse.json({
         message: 'Item removido dos favoritos',
-        isFavorited: false 
+        isFavorited: false
       });
     } else {
       // Adicionar aos favoritos
@@ -66,9 +66,9 @@ export async function POST(request: NextRequest) {
         }
       });
 
-      return NextResponse.json({ 
+      return NextResponse.json({
         message: 'Item adicionado aos favoritos',
-        isFavorited: true 
+        isFavorited: true
       });
     }
   } catch (error) {

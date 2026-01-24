@@ -16,10 +16,10 @@ import { WhatsappIcon } from '@/components/icons';
 const whatsappUrl = 'https://wa.me/5583991180251?text=Ola! Quero falar com a Cícero Joias.';
 
 const services = [
-  { name: 'Alianças personalizadas', href: '/orcamento?tipo=aliancas' },
-  { name: 'Restauração de joias', href: '/orcamento?tipo=restauracao' },
-  { name: 'Banho de ouro', href: '/orcamento?tipo=banho-ouro' },
-  { name: 'Anéis de formatura', href: '/orcamento?tipo=anel-formatura' },
+  { name: 'Alianças personalizadas', href: '/servicos' },
+  { name: 'Restauração de joias', href: '/servicos' },
+  { name: 'Banho de ouro', href: '/servicos' },
+  { name: 'Anéis de formatura', href: '/servicos' },
 ];
 
 const socials = [

@@ -80,15 +80,9 @@ export function PortfolioPreviewSection() {
         </AnimatedSection>
 
         {loading ? (
-          <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3
-            md:[&>*:nth-child(3)]:col-span-2
-            md:[&>*:nth-child(3)]:justify-self-center
-            md:[&>*:nth-child(3)]:w-1/2
-            lg:[&>*:nth-child(3)]:col-span-1
-            lg:[&>*:nth-child(3)]:justify-self-auto
-            lg:[&>*:nth-child(3)]:w-full">
+          <div className="flex flex-wrap justify-center gap-6">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="aspect-[4/5] sm:aspect-[3/4] rounded-3xl bg-grafite/10 animate-pulse" />
+              <div key={i} className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] max-w-sm aspect-[4/5] sm:aspect-[3/4] rounded-3xl bg-grafite/10 animate-pulse" />
             ))}
           </div>
         ) : error ? (
@@ -103,22 +97,16 @@ export function PortfolioPreviewSection() {
               <p className="font-montserrat text-xs text-marfim/70 leading-relaxed">Em breve, novos trabalhos especiais serão destacados aqui.</p>
             </div>
             <Link href="/portfolio">
-              <Button variant="outline" className="font-montserrat border-marfim/30 text-marfim hover:bg-marfim/5 hover:border-marfim/50 transition-all duration-500">
+              <Button variant="outline" className="bg-transparent font-montserrat border-marfim/30 text-marfim hover:bg-marfim/5 hover:border-marfim/50 transition-all duration-500">
                 Ver todo o portfólio
               </Button>
             </Link>
           </div>
         ) : (
           <>
-            <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3
-              md:[&>*:nth-child(3)]:col-span-2
-              md:[&>*:nth-child(3)]:justify-self-center
-              md:[&>*:nth-child(3)]:w-1/2
-              lg:[&>*:nth-child(3)]:col-span-1
-              lg:[&>*:nth-child(3)]:justify-self-auto
-              lg:[&>*:nth-child(3)]:w-full">
+            <div className="flex flex-wrap justify-center gap-6">
               {items.map((item, index) => (
-                <AnimatedSection key={item.id} delay={0.1 + index * 0.1}>
+                <AnimatedSection key={item.id} delay={0.1 + index * 0.1} className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] max-w-sm">
                   <Link href={`/portfolio/${generatePortfolioSlug({
                     title: item.title,
                     category: item.category,

@@ -8,7 +8,7 @@ const updateProductSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório').optional(),
   description: z.string().optional().nullable(),
   price: z.number().positive('Preço deve ser positivo').optional().nullable(),
-  category: z.enum(['JEWELRY', 'RINGS', 'NECKLACES', 'EARRINGS', 'BRACELETS', 'WATCHES', 'ACCESSORIES']).optional(),
+  category: z.enum(['JEWELRY', 'RINGS', 'NECKLACES', 'EARRINGS', 'BRACELETS', 'WATCHES', 'ACCESSORIES', 'WEDDING_RINGS']).optional(),
   isActive: z.boolean().optional(),
   isReadyDelivery: z.boolean().optional(),
   mainImage: z.string().optional().nullable(),
@@ -155,8 +155,8 @@ export async function PUT(
     if (error instanceof z.ZodError) {
       console.error('Erro de validação:', error.errors);
       return NextResponse.json(
-        { 
-          error: 'Dados inválidos', 
+        {
+          error: 'Dados inválidos',
           details: error.errors.map(err => `${err.path.join('.')}: ${err.message}`).join(', ')
         },
         { status: 400 }
@@ -198,7 +198,7 @@ export async function DELETE(
     // Verificar se produto está vinculado a itens do portfólio
     if (existingProduct.portfolioItems.length > 0) {
       return NextResponse.json(
-        { 
+        {
           error: 'Não é possível deletar produto vinculado a itens do portfólio',
           details: `Produto está vinculado a ${existingProduct.portfolioItems.length} item(s) do portfólio`
         },

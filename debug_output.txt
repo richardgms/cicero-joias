@@ -1,0 +1,23 @@
+QUERYING...
+FOUND: cmkpk5q4y0000m14s2udb7xzg
+Title: Aliança de Ouro 16k Diamantada com Três Frisos
+Has Product? No
+LAST 5 ITEMS:
+[
+  {
+    "id": "cmkpk5q4y0000m14s2udb7xzg",
+    "title": "Aliança de Ouro 16k Diamantada com Três Frisos"
+  },
+  {
+    "id": "cmg39gptg000013f0cmmtcs07",
+    "title": "Aliança de Prata 990 Fosca com Detalhe Central Banhado a Ouro 18k"
+  },
+  {
+    "id": "cmg34xgrg0003a3rg2t59i1r6",
+    "title": "Aliança Tradicional em Ouro 18k"
+  },
+  {
+    "id": "cmg0416hk00004spd54sxdr89",
+    "title": "Aliança de Ouro 16k Polido com Detalhe Fosco Lateral"
+  }
+]

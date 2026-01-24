@@ -1,6 +1,7 @@
 import { Webhook } from 'svix';
 import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
+import { WebhookEvent, UserJSON } from '@clerk/nextjs/server';
 import prisma from '@/lib/prisma';
 
 export async function POST(req: Request) {
@@ -26,13 +27,13 @@ export async function POST(req: Request) {
     // Verificar assinatura do webhook
     const wh = new Webhook(process.env.CLERK_WEBHOOK_SECRET || "");
 
-    let evt;
+    let evt: WebhookEvent;
     try {
       evt = wh.verify(body, {
         "svix-id": svixId,
         "svix-timestamp": svixTimestamp,
         "svix-signature": svixSignature,
-      });
+      }) as WebhookEvent;
     } catch (err) {
       console.error('Erro na verificação do webhook:', err);
       return NextResponse.json(
@@ -42,21 +43,19 @@ export async function POST(req: Request) {
     }
 
     // Processar eventos do Clerk
-    const { type, data } = evt as { type: string; data: any };
-    console.log(`Evento recebido: ${type}`);
+    const eventType = evt.type;
 
-    switch (type) {
+    switch (eventType) {
       case 'user.created':
-        await handleUserCreated(data);
+        await handleUserCreated(evt.data);
         break;
       case 'user.updated':
-        await handleUserUpdated(data);
+        await handleUserUpdated(evt.data);
         break;
       case 'user.deleted':
-        await handleUserDeleted(data);
+        await handleUserDeleted(evt.data);
         break;
-      default:
-        console.log(`Evento não processado: ${type}`);
+      // Removido log de evento não processado para evitar poluição
     }
 
     return NextResponse.json({ success: true });
@@ -70,7 +69,7 @@ export async function POST(req: Request) {
 }
 
 // Função para processar criação de usuário
-async function handleUserCreated(userData: any) {
+async function handleUserCreated(userData: UserJSON) {
   try {
     const clerkUserId = userData.id;
     const email = userData.email_addresses?.[0]?.email_address;
@@ -93,14 +92,12 @@ async function handleUserCreated(userData: any) {
     });
 
     if (existingClient) {
-      console.log(`Cliente ${email} já existe no banco`);
       // Atualizar clerkUserId se não estiver definido
       if (!existingClient.clerkUserId) {
         await prisma.client.update({
           where: { id: existingClient.id },
           data: { clerkUserId }
         });
-        console.log(`✅ ClerkUserId atualizado para cliente existente ${email}`);
       }
       return;
     }
@@ -114,14 +111,13 @@ async function handleUserCreated(userData: any) {
       }
     });
 
-    console.log(`✅ Cliente ${email} criado e sincronizado com Clerk ID ${clerkUserId}!`);
   } catch (error) {
     console.error('Erro ao criar usuário:', error);
   }
 }
 
 // Função para processar atualização de usuário
-async function handleUserUpdated(userData: any) {
+async function handleUserUpdated(userData: UserJSON) {
   try {
     const clerkUserId = userData.id;
     const email = userData.email_addresses?.[0]?.email_address;
@@ -144,27 +140,26 @@ async function handleUserUpdated(userData: any) {
       }
     });
 
-    console.log(`✅ Cliente ${email} (Clerk ID: ${clerkUserId}) atualizado com sucesso!`);
   } catch (error) {
     console.error('Erro ao atualizar usuário:', error);
   }
 }
 
 // Função para processar exclusão de usuário
-async function handleUserDeleted(userData: any) {
+async function handleUserDeleted(userData: UserJSON | { id?: string; deleted?: boolean; object?: string }) {
   try {
     const clerkUserId = userData.id;
-    const email = userData.email_addresses?.[0]?.email_address;
+    // Em eventos de delete, o email pode não vir, depende da interface. 
+    // UserJSON tem email_addresses, mas DeletedObjectJSON tem apenas id e deleted.
+    // Vamos assumir que tentamos buscar pelo ID.
 
-    if (!email || !clerkUserId) return;
+    if (!clerkUserId) return;
 
     // Soft delete - remove clerkUserId do cliente mas mantém os dados
+    // Busca apenas pelo ID pois o email pode não estar disponível
     await prisma.client.updateMany({
       where: {
-        OR: [
-          { clerkUserId },
-          { email }
-        ]
+        clerkUserId
       },
       data: {
         clerkUserId: null, // Remove a conexão com Clerk
@@ -172,7 +167,6 @@ async function handleUserDeleted(userData: any) {
       }
     });
 
-    console.log(`✅ Cliente ${email} (Clerk ID: ${clerkUserId}) desvinculado do Clerk`);
   } catch (error) {
     console.error('Erro ao processar exclusão de usuário:', error);
   }

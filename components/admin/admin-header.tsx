@@ -20,7 +20,7 @@ export function AdminHeader() {
 
   const navigation = useMemo(() => {
     // Começar com link de Início
-    let nav = [essentialLinks[0]]; // { name: 'Início', href: '/' }
+    const nav = [essentialLinks[0]]; // { name: 'Início', href: '/' }
 
     // Adicionar páginas visíveis do banco de dados
     if (!loading && visiblePages.length > 0) {
@@ -34,7 +34,8 @@ export function AdminHeader() {
     // Adicionar link de Minha Área
     nav.push(essentialLinks[1]); // { name: 'Minha Área', href: '/minha-area' }
 
-    return nav;
+    // Deduplicar por href para evitar chaves duplicadas (ex: se Minha Área vier do banco)
+    return Array.from(new Map(nav.map(item => [item.href, item])).values());
   }, [visiblePages, loading]);
 
   return (

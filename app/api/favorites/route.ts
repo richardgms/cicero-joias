@@ -1,19 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import prisma from '@/lib/prisma';
 import { currentUser } from '@clerk/nextjs/server';
 
 export async function GET(request: NextRequest) {
   try {
     const user = await currentUser();
-    
+
     if (!user) {
       return NextResponse.json({ error: 'Usuário não autenticado' }, { status: 401 });
     }
 
     console.log('User object:', user);
-    
+
     const email = user.emailAddresses?.[0]?.emailAddress || user.primaryEmailAddress?.emailAddress;
-    
+
     if (!email) {
       console.error('Email não encontrado para o usuário:', user.id);
       return NextResponse.json({ error: 'Email do usuário não encontrado' }, { status: 400 });

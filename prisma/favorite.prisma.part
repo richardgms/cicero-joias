@@ -1,0 +1,12 @@
+
+model Favorite {
+  id              String        @id @default(cuid())
+  clientId        String
+  portfolioItemId String
+  createdAt       DateTime      @default(now())
+  client          Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  portfolioItem   PortfolioItem @relation(fields: [portfolioItemId], references: [id], onDelete: Cascade)
+
+  @@unique([clientId, portfolioItemId])
+  @@map("favorites")
+}

@@ -46,16 +46,8 @@ const navigation = [
     href: '/admin/usuarios',
     icon: Users,
   },
-  {
-    name: 'Orçamentos',
-    href: '/admin/orcamentos',
-    icon: FileText,
-  },
-  {
-    name: 'Relatórios',
-    href: '/admin/relatorios',
-    icon: BarChart3,
-  },
+
+
 ];
 
 export function AdminSidebar() {

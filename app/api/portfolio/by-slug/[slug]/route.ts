@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { extractIdFromSlug, isValidPortfolioSlug } from '@/lib/slug-utils';
-import { prisma } from '@/lib/prisma';
+import prisma from '@/lib/prisma';
 
 export async function GET(
   request: NextRequest,
@@ -18,7 +18,10 @@ export async function GET(
 
     // Extrair ID do slug
     const shortId = extractIdFromSlug(slug);
+    console.log(`[API Debug] Fetching portfolio item. Slug: "${slug}", Extracted ShortId: "${shortId}"`);
+
     if (!shortId) {
+      console.log('[API Debug] Short ID invalid');
       return NextResponse.json(
         { error: 'ID não encontrado no slug' },
         { status: 400 }
@@ -36,6 +39,8 @@ export async function GET(
         product: true,
       }
     });
+
+    console.log(`[API Debug] Query result: ${portfolioItem ? 'FOUND' : 'NOT FOUND'}. ID searched ending with: ${shortId}`);
 
     if (!portfolioItem) {
       return NextResponse.json(
@@ -67,7 +72,7 @@ export async function GET(
 
     // As imagens já estão no array images do PortfolioItem
     const processedImages = portfolioItem.images;
-    
+
     const response = {
       portfolioItem: {
         ...portfolioItem,

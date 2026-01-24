@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth, currentUser } from '@clerk/nextjs/server'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 import { z } from 'zod'
 
 // Schemas de validação
@@ -56,17 +56,7 @@ const DEFAULT_PAGES = [
     updatedAt: new Date().toISOString(),
     visibilityLogs: []
   },
-  {
-    id: 'default-5',
-    slug: 'orcamento',
-    title: 'Orçamento',
-    description: 'Formulário para solicitação de orçamentos',
-    isVisible: true,
-    priority: 5,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    visibilityLogs: []
-  },
+
   {
     id: 'default-6',
     slug: 'minha-area',
@@ -295,7 +285,7 @@ export async function PUT(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const { userId } = await auth()
-    
+
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -304,7 +294,7 @@ export async function POST(request: NextRequest) {
     const user = await currentUser()
     const userRole = (user?.publicMetadata?.role as string)?.toLowerCase()
     const isAdmin = userRole === 'admin'
-    
+
     if (!isAdmin) {
       return NextResponse.json({ error: 'Forbidden - Admin access required' }, { status: 403 })
     }
@@ -336,7 +326,7 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       page: newPage,
       message: `Page "${newPage.title}" created successfully`
     }, { status: 201 })
@@ -344,7 +334,7 @@ export async function POST(request: NextRequest) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: 'Invalid request data', details: error.errors }, { status: 400 })
     }
-    
+
     console.error('Error creating page visibility:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }

@@ -82,7 +82,8 @@ export default function AdminProductsPage() {
         const data = await response.json();
         setProducts(data.products);
       } else {
-        console.error('Erro ao carregar produtos');
+        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+        console.error(`Erro ao carregar produtos: ${response.status} ${response.statusText}`, errorData);
       }
     } catch (error) {
       console.error('Erro ao carregar produtos:', error);
@@ -117,15 +118,15 @@ export default function AdminProductsPage() {
   const filteredProducts = useMemo(() => {
     return products.filter(product => {
       const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           product.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           product.code?.toLowerCase().includes(searchTerm.toLowerCase());
+        product.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.code?.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesCategory = categoryFilter === 'all' || product.category === categoryFilter;
       const matchesStatus = statusFilter === 'all' ||
-                           (statusFilter === 'active' && product.isActive) ||
-                           (statusFilter === 'inactive' && !product.isActive);
+        (statusFilter === 'active' && product.isActive) ||
+        (statusFilter === 'inactive' && !product.isActive);
       const matchesStock = stockFilter === 'all' ||
-                          (stockFilter === 'in_stock' && product.stock > 0) ||
-                          (stockFilter === 'out_of_stock' && product.stock === 0);
+        (stockFilter === 'in_stock' && product.stock > 0) ||
+        (stockFilter === 'out_of_stock' && product.stock === 0);
 
       return matchesSearch && matchesCategory && matchesStatus && matchesStock;
     });

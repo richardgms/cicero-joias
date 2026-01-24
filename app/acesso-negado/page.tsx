@@ -7,13 +7,13 @@ const pageNames: Record<string, string> = {
   'pronta-entrega': 'Pronta Entrega',
   'portfolio': 'Portfólio',
   'sobre': 'Sobre Nós',
-  'orcamento': 'Orçamento'
+
 };
 
-export default async function AcessoNegadoPage({ 
-  searchParams 
-}: { 
-  searchParams: Promise<{ page?: string }> 
+export default async function AcessoNegadoPage({
+  searchParams
+}: {
+  searchParams: Promise<{ page?: string }>
 }) {
   const params = await searchParams;
   const pageSlug = params.page;
@@ -35,7 +35,7 @@ export default async function AcessoNegadoPage({
         {/* Descrição personalizada */}
         <div className="text-gray-600 mb-6 space-y-3">
           <p>
-            A página <strong className="text-esmeralda">{pageName}</strong> está temporariamente 
+            A página <strong className="text-esmeralda">{pageName}</strong> está temporariamente
             indisponível enquanto fazemos melhorias.
           </p>
           <div className="flex items-center justify-center text-sm text-amber-700 bg-amber-50 p-3 rounded-lg">
@@ -52,7 +52,7 @@ export default async function AcessoNegadoPage({
               Voltar ao Início
             </Link>
           </Button>
-          
+
           <Button variant="outline" asChild className="w-full border-esmeralda text-esmeralda hover:bg-esmeralda hover:text-white">
             <Link href="/portfolio">
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -65,8 +65,8 @@ export default async function AcessoNegadoPage({
         <div className="mt-8 pt-6 border-t border-gray-200">
           <p className="text-sm text-gray-500">
             Quer saber quando estará disponível?{' '}
-            <a 
-              href="https://wa.me/5583991180251?text=Olá! Gostaria de saber quando a página estará disponível." 
+            <a
+              href="https://wa.me/5583991180251?text=Olá! Gostaria de saber quando a página estará disponível."
               className="text-esmeralda hover:underline font-medium"
               target="_blank"
               rel="noopener noreferrer"

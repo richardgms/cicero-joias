@@ -56,43 +56,43 @@ export const servicesGrid: Array<WithIcon<{
   description: string;
   href: string;
 }>> = [
-  {
-    title: 'Alianças Personalizadas',
-    description: 'Alianças únicas sob medida com gravação personalizada, técnica sem emendas e certificado vitalício inclusos.',
-    href: '/servicos/aliancas-personalizadas',
-    icon: AliancasIcon,
-  },
-  {
-    title: 'Banho de Ouro Profissional',
-    description: 'Restaure o brilho das suas joias com banho de ouro 18k. Processo profissional que renova e protege suas peças.',
-    href: '/servicos/banho-de-ouro',
-    icon: BanhoOuroIcon,
-  },
-  {
-    title: 'Consertos Especializados',
-    description: 'Recuperação completa de joias: soldas, ajustes de tamanho, troca de pedras e restauração com garantia de qualidade.',
-    href: '/servicos/consertos',
-    icon: ConsertosIcon,
-  },
-  {
-    title: 'Joias Sob Medida',
-    description: 'Transforme suas ideias em joias exclusivas: anéis, brincos, pingentes e colares com design totalmente personalizado.',
-    href: '/servicos/joias-sob-medida',
-    icon: JoiasSobMedidaIcon,
-  },
-  {
-    title: 'Lentes de Óculos',
-    description: 'Troca de lentes para óculos com atendimento especializado. Qualidade, precisão e conforto para sua visão no dia a dia.',
-    href: '/servicos/lentes-de-oculos',
-    icon: OculosIcon,
-  },
-  {
-    title: 'Limpeza de Joias',
-    description: 'Limpeza profissional em prata, ouro e folheado. Restaura o brilho original de suas peças com processo especializado e seguro.',
-    href: '/servicos/limpeza-de-joias',
-    icon: Droplet,
-  },
-];
+    {
+      title: 'Alianças Personalizadas',
+      description: 'Alianças únicas sob medida com gravação personalizada, técnica sem emendas e certificado vitalício inclusos.',
+      href: '/servicos/aliancas-personalizadas',
+      icon: AliancasIcon,
+    },
+    {
+      title: 'Banho de Ouro Profissional',
+      description: 'Restaure o brilho das suas joias com banho de ouro 18k. Processo profissional que renova e protege suas peças.',
+      href: '/servicos/banho-de-ouro',
+      icon: BanhoOuroIcon,
+    },
+    {
+      title: 'Consertos Especializados',
+      description: 'Recuperação completa de joias: soldas, ajustes de tamanho, troca de pedras e restauração com garantia de qualidade.',
+      href: '/servicos/consertos',
+      icon: ConsertosIcon,
+    },
+    {
+      title: 'Joias Sob Medida',
+      description: 'Transforme suas ideias em joias exclusivas: anéis, brincos, pingentes e colares com design totalmente personalizado.',
+      href: '/servicos/joias-sob-medida',
+      icon: JoiasSobMedidaIcon,
+    },
+    {
+      title: 'Lentes de Óculos',
+      description: 'Troca de lentes para óculos com atendimento especializado. Qualidade, precisão e conforto para sua visão no dia a dia.',
+      href: '/servicos/lentes-de-oculos',
+      icon: OculosIcon,
+    },
+    {
+      title: 'Limpeza de Joias',
+      description: 'Limpeza profissional em prata, ouro e folheado. Restaura o brilho original de suas peças com processo especializado e seguro.',
+      href: '/servicos/limpeza-de-joias',
+      icon: Droplet,
+    },
+  ];
 
 // Hierarchical cards data with main featured card and secondary supporting cards
 export const authorityHierarchy = {
@@ -121,8 +121,8 @@ export const authorityHierarchy = {
     {
       value: '72h',
       label: 'resposta garantida',
-      description: 'Orçamento detalhado em até 72h.',
-      expandedDetails: 'Entendemos a ansiedade de planejar o momento perfeito. Por isso, garantimos resposta completa com valores, fotos e prazos em até 72 horas, para que vocês possam tomar decisões com tranquilidade.',
+      description: 'Atendimento ágil para suas dúvidas.',
+      expandedDetails: 'Entendemos a importância do seu tempo. Por isso, garantimos uma resposta rápida e completa para todas as suas dúvidas sobre nossos serviços e produtos, via WhatsApp ou presencialmente.',
       icon: Clock,
     },
     {

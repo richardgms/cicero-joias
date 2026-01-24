@@ -13,9 +13,9 @@ const alwaysPublicRoutes = [
 // Páginas que podem ser controladas por visibilidade
 const controllablePages = [
   "/sobre",
-  "/portfolio", 
+  "/portfolio",
   "/pronta-entrega",
-  "/orcamento",
+
 ];
 
 // Rotas que precisam de autenticação
@@ -29,13 +29,13 @@ function getPageSlugFromPath(pathname: string): string | null {
   if (pathname === '/sobre') return 'sobre';
   if (pathname === '/portfolio') return 'portfolio';
   if (pathname === '/pronta-entrega') return 'pronta-entrega';
-  if (pathname === '/orcamento') return 'orcamento';
+
   return null;
 }
 
 export default clerkMiddleware(async (auth, req) => {
   const pathName = req.nextUrl.pathname;
-  
+
   // Permitir todas as rotas sempre públicas
   if (alwaysPublicRoutes.includes(pathName)) {
     return NextResponse.next();
@@ -56,7 +56,7 @@ export default clerkMiddleware(async (auth, req) => {
   if (pageSlug && controllablePages.includes(pathName)) {
     // Por enquanto, vamos permitir todas as páginas e implementar a verificação no lado do cliente
     // Isso evita problemas de performance no middleware
-    
+
     // TODO: Implementar verificação de visibilidade no componente da página
     // Para MVP, vamos usar uma abordagem mais simples
   }

@@ -1,14 +1,14 @@
 import { NextResponse } from 'next/server';
-import { auth, clerkClient } from '@clerk/nextjs/server';
 import prisma from '@/lib/prisma';
 import { z } from 'zod';
+import { checkAdminAuth } from '@/lib/check-admin';
 
 // Schema de validação para criação de produto
 const createProductSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
   description: z.string().optional(),
   price: z.number().positive('Preço deve ser positivo').optional().nullable(),
-  category: z.enum(['JEWELRY', 'RINGS', 'NECKLACES', 'EARRINGS', 'BRACELETS', 'WATCHES', 'ACCESSORIES']),
+  category: z.enum(['JEWELRY', 'RINGS', 'NECKLACES', 'EARRINGS', 'BRACELETS', 'WATCHES', 'ACCESSORIES', 'WEDDING_RINGS']),
   isActive: z.boolean().default(true),
   isReadyDelivery: z.boolean().default(false),
   mainImage: z.string().optional(),
@@ -19,28 +19,6 @@ const createProductSchema = z.object({
   size: z.string().optional(),
   code: z.string().optional(),
 });
-
-async function checkAdminAuth() {
-  const { userId } = await auth();
-
-  if (!userId) {
-    return { error: 'Não autorizado', status: 401 };
-  }
-
-  try {
-    const client = await clerkClient();
-    const user = await client.users.getUser(userId);
-    const userRole = (user.publicMetadata?.role as string)?.toLowerCase();
-
-    if (userRole !== 'admin') {
-      return { error: 'Acesso negado', status: 403 };
-    }
-
-    return { userId };
-  } catch (error) {
-    return { error: 'Erro de autenticação', status: 500 };
-  }
-}
 
 // GET /api/admin/products - Listar produtos
 export async function GET() {
