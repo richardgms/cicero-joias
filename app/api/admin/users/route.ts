@@ -19,7 +19,8 @@ async function getClerkUsersWithClientData() {
           createdAt: true,
           clerkUserId: true,
           userId: true,
-        });
+        },
+      });
 
       // Map clients by their clerkUserId first, then fallback to userId
       clients.forEach(client => {
