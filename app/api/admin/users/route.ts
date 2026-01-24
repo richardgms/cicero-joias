@@ -14,19 +14,17 @@ async function getClerkUsersWithClientData() {
       const clients = await prisma.client.findMany({
         select: {
           id: true,
+          email: true,
           phone: true,
           whatsapp: true,
           createdAt: true,
-          clerkUserId: true,
-          userId: true,
         },
       });
 
-      // Map clients by their clerkUserId first, then fallback to userId
+      // Map clients by their email
       clients.forEach(client => {
-        const clerkId = client.clerkUserId || client.userId;
-        if (clerkId) {
-          clientMap.set(clerkId, client);
+        if (client.email) {
+          clientMap.set(client.email, client);
         }
       });
 
@@ -37,7 +35,8 @@ async function getClerkUsersWithClientData() {
     const users = clerkUsers.data.map((user: User) => {
       const role = (user.publicMetadata?.role as string)?.toUpperCase() || 'CLIENT';
       const isAdmin = role === 'ADMIN';
-      const clientData = clientMap.get(user.id);
+      const email = user.emailAddresses[0]?.emailAddress;
+      const clientData = email ? clientMap.get(email) : null;
 
       return {
         id: user.id,
