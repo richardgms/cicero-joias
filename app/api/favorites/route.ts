@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
     const client = await prisma.client.findUnique({
       where: { email },
       include: {
-        favorites: {
+        Favorite: {
           include: {
             portfolioItem: true
           },
@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ favorites: [] });
     }
 
-    return NextResponse.json({ favorites: client.favorites });
+    return NextResponse.json({ favorites: client.Favorite });
   } catch (error) {
     console.error('Erro ao buscar favoritos:', error);
     return NextResponse.json({ error: 'Erro interno do servidor' }, { status: 500 });
