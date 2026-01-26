@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth, currentUser } from '@clerk/nextjs/server'
+import { checkAdminAuth } from '@/lib/check-admin'
 import prisma from '@/lib/prisma'
 import { z } from 'zod'
 
@@ -61,22 +61,9 @@ const DEFAULT_PAGES = [
 // GET - Listar todas as configurações de visibilidade
 export async function GET() {
   try {
-    const { userId } = await auth()
-
-    if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    // Verificar se é admin - CORRIGIDO: usando publicMetadata
-    const user = await currentUser()
-    const userRole = (user?.publicMetadata?.role as string)?.toLowerCase()
-    const isAdmin = userRole === 'admin'
-
-    if (!isAdmin) {
-      return NextResponse.json({
-        error: 'Forbidden - Admin access required',
-        debug: { userRole, publicMetadata: user?.publicMetadata }
-      }, { status: 403 })
+    const authResult = await checkAdminAuth()
+    if ('error' in authResult) {
+      return NextResponse.json({ error: authResult.error }, { status: authResult.status })
     }
 
     // Tentar buscar dados do database com timeout
@@ -125,20 +112,11 @@ export async function GET() {
 // PUT - Atualizar visibilidade de uma página
 export async function PUT(request: NextRequest) {
   try {
-    const { userId } = await auth()
-
-    if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const authResult = await checkAdminAuth()
+    if ('error' in authResult) {
+      return NextResponse.json({ error: authResult.error }, { status: authResult.status })
     }
-
-    // Verificar se é admin - CORRIGIDO: usando publicMetadata
-    const user = await currentUser()
-    const userRole = (user?.publicMetadata?.role as string)?.toLowerCase()
-    const isAdmin = userRole === 'admin'
-
-    if (!isAdmin) {
-      return NextResponse.json({ error: 'Forbidden - Admin access required' }, { status: 403 })
-    }
+    const { userId, user } = authResult;
 
     const body = await request.json()
     const { slug, isVisible, changeReason } = updateVisibilitySchema.parse(body)
@@ -273,20 +251,11 @@ export async function PUT(request: NextRequest) {
 // POST - Criar nova configuração de página (se necessário)
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await auth()
-
-    if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const authResult = await checkAdminAuth()
+    if ('error' in authResult) {
+      return NextResponse.json({ error: authResult.error }, { status: authResult.status })
     }
-
-    // Verificar se é admin - CORRIGIDO: usando publicMetadata
-    const user = await currentUser()
-    const userRole = (user?.publicMetadata?.role as string)?.toLowerCase()
-    const isAdmin = userRole === 'admin'
-
-    if (!isAdmin) {
-      return NextResponse.json({ error: 'Forbidden - Admin access required' }, { status: 403 })
-    }
+    const { userId, user } = authResult;
 
     const createPageSchema = z.object({
       slug: z.string().min(1),

@@ -3,7 +3,10 @@ import { clerkClient } from '@clerk/nextjs/server';
 
 export interface AdminAuthSuccess {
   userId: string;
+  user: any; // Returning full user object for logging needs
 }
+
+
 
 export interface AdminAuthError {
   error: string;
@@ -58,7 +61,7 @@ export async function checkAdminAuth(): Promise<AdminAuthSuccess | AdminAuthErro
       };
     }
 
-    return { userId };
+    return { userId, user };
 
   } catch (error: any) {
     // This catch should only trigger for unexpected errors
