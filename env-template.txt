@@ -39,8 +39,8 @@ CLERK_WEBHOOK_SECRET="whsec_SUBSTITUA_PELO_SECRET_REAL"
 # URLs das páginas de autenticação (podem manter os valores padrão)
 NEXT_PUBLIC_CLERK_SIGN_IN_URL="/sign-in"
 NEXT_PUBLIC_CLERK_SIGN_UP_URL="/sign-up"
-NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL="/minha-area"
-NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL="/minha-area"
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL="/"
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL="/"
 
 # ===========================================
 # CONFIGURAÇÕES OPCIONAIS

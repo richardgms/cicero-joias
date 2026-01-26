@@ -7,10 +7,9 @@ import { Menu, X } from 'lucide-react';
 import { useUser, UserButton } from '@clerk/nextjs';
 import { usePageVisibility } from '@/hooks/use-page-visibility';
 
-// Links essenciais que sempre aparecem na navegação
+// Link essencial que sempre aparece na navegação
 const essentialLinks = [
   { name: 'Início', href: '/' },
-  { name: 'Minha Área', href: '/minha-area' },
 ];
 
 export function AdminHeader() {
@@ -31,12 +30,10 @@ export function AdminHeader() {
       nav.push(...dynamicPages);
     }
 
-    // Adicionar link de Minha Área
-    nav.push(essentialLinks[1]); // { name: 'Minha Área', href: '/minha-area' }
-
-    // Deduplicar por href para evitar chaves duplicadas (ex: se Minha Área vier do banco)
+    // Deduplicar por href para evitar chaves duplicadas
     return Array.from(new Map(nav.map(item => [item.href, item])).values());
   }, [visiblePages, loading]);
+
 
   return (
     <header className="sticky top-0 z-50 bg-white">

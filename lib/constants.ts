@@ -14,8 +14,6 @@ export const SYSTEM_ROUTES = {
         SERVICES: '/servicos',
         ABOUT: '/sobre',
         PORTFOLIO: '/portfolio',
-
-        MY_AREA: '/minha-area',
     }
 };
 

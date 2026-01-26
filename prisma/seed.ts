@@ -34,13 +34,6 @@ async function main() {
       description: 'Página com os serviços oferecidos pela Cícero Joias',
       isVisible: true,
       priority: 2
-    },
-    {
-      slug: 'minha-area',
-      title: 'Minha Área',
-      description: 'Área pessoal do usuário com favoritos',
-      isVisible: true,
-      priority: 6
     }
   ]
 

@@ -37,23 +37,23 @@ export function ServicesGridSection() {
   };
 
   return (
-    <section id="servicos" className="relative overflow-hidden bg-[#F8F5F0] py-10 sm:py-16">
+    <section id="servicos" className="relative overflow-hidden bg-surface-page py-10 sm:py-16">
       <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-12 px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <AnimatedSection className="space-y-6 text-center" delay={0.05}>
-          <span className="font-jost inline-flex items-center justify-center rounded-full border border-esmeralda/20 bg-white px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-esmeralda/80 hover:scale-105 hover:border-esmeralda/30 hover:shadow-sm transition-all duration-500 cursor-default">
+          <span className="font-jost inline-flex items-center justify-center rounded-full border border-text-primary/20 bg-surface-section px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-text-primary/80 hover:scale-105 hover:border-text-primary/30 hover:shadow-sm transition-all duration-500 cursor-default">
             NOSSOS SERVIÇOS
           </span>
-          <h2 className="font-philosopher text-3xl sm:text-5xl lg:text-6xl font-bold text-esmeralda">
+          <h2 className="font-philosopher text-3xl sm:text-5xl lg:text-6xl font-bold text-text-primary">
             Serviços Especializados
           </h2>
-          <p className="font-montserrat mx-auto max-w-3xl text-base sm:text-lg text-grafite/75">
+          <p className="font-montserrat mx-auto max-w-3xl text-base sm:text-lg text-text-secondary/75">
             6 categorias de serviços para atender todas as suas necessidades
           </p>
         </AnimatedSection>
 
         {/* Swipe Hint - Mobile Only */}
-        <p className="flex items-center justify-center gap-2 text-sm text-esmeralda/70 font-montserrat font-medium sm:hidden mb-2">
+        <p className="flex items-center justify-center gap-2 text-sm text-text-primary/70 font-montserrat font-medium sm:hidden mb-2">
           <span>Arraste para ver mais serviços</span>
           <ArrowRight className="h-4 w-4" />
         </p>
@@ -85,31 +85,31 @@ export function ServicesGridSection() {
                   aria-label={`Saiba mais sobre ${service.title}`}
                   draggable={false}
                 >
-                  <div className="relative flex h-full min-h-[280px] flex-col justify-start overflow-hidden rounded-3xl border border-white/60 bg-white/60 backdrop-blur-[2px] p-8 shadow-[0_4px_20px_-4px_rgba(24,68,52,0.05)] transition-all duration-500 hover:border-esmeralda/30 hover:bg-white hover:shadow-[0_20px_40px_-12px_rgba(24,68,52,0.15)] hover:-translate-y-1">
+                  <div className="relative flex h-full min-h-[280px] flex-col justify-start overflow-hidden rounded-3xl border border-white/60 bg-surface-card backdrop-blur-[2px] p-8 shadow-card transition-all duration-500 hover:border-text-primary/30 hover:bg-surface-section hover:shadow-card-hover hover:-translate-y-1">
                     {/* Ícone Background Grande - Decorativo */}
-                    <div className="absolute -right-8 -bottom-10 text-esmeralda/5 transition-all duration-500 group-hover:scale-110 group-hover:text-esmeralda/10 group-hover:-rotate-12">
+                    <div className="absolute -right-8 -bottom-10 text-text-primary/5 transition-all duration-500 group-hover:scale-110 group-hover:text-text-primary/10 group-hover:-rotate-12">
                       <IconComponent className="h-64 w-64" strokeWidth={1} />
                     </div>
 
                     {/* Conteúdo em Overlay */}
                     <div className="relative z-10 space-y-5">
                       {/* Ícone Pequeno Badge - Estilo Glass */}
-                      <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-esmeralda/5 border border-esmeralda/10 text-esmeralda shadow-sm transition-transform duration-500 group-hover:scale-110 group-hover:bg-esmeralda group-hover:text-white">
+                      <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-surface-subtle border border-text-primary/10 text-text-primary shadow-sm transition-transform duration-500 group-hover:scale-110 group-hover:bg-action-primary group-hover:text-white">
                         <IconComponent className="h-6 w-6" strokeWidth={1.5} />
                       </div>
 
                       {/* Título + Descrição */}
                       <div className="space-y-3">
-                        <h3 className="font-philosopher text-2xl font-bold text-esmeralda tracking-tight">
+                        <h3 className="font-philosopher text-2xl font-bold text-text-primary tracking-tight">
                           {service.title}
                         </h3>
-                        <p className="font-montserrat text-[15px] font-medium leading-relaxed text-grafite/60 group-hover:text-grafite/80 transition-colors">
+                        <p className="font-montserrat text-[15px] font-medium leading-relaxed text-text-secondary/60 group-hover:text-text-secondary/80 transition-colors">
                           {service.description}
                         </p>
                       </div>
 
                       {/* CTA Link */}
-                      <div className="pt-2 font-jost flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-ouro transition-colors duration-500 group-hover:text-esmeralda">
+                      <div className="pt-2 font-jost flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-action-strong transition-colors duration-500 group-hover:text-text-primary">
                         <span>Saiba mais</span>
                         <ArrowRight className="h-3 w-3 transition-transform duration-500 group-hover:translate-x-1" />
                       </div>
@@ -128,8 +128,8 @@ export function ServicesGridSection() {
               key={index}
               onClick={() => scrollToCard(index)}
               className={`h-2 rounded-full transition-all duration-300 ${activeIndex === index
-                ? 'w-6 bg-esmeralda'
-                : 'w-2 bg-esmeralda/30 hover:bg-esmeralda/50'
+                ? 'w-6 bg-action-primary'
+                : 'w-2 bg-text-primary/30 hover:bg-text-primary/50'
                 }`}
               role="tab"
               aria-selected={activeIndex === index}
@@ -143,7 +143,7 @@ export function ServicesGridSection() {
           <Link href="/servicos">
             <Button
               size="lg"
-              className="font-montserrat group rounded-full bg-esmeralda px-8 py-6 text-base font-semibold text-white shadow-lg transition-all duration-500 hover:bg-esmeralda-dark hover:shadow-2xl hover:scale-105 hover:-translate-y-1"
+              className="font-montserrat group rounded-full bg-action-primary px-8 py-6 text-base font-semibold text-white shadow-lg transition-all duration-500 hover:bg-action-primary-hover hover:shadow-2xl hover:scale-105 hover:-translate-y-1"
             >
               Ver todos os serviços
               <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-500 group-hover:translate-x-2" />

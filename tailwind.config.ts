@@ -26,6 +26,13 @@ const config: Config = {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
+        // Semantic Tokens
+        'radius-sm': '6px',
+        'radius-md': '8px',
+        'radius-lg': '12px',
+        'radius-xl': '16px',
+        'radius-2xl': '24px',
+        'radius-full': '9999px',
       },
       boxShadow: {
         'card-sm': '0 15px 35px -20px rgba(24, 68, 52, 0.15)',
@@ -33,26 +40,59 @@ const config: Config = {
         'card-md': '0 24px 55px -34px rgba(24, 68, 52, 0.35)',
         'button-gold': '0 10px 25px -10px rgba(200, 155, 60, 0.2)',
         'button-gold-strong': '0 10px 25px -10px rgba(200, 155, 60, 0.3)',
+        // Semantic Tokens
+        'shadow-sm': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+        'shadow-md': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+        'shadow-card': '0 4px 20px -4px rgba(24,68,52,0.05)',
+        'shadow-card-hover': '0 20px 40px -12px rgba(24,68,52,0.15)',
+        'shadow-button-primary': '0 25px 45px -20px rgba(207,154,36,0.45)',
       },
       colors: {
-        // Paleta Esmeralda Solar
+        // Tokens Semânticos (Design System)
+        // Texto
+        'text-primary': '#184434', // Esmeralda
+        'text-secondary': '#2E363D', // Grafite
+        'text-muted': '#2d6854', // Esmeralda Light
+        'text-on-dark': '#F5F3EE', // Marfim
+        'text-on-brand': '#184434', // Esmeralda (on Gold)
+
+        // Superfícies
+        'surface-page': '#F8F5F0', // Marfim/Off-white
+        'surface-section': '#FFFFFF', // Branco
+        'surface-card': 'rgba(255, 255, 255, 0.6)', // Glass
+        'surface-subtle': 'rgba(24, 68, 52, 0.05)', // Esmeralda Ultra-Light
+        // surface-hero é tratado via classes de gradiente
+
+        // Ações
+        'action-primary': '#184434', // Esmeralda
+        'action-primary-hover': '#0f2b21', // Esmeralda Dark
+        'action-strong': '#CF9A24', // Ouro
+        'action-strong-hover': '#B88820', // Ouro Dark
+
+        // Bordas
+        'border-default': 'rgba(166, 166, 166, 0.2)',
+        'border-subtle': 'rgba(207, 154, 36, 0.3)', // Ouro Low Opacity
+        'border-focus': '#CF9A24', // Ouro
+
+        // Paleta Esmeralda Solar (Base)
         esmeralda: {
           DEFAULT: '#184434', // Esmeralda Profundo (cor-base)
           light: '#2A6A52',
           dark: '#0F2A20',
+          deep: '#04160f', // Legacy Dark
         },
         ouro: {
-          DEFAULT: '#C89B3C', // Ouro WCAG AA (4.52:1 contraste)
+          DEFAULT: '#CF9A24', // Atualizado para tom do Design System
           light: '#E1B959',
           dark: '#B08935',
         },
         marfim: {
-          DEFAULT: '#F7F5F0', // Marfim Clássico (complementar claro)
+          DEFAULT: '#F5F3EE', // Atualizado para tom do Design System
           light: '#FFFFFF',
           dark: '#E8E4D8',
         },
         grafite: {
-          DEFAULT: '#1A1A1A', // Grafite Lux (sombras/texto)
+          DEFAULT: '#2E363D', // Atualizado para tom do Design System
           light: '#333333',
           dark: '#000000',
         },

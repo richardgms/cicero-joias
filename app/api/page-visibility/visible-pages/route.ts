@@ -7,8 +7,6 @@ const PAGE_MAPPING = [
   { slug: 'sobre', title: 'Sobre Nós', href: '/sobre' },
   { slug: 'portfolio', title: 'Portfólio', href: '/portfolio' },
   { slug: 'pronta-entrega', title: 'Pronta Entrega', href: '/pronta-entrega' },
-
-  { slug: 'minha-area', title: 'Minha Área', href: '/minha-area' }
 ]
 
 // GET - Buscar apenas páginas visíveis (para menu de navegação)

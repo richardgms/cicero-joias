@@ -60,7 +60,7 @@ export function PortfolioPreviewSection() {
   }, []);
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-esmeralda via-esmeralda-dark to-[#0b1f18] py-10 sm:py-16 text-marfim">
+    <section className="relative overflow-hidden bg-gradient-to-br from-esmeralda via-esmeralda-dark to-esmeralda-dark py-10 sm:py-16 text-text-on-dark">
       {/* Preset Background Esmeralda - Ver docs/style-presets.md */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(207,154,36,0.15),transparent_50%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(255,255,255,0.08),transparent_40%)]" />
@@ -68,13 +68,13 @@ export function PortfolioPreviewSection() {
       {/* Content */}
       <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-16 px-4 sm:px-6 lg:px-8">
         <AnimatedSection className="space-y-7 text-center" delay={0.05}>
-          <span className="font-jost inline-flex items-center justify-center gap-2 rounded-full border border-ouro/40 bg-ouro/20 px-5 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-ouro transition-all duration-500 hover:scale-105 hover:bg-ouro/30 hover:border-ouro/60 hover:shadow-[0_0_20px_rgba(207,154,36,0.3)] cursor-default">
+          <span className="font-jost inline-flex items-center justify-center gap-2 rounded-full border border-action-strong/40 bg-action-strong/20 px-5 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-action-strong transition-all duration-500 hover:scale-105 hover:bg-action-strong/30 hover:border-action-strong/60 hover:shadow-[0_0_20px_rgba(207,154,36,0.3)] cursor-default">
             Trabalhos em Destaque
           </span>
-          <h2 className="font-philosopher text-3xl sm:text-5xl lg:text-6xl font-bold text-marfim leading-tight">
+          <h2 className="font-philosopher text-3xl sm:text-5xl lg:text-6xl font-bold text-text-on-dark leading-tight">
             Nossos Trabalhos
           </h2>
-          <p className="font-montserrat mx-auto max-w-3xl text-base sm:text-lg text-marfim/90 leading-relaxed">
+          <p className="font-montserrat mx-auto max-w-3xl text-base sm:text-lg text-text-on-dark/90 leading-relaxed">
             Conheça alguns dos projetos que realizamos
           </p>
         </AnimatedSection>
@@ -82,22 +82,22 @@ export function PortfolioPreviewSection() {
         {loading ? (
           <div className="flex flex-wrap justify-center gap-6">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] max-w-sm aspect-[4/5] sm:aspect-[3/4] rounded-3xl bg-grafite/10 animate-pulse" />
+              <div key={i} className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] max-w-sm aspect-[4/5] sm:aspect-[3/4] rounded-3xl bg-text-secondary/10 animate-pulse" />
             ))}
           </div>
         ) : error ? (
           null
         ) : items.length === 0 ? (
           <div className="flex h-72 flex-col items-center justify-center gap-8 text-center">
-            <div className="rounded-2xl border border-esmeralda/10 bg-esmeralda/5 p-10 backdrop-blur-sm max-w-md">
-              <div className="mx-auto mb-6 h-16 w-16 rounded-full bg-esmeralda/10 p-4">
-                <Sparkles className="h-full w-full text-esmeralda/80" />
+            <div className="rounded-2xl border border-text-primary/10 bg-text-primary/5 p-10 backdrop-blur-sm max-w-md">
+              <div className="mx-auto mb-6 h-16 w-16 rounded-full bg-text-primary/10 p-4">
+                <Sparkles className="h-full w-full text-text-primary/80" />
               </div>
-              <p className="font-montserrat text-sm font-medium text-marfim mb-4">Nenhum projeto em destaque no momento</p>
-              <p className="font-montserrat text-xs text-marfim/70 leading-relaxed">Em breve, novos trabalhos especiais serão destacados aqui.</p>
+              <p className="font-montserrat text-sm font-medium text-text-on-dark mb-4">Nenhum projeto em destaque no momento</p>
+              <p className="font-montserrat text-xs text-text-on-dark/70 leading-relaxed">Em breve, novos trabalhos especiais serão destacados aqui.</p>
             </div>
             <Link href="/portfolio">
-              <Button variant="outline" className="bg-transparent font-montserrat border-marfim/30 text-marfim hover:bg-marfim/5 hover:border-marfim/50 transition-all duration-500">
+              <Button variant="outline" className="bg-transparent font-montserrat border-text-on-dark/30 text-text-on-dark hover:bg-text-on-dark/5 hover:border-text-on-dark/50 transition-all duration-500">
                 Ver todo o portfólio
               </Button>
             </Link>
@@ -125,17 +125,17 @@ export function PortfolioPreviewSection() {
                       />
 
                       {/* Overlay rodapé - Estado normal */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-grafite/75 via-grafite/40 to-transparent
+                      <div className="absolute inset-0 bg-gradient-to-t from-text-secondary/75 via-text-secondary/40 to-transparent
                         opacity-100 group-hover:opacity-0 transition-opacity duration-500" />
 
                       {/* Overlay rodapé - Estado hover (mais claro) */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-grafite/60 via-grafite/20 to-transparent
+                      <div className="absolute inset-0 bg-gradient-to-t from-text-secondary/60 via-text-secondary/20 to-transparent
                         opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
                       {/* Conteúdo */}
                       <div className="absolute bottom-0 left-0 right-0 p-6 space-y-3 text-white">
                         {/* Categoria */}
-                        <span className="font-jost inline-block px-3 py-1 text-xs font-semibold uppercase tracking-wider bg-ouro/20 backdrop-blur-sm rounded-full border border-ouro/30 group-hover:scale-105 group-hover:bg-ouro/30 transition-all duration-500">
+                        <span className="font-jost inline-block px-3 py-1 text-xs font-semibold uppercase tracking-wider bg-action-strong/20 backdrop-blur-sm rounded-full border border-action-strong/30 group-hover:scale-105 group-hover:bg-action-strong/30 transition-all duration-500">
                           {categoryLabels[item.category as keyof typeof categoryLabels] || item.category}
                         </span>
 
@@ -145,7 +145,7 @@ export function PortfolioPreviewSection() {
                         </h3>
 
                         {/* Link "Ver detalhes" */}
-                        <div className="flex items-center gap-2 text-sm font-medium text-ouro group-hover:gap-3 transition-all duration-500">
+                        <div className="flex items-center gap-2 text-sm font-medium text-action-strong group-hover:gap-3 transition-all duration-500">
                           <span>Ver detalhes</span>
                           <ArrowRight className="h-4 w-4 transition-transform duration-500" />
                         </div>
@@ -159,16 +159,16 @@ export function PortfolioPreviewSection() {
             <AnimatedSection delay={0.4} className="text-center">
               <div>
                 <div className="space-y-3 mb-4">
-                  <p className="font-jost text-sm uppercase tracking-[0.3em] text-marfim/70">
+                  <p className="font-jost text-sm uppercase tracking-[0.3em] text-text-on-dark/70">
                     Quer ver mais trabalhos nossos?
                   </p>
-                  <p className="font-montserrat mx-auto max-w-xl text-marfim/90">
+                  <p className="font-montserrat mx-auto max-w-xl text-text-on-dark/90">
                     Explore nossa coleção completa de alianças personalizadas e restaurações
                     especiais.
                   </p>
                 </div>
                 <Link href="/portfolio">
-                  <Button className="font-jost group rounded-full bg-ouro text-grafite hover:bg-ouro/90 hover:scale-105 hover:-translate-y-1 hover:shadow-2xl transition-all duration-500 px-8 py-6 text-base font-semibold uppercase tracking-[0.2em]">
+                  <Button className="font-jost group rounded-full bg-action-strong text-text-on-brand hover:bg-action-strong/90 hover:scale-105 hover:-translate-y-1 hover:shadow-2xl transition-all duration-500 px-8 py-6 text-base font-semibold uppercase tracking-[0.2em]">
                     Ver portfólio completo
                     <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-500 group-hover:translate-x-2" />
                   </Button>

@@ -35,8 +35,8 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
         <Header />
         <main className="flex-1">{children}</main>
         {/* Conector físico para evitar linhas brancas (gap fix) */}
-        <div className="relative z-20 h-1 -mb-1 w-full bg-[#04160f]" aria-hidden="true" />
-        <div className="relative z-10 bg-[#04160f]">
+        <div className="relative z-20 h-1 -mb-1 w-full bg-esmeralda-dark" aria-hidden="true" />
+        <div className="relative z-10 bg-esmeralda-dark">
           <Footer />
         </div>
       </div>
