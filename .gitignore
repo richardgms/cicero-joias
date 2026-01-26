@@ -48,3 +48,4 @@ tsconfig.tsbuildinfo
 !.agent/workflows/
 !.agent/rules/
 !.agent/ARCHITECTURE.md
+.agent(legacy)/

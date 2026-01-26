@@ -138,6 +138,14 @@ Sistema espacial baseado em grid de 4px (Tailwind).
     *   **Borda**: `border-subtle` (Ouro 50%) ou `border-default`.
     *   *Uso*: "Saiba mais", botões de filtro.
 
+4.  **Glass Dark (Hero/Métricas)**
+    *   **Bg**: `white/[0.03]` (3%).
+    *   **Texto**: `white/[0.65]` (65%) -> `white` (100% hover).
+    *   **Borda**: `border-white/20`.
+    *   **Hover**: `border-ouro/30`, `bg-white/[0.07]`, Glow interno dourado (`bg-ouro/20` blur).
+    *   **Transição**: `duration-500` (Suave).
+    *   *Uso*: Ações secundárias em fundos escuros e Cards de Estatísticas (Hero).
+
 ### Cards (Serviços/Portfólio)
 
 *   **Background**: `surface-card` (Branco com opacidade/blur se sobre imagem, sólido se sobre página).

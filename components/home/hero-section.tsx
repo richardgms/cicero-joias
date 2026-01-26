@@ -148,11 +148,11 @@ export function HeroSection() {
 
               <motion.a
                 href="#servicos"
-                className="group inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 py-3 md:px-10 md:py-4 text-xs md:text-sm font-bold uppercase tracking-[0.2em] text-white transition-all hover:bg-white/10 backdrop-blur-sm"
-                whileHover={{ scale: 1.02 }}
+                className="group relative inline-flex w-full sm:w-auto items-center justify-center gap-2 overflow-hidden rounded-full border border-white/20 bg-white/[0.03] px-6 py-3 md:px-10 md:py-4 text-xs md:text-sm font-bold uppercase tracking-[0.2em] text-white/[0.65] transition-all duration-500 hover:text-white hover:bg-white/[0.07] hover:border-ouro/30 backdrop-blur-sm"
                 whileTap={{ scale: 0.98 }}
               >
-                Nossos Serviços
+                <div className="absolute -bottom-10 -left-10 w-24 h-24 bg-ouro/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <span className="relative z-10">Nossos Serviços</span>
               </motion.a>
             </motion.div>
 
@@ -163,7 +163,7 @@ export function HeroSection() {
             >
               {heroStats.map((stat, index) => (
                 <div key={stat.number}
-                  className="group relative overflow-hidden rounded-xl md:rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/10 p-4 md:p-8 lg:p-10
+                  className="group relative overflow-hidden rounded-xl md:rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/20 p-4 md:p-8 lg:p-10
                     shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]
                     transition-all duration-500
                     hover:bg-white/[0.07] hover:border-ouro/30
@@ -184,7 +184,7 @@ export function HeroSection() {
                   <p className="relative font-jost text-[10px] md:text-xs lg:text-sm font-bold text-white/90 mb-2 md:mb-3 uppercase tracking-wider">
                     {stat.label}
                   </p>
-                  <p className="relative font-montserrat text-[10px] md:text-xs lg:text-sm text-white/50 leading-relaxed group-hover:text-white/75 transition-colors hidden sm:block">
+                  <p className="relative font-montserrat text-[10px] md:text-xs lg:text-sm text-white/[0.65] leading-relaxed group-hover:text-white transition-colors hidden sm:block">
                     {stat.description}
                   </p>
                 </div>

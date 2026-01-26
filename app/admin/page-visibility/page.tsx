@@ -59,11 +59,11 @@ export default function PageVisibilityPage() {
     try {
       setLoading(true);
       const response = await fetch('/api/admin/page-visibility');
-      
+
       if (!response.ok) {
         throw new Error('Failed to fetch page visibility settings');
       }
-      
+
       const data = await response.json();
       setPages(data.pages || []);
       const dbUnavailable = !!data.warning;
@@ -150,11 +150,11 @@ export default function PageVisibilityPage() {
 
   // Filtrar páginas
   const filteredPages = pages.filter(page => {
-    const matchesFilter = filter === 'all' || 
-                         (filter === 'visible' && page.isVisible) || 
-                         (filter === 'hidden' && !page.isVisible);
+    const matchesFilter = filter === 'all' ||
+      (filter === 'visible' && page.isVisible) ||
+      (filter === 'hidden' && !page.isVisible);
     const matchesSearch = page.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         page.slug.toLowerCase().includes(searchTerm.toLowerCase());
+      page.slug.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesFilter && matchesSearch;
   });
 
@@ -201,7 +201,14 @@ export default function PageVisibilityPage() {
                   <strong>Exibindo configuração padrão</strong> (páginas em modo fallback).
                   As alterações não podem ser salvas no momento devido a problemas de conectividade com o banco de dados.
                 </p>
-                <p className="mt-1">
+
+                {(pages as any).errorDetails && (
+                  <div className="mt-3 p-2 bg-yellow-100 rounded text-xs font-mono border border-yellow-200 break-words">
+                    <strong>Erro Técnico:</strong> {(pages as any).errorDetails}
+                  </div>
+                )}
+
+                <p className="mt-2">
                   <strong>Ações recomendadas:</strong>
                 </p>
                 <ul className="list-disc list-inside mt-1 space-y-1">
@@ -242,7 +249,7 @@ export default function PageVisibilityPage() {
               <option value="visible">Apenas visíveis</option>
               <option value="hidden">Apenas ocultas</option>
             </select>
-            
+
             <button
               onClick={() => {
                 setIsDatabaseUnavailable(false); // Reset database unavailable state
@@ -271,13 +278,12 @@ export default function PageVisibilityPage() {
                   <h3 className="text-lg font-semibold text-gray-900">
                     {page.title}
                   </h3>
-                  
+
                   {/* Badge de status */}
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                    page.isVisible
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${page.isVisible
                       ? 'bg-green-100 text-green-800'
                       : 'bg-red-100 text-red-800'
-                  }`}>
+                    }`}>
                     {page.isVisible ? (
                       <>
                         <Globe className="w-3 h-3 mr-1" />
@@ -338,15 +344,13 @@ export default function PageVisibilityPage() {
                             <div key={log.id} className="border border-gray-200 bg-gray-50 p-4 rounded-lg">
                               <div className="flex items-center justify-between mb-2">
                                 <div className="flex items-center space-x-2">
-                                  <span className={`px-2 py-1 rounded text-xs font-medium ${
-                                    log.previousStatus ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                                  }`}>
+                                  <span className={`px-2 py-1 rounded text-xs font-medium ${log.previousStatus ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                                    }`}>
                                     {log.previousStatus ? 'Visível' : 'Oculta'}
                                   </span>
                                   <span className="text-gray-400">→</span>
-                                  <span className={`px-2 py-1 rounded text-xs font-medium ${
-                                    log.newStatus ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                                  }`}>
+                                  <span className={`px-2 py-1 rounded text-xs font-medium ${log.newStatus ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                                    }`}>
                                     {log.newStatus ? 'Visível' : 'Oculta'}
                                   </span>
                                 </div>
@@ -393,11 +397,10 @@ export default function PageVisibilityPage() {
                     togglePageVisibility(page.slug, page.isVisible, page.title);
                   }}
                   disabled={isDatabaseUnavailable}
-                  className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-esmeralda focus:ring-offset-2 ${
-                    isDatabaseUnavailable
+                  className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-esmeralda focus:ring-offset-2 ${isDatabaseUnavailable
                       ? 'bg-gray-200 cursor-not-allowed opacity-50'
                       : page.isVisible ? 'bg-esmeralda' : 'bg-gray-300'
-                  }`}
+                    }`}
                   title={isDatabaseUnavailable
                     ? 'Banco de dados indisponível - não é possível alterar'
                     : page.isVisible ? 'Ocultar página' : 'Mostrar página'
@@ -407,9 +410,8 @@ export default function PageVisibilityPage() {
                     {page.isVisible ? 'Ocultar página' : 'Mostrar página'}
                   </span>
                   <span
-                    className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
-                      page.isVisible ? 'translate-x-7' : 'translate-x-1'
-                    }`}
+                    className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${page.isVisible ? 'translate-x-7' : 'translate-x-1'
+                      }`}
                   >
                     {page.isVisible ? (
                       <Eye className="h-3 w-3 text-esmeralda m-1.5" />

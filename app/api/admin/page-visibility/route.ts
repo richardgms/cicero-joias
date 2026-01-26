@@ -106,7 +106,8 @@ export async function GET() {
       console.warn('[PAGE-VISIBILITY] Using fallback data - query failed');
       return NextResponse.json({
         pages: DEFAULT_PAGES,
-        warning: 'Using default configuration - database query failed'
+        warning: 'Using default configuration - database query failed',
+        errorDetails: queryError instanceof Error ? queryError.message : String(queryError)
       }, { status: 200 })
     }
   } catch (error) {
