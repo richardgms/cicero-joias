@@ -147,8 +147,8 @@ export default function SobrePage() {
               <div className="relative">
                 <Quote className="mx-auto h-8 w-8 text-action-strong/80 mb-6" />
                 <blockquote className="font-philosopher text-xl md:text-2xl font-bold text-text-on-dark leading-relaxed mb-6">
-                  "Movido pela paixão pela arte da joalheria e pelo desejo de criar peças que{' '}
-                  <span className="text-action-strong">eternizassem momentos especiais</span>"
+                  &ldquo;Movido pela paixão pela arte da joalheria e pelo desejo de criar peças que{' '}
+                  <span className="text-action-strong">eternizassem momentos especiais</span>&rdquo;
                 </blockquote>
                 <cite className="font-jost text-xs text-text-on-dark/70 not-italic uppercase tracking-widest">
                   — Mestre Joalheiro Cícero, Fundador
