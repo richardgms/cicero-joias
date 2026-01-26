@@ -51,7 +51,7 @@ export function HeroSection() {
       {/* Background Image - 100% opacity */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/assets/images/home-hero.jpg"
+          src="/assets/images/home-hero.webp"
           alt="Cícero Joias Atelier"
           fill
           priority
@@ -62,7 +62,7 @@ export function HeroSection() {
 
       {/* Cinematic Overlays - Adjusted to 80% as requested */}
       <div className="absolute inset-0 z-[1] bg-gradient-to-br from-[#0B2B20]/80 via-[#184434]/80 to-[#04160F]/80" />
-      <div className="absolute inset-0 z-[1] bg-[url('/assets/noise.png')] opacity-[0.03] mix-blend-overlay" />
+      <div className="absolute inset-0 z-[1] bg-[url('/assets/noise.webp')] opacity-[0.03] mix-blend-overlay" />
 
       {/* Active Ambient Blobs */}
       <motion.div

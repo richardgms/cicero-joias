@@ -42,7 +42,7 @@ export function Header() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3">
           <div className="relative h-10 w-10">
-            <Image src="/assets/logos/circle-monogram.png" alt="Cícero Joias" fill sizes="40px" />
+            <Image src="/assets/logos/circle-monogram.webp" alt="Cícero Joias" fill sizes="40px" />
           </div>
           <div className="flex flex-col leading-tight">
             <span className="font-montserrat text-base font-semibold text-text-primary">Cícero Joias</span>

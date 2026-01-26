@@ -42,7 +42,7 @@ export function Footer() {
               <Link href="/" className="inline-flex items-center gap-3 group">
                 <div className="relative h-12 w-12 overflow-hidden rounded-full border border-white/10 transition-colors group-hover:border-action-strong/50">
                   <Image
-                    src="/assets/logos/circle-monogram.png"
+                    src="/assets/logos/circle-monogram.webp"
                     alt="Cícero Joias"
                     fill
                     sizes="48px"

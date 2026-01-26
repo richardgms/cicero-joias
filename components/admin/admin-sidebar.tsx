@@ -60,7 +60,7 @@ export function AdminSidebar() {
         <Link href="/" className="flex items-center space-x-3 group h-10">
           <div className="relative">
             <Image
-              src="/assets/logos/circle-monogram.png"
+              src="/assets/logos/circle-monogram.webp"
               alt="Cícero Joias - Monograma"
               width={32}
               height={32}
@@ -69,7 +69,7 @@ export function AdminSidebar() {
             {/* Shine effect decorativo */}
             <div className="absolute -top-0.5 -right-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <Image
-                src="/assets/brand/shine.png"
+                src="/assets/brand/shine.webp"
                 alt=""
                 width={8}
                 height={8}

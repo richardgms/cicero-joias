@@ -53,9 +53,9 @@ export const metadata: Metadata = {
   authors: [{ name: 'Cícero Joias' }],
   creator: 'Cícero Joias',
   icons: {
-    icon: '/assets/logos/circle-monogram.png',
-    shortcut: '/assets/logos/circle-monogram.png',
-    apple: '/assets/logos/circle-monogram.png',
+    icon: '/assets/logos/circle-monogram.webp',
+    shortcut: '/assets/logos/circle-monogram.webp',
+    apple: '/assets/logos/circle-monogram.webp',
   },
   openGraph: {
     title: 'Cícero Joias - Tradição que se Renova',
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     siteName: 'Cícero Joias',
     images: [
       {
-        url: '/assets/logos/circle-monogram.png',
+        url: '/assets/logos/circle-monogram.webp',
         width: 800,
         height: 800,
         alt: 'Cícero Joias - Logo',
@@ -76,7 +76,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Cícero Joias - Tradição que se Renova',
     description: 'Joalheria familiar com mais de 40 anos de tradição.',
-    images: ['/assets/logos/circle-monogram.png'],
+    images: ['/assets/logos/circle-monogram.webp'],
   },
   robots: {
     index: true,

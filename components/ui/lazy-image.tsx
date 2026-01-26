@@ -68,13 +68,13 @@ export function LazyImage({
   const [currentSrc, setCurrentSrc] = useState(src);
 
   const defaultBlurDataURL = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AoU6kEKEIEpSlKUoiIiJ6FKeKvL/Z";
-  
+
   // Lista de fallbacks em ordem de prioridade
   const fallbackImages = [
     fallbackSrc,
-    '/assets/images/jewelry-workshop-hero.jpg',
-    '/assets/images/home-hero.jpg',
-    '/assets/images/home-services.jpg'
+    '/assets/images/jewelry-workshop-hero.webp',
+    '/assets/images/home-hero.webp',
+    '/assets/images/home-services.webp'
   ].filter(Boolean);
 
   const handleLoad = () => {
@@ -89,7 +89,7 @@ export function LazyImage({
         return;
       }
     }
-    
+
     setHasError(true);
     setIsLoading(false);
     onError?.();
@@ -97,9 +97,8 @@ export function LazyImage({
 
   const imageProps = {
     src: currentSrc,
-    className: `transition-all duration-500 ${
-      isLoading ? 'opacity-0 scale-105' : 'opacity-100 scale-100'
-    } ${hasError ? 'opacity-50' : ''} ${className}`,
+    className: `transition-all duration-500 ${isLoading ? 'opacity-0 scale-105' : 'opacity-100 scale-100'
+      } ${hasError ? 'opacity-50' : ''} ${className}`,
     onLoad: handleLoad,
     onError: handleError,
     sizes: sizes || "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
@@ -127,7 +126,7 @@ export function LazyImage({
   return (
     <div className="relative overflow-hidden">
       {isLoading && (
-        <motion.div 
+        <motion.div
           className="absolute inset-0 bg-gradient-to-r from-esmeralda/5 via-esmeralda/10 to-esmeralda/5 animate-pulse rounded-lg z-10"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}

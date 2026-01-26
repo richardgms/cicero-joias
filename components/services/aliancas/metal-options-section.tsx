@@ -40,7 +40,7 @@ export function MetalOptionsSection() {
             <div className="absolute inset-0 bg-gradient-to-br from-[#1E5445] via-esmeralda to-esmeralda-dark" />
 
             {/* Texture Overlay */}
-            <div className="absolute inset-0 opacity-10 bg-[url('/assets/texture-noise.png')] mix-blend-overlay" />
+            <div className="absolute inset-0 opacity-10 bg-[url('/assets/texture-noise.webp')] mix-blend-overlay" />
 
             {/* Decorative Blobs */}
             <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-esmeralda-light/30 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />

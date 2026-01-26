@@ -12,7 +12,7 @@ export default function JoiasSobMedidaPage() {
       <section className="relative overflow-hidden bg-gradient-to-br from-esmeralda via-esmeralda-dark to-[#0b1f18] py-24 text-marfim">
         <div className="absolute inset-0">
           <Image
-            src="/assets/images/sobre-nos-hero.jpg"
+            src="/assets/images/sobre-nos-hero.webp"
             alt="Joias Sob Medida"
             fill
             className="object-cover opacity-20"

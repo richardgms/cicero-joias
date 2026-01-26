@@ -13,7 +13,7 @@ export function LegacyHeroSection() {
             {/* Background Image - 100% opacity */}
             <div className="absolute inset-0 z-0">
                 <Image
-                    src="/assets/images/home-hero.jpg"
+                    src="/assets/images/home-hero.webp"
                     alt="Cícero Joias"
                     fill
                     priority

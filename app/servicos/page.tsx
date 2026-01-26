@@ -61,7 +61,7 @@ export default function ServicosPage() {
         <section className="relative overflow-hidden bg-gradient-to-br from-esmeralda via-esmeralda-dark to-esmeralda-deep pt-10 pb-24 text-text-on-dark">
           <div className="absolute inset-0">
             <Image
-              src="/assets/images/sobre-nos-hero.jpg"
+              src="/assets/images/sobre-nos-hero.webp"
               alt="Nossos serviços"
               fill
               className="object-cover opacity-20"

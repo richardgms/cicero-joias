@@ -143,7 +143,7 @@ function ProntaEntregaContent() {
       const response = await fetch(`/api/public/products/ready-delivery?${params}`);
       if (response.ok) {
         const data: ApiResponse = await response.json();
-        
+
         // Ordenar produtos
         let sortedProducts = [...data.products];
         switch (sortBy) {
@@ -253,14 +253,14 @@ function ProntaEntregaContent() {
       {/* Hero Section */}
       <section className="py-24 relative overflow-hidden" style={{ backgroundColor: '#133629' }}>
         <div className="absolute inset-0 opacity-20">
-          <div 
+          <div
             className="w-full h-full bg-cover bg-center"
             style={{
-              backgroundImage: `url('/assets/images/pronta-entrega-hero.PNG')`
+              backgroundImage: `url('/assets/images/pronta-entrega-hero.webp')`
             }}
           />
         </div>
-        
+
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="font-philosopher font-bold leading-none mb-6 text-marfim">
@@ -305,7 +305,7 @@ function ProntaEntregaContent() {
                     className="pl-10"
                   />
                 </div>
-                
+
                 <Select value={sortBy} onValueChange={setSortBy}>
                   <SelectTrigger className="w-48">
                     <SelectValue />
@@ -343,10 +343,10 @@ function ProntaEntregaContent() {
               </span>
               {(categoryFilter !== 'all' || materialFilter !== 'all' || stockFilter !== 'all' || searchTerm ||
                 priceRange[0] !== priceStats.min || priceRange[1] !== priceStats.max) && (
-                <Button variant="ghost" size="sm" onClick={resetFilters} className="font-montserrat">
-                  Limpar Filtros
-                </Button>
-              )}
+                  <Button variant="ghost" size="sm" onClick={resetFilters} className="font-montserrat">
+                    Limpar Filtros
+                  </Button>
+                )}
             </div>
           </div>
 
@@ -489,8 +489,8 @@ function ProntaEntregaContent() {
                 </div>
               ) : (
                 <>
-                  <div className={viewMode === 'grid' 
-                    ? "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6" 
+                  <div className={viewMode === 'grid'
+                    ? "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
                     : "space-y-4"
                   }>
                     {filteredProducts.map((product) => (
@@ -499,14 +499,14 @@ function ProntaEntregaContent() {
                           <Card className="overflow-hidden hover:shadow-xl transition-all duration-300">
                             <div className="relative h-64 overflow-hidden">
                               <Image
-                                src={product.mainImage || '/assets/images/home-hero.jpg'}
+                                src={product.mainImage || '/assets/images/home-hero.webp'}
                                 alt={product.name}
                                 fill
                                 className="object-cover group-hover:scale-105 transition-transform duration-500"
                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                 onError={(e) => {
                                   const target = e.target as HTMLImageElement;
-                                  target.src = '/assets/images/home-hero.jpg';
+                                  target.src = '/assets/images/home-hero.webp';
                                 }}
                               />
                               <div className="absolute top-4 left-4">
@@ -527,7 +527,7 @@ function ProntaEntregaContent() {
                                 </div>
                               )}
                             </div>
-                            
+
                             <CardContent className="p-6">
                               <h3 className="font-philosopher text-lg font-bold text-esmeralda mb-2 group-hover:text-ouro transition-colors">
                                 {product.name}
@@ -567,14 +567,14 @@ function ProntaEntregaContent() {
                             <div className="flex">
                               <div className="relative w-32 h-32 flex-shrink-0">
                                 <Image
-                                  src={product.mainImage || '/assets/images/home-hero.jpg'}
+                                  src={product.mainImage || '/assets/images/home-hero.webp'}
                                   alt={product.name}
                                   fill
                                   className="object-cover"
                                   sizes="128px"
                                   onError={(e) => {
                                     const target = e.target as HTMLImageElement;
-                                    target.src = '/assets/images/home-hero.jpg';
+                                    target.src = '/assets/images/home-hero.webp';
                                   }}
                                 />
                               </div>
