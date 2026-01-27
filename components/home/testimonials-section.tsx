@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Quote } from 'lucide-react';
+import { Quote, Star } from 'lucide-react';
 import { AnimatedSection } from '@/components/ui/animated-section';
 import { testimonials } from './home-data';
 
@@ -22,113 +22,101 @@ function getInitials(name: string): string {
   return (firstInitial + lastInitial).toUpperCase();
 }
 
-// Função para gerar cor baseada no nome
-// Função para gerar cor baseada no nome
-function getColorFromName(name: string): string {
-  const colors = [
-    'bg-text-primary/10 text-text-primary border-text-primary/20', // Esmeralda
-    'bg-action-strong/10 text-action-strong border-action-strong/20', // Ouro
-    'bg-blue-500/10 text-blue-700 border-blue-500/20',    // Azul
-    'bg-purple-500/10 text-purple-700 border-purple-500/20', // Roxo
-  ];
-
-  // Gera hash simples do nome
-  let hash = 0;
-  for (let i = 0; i < name.length; i++) {
-    hash = name.charCodeAt(i) + ((hash << 5) - hash);
-  }
-
-  // Usa hash para selecionar cor
-  const index = Math.abs(hash) % colors.length;
-  return colors[index];
-}
-
 export function TestimonialsSection() {
   return (
-    <section className="relative overflow-hidden bg-surface-page py-8 sm:py-12 md:py-14">
-      {/* Background decoration */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_10%_20%,rgba(24,68,52,0.04),transparent_55%)]" />
+    <section className="relative overflow-hidden bg-[#f7f5f0] py-12 sm:py-16 md:py-20 lg:py-24">
+      {/* Background decoration - Subtle Noise & Gradient */}
+      <div className="absolute inset-0 bg-[url('/assets/noise.webp')] opacity-[0.03] mix-blend-multiply pointer-events-none" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(199,154,52,0.03),transparent_40%),radial-gradient(circle_at_100%_100%,rgba(24,68,52,0.03),transparent_40%)]" />
 
       <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <AnimatedSection className="space-y-6 text-center" delay={0.05}>
-          <span className="font-jost inline-flex items-center justify-center gap-2 rounded-full border border-text-primary/30 bg-surface-section/70 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-text-primary/80 hover:scale-105 hover:border-text-primary/40 hover:bg-surface-section/90 transition-all duration-500 cursor-default">
-            <Quote className="h-4 w-4" />
-            Depoimentos
-          </span>
-          <h2 className="font-philosopher text-[clamp(28px,3.5vw+12px,42px)] font-bold text-text-primary">
-            O que nossos clientes dizem
+        <AnimatedSection className="flex flex-col items-center gap-4 text-center" delay={0.05}>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/50 border border-[#c79a34]/30 shadow-sm backdrop-blur-sm">
+            <Quote className="w-3.5 h-3.5 text-[#c79a34] fill-[#c79a34]" />
+            <span className="text-[10px] font-jost font-semibold uppercase tracking-widest text-[#184434]">
+              Depoimentos
+            </span>
+          </div>
+
+          <h2 className="font-philosopher text-[clamp(32px,4vw+1rem,48px)] font-bold text-[#184434] leading-[1.1]">
+            Histórias que <span className="text-[#c79a34]">Brilham</span>
           </h2>
-          <p className="font-montserrat mx-auto max-w-3xl text-[clamp(16px,2vw+10px,18px)] text-text-secondary/75">
-            A confiança de quem escolheu uma joalheria com 40 anos de tradição.
+
+          <p className="font-montserrat mx-auto max-w-2xl text-[clamp(14px,1.5vw,16px)] text-[#1a1a1a]/70 leading-relaxed">
+            A confiança de quem escolheu eternizar momentos com nossa joalheria.
+            Mais do que clientes, amigos que fazem parte dos nossos 40 anos de tradição.
           </p>
         </AnimatedSection>
 
         {/* Testimonials Grid */}
         <AnimatedSection
-          className="grid gap-6 sm:grid-cols-2 md:gap-8"
+          className="grid gap-6 sm:grid-cols-2 lg:gap-8"
           delay={0.12}
           stagger
         >
-          {testimonials.map((testimonial) => (
+          {testimonials.map((testimonial, index) => (
             <motion.article
               key={testimonial.name}
-              className="group relative flex h-full flex-col gap-5 justify-between rounded-3xl border border-text-primary/10 bg-surface-card/90 backdrop-blur-sm p-6 shadow-md transition-all duration-500 ease-in-out hover:shadow-card-hover hover:-translate-y-1.5 hover:scale-[1.01] hover:border-text-primary/15 overflow-hidden"
+              className="group relative flex flex-col justify-between h-full bg-white rounded-2xl p-6 md:p-8 
+                border border-[#c79a34]/10 
+                shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)]
+                transition-all duration-500 ease-out
+                hover:-translate-y-1 hover:border-[#c79a34]/40 hover:shadow-[0_10px_40px_-10px_rgba(199,154,52,0.15)]"
             >
-              {/* Quote Text */}
-              <p className="relative text-[clamp(14px,1.5vw+10px,16px)] leading-relaxed text-text-secondary/80">
-                <span className="absolute -right-2 -top-4 text-3xl text-action-strong/40 scale-x-[-1]" aria-hidden="true">&ldquo;</span>
-                {testimonial.quote}
-              </p>
+              {/* Decorative Quote Icon Background */}
+              <Quote
+                className="absolute top-6 right-6 w-12 h-12 text-[#c79a34]/10 transform -scale-x-100 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6"
+                strokeWidth={0}
+                fill="currentColor"
+              />
 
-              {/* Footer: Avatar + Info + Rating */}
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  {/* Avatar com Iniciais */}
-                  <div
-                    className={`flex h-12 w-12 items-center justify-center rounded-full border-2 font-semibold transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 ${getColorFromName(testimonial.name)}`}
-                    aria-hidden="true"
-                  >
+              {/* Content */}
+              <div className="relative z-10 flex flex-col gap-6">
+                <div className="flex gap-1 mb-2">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`w-3.5 h-3.5 ${i < (testimonial.rating || 5) ? 'text-[#c79a34] fill-[#c79a34]' : 'text-gray-200 fill-gray-200'}`}
+                    />
+                  ))}
+                </div>
+
+                <p className="font-montserrat text-[#1a1a1a]/80 text-[15px] md:text-[16px] leading-relaxed italic relative">
+                  &ldquo;{testimonial.quote}&rdquo;
+                </p>
+
+                <div className="flex items-center gap-4 mt-auto pt-4 border-t border-[#f7f5f0]">
+                  {/* Avatar Initials */}
+                  <div className="w-10 h-10 rounded-full bg-[#184434]/5 border border-[#184434]/10 flex items-center justify-center text-[#184434] font-philosopher font-bold text-sm">
                     {getInitials(testimonial.name)}
                   </div>
 
-                  {/* Nome e Localização */}
-                  <div className="space-y-0.5">
-                    <p className="text-sm font-semibold text-text-primary">{testimonial.name}</p>
-                    <p className="text-xs uppercase tracking-wide text-text-primary/60">
+                  <div>
+                    <h4 className="font-philosopher font-bold text-[#184434] text-lg leading-none mb-1">
+                      {testimonial.name}
+                    </h4>
+                    <p className="font-jost text-[10px] uppercase tracking-wider text-[#c79a34] font-semibold">
                       {testimonial.location}
                     </p>
                   </div>
                 </div>
-
-                {/* Rating */}
-                {testimonial.rating && (
-                  <div className="flex flex-col items-end gap-0.5">
-                    <div className="flex items-center gap-1 text-sm font-semibold text-text-secondary">
-                      {testimonial.rating.toFixed(1)} ⭐
-                    </div>
-                    {testimonial.source && (
-                      <span className="text-xs text-text-secondary/60">{testimonial.source}</span>
-                    )}
-                  </div>
-                )}
               </div>
-
-              {/* Quote Icon Decorativo */}
-              <Quote
-                aria-hidden="true"
-                className="pointer-events-none absolute -bottom-2 -right-4 h-20 w-20 -rotate-12 text-text-primary/5 sm:h-24 sm:w-24 lg:h-32 lg:w-32 transition-all duration-500 group-hover:scale-110 group-hover:opacity-10 group-hover:-rotate-[15deg]"
-                strokeWidth={1.5}
-              />
             </motion.article>
           ))}
         </AnimatedSection>
 
-        {/* Footer Text */}
-        <AnimatedSection className="text-center" delay={0.18}>
-          <p className="text-sm sm:text-base text-text-secondary/70">
-            Atendimento próximo e personalizado em cada serviço: do primeiro contato ao acompanhamento pós-entrega.
-          </p>
+        {/* Bottom CTA */}
+        <AnimatedSection className="text-center mt-4" delay={0.2}>
+          <a
+            href="https://g.page/cicerojoias"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-[#184434] font-jost text-xs uppercase tracking-widest font-semibold border-b border-[#c79a34]/30 pb-0.5 hover:text-[#c79a34] hover:border-[#c79a34] transition-all duration-300"
+          >
+            Ver mais avaliações no Google
+            <Star className="w-3 h-3 mb-0.5" />
+          </a>
         </AnimatedSection>
       </div>
     </section>
