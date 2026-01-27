@@ -11,12 +11,12 @@ import {
 export default function BanhoDeOuroPage() {
   return (
     <div className="min-h-screen">
-      <BanhoOuroHeroSection />
-      <BanhoOuroAboutSection />
-      <BanhoOuroDifferentialsSection />
-      <BanhoOuroProcessSection />
-      <BanhoOuroFAQSection />
-      <BanhoOuroFinalCTASection />
+      <section id="hero"><BanhoOuroHeroSection /></section>
+      <section id="sobre"><BanhoOuroAboutSection /></section>
+      <section id="diferenciais"><BanhoOuroDifferentialsSection /></section>
+      <section id="processo"><BanhoOuroProcessSection /></section>
+      <section id="faq"><BanhoOuroFAQSection /></section>
+      <section id="contato"><BanhoOuroFinalCTASection /></section>
     </div>
   );
 }

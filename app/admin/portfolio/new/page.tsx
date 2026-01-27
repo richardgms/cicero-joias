@@ -31,9 +31,8 @@ const categoryOptions = {
 };
 
 const statusOptions = {
-  DRAFT: 'Rascunho',
+  ARCHIVED: 'Arquivado',
   PUBLISHED: 'Publicado',
-  FEATURED: 'Destaque',
 };
 
 interface Specification {
@@ -51,7 +50,7 @@ interface FormData {
   images: string[];
   isActive: boolean;
   isFeatured: boolean;
-  status: 'DRAFT' | 'PUBLISHED' | 'FEATURED';
+  status: 'DRAFT' | 'PUBLISHED' | 'FEATURED' | 'ARCHIVED';
   order: number;
   specifications: Specification[];
   seoTitle: string;
@@ -76,7 +75,7 @@ export default function NewPortfolioPage() {
     images: [],
     isActive: true,
     isFeatured: false,
-    status: 'DRAFT',
+    status: 'ARCHIVED',
     order: 0,
     specifications: [],
     seoTitle: '',
@@ -98,7 +97,7 @@ export default function NewPortfolioPage() {
   // Validação em tempo real
   const validateField = (field: keyof FormData, value: any) => {
     const newErrors = { ...errors };
-    
+
     switch (field) {
       case 'title':
         if (!value.trim()) {
@@ -138,7 +137,7 @@ export default function NewPortfolioPage() {
         }
         break;
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -242,24 +241,24 @@ export default function NewPortfolioPage() {
     const reader = new FileReader();
     reader.onload = (event) => {
       const result = event.target?.result as string;
-      
+
       if (isMain) {
         setFormData(prev => ({ ...prev, mainImage: result }));
         validateField('mainImage', result);
       } else {
-        setFormData(prev => ({ 
-          ...prev, 
-          images: [...prev.images, result] 
+        setFormData(prev => ({
+          ...prev,
+          images: [...prev.images, result]
         }));
       }
-      
+
       setUploadingImage(false);
       toast({
         title: "Imagem carregada",
         description: `Imagem ${isMain ? 'principal' : 'adicional'} carregada com sucesso.`,
       });
     };
-    
+
     reader.onerror = () => {
       setUploadingImage(false);
       toast({
@@ -268,7 +267,7 @@ export default function NewPortfolioPage() {
         variant: "destructive",
       });
     };
-    
+
     reader.readAsDataURL(file);
   };
 
@@ -289,7 +288,7 @@ export default function NewPortfolioPage() {
   const updateSpecification = (index: number, field: 'key' | 'value', value: string) => {
     setFormData(prev => ({
       ...prev,
-      specifications: prev.specifications.map((spec, i) => 
+      specifications: prev.specifications.map((spec, i) =>
         i === index ? { ...spec, [field]: value } : spec
       )
     }));
@@ -390,8 +389,8 @@ export default function NewPortfolioPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="category">Categoria *</Label>
-                    <Select 
-                      value={formData.category} 
+                    <Select
+                      value={formData.category}
                       onValueChange={(value) => {
                         setFormData(prev => ({ ...prev, category: value as FormData['category'] }));
                         validateField('category', value);
@@ -645,7 +644,7 @@ export default function NewPortfolioPage() {
                         </Button>
                       </div>
                     ))}
-                    
+
                     <label className="flex flex-col items-center justify-center h-24 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
                       <Upload className="w-6 h-6 text-gray-400" />
                       <span className="text-xs text-gray-500 mt-1">Adicionar</span>
@@ -671,8 +670,8 @@ export default function NewPortfolioPage() {
               <CardContent className="space-y-4">
                 <div>
                   <Label htmlFor="status">Status</Label>
-                  <Select 
-                    value={formData.status} 
+                  <Select
+                    value={formData.status}
                     onValueChange={(value) => setFormData(prev => ({ ...prev, status: value as FormData['status'] }))}
                   >
                     <SelectTrigger>
@@ -763,7 +762,7 @@ export default function NewPortfolioPage() {
                     </>
                   )}
                 </Button>
-                
+
                 <Button type="button" variant="outline" className="w-full" asChild>
                   <Link href="/admin/portfolio">
                     Cancelar
@@ -774,6 +773,6 @@ export default function NewPortfolioPage() {
           </div>
         </div>
       </form>
-          </div>
-    );
+    </div>
+  );
 } 

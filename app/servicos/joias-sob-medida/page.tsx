@@ -9,7 +9,7 @@ export default function JoiasSobMedidaPage() {
   return (
     <div className="min-h-screen bg-marfim">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-esmeralda via-esmeralda-dark to-[#0b1f18] py-24 text-marfim">
+      <section id="hero" className="relative overflow-hidden bg-gradient-to-br from-esmeralda via-esmeralda-dark to-[#0b1f18] py-24 text-marfim">
         <div className="absolute inset-0">
           <Image
             src="/assets/images/sobre-nos-hero.webp"
@@ -40,7 +40,7 @@ export default function JoiasSobMedidaPage() {
       </section>
 
       {/* Under Construction Section */}
-      <section className="relative -mt-16 rounded-t-[48px] bg-marfim pb-24 pt-20">
+      <section id="em-breve" className="relative -mt-16 rounded-t-[48px] bg-marfim pb-24 pt-20">
         <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
           <div className="rounded-3xl border border-esmeralda/10 bg-white p-12 shadow-[0_25px_60px_-35px_rgba(24,68,52,0.25)]">
             <div className="flex flex-col items-center gap-8">

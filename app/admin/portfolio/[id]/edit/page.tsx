@@ -31,9 +31,8 @@ const categoryOptions = {
 };
 
 const statusOptions = {
-  DRAFT: 'Rascunho',
+  ARCHIVED: 'Arquivado',
   PUBLISHED: 'Publicado',
-  FEATURED: 'Destaque',
 };
 
 interface Specification {
@@ -51,7 +50,7 @@ interface FormData {
   images: string[];
   isActive: boolean;
   isFeatured: boolean;
-  status: 'DRAFT' | 'PUBLISHED' | 'FEATURED';
+  status: 'DRAFT' | 'PUBLISHED' | 'FEATURED' | 'ARCHIVED';
   order: number;
   specifications: Specification[];
   seoTitle: string;
@@ -64,7 +63,7 @@ export default function EditPortfolioPage() {
   const router = useRouter();
   const params = useParams();
   const portfolioId = params.id as string;
-  
+
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [uploadingImage, setUploadingImage] = useState(false);
@@ -79,7 +78,7 @@ export default function EditPortfolioPage() {
     images: [],
     isActive: true,
     isFeatured: false,
-    status: 'DRAFT',
+    status: 'ARCHIVED',
     order: 0,
     specifications: [],
     seoTitle: '',
@@ -138,7 +137,7 @@ export default function EditPortfolioPage() {
           images: item.images || [],
           isActive: item.isActive,
           isFeatured: item.isFeatured || false,
-          status: item.status || 'DRAFT',
+          status: (item.status === 'DRAFT' ? 'ARCHIVED' : item.status === 'FEATURED' ? 'PUBLISHED' : item.status) || 'ARCHIVED',
           order: item.order || 0,
           specifications,
           seoTitle: item.seoTitle || '',
@@ -191,7 +190,7 @@ export default function EditPortfolioPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.title || !formData.category || !formData.mainImage) {
       toast({
         title: "Campos obrigatórios",
@@ -235,8 +234,8 @@ export default function EditPortfolioPage() {
         const error = await response.json();
         toast({
           title: "Erro ao atualizar projeto",
-          description: error.details ? 
-            `Problemas de validação: ${error.details.map((d: any) => d.message).join(', ')}` : 
+          description: error.details ?
+            `Problemas de validação: ${error.details.map((d: any) => d.message).join(', ')}` :
             error.error || "Erro desconhecido",
           variant: "destructive",
         });
@@ -281,23 +280,23 @@ export default function EditPortfolioPage() {
     const reader = new FileReader();
     reader.onload = (event) => {
       const result = event.target?.result as string;
-      
+
       if (isMain) {
         setFormData(prev => ({ ...prev, mainImage: result }));
       } else {
-        setFormData(prev => ({ 
-          ...prev, 
-          images: [...prev.images, result] 
+        setFormData(prev => ({
+          ...prev,
+          images: [...prev.images, result]
         }));
       }
-      
+
       setUploadingImage(false);
       toast({
         title: "Imagem carregada",
         description: `Imagem ${isMain ? 'principal' : 'adicional'} carregada com sucesso.`,
       });
     };
-    
+
     reader.onerror = () => {
       setUploadingImage(false);
       toast({
@@ -306,7 +305,7 @@ export default function EditPortfolioPage() {
         variant: "destructive",
       });
     };
-    
+
     reader.readAsDataURL(file);
   };
 
@@ -327,7 +326,7 @@ export default function EditPortfolioPage() {
   const updateSpecification = (index: number, field: 'key' | 'value', value: string) => {
     setFormData(prev => ({
       ...prev,
-      specifications: prev.specifications.map((spec, i) => 
+      specifications: prev.specifications.map((spec, i) =>
         i === index ? { ...spec, [field]: value } : spec
       )
     }));
@@ -431,8 +430,8 @@ export default function EditPortfolioPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="category">Categoria *</Label>
-                    <Select 
-                      value={formData.category} 
+                    <Select
+                      value={formData.category}
                       onValueChange={(value) => setFormData(prev => ({ ...prev, category: value as FormData['category'] }))}
                       required
                     >
@@ -667,7 +666,7 @@ export default function EditPortfolioPage() {
                         </Button>
                       </div>
                     ))}
-                    
+
                     <label className="flex flex-col items-center justify-center h-24 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
                       <Upload className="w-6 h-6 text-gray-400" />
                       <span className="text-xs text-gray-500 mt-1">Adicionar</span>
@@ -693,8 +692,8 @@ export default function EditPortfolioPage() {
               <CardContent className="space-y-4">
                 <div>
                   <Label htmlFor="status">Status</Label>
-                  <Select 
-                    value={formData.status} 
+                  <Select
+                    value={formData.status}
                     onValueChange={(value) => setFormData(prev => ({ ...prev, status: value as FormData['status'] }))}
                   >
                     <SelectTrigger>
@@ -780,7 +779,7 @@ export default function EditPortfolioPage() {
                     </>
                   )}
                 </Button>
-                
+
                 <Button type="button" variant="outline" className="w-full" asChild>
                   <Link href="/admin/portfolio">
                     Cancelar

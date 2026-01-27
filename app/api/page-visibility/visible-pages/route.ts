@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 
+export const dynamic = 'force-dynamic'
+
 // Mapeamento das páginas com seus slugs para fallback
 const PAGE_MAPPING = [
   { slug: 'servicos', title: 'Serviços', href: '/servicos' },

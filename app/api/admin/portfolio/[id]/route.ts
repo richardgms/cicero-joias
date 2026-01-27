@@ -17,7 +17,7 @@ const updatePortfolioSchema = z.object({
   images: z.array(z.string()).optional(),
   isActive: z.boolean().optional(),
   isFeatured: z.boolean().optional(),
-  status: z.string().regex(/^(DRAFT|PUBLISHED|FEATURED)$/, 'Status inválido').optional(),
+  status: z.string().regex(/^(DRAFT|PUBLISHED|FEATURED|ARCHIVED)$/, 'Status inválido').optional(),
   order: z.number().int('Ordem deve ser um número inteiro').min(0, 'Ordem não pode ser negativa').optional(),
   specifications: z.record(z.string()).optional().nullable(),
   seoTitle: z.string().optional().nullable().refine((val) => !val || val.length <= 60, {

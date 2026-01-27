@@ -58,7 +58,7 @@ export default function ServicosPage() {
     <PageVisibilityGuard pageSlug="servicos">
       <div className="min-h-screen bg-surface-page">
         {/* Hero Section */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-esmeralda via-esmeralda-dark to-esmeralda-deep pt-10 pb-24 text-text-on-dark">
+        <section id="hero" className="relative overflow-hidden bg-gradient-to-br from-esmeralda via-esmeralda-dark to-esmeralda-deep pt-10 pb-24 text-text-on-dark">
           <div className="absolute inset-0">
             <Image
               src="/assets/images/sobre-nos-hero.webp"
@@ -87,7 +87,7 @@ export default function ServicosPage() {
         </section>
 
         {/* Services Section */}
-        <section className="relative -mt-16 rounded-t-[48px] bg-surface-page pb-24 pt-20">
+        <section id="lista-servicos" className="relative -mt-16 rounded-t-[48px] bg-surface-page pb-24 pt-20">
           <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             <div className="mb-16 text-center">
               <h2 className="font-philosopher font-bold text-4xl text-text-primary mb-4">
@@ -125,7 +125,7 @@ export default function ServicosPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="relative overflow-hidden bg-esmeralda-deep py-24 text-text-on-dark">
+        <section id="contato" className="relative overflow-hidden bg-esmeralda-deep py-24 text-text-on-dark">
           <div className="absolute inset-0 opacity-30">
             <div className="absolute -right-12 top-0 h-48 w-48 rounded-full bg-action-strong/20 blur-[120px]" />
             <div className="absolute -left-16 bottom-0 h-56 w-56 rounded-full bg-esmeralda-light/20 blur-[140px]" />

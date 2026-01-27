@@ -28,14 +28,14 @@ const FinalCTASection = dynamic(() => import('@/components/home/final-cta-sectio
 export default function AliancasPersonalizadasPage() {
   return (
     <div className="min-h-screen">
-      <AliancasHeroSection />
-      <MetalOptionsSection />
-      <FeaturesSection />
-      <ProcessSection />
-      <PortfolioPreviewSection />
-      <AuthoritySection />
-      <AliancasTestimonialsSection />
-      <FinalCTASection />
+      <section id="hero"><AliancasHeroSection /></section>
+      <section id="metais"><MetalOptionsSection /></section>
+      <section id="diferenciais"><FeaturesSection /></section>
+      <section id="processo"><ProcessSection /></section>
+      <section id="portfolio"><PortfolioPreviewSection /></section>
+      <section id="autoridade"><AuthoritySection /></section>
+      <section id="depoimentos"><AliancasTestimonialsSection /></section>
+      <section id="contato"><FinalCTASection /></section>
     </div>
   );
 }

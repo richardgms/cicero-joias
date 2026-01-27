@@ -44,21 +44,29 @@ export default function HomePage() {
   return (
     <main className="min-h-screen">
       {/* 1. Hero - Apresentação inicial com proposta de valor */}
-      <HeroSection />
+      <section id="hero">
+        <HeroSection />
+      </section>
 
       {/* 2. Services - Catálogo completo de serviços */}
-      <div id="servicos">
+      <section id="servicos">
         <ServicesGridSection />
-      </div>
+      </section>
 
       {/* 3. Portfolio - Trabalhos em destaque */}
-      <PortfolioPreviewSection />
+      <section id="portfolio">
+        <PortfolioPreviewSection />
+      </section>
 
       {/* 4. Testimonials - Depoimentos de clientes */}
-      <TestimonialsSection />
+      <section id="depoimentos">
+        <TestimonialsSection />
+      </section>
 
       {/* 5. Final CTA - Chamada final para ação */}
-      <FinalCTASection />
+      <section id="contato">
+        <FinalCTASection />
+      </section>
     </main>
   );
 }

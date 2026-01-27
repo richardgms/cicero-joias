@@ -79,7 +79,7 @@ export default function SobrePage() {
     <PageVisibilityGuard pageSlug="sobre">
       <div className="min-h-screen bg-surface-page">
         {/* Sister Page Hero Pattern */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-esmeralda via-esmeralda-dark to-esmeralda-deep pt-10 pb-24 text-text-on-dark">
+        <section id="hero" className="relative overflow-hidden bg-gradient-to-br from-esmeralda via-esmeralda-dark to-esmeralda-deep pt-10 pb-24 text-text-on-dark">
           <div className="absolute inset-0">
             <Image
               src="/assets/images/sobre-nos-hero.webp"
@@ -108,11 +108,11 @@ export default function SobrePage() {
         </section>
 
         {/* Content Overlap Wrapper */}
-        <section className="relative -mt-16 rounded-t-[48px] bg-surface-page pb-24 pt-20">
+        <section id="nossa-historia" className="relative -mt-16 rounded-t-[48px] bg-surface-page pb-24 pt-20">
           <div className="mx-auto flex max-w-6xl flex-col gap-16 px-4 sm:px-6 lg:px-8">
 
             {/* Stats Grid - Glass Cards */}
-            <div className="grid gap-6 sm:grid-cols-3 -mt-8 relative z-10">
+            <div id="numeros" className="grid gap-6 sm:grid-cols-3 -mt-8 relative z-10">
               {legacyStats.map((item) => (
                 <div
                   key={item.label}
@@ -240,7 +240,7 @@ export default function SobrePage() {
         </section>
 
         {/* CTA Section */}
-        <section className="relative overflow-hidden bg-esmeralda-deep py-24 text-text-on-dark">
+        <section id="contato" className="relative overflow-hidden bg-esmeralda-deep py-24 text-text-on-dark">
           <div className="absolute inset-0 opacity-30">
             <div className="absolute -right-12 top-0 h-48 w-48 rounded-full bg-action-strong/20 blur-[120px]" />
             <div className="absolute -left-16 bottom-0 h-56 w-56 rounded-full bg-esmeralda-light/20 blur-[140px]" />

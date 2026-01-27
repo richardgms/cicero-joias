@@ -26,6 +26,7 @@ export async function GET(request: Request) {
 
     const where: Record<string, unknown> = {
       isActive: true,
+      status: 'PUBLISHED',
     };
 
     if (category && category !== 'todos') {

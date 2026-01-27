@@ -39,7 +39,7 @@ const createPortfolioSchema = z.object({
     }
     return val !== false;
   }).default(false).optional(),
-  status: z.string().regex(/^(DRAFT|PUBLISHED|FEATURED)$/, 'Status inválido').default('DRAFT'),
+  status: z.string().regex(/^(DRAFT|PUBLISHED|FEATURED|ARCHIVED)$/, 'Status inválido').default('ARCHIVED'),
   order: z.union([z.number(), z.string()]).transform((val) => {
     if (typeof val === 'string') {
       const parsed = parseInt(val, 10);
