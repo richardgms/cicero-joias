@@ -52,6 +52,7 @@ export async function GET() {
         count: portfolioCount
       };
     } catch (queryError) {
+      console.error('Portfolio Query Test Failed (Detailed):', queryError);
       healthCheck.checks.portfolioQuery = {
         status: 'FAIL',
         error: queryError instanceof Error ? queryError.message : String(queryError)

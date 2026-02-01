@@ -1,0 +1,6 @@
+﻿------- DIAGNOSTIC REPORT -------
+Portfolio Query Status: PASS
+Portfolio Query Error: undefined
+Database Status: PASS
+Database Error: undefined
+---------------------------------
