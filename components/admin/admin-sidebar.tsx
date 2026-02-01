@@ -12,7 +12,8 @@ import {
   BarChart3,
   FileText,
   Gem,
-  Eye
+  Eye,
+  Activity
 } from 'lucide-react';
 
 const navigation = [
@@ -45,6 +46,11 @@ const navigation = [
     name: 'Usuários',
     href: '/admin/usuarios',
     icon: Users,
+  },
+  {
+    name: 'Health',
+    href: '/admin/health',
+    icon: Activity,
   },
 
 

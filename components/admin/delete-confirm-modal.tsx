@@ -1,6 +1,7 @@
 'use client';
 
 import { AlertTriangle, Trash2 } from 'lucide-react';
+import { LoadingScreen } from '@/components/ui/loading-screen';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -36,7 +37,7 @@ export function DeleteConfirmModal({
   variant = 'destructive',
 }: DeleteConfirmModalProps) {
   const defaultTitle = title || 'Confirmar exclusão';
-  const defaultDescription = description || 
+  const defaultDescription = description ||
     `Tem certeza que deseja deletar ${itemName ? `"${itemName}"` : 'este item'}? Esta ação não pode ser desfeita.`;
 
   const defaultTrigger = (
@@ -123,10 +124,10 @@ export function useDeleteModal() {
     // Em uma implementação real, você poderia usar um context provider
     // para gerenciar modals globalmente
     const result = window.confirm(
-      options?.description || 
+      options?.description ||
       `Tem certeza que deseja deletar ${options?.itemName ? `"${options.itemName}"` : 'este item'}? Esta ação não pode ser desfeita.`
     );
-    
+
     if (result) {
       onConfirm();
     }

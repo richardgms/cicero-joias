@@ -4,6 +4,7 @@ import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
+import { LoadingScreen } from '@/components/ui/loading-screen';
 
 interface AdminGuardProps {
   children: React.ReactNode;
@@ -22,7 +23,7 @@ export function AdminGuard({ children }: AdminGuardProps) {
 
       // Verificar se o usuário tem role ADMIN (case insensitive)
       const userRole = (user.publicMetadata?.role as string)?.toLowerCase();
-      
+
       if (userRole !== 'admin') {
         // Redirecionar para página de acesso negado
         router.push('/acesso-negado');
@@ -35,10 +36,7 @@ export function AdminGuard({ children }: AdminGuardProps) {
   if (!isLoaded) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="flex flex-col items-center space-y-4">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
-          <p className="text-sm text-gray-600">Verificando permissões...</p>
-        </div>
+        <LoadingScreen variant="fullscreen" message="Verificando permissões..." />
       </div>
     );
   }
@@ -50,15 +48,12 @@ export function AdminGuard({ children }: AdminGuardProps) {
 
   // Verificar role (case insensitive)
   const userRole = (user.publicMetadata?.role as string)?.toLowerCase();
-  
+
   if (userRole !== 'admin') {
     // Não renderizar enquanto redireciona
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="flex flex-col items-center space-y-4">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
-          <p className="text-sm text-gray-600">Redirecionando...</p>
-        </div>
+        <LoadingScreen variant="fullscreen" message="Redirecionando..." />
       </div>
     );
   }

@@ -68,7 +68,7 @@ export function PortfolioPreviewSection() {
       {/* Content */}
       <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-16 px-4 sm:px-6 lg:px-8">
         <AnimatedSection className="space-y-7 text-center" delay={0.05}>
-          <span className="font-jost inline-flex items-center justify-center gap-2 rounded-full border border-action-strong/40 bg-action-strong/20 px-5 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-action-strong transition-all duration-500 hover:scale-105 hover:bg-action-strong/30 hover:border-action-strong/60 hover:shadow-[0_0_20px_rgba(207,154,36,0.3)] cursor-default">
+          <span className="font-jost inline-flex items-center justify-center gap-2 rounded-full border border-action-strong/40 bg-action-strong/20 px-5 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-action-strong transition-all duration-500 hover:scale-105 hover:bg-action-strong/30 hover:border-action-strong/60 hover:shadow-button-gold cursor-default">
             Trabalhos em Destaque
           </span>
           <h2 className="font-philosopher text-3xl sm:text-5xl lg:text-6xl font-bold text-text-on-dark leading-tight">
@@ -168,10 +168,15 @@ export function PortfolioPreviewSection() {
                   </p>
                 </div>
                 <Link href="/portfolio">
-                  <Button className="font-jost group rounded-full bg-action-strong text-text-on-brand hover:bg-action-strong/90 hover:scale-105 hover:-translate-y-1 hover:shadow-2xl transition-all duration-500 px-8 py-6 text-base font-semibold uppercase tracking-[0.2em]">
-                    Ver portfólio completo
-                    <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-500 group-hover:translate-x-2" />
-                  </Button>
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Button className="font-jost group rounded-full bg-action-strong text-text-on-brand shadow-button-primary hover:bg-action-strong/90 hover:shadow-button-gold-strong hover:-translate-y-0.5 transition-all duration-500 px-8 py-6 text-base font-semibold uppercase tracking-[0.2em]">
+                      Ver portfólio completo
+                      <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" />
+                    </Button>
+                  </motion.div>
                 </Link>
               </div>
             </AnimatedSection>

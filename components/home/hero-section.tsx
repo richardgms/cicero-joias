@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Star } from 'lucide-react';
 import { heroStats, whatsappLinks } from './home-data';
 import CountUp from '@/components/ui/count-up';
+import { Button } from '@/components/ui/button';
 
 export function HeroSection() {
   // Animation variants
@@ -60,8 +61,8 @@ export function HeroSection() {
         />
       </div>
 
-      {/* Cinematic Overlays - Adjusted to 80% as requested */}
-      <div className="absolute inset-0 z-[1] bg-gradient-to-br from-[#0B2B20]/80 via-[#184434]/80 to-[#04160F]/80" />
+      {/* Cinematic Overlays - Gradients using Tokens where possible, but preserving complex gradients */}
+      <div className="absolute inset-0 z-[1] bg-gradient-to-br from-esmeralda-dark/80 via-esmeralda/80 to-esmeralda-deep/80" />
       <div className="absolute inset-0 z-[1] bg-[url('/assets/noise.webp')] opacity-[0.03] mix-blend-overlay" />
 
       {/* Active Ambient Blobs */}
@@ -82,7 +83,7 @@ export function HeroSection() {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="relative z-10 container mx-auto px-4 text-center text-white flex flex-col items-center justify-between h-full max-h-[720px] md:max-h-none lg:max-h-[1100px]"
+        className="relative z-10 container mx-auto px-4 text-center text-text-on-dark flex flex-col items-center justify-between h-full max-h-[720px] md:max-h-none lg:max-h-[1100px]"
       >
 
         {/* Top Space */}
@@ -136,23 +137,30 @@ export function HeroSection() {
                 href={whatsappLinks.primary}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative inline-flex w-full sm:w-auto items-center justify-center gap-3 overflow-hidden rounded-full bg-ouro px-6 py-3 md:px-10 md:py-4 text-xs md:text-sm font-bold uppercase tracking-[0.2em] text-esmeralda-dark shadow-[0_0_40px_-10px_rgba(207,154,36,0.5)] transition-all hover:bg-[#F2C054] hover:shadow-[0_0_60px_-15px_rgba(207,154,36,0.7)]"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <span className="relative z-10 flex items-center gap-2">
-                  Solicitar Orçamento
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </span>
+                <Button
+                  className="group w-full sm:w-auto gap-3 rounded-full bg-action-strong px-6 py-6 md:px-10 md:py-8 text-xs md:text-sm font-bold uppercase tracking-[0.2em] text-text-on-brand shadow-button-primary transition-all duration-500 hover:bg-action-strong/90 hover:shadow-button-gold-strong hover:-translate-y-0.5"
+                >
+                  <span className="relative z-10 flex items-center gap-2">
+                    Solicitar Orçamento
+                    <ArrowRight className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" />
+                  </span>
+                </Button>
               </motion.a>
 
               <motion.a
                 href="#servicos"
-                className="group relative inline-flex w-full sm:w-auto items-center justify-center gap-2 overflow-hidden rounded-full border border-white/20 bg-white/[0.03] px-6 py-3 md:px-10 md:py-4 text-xs md:text-sm font-bold uppercase tracking-[0.2em] text-white/[0.65] transition-all duration-500 hover:text-white hover:bg-white/[0.07] hover:border-ouro/30 backdrop-blur-sm"
                 whileTap={{ scale: 0.98 }}
               >
-                <div className="absolute -bottom-10 -left-10 w-24 h-24 bg-ouro/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                <span className="relative z-10">Nossos Serviços</span>
+                <Button
+                  variant="outline"
+                  className="group relative w-full sm:w-auto gap-2 overflow-hidden rounded-full border-white/20 bg-white/[0.03] px-6 py-6 md:px-10 md:py-8 text-xs md:text-sm font-bold uppercase tracking-[0.2em] text-white/[0.65] transition-all duration-500 hover:text-white hover:bg-white/[0.07] hover:border-ouro/30 backdrop-blur-sm shadow-none hover:shadow-lg"
+                >
+                  <div className="absolute -bottom-10 -left-10 w-24 h-24 bg-ouro/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                  <span className="relative z-10">Nossos Serviços</span>
+                </Button>
               </motion.a>
             </motion.div>
 
@@ -164,9 +172,9 @@ export function HeroSection() {
               {heroStats.map((stat, index) => (
                 <div key={stat.number}
                   className="group relative overflow-hidden rounded-xl md:rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/20 p-4 md:p-8 lg:p-10
-                    shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]
+                    shadow-card-sm
                     transition-all duration-500
-                    hover:bg-white/[0.07] hover:border-ouro/30
+                    hover:bg-white/[0.07] hover:border-ouro/30 hover:shadow-card-sm-hover
                   "
                 >
                   <div className="absolute -bottom-10 -left-10 w-24 h-24 md:w-40 md:h-40 bg-ouro/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowLeft, Upload, X, Save, Plus, Trash2 } from 'lucide-react';
+import { LoadingScreen } from '@/components/ui/loading-screen';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -30,10 +31,7 @@ const categoryOptions = {
   GRADUATION_RINGS: 'Anéis de Formatura',
 };
 
-const statusOptions = {
-  ARCHIVED: 'Arquivado',
-  PUBLISHED: 'Publicado',
-};
+
 
 interface Specification {
   key: string;
@@ -88,9 +86,9 @@ export default function NewPortfolioPage() {
 
   // Buscar contagem de itens destacados
   useEffect(() => {
-    fetch('/api/public/portfolio?featured=true')
+    fetch('/api/admin/portfolio/featured-count')
       .then(res => res.json())
-      .then(data => setFeaturedCount(data.pagination?.total || 0))
+      .then(data => setFeaturedCount(data.count || 0))
       .catch(() => setFeaturedCount(0));
   }, []);
 
@@ -200,7 +198,9 @@ export default function NewPortfolioPage() {
       } else if (error.status === 409) {
         errorTitle = "Item duplicado";
         errorDescription = error.message || "Já existe um item com essas informações";
-      } else if (error.details) {
+      } else if (error.details && Array.isArray(error.details.details)) {
+        errorDescription = `Problemas de validação: ${error.details.details.map((d: any) => d.message).join(', ')}`;
+      } else if (error.details && Array.isArray(error.details)) {
         errorDescription = `Problemas de validação: ${error.details.map((d: any) => d.message).join(', ')}`;
       }
 
@@ -587,10 +587,7 @@ export default function NewPortfolioPage() {
                       <label className={`flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 border-dashed rounded-lg ${uploadingImage ? 'cursor-not-allowed opacity-50' : 'cursor-pointer bg-gray-50 hover:bg-gray-100'}`}>
                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                           {uploadingImage ? (
-                            <>
-                              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-500 mb-4"></div>
-                              <p className="mb-2 text-sm text-gray-500">Carregando imagem...</p>
-                            </>
+                            <LoadingScreen variant="inline" message="Carregando imagem..." />
                           ) : (
                             <>
                               <Upload className="w-8 h-8 mb-4 text-gray-500" />
@@ -668,31 +665,16 @@ export default function NewPortfolioPage() {
                 <CardTitle>Status e Publicação</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div>
-                  <Label htmlFor="status">Status</Label>
-                  <Select
-                    value={formData.status}
-                    onValueChange={(value) => setFormData(prev => ({ ...prev, status: value as FormData['status'] }))}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.entries(statusOptions).map(([value, label]) => (
-                        <SelectItem key={value} value={value}>{label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <Separator />
-
                 <div className="flex items-center justify-between">
                   <Label htmlFor="isActive">Projeto Ativo</Label>
                   <Switch
                     id="isActive"
                     checked={formData.isActive}
-                    onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isActive: checked }))}
+                    onCheckedChange={(checked) => setFormData(prev => ({
+                      ...prev,
+                      isActive: checked,
+                      status: checked ? 'PUBLISHED' : 'ARCHIVED'
+                    }))}
                   />
                 </div>
 

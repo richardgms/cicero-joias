@@ -4,6 +4,9 @@ import prisma, { executeWithRetry } from '@/lib/prisma';
 import { z } from 'zod';
 import { checkAdminAuth } from "@/lib/check-admin";
 
+
+
+
 // Schema de validação para criação de item do portfólio
 const createPortfolioSchema = z.object({
   title: z.string().min(1, 'Título é obrigatório').max(255, 'Título muito longo'),
@@ -227,7 +230,7 @@ export async function GET() {
       { portfolioItems, debug: debugInfo },
       {
         headers: {
-          'X-Debug-Info': JSON.stringify(debugInfo),
+
           'X-Request-ID': requestId,
           'X-Total-Duration': `${totalDuration}ms`,
           'X-Items-Count': portfolioItems.length.toString()
@@ -289,7 +292,7 @@ export async function GET() {
       {
         status: statusCode,
         headers: {
-          'X-Debug-Info': JSON.stringify(debugInfo),
+
           'X-Request-ID': requestId,
           'X-Error-Type': errorInfo.name,
           'X-Total-Duration': `${totalDuration}ms`
@@ -533,7 +536,7 @@ export async function POST(request: Request) {
       {
         status: 201,
         headers: {
-          'X-Debug-Info': JSON.stringify(debugInfo),
+
           'X-Operation-Time': `${endTime - startTime}ms`
         }
       }
@@ -541,6 +544,7 @@ export async function POST(request: Request) {
 
   } catch (error) {
     const endTime = Date.now();
+
     debugInfo.push(`Unexpected error after ${endTime - startTime}ms: ${error instanceof Error ? error.message : String(error)}`);
 
     return NextResponse.json(
@@ -555,7 +559,7 @@ export async function POST(request: Request) {
       {
         status: 500,
         headers: {
-          'X-Debug-Info': JSON.stringify(debugInfo),
+
           'X-Operation-Time': `${endTime - startTime}ms`
         }
       }

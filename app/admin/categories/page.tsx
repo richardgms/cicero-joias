@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, GripVertical, Palette, Save, X } from 'lucide-react';
+import { LoadingScreen } from '@/components/ui/loading-screen';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -83,14 +84,14 @@ export default function AdminCategoriesPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
-      const url = editingCategory 
+      const url = editingCategory
         ? `/api/admin/categories/${editingCategory.id}`
         : '/api/admin/categories';
-      
+
       const method = editingCategory ? 'PUT' : 'POST';
-      
+
       const response = await fetch(url, {
         method,
         headers: {
@@ -165,10 +166,7 @@ export default function AdminCategoriesPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-96">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-2 text-gray-600">Carregando categorias...</p>
-        </div>
+        <LoadingScreen variant="inline" message="Carregando categorias..." />
       </div>
     );
   }
@@ -210,11 +208,11 @@ export default function AdminCategoriesPage() {
                   required
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="type">Tipo</Label>
-                <Select 
-                  value={formData.type} 
+                <Select
+                  value={formData.type}
                   onValueChange={(value) => setFormData({ ...formData, type: value as 'PORTFOLIO' | 'PRODUCT' })}
                 >
                   <SelectTrigger>
@@ -235,11 +233,10 @@ export default function AdminCategoriesPage() {
                       key={preset.value}
                       type="button"
                       onClick={() => setFormData({ ...formData, color: preset.value })}
-                      className={`w-full h-10 rounded-lg border-2 transition-all ${
-                        formData.color === preset.value 
-                          ? 'border-gray-900 scale-110' 
-                          : 'border-gray-200 hover:border-gray-400'
-                      }`}
+                      className={`w-full h-10 rounded-lg border-2 transition-all ${formData.color === preset.value
+                        ? 'border-gray-900 scale-110'
+                        : 'border-gray-200 hover:border-gray-400'
+                        }`}
                       style={{ backgroundColor: preset.value }}
                       title={preset.name}
                     />
@@ -259,9 +256,9 @@ export default function AdminCategoriesPage() {
                   <Save className="h-4 w-4 mr-2" />
                   {editingCategory ? 'Atualizar' : 'Criar'}
                 </Button>
-                <Button 
-                  type="button" 
-                  variant="outline" 
+                <Button
+                  type="button"
+                  variant="outline"
                   onClick={() => setIsDialogOpen(false)}
                 >
                   <X className="h-4 w-4 mr-2" />
@@ -337,7 +334,7 @@ export default function AdminCategoriesPage() {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center space-x-2">
-                      <div 
+                      <div
                         className="w-6 h-6 rounded-full border"
                         style={{ backgroundColor: category.color }}
                       />
@@ -417,7 +414,7 @@ export default function AdminCategoriesPage() {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center space-x-2">
-                      <div 
+                      <div
                         className="w-6 h-6 rounded-full border"
                         style={{ backgroundColor: category.color }}
                       />

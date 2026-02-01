@@ -1,6 +1,7 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
 import type { Metadata } from 'next';
+import { LoadingScreen } from '@/components/ui/loading-screen';
 
 // Priority 1: Critical rendering path - Above the fold (immediate load)
 import { HeroSection } from '@/components/home/hero-section';
@@ -9,17 +10,17 @@ import { ServicesGridSection } from '@/components/home/services-grid-section';
 // Priority 2: Below fold - Viewport threshold (lazy load with high priority)
 const PortfolioPreviewSection = dynamic(
   () => import('@/components/home/portfolio-preview-section').then(mod => mod.PortfolioPreviewSection),
-  { ssr: true, loading: () => <div className="min-h-[600px]" /> }
+  { ssr: true, loading: () => <div className="min-h-[600px] flex items-center justify-center"><LoadingScreen variant="inline" message="Carregando portfólio..." /></div> }
 );
 
 const TestimonialsSection = dynamic(
   () => import('@/components/home/testimonials-section').then(mod => mod.TestimonialsSection),
-  { ssr: true, loading: () => <div className="min-h-[500px]" /> }
+  { ssr: true, loading: () => <div className="min-h-[500px] flex items-center justify-center"><LoadingScreen variant="inline" message="Carregando depoimentos..." /></div> }
 );
 
 const FinalCTASection = dynamic(
   () => import('@/components/home/final-cta-section').then(mod => mod.FinalCTASection),
-  { ssr: true, loading: () => <div className="min-h-[300px]" /> }
+  { ssr: true, loading: () => <div className="min-h-[300px] flex items-center justify-center"><LoadingScreen variant="inline" message="Carregando..." /></div> }
 );
 
 export const metadata: Metadata = {

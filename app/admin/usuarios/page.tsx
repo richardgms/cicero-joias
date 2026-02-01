@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { LoadingScreen } from '@/components/ui/loading-screen';
 import {
   Select,
   SelectContent,
@@ -207,8 +208,8 @@ export default function AdminUsersPage() {
         <Card className="border-esmeralda/10">
           <CardContent className="p-0">
             {loading ? (
-              <div className="flex h-64 items-center justify-center text-esmeralda/70">
-                Carregando usuários...
+              <div className="flex h-64 items-center justify-center">
+                <LoadingScreen variant="inline" message="Carregando usuários..." />
               </div>
             ) : error ? (
               <div className="flex h-64 flex-col items-center justify-center gap-3 text-center text-esmeralda/70">

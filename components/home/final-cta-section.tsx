@@ -53,12 +53,12 @@ export function FinalCTASection() {
           href={whatsappLinks.primary}
           target="_blank"
           rel="noopener noreferrer"
-          className="font-jost group inline-flex w-full items-center justify-center gap-2 rounded-full bg-action-strong px-6 py-3 text-sm font-semibold uppercase tracking-[0.26em] text-text-on-brand shadow-button-primary transition-colors hover:bg-action-strong/90 sm:w-auto md:w-auto"
-          whileHover={{ x: 3 }}
-          whileTap={{ scale: 0.97 }}
+          className="font-jost group inline-flex w-full items-center justify-center gap-2 rounded-full bg-action-strong px-6 py-3 text-sm font-semibold uppercase tracking-[0.26em] text-text-on-brand shadow-button-primary transition-all duration-500 hover:bg-action-strong/90 hover:shadow-button-gold-strong hover:-translate-y-0.5 sm:w-auto md:w-auto"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
         >
           Falar no WhatsApp
-          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          <ArrowRight className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" />
         </motion.a>
       </div>
     </section>

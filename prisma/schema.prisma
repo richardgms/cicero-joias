@@ -85,7 +85,9 @@ model PortfolioItem {
   productId           String?
   favorites           Favorite[]
   product             Product?          @relation(fields: [productId], references: [id])
+  deletedAt           DateTime?
 
+  @@index([deletedAt])
   @@map("portfolio_items")
 }
 
@@ -152,7 +154,7 @@ model PageVisibilityLog {
   @@map("page_visibility_logs")
 }
 
-model site_settings {
+model SiteSettings {
   id          String   @id
   key         String   @unique
   value       String
@@ -160,6 +162,8 @@ model site_settings {
   description String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime
+
+  @@map("site_settings")
 }
 
 enum UserRole {

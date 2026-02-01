@@ -11,14 +11,17 @@ import {
   Eye,
   Clock,
   SlidersHorizontal,
-  ArrowRight
+  ArrowRight,
+  Star
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { LoadingScreen } from '@/components/ui/loading-screen';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { generatePortfolioSlug } from '@/lib/slug-utils';
 import { PageVisibilityGuard } from '@/components/page-visibility-guard';
+import { FinalCTASection } from '@/components/home/final-cta-section';
 
 const categoryLabels = {
   WEDDING_RINGS: 'Alianças de Casamento',
@@ -76,6 +79,27 @@ export default function PortfolioPage() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pagination, setPagination] = useState(INITIAL_PAGINATION);
   const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { type: "spring", stiffness: 50, damping: 20 }
+    }
+  };
 
   useEffect(() => {
     const fetchPortfolioItems = async () => {
@@ -169,39 +193,63 @@ export default function PortfolioPage() {
   return (
     <PageVisibilityGuard pageSlug="portfolio">
       <div className="min-h-screen bg-surface-page">
-        {/* Hero Section - Matching Services Page Structure */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-esmeralda via-esmeralda-dark to-esmeralda-deep pt-10 pb-24 text-text-on-dark">
-          <div className="absolute inset-0">
-            {/* Uses a conceptual placeholder or specific background logic if needed, 
-                 using plain gradients to match Services page style exactly */}
-            <div className="absolute inset-0 bg-gradient-to-b from-esmeralda-deep/70 via-esmeralda-deep/60 to-esmeralda-deep/90" />
-            <div className="absolute -top-32 right-0 h-64 w-64 rounded-full bg-action-strong/20 blur-[120px]" />
-            <div className="absolute -bottom-20 left-10 h-72 w-72 rounded-full bg-esmeralda-light/10 blur-[140px]" />
+        {/* Hero Section - Standardized with Glass/Dark aesthetic */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-esmeralda info-esmeralda-dark via-esmeralda to-esmeralda-deep pt-16 pb-32 text-text-on-dark">
+          {/* Background & Overlays */}
+          <div className="absolute inset-0 z-0">
+            {/* Standardized Noise & Gradient Overlays */}
+            <div className="absolute inset-0 bg-gradient-to-b from-esmeralda-deep/80 via-esmeralda-deep/70 to-esmeralda-deep/90" />
+            <div className="absolute inset-0 bg-[url('/assets/noise.webp')] opacity-[0.03] mix-blend-overlay" />
+
+            {/* Decorative Blurs */}
+            <div className="absolute -top-32 right-0 h-96 w-96 rounded-full bg-action-strong/10 blur-[120px]" />
+            <div className="absolute -bottom-20 left-10 h-80 w-80 rounded-full bg-esmeralda-light/10 blur-[140px]" />
           </div>
 
-          <div className="relative mx-auto flex max-w-6xl flex-col gap-6 px-4 text-center sm:px-6 lg:px-8">
-            <span className="inline-flex mx-auto w-fit items-center gap-2 rounded-full border border-text-on-dark/30 bg-white/10 px-4 py-1 font-jost text-xs font-semibold uppercase tracking-[0.3em] text-text-on-dark/80">
-              Nosso trabalho em foco
-            </span>
-            <h1 className="font-philosopher font-bold leading-none">
-              <span className="block text-[clamp(40px,5vw+16px,64px)]">Portfólio de</span>
-              <span className="block text-[clamp(32px,4vw+12px,56px)] text-action-strong">Joias e Restaurações</span>
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="relative z-10 mx-auto flex max-w-6xl flex-col gap-8 px-4 text-center sm:px-6 lg:px-8"
+          >
+            {/* Standardized Badge */}
+            <motion.div variants={itemVariants} className="mx-auto inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 backdrop-blur-md shadow-lg">
+              <Star className="w-3 h-3 text-ouro fill-ouro" />
+              <span className="font-jost text-[10px] md:text-xs font-semibold uppercase tracking-[0.2em] text-ouro/90">
+                Nosso trabalho em foco
+              </span>
+            </motion.div>
+
+            {/* Standardized Headlines */}
+            <h1 className="font-philosopher font-bold leading-tight">
+              <motion.span variants={itemVariants} className="block text-[clamp(40px,5vw+16px,64px)] text-transparent bg-clip-text bg-gradient-to-b from-white to-white/80 filter drop-shadow-2xl">
+                Portfólio de
+              </motion.span>
+              <motion.span variants={itemVariants} className="block text-[clamp(32px,4vw+12px,56px)] text-ouro/90 filter drop-shadow-lg">
+                Joias e Restaurações
+              </motion.span>
             </h1>
-            <p className="mx-auto max-w-2xl font-montserrat text-lg text-text-on-dark/90 leading-relaxed">
-              Conheça projetos recentes: alianças personalizadas, restaurações com memória afetiva e renovações de peças queridas. Filtre por categoria para encontrar o que mais combina com você.
-            </p>
-          </div>
+
+            <motion.p variants={itemVariants} className="mx-auto max-w-2xl font-montserrat text-base md:text-lg text-white/75 leading-relaxed">
+              Conheça projetos recentes: alianças personalizadas, restaurações com memória afetiva e renovações de peças queridas.
+            </motion.p>
+          </motion.div>
         </section>
 
-        {/* Content Section - Overlapping Wrapper Matching Services Page */}
-        <section className="relative -mt-16 rounded-t-[48px] bg-surface-page pb-24 pt-20">
+        {/* Content Section - Overlapping Wrapper */}
+        <section className="relative -mt-16 rounded-t-[48px] bg-surface-page pb-24 pt-20 shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
           <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
 
-            {/* Filters Container - Embedded similar to Services Grid Header */}
-            <div className="mb-12 flex flex-col gap-6 rounded-3xl border border-white/60 bg-surface-card p-6 shadow-card backdrop-blur-sm">
+            {/* Filters Container */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mb-12 flex flex-col gap-6 rounded-3xl border border-ouro/10 bg-surface-card p-6 shadow-card backdrop-blur-sm"
+            >
               <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div className="flex flex-1 items-center gap-3 rounded-full border border-action-primary/10 bg-white/50 px-4 py-2">
-                  <Search className="h-4 w-4 text-action-primary" />
+                <div className="flex flex-1 items-center gap-3 rounded-full border border-ouro/20 bg-white/50 px-4 py-2 transition-colors focus-within:border-ouro/50">
+                  <Search className="h-4 w-4 text-ouro" />
                   <Input
                     value={searchTerm}
                     onChange={handleSearchChange}
@@ -213,7 +261,7 @@ export default function PortfolioPage() {
                   <Button
                     variant={viewMode === 'grid' ? 'default' : 'outline'}
                     size="sm"
-                    className={viewMode === 'grid' ? 'bg-action-primary text-text-on-dark' : 'border-action-primary/20 text-action-primary hover:bg-action-primary/5'}
+                    className={viewMode === 'grid' ? 'bg-action-primary text-text-on-dark shadow-sm' : 'border-ouro/20 text-text-secondary hover:bg-ouro/10'}
                     onClick={() => setViewMode('grid')}
                   >
                     <Grid3X3 className="h-4 w-4" />
@@ -221,7 +269,7 @@ export default function PortfolioPage() {
                   <Button
                     variant={viewMode === 'list' ? 'default' : 'outline'}
                     size="sm"
-                    className={viewMode === 'list' ? 'bg-action-primary text-text-on-dark' : 'border-action-primary/20 text-action-primary hover:bg-action-primary/5'}
+                    className={viewMode === 'list' ? 'bg-action-primary text-text-on-dark shadow-sm' : 'border-ouro/20 text-text-secondary hover:bg-ouro/10'}
                     onClick={() => setViewMode('list')}
                   >
                     <List className="h-4 w-4" />
@@ -229,10 +277,10 @@ export default function PortfolioPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="border-action-primary/20 text-action-primary hover:bg-action-primary/5"
+                    className="border-ouro/20 text-text-secondary hover:bg-ouro/10 group"
                     onClick={() => setIsFilterDialogOpen(true)}
                   >
-                    <SlidersHorizontal className="h-4 w-4 mr-2" />
+                    <SlidersHorizontal className="h-4 w-4 mr-2 text-ouro" />
                     Filtros
                   </Button>
                 </div>
@@ -242,9 +290,9 @@ export default function PortfolioPage() {
                 <div className="flex flex-wrap gap-2 md:col-span-2">
                   <Badge
                     onClick={() => handleCategoryChange('all')}
-                    className={`cursor-pointer border transition-colors duration-200 ${selectedCategory === 'all'
-                      ? 'bg-action-primary text-text-on-dark border-transparent hover:bg-action-primary-hover'
-                      : 'bg-surface-subtle text-text-primary border-action-primary/10 hover:bg-action-primary/5'}`}
+                    className={`cursor-pointer border transition-all duration-300 ${selectedCategory === 'all'
+                      ? 'bg-action-primary text-text-on-dark border-transparent shadow-sm'
+                      : 'bg-white/50 text-text-secondary border-ouro/20 hover:bg-ouro/10 hover:border-ouro/40'}`}
                   >
                     Todos
                   </Badge>
@@ -252,9 +300,9 @@ export default function PortfolioPage() {
                     <Badge
                       key={category}
                       onClick={() => handleCategoryChange(category)}
-                      className={`cursor-pointer border transition-colors duration-200 ${selectedCategory === category
-                        ? 'bg-action-primary text-text-on-dark border-transparent hover:bg-action-primary-hover'
-                        : 'bg-surface-subtle text-text-primary border-action-primary/10 hover:bg-action-primary/5'}`}
+                      className={`cursor-pointer border transition-all duration-300 ${selectedCategory === category
+                        ? 'bg-action-primary text-text-on-dark border-transparent shadow-sm'
+                        : 'bg-white/50 text-text-secondary border-ouro/20 hover:bg-ouro/10 hover:border-ouro/40'}`}
                     >
                       {categoryLabels[category as keyof typeof categoryLabels] || category}
                     </Badge>
@@ -264,7 +312,7 @@ export default function PortfolioPage() {
                 <div className="flex items-center justify-end gap-2">
                   <span className="font-jost text-xs font-semibold uppercase tracking-wide text-text-secondary/70">Organizar por</span>
                   <Select value={dateFilter} onValueChange={handleDateFilterChange}>
-                    <SelectTrigger className="w-[160px] border-action-primary/20 text-text-primary bg-white/50">
+                    <SelectTrigger className="w-[160px] border-ouro/20 text-text-primary bg-white/50 focus:ring-ouro/30">
                       <SelectValue placeholder="Mais recentes" />
                     </SelectTrigger>
                     <SelectContent>
@@ -280,13 +328,13 @@ export default function PortfolioPage() {
                   <p>Exibindo {filteredItems.length} de {pagination.total} projetos</p>
                 )}
               </div>
-            </div>
+            </motion.div>
 
             {/* Content Grid */}
             <AnimatePresence initial={false}>
               {loading ? (
                 <div className="flex h-48 items-center justify-center">
-                  <span className="font-montserrat text-sm text-text-secondary/70">Carregando portfólio...</span>
+                  <LoadingScreen variant="inline" message="Carregando projetos..." />
                 </div>
               ) : error ? (
                 <div className="flex h-48 flex-col items-center justify-center gap-3">
@@ -300,50 +348,58 @@ export default function PortfolioPage() {
                   <p className="font-montserrat text-sm text-text-secondary/70">
                     Nenhum projeto encontrado com os filtros atuais.
                   </p>
-                  <Button onClick={() => handleCategoryChange('all')} variant="outline" className="font-montserrat border-action-primary/30 text-action-primary">
+                  <Button onClick={() => handleCategoryChange('all')} variant="outline" className="font-montserrat border-ouro/30 text-ouro">
                     Limpar filtros
                   </Button>
                 </div>
               ) : (
                 <motion.div
                   key={viewMode + selectedCategory + searchTerm + dateFilter + currentPage}
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
                   className={viewMode === 'grid' ? 'grid gap-8 md:grid-cols-2 lg:grid-cols-3' : 'space-y-6'}
                   layout
                 >
                   {filteredItems.map((item) => (
-                    <motion.div key={item.id} layout>
-                      {/* Uses Card Design matching Services Page but adapted for Image content */}
+                    <motion.div key={item.id} variants={itemVariants} layout>
+                      {/* Standardized Card Design */}
                       <Link href={`/portfolio/${generatePortfolioSlug({
                         title: item.title,
                         category: item.category,
                         id: item.id
                       })}`}>
                         <div
-                          className={`group h-full rounded-3xl border border-white/60 bg-surface-card p-4 shadow-card transition-all duration-500 hover:-translate-y-2 hover:shadow-card-hover hover:border-action-primary/20 hover:bg-white ${viewMode === 'list' ? 'flex flex-col md:flex-row gap-6 p-6' : ''}`}
+                          className={`group h-full rounded-3xl border border-ouro/15 bg-surface-card p-4 shadow-card transition-all duration-500 hover:border-ouro/50 hover:shadow-card-hover hover:-translate-y-1 hover:bg-white ${viewMode === 'list' ? 'flex flex-col md:flex-row gap-6 p-6' : ''}`}
                         >
                           <div className={viewMode === 'list' ? 'relative h-56 w-full md:w-64 overflow-hidden rounded-2xl md:rounded-l-2xl md:rounded-r-lg' : 'relative aspect-[4/3] w-full overflow-hidden rounded-2xl'}>
                             <Image
                               src={item.mainImage || '/assets/images/placeholder-jewelry.svg'}
                               alt={item.title}
                               fill
-                              className="object-cover transition-transform duration-500 group-hover:scale-110"
+                              className="object-cover transition-transform duration-700 group-hover:scale-110"
                               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             />
+                            {/* Overlay Gradient */}
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-                            <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-1 font-jost text-xs font-semibold uppercase tracking-wide text-white">
-                              <Clock className="h-3 w-3" />
-                              {new Date(item.createdAt).toLocaleDateString('pt-BR')}
+
+                            {/* Overlay Content */}
+                            <div className="absolute bottom-3 left-3 flex items-center gap-2 transform translate-y-4 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+                              <div className="flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 font-jost text-xs font-semibold uppercase tracking-wide text-white backdrop-blur-md">
+                                <Clock className="h-3 w-3" />
+                                {new Date(item.createdAt).toLocaleDateString('pt-BR')}
+                              </div>
                             </div>
                           </div>
 
                           <div className={viewMode === 'list' ? 'flex flex-1 flex-col justify-between' : 'flex flex-col justify-between pt-6'}>
                             <div className="space-y-3">
                               <div className="flex items-center gap-2">
-                                <Badge className="bg-action-primary/5 text-action-primary border-transparent group-hover:bg-action-strong/10 group-hover:text-action-strong transition-colors">
+                                <Badge className="bg-ouro/10 text-ouro border-transparent group-hover:bg-ouro/20 transition-colors">
                                   {categoryLabels[item.category as keyof typeof categoryLabels] || item.category}
                                 </Badge>
                               </div>
-                              <h3 className="font-philosopher text-xl font-bold text-text-primary group-hover:text-action-primary transition-colors line-clamp-2">
+                              <h3 className="font-philosopher text-xl font-bold text-text-primary group-hover:text-ouro transition-colors line-clamp-2">
                                 {item.title}
                               </h3>
                               {(item.description && viewMode === 'list') && (
@@ -351,7 +407,7 @@ export default function PortfolioPage() {
                               )}
                             </div>
 
-                            <div className="mt-4 flex items-center justify-between font-jost text-sm font-semibold uppercase tracking-widest text-action-strong group-hover:text-action-primary transition-colors">
+                            <div className="mt-4 flex items-center justify-between font-jost text-xs font-bold uppercase tracking-widest text-ouro border-t border-transparent pt-4 group-hover:border-ouro/10 transition-colors">
                               <span>Ver detalhes</span>
                               <ArrowRight className="h-4 w-4 transform transition-transform duration-300 group-hover:translate-x-1" />
                             </div>
@@ -364,14 +420,15 @@ export default function PortfolioPage() {
               )}
             </AnimatePresence>
 
-            {/* Pagination */}
+            {/* Pagination Standardized */}
             {pagination.totalPages > 1 && (
               <div className="mt-16 flex items-center justify-center gap-2">
                 <Button
                   variant="outline"
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={!pagination.hasPrevPage}
-                  className="font-montserrat border-action-primary/20 text-action-primary hover:border-action-primary hover:text-action-primary disabled:opacity-50"
+                  className="font-montserrat border-ouro/20 text-text-secondary hover:border-ouro hover:text-ouro disabled:opacity-50"
+                  size="sm"
                 >
                   Anterior
                 </Button>
@@ -382,8 +439,8 @@ export default function PortfolioPage() {
                       variant={page === currentPage ? 'default' : 'outline'}
                       onClick={() => handlePageChange(page)}
                       className={page === currentPage
-                        ? 'font-montserrat bg-action-primary text-text-on-dark hover:bg-action-primary-hover'
-                        : 'font-montserrat border-action-primary/20 text-action-primary hover:border-action-primary hover:text-action-primary'}
+                        ? 'font-montserrat bg-action-primary text-text-on-dark hover:bg-action-primary-hover shadow-button-primary'
+                        : 'font-montserrat border-ouro/20 text-text-secondary hover:border-ouro hover:text-ouro'}
                       size="sm"
                     >
                       {page}
@@ -394,7 +451,8 @@ export default function PortfolioPage() {
                   variant="outline"
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={!pagination.hasNextPage}
-                  className="font-montserrat border-action-primary/20 text-action-primary hover:border-action-primary hover:text-action-primary disabled:opacity-50"
+                  className="font-montserrat border-ouro/20 text-text-secondary hover:border-ouro hover:text-ouro disabled:opacity-50"
+                  size="sm"
                 >
                   Próxima
                 </Button>
@@ -403,37 +461,8 @@ export default function PortfolioPage() {
           </div>
         </section>
 
-        {/* CTA Section - Matching Home/Services CTA but with Portfolio Context */}
-        <section className="relative overflow-hidden bg-esmeralda-deep py-24 text-text-on-dark">
-          <div className="absolute inset-0 opacity-30">
-            <div className="absolute -right-12 top-0 h-48 w-48 rounded-full bg-action-strong/20 blur-[120px]" />
-            <div className="absolute -left-16 bottom-0 h-56 w-56 rounded-full bg-esmeralda-light/20 blur-[140px]" />
-          </div>
-          {/* Blend Gradient */}
-          <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-surface-page/5 to-transparent opacity-10" />
-
-          <div className="relative mx-auto flex max-w-4xl flex-col items-center gap-8 px-4 text-center sm:px-6">
-            <span className="inline-flex items-center gap-2 rounded-full border border-text-on-dark/20 bg-white/5 px-4 py-1 font-jost text-xs font-semibold uppercase tracking-[0.3em] text-text-on-dark/70">
-              Gostou do que viu?
-            </span>
-            <h2 className="font-philosopher font-bold text-[clamp(28px,4vw+10px,42px)]">
-              Sua joia também pode contar uma história
-            </h2>
-            <p className="max-w-2xl font-montserrat text-sm text-text-on-dark/75 leading-relaxed">
-              Cada peça que você viu aqui começou com uma conversa. Que tal começarmos a sua? Entre em contato para restaurar uma herança ou criar algo novo.
-            </p>
-            <div className="flex flex-col gap-4 sm:flex-row">
-              <Link
-                href="https://wa.me/5583991180251"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-full bg-action-strong px-8 py-3 font-jost text-sm font-bold uppercase tracking-[0.2em] text-text-on-brand shadow-button-primary transition-all duration-300 hover:bg-action-strong-hover hover:scale-105 hover:-translate-y-1"
-              >
-                Solicitar Orçamento
-              </Link>
-            </div>
-          </div>
-        </section>
+        {/* Replaced Footer with Standard Component */}
+        <FinalCTASection />
       </div>
     </PageVisibilityGuard>
   );

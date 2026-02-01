@@ -49,3 +49,9 @@ tsconfig.tsbuildinfo
 !.agent/rules/
 !.agent/ARCHITECTURE.md
 .agent(legacy)/
+
+# Unused Assets
+public/assets/photosproducts/
+
+# Temporary Scripts
+scripts/inspect_remaining_files.js

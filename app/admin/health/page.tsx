@@ -15,6 +15,7 @@ import {
     Shield,
     Clock
 } from 'lucide-react';
+import { LoadingScreen } from '@/components/ui/loading-screen';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -103,7 +104,7 @@ export default function SystemHealthPage() {
     if (loading && !data) {
         return (
             <div className="flex h-[80vh] items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                <LoadingScreen variant="inline" message="Verificando saúde do sistema..." />
             </div>
         );
     }

@@ -44,7 +44,7 @@ export async function GET(
   try {
     const portfolioItem = await executeWithRetry(async () => {
       return await prisma.portfolioItem.findUnique({
-        where: { id },
+        where: { id, deletedAt: null },
         include: {
           product: {
             select: {
@@ -89,7 +89,7 @@ export async function PUT(
     // Verificar se o item existe
     const existingItem = await executeWithRetry(async () => {
       return await prisma.portfolioItem.findUnique({
-        where: { id },
+        where: { id, deletedAt: null },
       });
     });
 
@@ -236,7 +236,7 @@ export async function DELETE(
     try {
       existingItem = await executeWithRetry(async () => {
         return await prisma.portfolioItem.findUnique({
-          where: { id },
+          where: { id, deletedAt: null },
           include: {
             favorites: true // Verificar dependências
           }
@@ -291,11 +291,12 @@ export async function DELETE(
     // Teste 6: Deletar o item
     try {
       await executeWithRetry(async () => {
-        return await prisma.portfolioItem.delete({
+        return await prisma.portfolioItem.update({
           where: { id },
+          data: { deletedAt: new Date() }
         });
       });
-      debugInfo.push('Portfolio item deleted successfully');
+      debugInfo.push('Portfolio item soft-deleted successfully');
     } catch (deleteError) {
       debugInfo.push(`Delete failed: ${deleteError instanceof Error ? deleteError.message : String(deleteError)}`);
 
@@ -348,7 +349,7 @@ export async function DELETE(
       {
         status: 200,
         headers: {
-          'X-Debug-Info': JSON.stringify(debugInfo),
+
           'X-Operation-Time': `${endTime - startTime}ms`
         }
       }
@@ -370,7 +371,7 @@ export async function DELETE(
       {
         status: 500,
         headers: {
-          'X-Debug-Info': JSON.stringify(debugInfo),
+
           'X-Operation-Time': `${endTime - startTime}ms`
         }
       }

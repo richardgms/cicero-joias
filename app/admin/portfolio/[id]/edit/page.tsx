@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowLeft, Upload, X, Save, Plus, Trash2 } from 'lucide-react';
+import { LoadingScreen } from '@/components/ui/loading-screen';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -30,10 +31,7 @@ const categoryOptions = {
   GRADUATION_RINGS: 'Anéis de Formatura',
 };
 
-const statusOptions = {
-  ARCHIVED: 'Arquivado',
-  PUBLISHED: 'Publicado',
-};
+
 
 interface Specification {
   key: string;
@@ -174,9 +172,9 @@ export default function EditPortfolioPage() {
     const fetchFeaturedCount = async () => {
       setIsLoadingFeaturedCount(true);
       try {
-        const response = await fetch('/api/public/portfolio?featured=true');
+        const response = await fetch('/api/admin/portfolio/featured-count');
         const data = await response.json();
-        setFeaturedCount(data.pagination?.total || 0);
+        setFeaturedCount(data.count || 0);
       } catch (error) {
         console.error('Erro ao buscar contagem de destaques:', error);
         setFeaturedCount(0);
@@ -234,7 +232,7 @@ export default function EditPortfolioPage() {
         const error = await response.json();
         toast({
           title: "Erro ao atualizar projeto",
-          description: error.details ?
+          description: (error.details && Array.isArray(error.details)) ?
             `Problemas de validação: ${error.details.map((d: any) => d.message).join(', ')}` :
             error.error || "Erro desconhecido",
           variant: "destructive",
@@ -359,10 +357,7 @@ export default function EditPortfolioPage() {
   if (initialLoading) {
     return (
       <div className="flex items-center justify-center min-h-96">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-2 text-gray-600">Carregando projeto...</p>
-        </div>
+        <LoadingScreen variant="inline" message="Carregando projeto..." />
       </div>
     );
   }
@@ -690,31 +685,16 @@ export default function EditPortfolioPage() {
                 <CardTitle>Status e Publicação</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div>
-                  <Label htmlFor="status">Status</Label>
-                  <Select
-                    value={formData.status}
-                    onValueChange={(value) => setFormData(prev => ({ ...prev, status: value as FormData['status'] }))}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.entries(statusOptions).map(([value, label]) => (
-                        <SelectItem key={value} value={value}>{label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <Separator />
-
                 <div className="flex items-center justify-between">
                   <Label htmlFor="isActive">Projeto Ativo</Label>
                   <Switch
                     id="isActive"
                     checked={formData.isActive}
-                    onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isActive: checked }))}
+                    onCheckedChange={(checked) => setFormData(prev => ({
+                      ...prev,
+                      isActive: checked,
+                      status: checked ? 'PUBLISHED' : 'ARCHIVED'
+                    }))}
                   />
                 </div>
 

@@ -3,6 +3,7 @@
 import { ReactNode } from 'react';
 import { usePageVisibility } from '@/hooks/use-page-visibility';
 import { Eye, Shield, Loader2 } from 'lucide-react';
+import { LoadingScreen } from '@/components/ui/loading-screen';
 
 interface PageVisibilityGuardProps {
   pageSlug: string;
@@ -10,22 +11,17 @@ interface PageVisibilityGuardProps {
   fallback?: ReactNode;
 }
 
-export function PageVisibilityGuard({ 
-  pageSlug, 
-  children, 
-  fallback 
+export function PageVisibilityGuard({
+  pageSlug,
+  children,
+  fallback
 }: PageVisibilityGuardProps) {
   const { loading, isVisible, isAdmin, error } = usePageVisibility(pageSlug);
 
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-marfim via-gray-50 to-esmeralda/5">
-        <div className="text-center">
-          <Loader2 className="h-12 w-12 text-esmeralda animate-spin mx-auto mb-4" />
-          <p className="font-montserrat text-gray-600">Verificando disponibilidade...</p>
-        </div>
-      </div>
+      <LoadingScreen variant="fullscreen" message="Verificando disponibilidade..." />
     );
   }
 
@@ -67,9 +63,9 @@ export function PageVisibilityGuard({
   if (fallback) {
     return <div className="w-full">{fallback}</div>;
   }
-  
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-marfim via-gray-50 to-esmeralda/5">
+    <div className="min-h-screen flex items-center justify-center bg-[#F8F5F0]">
       <div className="text-center">
         <Eye className="h-12 w-12 text-gray-400 mx-auto mb-4" />
         <h2 className="text-xl font-semibold text-gray-900 mb-2">

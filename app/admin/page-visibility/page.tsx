@@ -14,6 +14,7 @@ import {
   RotateCcw,
   ExternalLink
 } from 'lucide-react';
+import { LoadingScreen } from '@/components/ui/loading-screen';
 import Link from 'next/link';
 import {
   Dialog,
@@ -165,7 +166,7 @@ export default function PageVisibilityPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-esmeralda"></div>
+        <LoadingScreen variant="inline" message="Carregando configurações..." />
       </div>
     );
   }
@@ -281,8 +282,8 @@ export default function PageVisibilityPage() {
 
                   {/* Badge de status */}
                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${page.isVisible
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-red-100 text-red-800'
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-red-100 text-red-800'
                     }`}>
                     {page.isVisible ? (
                       <>
@@ -398,8 +399,8 @@ export default function PageVisibilityPage() {
                   }}
                   disabled={isDatabaseUnavailable}
                   className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-esmeralda focus:ring-offset-2 ${isDatabaseUnavailable
-                      ? 'bg-gray-200 cursor-not-allowed opacity-50'
-                      : page.isVisible ? 'bg-esmeralda' : 'bg-gray-300'
+                    ? 'bg-gray-200 cursor-not-allowed opacity-50'
+                    : page.isVisible ? 'bg-esmeralda' : 'bg-gray-300'
                     }`}
                   title={isDatabaseUnavailable
                     ? 'Banco de dados indisponível - não é possível alterar'

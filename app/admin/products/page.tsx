@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Plus, Search, Edit, Trash2, Eye, MoreHorizontal, Package } from 'lucide-react';
+import { LoadingScreen } from '@/components/ui/loading-screen';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -143,10 +144,7 @@ export default function AdminProductsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-96">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-2 text-gray-600">Carregando produtos...</p>
-        </div>
+        <LoadingScreen variant="inline" message="Carregando produtos..." />
       </div>
     );
   }

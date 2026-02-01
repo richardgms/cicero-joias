@@ -11,6 +11,7 @@ import {
   Search, Filter, Star, Clock, Package,
   SlidersHorizontal, Grid3X3, List, HelpCircle
 } from 'lucide-react';
+import { LoadingScreen } from '@/components/ui/loading-screen';
 import {
   Select,
   SelectContent,
@@ -466,10 +467,7 @@ function ProntaEntregaContent() {
             <div className="lg:col-span-3">
               {loading ? (
                 <div className="flex items-center justify-center min-h-96">
-                  <div className="text-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-esmeralda mx-auto"></div>
-                    <p className="mt-2 font-montserrat text-gray-600">Carregando produtos...</p>
-                  </div>
+                  <LoadingScreen variant="inline" message="Carregando produtos..." />
                 </div>
               ) : filteredProducts.length === 0 ? (
                 <div className="text-center py-12">
