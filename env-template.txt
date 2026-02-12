@@ -10,9 +10,8 @@ NODE_ENV=development
 # ===========================================
 # URL para o Transaction Pooler (Porta 6543) - ALTA PERFORMANCE
 # Ideal para acesso via aplicação (Server Components, API Routes)
-# IMPORTANTE: statement_cache_size=0 é obrigatório com PgBouncer em modo transaction
-# Exemplo: ...:6543/postgres?pgbouncer=true&statement_cache_size=0
-DATABASE_URL="postgresql://postgres:[SENHA]@db.[PROJETO].supabase.co:6543/postgres?pgbouncer=true&statement_cache_size=0"
+# Exemplo: ...:6543/postgres?pgbouncer=true
+DATABASE_URL="postgresql://postgres:[SENHA]@db.[PROJETO].supabase.co:6543/postgres?pgbouncer=true"
 
 # URL Direta / Session Pooler (Porta 5432) - MIGRAÇÔES
 # Obrigatória para rodar 'npx prisma migrate deploy'

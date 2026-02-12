@@ -33,7 +33,9 @@ export async function GET(
       where: {
         id: {
           endsWith: shortId
-        }
+        },
+        isActive: true,
+        deletedAt: null
       },
       include: {
         product: true,
@@ -55,7 +57,9 @@ export async function GET(
         category: portfolioItem.category,
         id: {
           not: portfolioItem.id
-        }
+        },
+        isActive: true,
+        deletedAt: null
       },
       select: {
         id: true,

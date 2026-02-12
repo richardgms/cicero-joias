@@ -10,9 +10,10 @@ export async function GET(
 
     // Buscar projeto por ID
     const portfolioItem = await prisma.portfolioItem.findUnique({
-      where: { 
+      where: {
         id,
-        isActive: true
+        isActive: true,
+        deletedAt: null
       },
       include: {
         product: {
@@ -38,7 +39,8 @@ export async function GET(
       where: {
         id: { not: id },
         category: portfolioItem.category,
-        isActive: true
+        isActive: true,
+        deletedAt: null
       },
       take: 3,
       orderBy: { createdAt: 'desc' },
