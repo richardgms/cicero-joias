@@ -46,7 +46,9 @@ export async function GET() {
 
     // Teste 3: Query de contagem no portfólio
     try {
-      const portfolioCount = await prisma.portfolioItem.count();
+      const portfolioCount = await executeWithRetry(async () => {
+        return await prisma.portfolioItem.count();
+      });
       healthCheck.checks.portfolioQuery = {
         status: 'PASS',
         count: portfolioCount
@@ -61,12 +63,14 @@ export async function GET() {
 
     // Teste 4: Schema do banco
     try {
-      const tableInfo = await prisma.$queryRaw`
-        SELECT table_name
-        FROM information_schema.tables
-        WHERE table_schema = 'public'
-        AND table_name IN ('portfolio_items', 'activity_logs')
-      `;
+      const tableInfo = await executeWithRetry(async () => {
+        return await prisma.$queryRaw`
+          SELECT table_name
+          FROM information_schema.tables
+          WHERE table_schema = 'public'
+          AND table_name IN ('portfolio_items', 'activity_logs')
+        `;
+      });
       healthCheck.checks.schema = {
         status: 'PASS',
         tables: tableInfo
