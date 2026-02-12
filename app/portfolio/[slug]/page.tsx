@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ChevronLeft, ArrowRight, Share2, Heart, Clock, CheckCircle2, Star } from 'lucide-react';
+import { ChevronLeft, ArrowRight, Share2, Expand, X, Clock, CheckCircle2, Star } from 'lucide-react';
 import { useUser } from '@clerk/nextjs';
 import { Button } from '@/components/ui/button';
 import { useParams } from 'next/navigation';
@@ -71,8 +71,7 @@ export default function PortfolioItemPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [isFavorited, setIsFavorited] = useState(false);
-  const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   // Use standardized animation variants
   const containerVariants = {
@@ -141,31 +140,6 @@ export default function PortfolioItemPage() {
     return () => { isMounted = false; };
   }, [slug]);
 
-  // Check Favorite Status
-  useEffect(() => {
-    if (!portfolioItem || !isLoaded || !isSignedIn) return;
-
-    let isMounted = true;
-
-    const loadFavoriteState = async () => {
-      try {
-        const response = await fetch('/api/favorites');
-        if (!isMounted) return;
-
-        if (response.ok) {
-          const data: FavoriteResponse = await response.json();
-          const isFav = data.favorites?.some((fav) => fav.portfolioItem.id === portfolioItem.id) ?? false;
-          setIsFavorited(isFav);
-        }
-      } catch (error) {
-        console.error('Erro ao verificar favorito:', error);
-      }
-    };
-
-    loadFavoriteState();
-
-    return () => { isMounted = false; };
-  }, [isLoaded, isSignedIn, portfolioItem]);
 
   const handleShare = async () => {
     if (!portfolioItem) return;
@@ -190,37 +164,6 @@ export default function PortfolioItemPage() {
       toast.success('Link copiado para a área de transferência!');
     } catch (error) {
       toast.error('Não foi possível copiar o link.');
-    }
-  };
-
-  const toggleFavorite = async () => {
-    if (!portfolioItem || isTogglingFavorite) return;
-
-    if (!isSignedIn) {
-      toast.error('Faça login para salvar favoritos.');
-      return;
-    }
-
-    setIsTogglingFavorite(true);
-
-    try {
-      const method = isFavorited ? 'DELETE' : 'POST';
-      const response = await fetch('/api/favorites', {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ portfolioItemId: portfolioItem.id }),
-      });
-
-      if (response.ok) {
-        setIsFavorited(!isFavorited);
-        toast.success(isFavorited ? 'Removido dos favoritos' : 'Salvo nos favoritos!');
-      } else {
-        toast.error('Erro ao atualizar favoritos.');
-      }
-    } catch (error) {
-      toast.error('Erro ao conectar com o servidor.');
-    } finally {
-      setIsTogglingFavorite(false);
     }
   };
 
@@ -253,7 +196,7 @@ export default function PortfolioItemPage() {
     <PageVisibilityGuard pageSlug="portfolio">
       <div className="min-h-screen bg-surface-page">
         {/* Standardized Header/Hero Context */}
-        <div className="relative overflow-hidden bg-esmeralda-deep pt-32 pb-24 lg:pt-40 lg:pb-32">
+        <div className="relative overflow-hidden bg-esmeralda-deep pt-16 pb-16 lg:pt-24 lg:pb-24">
           <div className="absolute inset-0 z-0">
             <div className="absolute inset-0 bg-gradient-to-b from-esmeralda-deep/90 via-esmeralda-deep/80 to-esmeralda-deep/95" />
             <div className="absolute inset-0 bg-[url('/assets/noise.webp')] opacity-[0.03] mix-blend-overlay" />
@@ -296,8 +239,8 @@ export default function PortfolioItemPage() {
           </div>
         </div>
 
-        <div className="relative -mt-16 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-24">
-          <div className="grid gap-12 lg:grid-cols-[1.2fr,1fr] xl:gap-16">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-10 pb-24 lg:pt-14">
+          <div className="grid gap-10 lg:grid-cols-[1.3fr,1fr] lg:gap-14 xl:gap-20">
             {/* Left Column: Images */}
             <motion.div
               className="space-y-6"
@@ -307,7 +250,7 @@ export default function PortfolioItemPage() {
             >
               {/* Main Image */}
               <div
-                className="relative aspect-[4/3] w-full overflow-hidden rounded-[2rem] border border-white/60 bg-white shadow-2xl"
+                className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-black/[0.06] bg-white shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)]"
               >
                 <Image
                   src={allImages[selectedImageIndex] || '/assets/images/placeholder-jewelry.svg'}
@@ -328,27 +271,26 @@ export default function PortfolioItemPage() {
                   >
                     <Share2 className="h-4 w-4" />
                   </Button>
-                  <Button
-                    size="icon"
-                    variant="secondary"
-                    className={`h-10 w-10 rounded-full shadow-sm backdrop-blur-sm transition-all hover:scale-105 ${isFavorited ? 'bg-red-50 text-red-500 hover:bg-red-100' : 'bg-white/90 text-text-primary hover:bg-white hover:text-red-500'}`}
-                    onClick={toggleFavorite}
-                    disabled={isTogglingFavorite}
-                    title={isFavorited ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
-                  >
-                    <Heart className={`h-4 w-4 ${isFavorited ? 'fill-current' : ''}`} />
-                  </Button>
                 </div>
+
+                {/* Fullscreen expand button */}
+                <button
+                  onClick={() => setIsFullscreen(true)}
+                  className="absolute right-4 bottom-4 flex h-10 w-10 items-center justify-center rounded-full bg-black/50 text-white/90 backdrop-blur-sm transition-all hover:bg-black/70 hover:scale-105"
+                  title="Ver em tela cheia"
+                >
+                  <Expand className="h-4 w-4" />
+                </button>
               </div>
 
               {/* Thumbnail Grid */}
               {allImages.length > 1 && (
-                <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+                <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
                   {allImages.map((img, idx) => (
                     <button
                       key={idx}
                       onClick={() => setSelectedImageIndex(idx)}
-                      className={`relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-2xl border-2 transition-all duration-300 ${selectedImageIndex === idx ? 'border-ouro ring-2 ring-ouro/20 scale-105' : 'border-transparent opacity-70 hover:opacity-100 grayscale hover:grayscale-0'}`}
+                      className={`relative h-[72px] w-[72px] flex-shrink-0 overflow-hidden rounded-xl border-2 transition-all duration-300 ${selectedImageIndex === idx ? 'border-ouro ring-2 ring-ouro/30 shadow-md' : 'border-border-default/60 opacity-60 hover:opacity-100 hover:border-ouro/40'}`}
                     >
                       <Image
                         src={img}
@@ -364,18 +306,18 @@ export default function PortfolioItemPage() {
 
             {/* Right Column: Content */}
             <motion.div
-              className="flex flex-col gap-8 pt-6"
+              className="flex flex-col gap-8 pt-4 lg:pt-8"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4, duration: 0.6 }}
             >
-              <div className="space-y-6">
-                <p className="font-montserrat text-lg text-text-secondary/80 leading-relaxed first-letter:text-5xl first-letter:font-philosopher first-letter:text-ouro first-letter:mr-1 first-letter:float-left">
+              <div className="space-y-5">
+                <p className="font-montserrat text-[15px] leading-[1.8] text-text-secondary/80 sm:text-base whitespace-pre-wrap first-letter:text-4xl first-letter:font-philosopher first-letter:font-bold first-letter:text-ouro first-letter:mr-1 first-letter:float-left first-letter:leading-[0.85] first-letter:mt-1">
                   {portfolioItem.description}
                 </p>
 
                 {portfolioItem.detailedDescription && (
-                  <div className="prose prose-stone max-w-none text-text-secondary/80 font-montserrat leading-relaxed pt-4 border-t border-border-default">
+                  <div className="text-[15px] leading-[1.8] text-text-secondary/70 font-montserrat pt-5 border-t border-border-default/60 whitespace-pre-wrap">
                     {portfolioItem.detailedDescription}
                   </div>
                 )}
@@ -383,16 +325,16 @@ export default function PortfolioItemPage() {
 
               {/* Specifications */}
               {portfolioItem.specifications && Object.keys(portfolioItem.specifications).length > 0 && (
-                <div className="rounded-3xl border border-ouro/10 bg-surface-card p-8 shadow-card-sm backdrop-blur-sm">
-                  <h3 className="font-philosopher text-xl font-bold text-text-primary mb-6 flex items-center gap-2">
-                    <CheckCircle2 className="h-5 w-5 text-ouro" />
+                <div className="rounded-2xl border border-ouro/15 bg-white/80 p-6 sm:p-8 shadow-card-sm backdrop-blur-sm">
+                  <h3 className="font-philosopher text-lg font-bold text-text-primary mb-5 flex items-center gap-2.5">
+                    <CheckCircle2 className="h-[18px] w-[18px] text-ouro" />
                     Especificações
                   </h3>
-                  <dl className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
+                  <dl className="grid gap-x-8 gap-y-5 sm:grid-cols-2">
                     {Object.entries(portfolioItem.specifications).map(([key, value]) => (
-                      <div key={key} className="flex flex-col gap-1 border-l-2 border-ouro/20 pl-4">
-                        <dt className="text-[10px] font-bold uppercase tracking-widest text-text-secondary/50">{key}</dt>
-                        <dd className="font-montserrat text-sm font-medium text-text-primary">{value}</dd>
+                      <div key={key} className="flex flex-col gap-1.5 border-l-2 border-ouro/25 pl-4">
+                        <dt className="text-[10px] font-bold uppercase tracking-[0.15em] text-text-secondary/60">{key}</dt>
+                        <dd className="font-montserrat text-sm font-semibold text-text-primary">{value}</dd>
                       </div>
                     ))}
                   </dl>
@@ -400,12 +342,12 @@ export default function PortfolioItemPage() {
               )}
 
               {/* CTAs */}
-              <div className="flex flex-col gap-4 pt-4 sm:flex-row">
+              <div className="flex flex-col gap-3 pt-6 sm:flex-row">
                 <Button
-                  className="flex-1 group rounded-full bg-action-strong text-text-on-brand shadow-button-primary transition-all duration-500 hover:bg-action-strong/90 hover:shadow-button-gold-strong hover:-translate-y-0.5 py-6 font-jost uppercase tracking-widest text-sm font-bold"
+                  className="flex-1 group rounded-full bg-esmeralda text-white shadow-[0_8px_24px_-6px_rgba(24,68,52,0.4)] transition-all duration-500 hover:bg-esmeralda-dark hover:shadow-[0_12px_32px_-6px_rgba(24,68,52,0.5)] hover:-translate-y-0.5 py-6 font-jost uppercase tracking-[0.15em] text-[13px] font-bold"
                   onClick={() => window.open(`https://wa.me/5583991180251?text=Olá! Gostaria de saber mais sobre o projeto: ${portfolioItem.title}`, '_blank')}
                 >
-                  <span className="flex items-center gap-2">
+                  <span className="flex items-center gap-2.5">
                     Solicitar Orçamento
                     <ArrowRight className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" />
                   </span>
@@ -414,7 +356,7 @@ export default function PortfolioItemPage() {
                 {portfolioItem.product && (
                   <Button
                     variant="outline"
-                    className="flex-1 group rounded-full border-ouro/30 bg-transparent text-text-primary transition-all duration-500 hover:border-ouro hover:text-ouro py-6 font-jost uppercase tracking-widest text-sm font-bold"
+                    className="flex-1 group rounded-full border-ouro/30 bg-transparent text-text-primary transition-all duration-500 hover:border-ouro hover:text-ouro py-6 font-jost uppercase tracking-[0.15em] text-[13px] font-bold"
                     onClick={() => window.location.href = `/produtos/${portfolioItem.product!.id}`}
                   >
                     Ver Produto Relacionado
@@ -427,19 +369,19 @@ export default function PortfolioItemPage() {
 
           {/* Related Projects Section */}
           {relatedProjects.length > 0 && (
-            <div className="mt-24 border-t border-border-default pt-20">
-              <div className="mb-12 flex items-center justify-between">
+            <div className="mt-20 border-t border-border-default/80 pt-16">
+              <div className="mb-10 flex items-end justify-between">
                 <div>
-                  <div className="inline-flex items-center gap-2 mb-4">
-                    <Star className="w-4 h-4 text-ouro" />
-                    <span className="font-jost text-xs font-bold uppercase tracking-widest text-ouro">Descubra Mais</span>
+                  <div className="inline-flex items-center gap-2 mb-3">
+                    <Star className="w-3.5 h-3.5 text-ouro" />
+                    <span className="font-jost text-[10px] font-bold uppercase tracking-[0.2em] text-ouro/80">Descubra Mais</span>
                   </div>
-                  <h2 className="font-philosopher text-4xl font-bold text-text-primary">Projetos Relacionados</h2>
+                  <h2 className="font-philosopher text-3xl font-bold text-text-primary sm:text-4xl">Projetos Relacionados</h2>
                 </div>
                 <Link href="/portfolio">
-                  <Button variant="ghost" className="hidden text-ouro hover:text-ouro/80 hover:bg-ouro/5 sm:flex font-jost uppercase tracking-widest text-xs font-bold">
+                  <Button variant="ghost" className="hidden text-ouro hover:text-ouro/80 hover:bg-ouro/5 sm:flex font-jost uppercase tracking-[0.15em] text-[11px] font-bold">
                     Ver todos
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                    <ArrowRight className="ml-2 h-3.5 w-3.5" />
                   </Button>
                 </Link>
               </div>
@@ -447,25 +389,25 @@ export default function PortfolioItemPage() {
               <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
                 {relatedProjects.map((project) => (
                   <Link key={project.id} href={`/portfolio/${generatePortfolioSlug({ title: project.title, category: project.category, id: project.id })}`}>
-                    <div className="group h-full overflow-hidden rounded-3xl border border-ouro/15 bg-surface-card shadow-card transition-all duration-500 hover:shadow-card-hover hover:-translate-y-2 hover:border-ouro/50">
+                    <div className="group h-full overflow-hidden rounded-2xl border border-black/[0.06] bg-white shadow-[0_2px_12px_-4px_rgba(0,0,0,0.06)] transition-all duration-500 hover:shadow-[0_16px_40px_-12px_rgba(24,68,52,0.12)] hover:-translate-y-1.5 hover:border-ouro/30">
                       <div className="relative aspect-[4/3] overflow-hidden">
                         <Image
                           src={project.mainImage || '/assets/images/placeholder-jewelry.svg'}
                           alt={project.title}
                           fill
-                          className="object-cover transition-transform duration-700 group-hover:scale-110"
+                          className="object-cover transition-transform duration-700 group-hover:scale-105"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
                         <div className="absolute bottom-4 left-4">
-                          <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 font-jost text-[10px] font-bold uppercase tracking-widest text-white backdrop-blur-md opacity-0 translate-y-2 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0">
+                          <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 font-jost text-[10px] font-bold uppercase tracking-[0.15em] text-white backdrop-blur-md opacity-0 translate-y-2 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0">
                             Ver Detalhes <ArrowRight className="w-3 h-3" />
                           </span>
                         </div>
                       </div>
-                      <div className="p-6">
-                        <Badge className="mb-3 bg-ouro/10 text-ouro border-transparent">{categoryLabels[project.category as keyof typeof categoryLabels] || project.category}</Badge>
-                        <h3 className="font-philosopher text-lg font-bold text-text-primary group-hover:text-ouro transition-colors">{project.title}</h3>
+                      <div className="p-5">
+                        <Badge className="mb-2.5 bg-ouro/10 text-ouro border-transparent text-[10px] font-bold">{categoryLabels[project.category as keyof typeof categoryLabels] || project.category}</Badge>
+                        <h3 className="font-philosopher text-[17px] font-bold text-text-primary group-hover:text-ouro transition-colors leading-snug">{project.title}</h3>
                       </div>
                     </div>
                   </Link>
@@ -474,6 +416,46 @@ export default function PortfolioItemPage() {
             </div>
           )}
         </div>
+
+        {/* Fullscreen Image Modal */}
+        <AnimatePresence>
+          {isFullscreen && (
+            <motion.div
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              onClick={() => setIsFullscreen(false)}
+            >
+              <motion.div
+                className="relative w-[90vmin] max-w-[700px] aspect-square"
+                initial={{ scale: 0.85, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.85, opacity: 0 }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                onClick={(e: React.MouseEvent) => e.stopPropagation()}
+              >
+                <Image
+                  src={allImages[selectedImageIndex] || '/assets/images/placeholder-jewelry.svg'}
+                  alt={portfolioItem.title}
+                  fill
+                  className="rounded-2xl object-cover"
+                  sizes="90vmin"
+                  priority
+                />
+
+                <button
+                  onClick={() => setIsFullscreen(false)}
+                  className="absolute right-4 bottom-4 flex h-11 w-11 items-center justify-center rounded-full bg-black/60 text-white/90 backdrop-blur-sm transition-all hover:bg-black/80 hover:scale-105"
+                  title="Fechar"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <FinalCTASection />
       </div>
