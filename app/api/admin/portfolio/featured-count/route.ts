@@ -1,6 +1,6 @@
 
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import prisma, { executeWithRetry } from '@/lib/prisma';
 import { checkAdminAuth } from "@/lib/check-admin";
 
 export async function GET() {
@@ -10,11 +10,13 @@ export async function GET() {
             return NextResponse.json({ error: authResult.error }, { status: authResult.status });
         }
 
-        const count = await prisma.portfolioItem.count({
-            where: {
-                isFeatured: true
-            }
-        });
+        const count = await executeWithRetry(() =>
+            prisma.portfolioItem.count({
+                where: {
+                    isFeatured: true
+                }
+            })
+        );
 
         return NextResponse.json({ count });
     } catch (error) {

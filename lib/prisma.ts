@@ -13,7 +13,7 @@ if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 
 export default prisma
 
-// Simplified retry wrapper to maintain compatibility with existing API routes
+// Retry wrapper with special handling for PgBouncer prepared statement errors
 export async function executeWithRetry<T>(
   operation: () => Promise<T>,
   maxRetries: number = 3,
@@ -28,6 +28,17 @@ export async function executeWithRetry<T>(
       lastError = error;
       if (attempt === maxRetries) break;
 
+      // For prepared statement errors (PgBouncer conflict), disconnect to clear stale connections
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      if (errorMessage.includes('prepared statement') && errorMessage.includes('already exists')) {
+        console.warn(`[Prisma] Prepared statement conflict on attempt ${attempt}, reconnecting...`);
+        try {
+          await prisma.$disconnect();
+        } catch {
+          // Ignore disconnect errors
+        }
+      }
+
       // Calculate delay with simple exponential backoff
       const delay = baseDelay * Math.pow(2, attempt - 1);
       await new Promise(resolve => setTimeout(resolve, delay));
@@ -35,4 +46,4 @@ export async function executeWithRetry<T>(
   }
 
   throw lastError;
-} 
+}

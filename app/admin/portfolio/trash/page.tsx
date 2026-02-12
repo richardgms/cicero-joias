@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, RotateCcw, Trash2, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { LoadingScreen } from '@/components/ui/loading-screen';
 
 interface DeletedItem {
@@ -24,11 +25,7 @@ export default function TrashPage() {
     const [loading, setLoading] = useState(true);
     const [processing, setProcessing] = useState<string | null>(null);
 
-    useEffect(() => {
-        fetchItems();
-    }, []);
-
-    const fetchItems = async () => {
+    const fetchItems = useCallback(async () => {
         try {
             const response = await fetch('/api/admin/trash');
             if (!response.ok) throw new Error('Falha ao carregar lixeira');
@@ -43,7 +40,11 @@ export default function TrashPage() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [toast]);
+
+    useEffect(() => {
+        fetchItems();
+    }, [fetchItems]);
 
     const handleRestore = async (id: string) => {
         setProcessing(id);
@@ -150,10 +151,13 @@ export default function TrashPage() {
                                     <div className="col-span-12 md:col-span-5 flex items-center gap-4">
                                         <div className="h-12 w-12 rounded-md bg-muted overflow-hidden relative shrink-0">
                                             {item.mainImage ? (
-                                                <img
+                                                <Image
                                                     src={item.mainImage}
                                                     alt={item.title}
-                                                    className="h-full w-full object-cover"
+                                                    fill
+                                                    className="object-cover"
+                                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                                    unoptimized
                                                 />
                                             ) : (
                                                 <div className="h-full w-full flex items-center justify-center bg-secondary">

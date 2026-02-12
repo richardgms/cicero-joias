@@ -162,12 +162,7 @@ export default function AdminPage() {
                   Adicionar Produto
                 </Link>
               </Button>
-              <Button asChild variant="outline" className="w-full justify-start">
-                <Link href="/admin/relatorios">
-                  <BarChart3 className="h-4 w-4 mr-2" />
-                  Ver Relatórios
-                </Link>
-              </Button>
+
             </div>
           </CardContent>
         </Card>

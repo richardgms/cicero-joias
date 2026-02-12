@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import prisma, { executeWithRetry } from '@/lib/prisma';
 import { checkAdminAuth } from '@/lib/check-admin';
 import { clerkClient } from '@clerk/nextjs/server';
 
@@ -23,7 +23,7 @@ export async function GET() {
       return NextResponse.json({ error: authResult.error }, { status: authResult.status });
     }
 
-    // Executar todas as queries em paralelo usando Promise.all para máxima performance
+    // Executar todas as queries em paralelo com retry para prepared statement errors
     const [
       totalPortfolio,
       activePortfolio,
@@ -34,7 +34,7 @@ export async function GET() {
       totalUsers,
       recentProjects,
       recentProducts,
-    ] = await Promise.all([
+    ] = await executeWithRetry(() => Promise.all([
       prisma.portfolioItem.count(),
       prisma.portfolioItem.count({ where: { isActive: true } }),
       prisma.product.count(),
@@ -65,7 +65,7 @@ export async function GET() {
           isActive: true,
         },
       }),
-    ]);
+    ]));
 
     // Converter preços para números para evitar problemas com Decimal
     const productsWithConvertedPrices = recentProducts.map((product) => ({
