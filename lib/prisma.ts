@@ -6,18 +6,20 @@ const globalForPrisma = globalThis as unknown as {
 }
 
 const prisma = globalForPrisma.prisma ?? new PrismaClient({
-  log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+  log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
 })
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 
 export default prisma
 
-// Retry wrapper with special handling for PgBouncer prepared statement errors
+// Simple retry wrapper — retries on error but NEVER calls prisma.$disconnect().
+// The old version called $disconnect() on prepared statement errors, which killed
+// ALL connections in the pool and caused cascading 50s+ timeouts.
 export async function executeWithRetry<T>(
   operation: () => Promise<T>,
-  maxRetries: number = 3,
-  baseDelay: number = 100
+  maxRetries: number = 2,
+  baseDelay: number = 200
 ): Promise<T> {
   let lastError: unknown;
 
@@ -28,19 +30,8 @@ export async function executeWithRetry<T>(
       lastError = error;
       if (attempt === maxRetries) break;
 
-      // For prepared statement errors (PgBouncer conflict), disconnect to clear stale connections
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      if (errorMessage.includes('prepared statement') && errorMessage.includes('already exists')) {
-        console.warn(`[Prisma] Prepared statement conflict on attempt ${attempt}, reconnecting...`);
-        try {
-          await prisma.$disconnect();
-        } catch {
-          // Ignore disconnect errors
-        }
-      }
-
-      // Calculate delay with simple exponential backoff
-      const delay = baseDelay * Math.pow(2, attempt - 1);
+      // Simple backoff without disconnecting
+      const delay = baseDelay * attempt;
       await new Promise(resolve => setTimeout(resolve, delay));
     }
   }

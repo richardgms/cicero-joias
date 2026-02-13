@@ -4,9 +4,11 @@ import { checkAdminAuth } from '@/lib/check-admin';
 import { AdminPortfolioClient } from './admin-portfolio-client';
 import { LoadingScreen } from '@/components/ui/loading-screen';
 import { redirect } from 'next/navigation';
+import { AdminPageHeader } from '@/components/admin/admin-page-header';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { Plus, Trash2 } from 'lucide-react';
 
-// Force dynamic rendering to ensure the list is always fresh
-// This is critical for the "Back from Edit" flow to show updated data
 export const dynamic = 'force-dynamic';
 
 async function getPortfolioItems() {
@@ -20,8 +22,6 @@ async function getPortfolioItems() {
       isFeatured: true,
       order: true,
       createdAt: true,
-      // Intentionally omitting 'images', 'description', 'detailedDescription'
-      // to reduce payload size and waterfall
     },
     orderBy: [
       { order: 'asc' },
@@ -35,21 +35,42 @@ async function getPortfolioItems() {
   }));
 }
 
+async function PortfolioContent() {
+  const items = await getPortfolioItems();
+  return <AdminPortfolioClient initialItems={items} />;
+}
+
 export default async function AdminPortfolioPage() {
-  // 1. Server-side Auth Check
   const authResult = await checkAdminAuth();
 
   if ("error" in authResult) {
     redirect('/');
   }
 
-  // 2. Direct Database Fetch (No API roundtrip)
-  const items = await getPortfolioItems();
-
-  // 3. Render Client Component with Initial Data
   return (
-    <Suspense fallback={<LoadingScreen variant="inline" message="Carregando projetos..." />}>
-      <AdminPortfolioClient initialItems={items} />
-    </Suspense>
+    <div className="space-y-6">
+      <AdminPageHeader
+        title="Portfólio"
+        description="Gerencie os projetos do portfólio da Cícero Joias"
+      >
+        <Button variant="secondary" asChild>
+          <Link href="/admin/portfolio/trash">
+            <Trash2 className="h-4 w-4 mr-2" />
+            Lixeira
+          </Link>
+        </Button>
+        <Button asChild>
+          <Link href="/admin/portfolio/new">
+            <Plus className="h-4 w-4 mr-2" />
+            Novo Projeto
+          </Link>
+        </Button>
+      </AdminPageHeader>
+
+      <Suspense fallback={<div className="py-12"><LoadingScreen variant="inline" message="Carregando projetos..." /></div>}>
+        {/* @ts-expect-error Server Component */}
+        <PortfolioContent />
+      </Suspense>
+    </div>
   );
 }

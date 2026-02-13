@@ -1,20 +1,6 @@
 import { NextResponse } from 'next/server';
-import prisma, { executeWithRetry } from '@/lib/prisma';
+import prisma from '@/lib/prisma';
 import { checkAdminAuth } from '@/lib/check-admin';
-import { clerkClient } from '@clerk/nextjs/server';
-
-// Helper function to get user count from Clerk
-async function getClerkUserCount() {
-  try {
-    const clerk = await clerkClient();
-    const clerkUsers = await clerk.users.getUserList({ limit: 1 }); // We only need the total count
-    return clerkUsers.totalCount;
-  } catch (error) {
-    console.warn('[STATS] Could not fetch user count from Clerk:', error);
-    // Fallback to local database count if Clerk fails
-    return await prisma.user.count();
-  }
-}
 
 export async function GET() {
   try {
@@ -23,7 +9,7 @@ export async function GET() {
       return NextResponse.json({ error: authResult.error }, { status: authResult.status });
     }
 
-    // Executar todas as queries em paralelo com retry para prepared statement errors
+    // Simple parallel queries — no executeWithRetry, no Clerk API calls
     const [
       totalPortfolio,
       activePortfolio,
@@ -31,17 +17,15 @@ export async function GET() {
       activeProducts,
       readyDeliveryProducts,
       lowStockProducts,
-      totalUsers,
       recentProjects,
       recentProducts,
-    ] = await executeWithRetry(() => Promise.all([
+    ] = await Promise.all([
       prisma.portfolioItem.count(),
       prisma.portfolioItem.count({ where: { isActive: true } }),
       prisma.product.count(),
       prisma.product.count({ where: { isActive: true } }),
       prisma.product.count({ where: { isReadyDelivery: true } }),
       prisma.product.count({ where: { stock: { lt: 5 } } }),
-      getClerkUserCount(),
       prisma.portfolioItem.findMany({
         take: 5,
         orderBy: { createdAt: 'desc' },
@@ -65,9 +49,17 @@ export async function GET() {
           isActive: true,
         },
       }),
-    ]));
+    ]);
 
-    // Converter preços para números para evitar problemas com Decimal
+    // Get user count from local DB
+    let totalUsers = 0;
+    try {
+      totalUsers = await prisma.user.count();
+    } catch {
+      // If user table fails, show 0
+    }
+
+    // Convert Decimal prices to numbers
     const productsWithConvertedPrices = recentProducts.map((product) => ({
       ...product,
       price: product.price ? Number(product.price) : null,

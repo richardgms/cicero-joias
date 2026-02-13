@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Plus, Search, Edit, Trash2, Eye, MoreHorizontal, RefreshCw } from 'lucide-react';
+import { Search, Edit, Trash2, Eye, MoreHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -63,7 +63,6 @@ export function AdminPortfolioClient({ initialItems }: AdminPortfolioClientProps
     const [statusFilter, setStatusFilter] = useState<string>('all');
     const { toast } = useToast();
     const router = useRouter();
-    const [isRefreshing, setIsRefreshing] = useState(false);
 
     const deletePortfolioMutation = useDeletePortfolioItem();
 
@@ -110,18 +109,6 @@ export function AdminPortfolioClient({ initialItems }: AdminPortfolioClientProps
         }
     };
 
-    const handleRefresh = () => {
-        setIsRefreshing(true);
-        router.refresh();
-        setTimeout(() => {
-            setIsRefreshing(false);
-            toast({
-                title: "Atualizado",
-                description: "Lista de projetos atualizada.",
-            });
-        }, 1000);
-    };
-
     const filteredItems = useMemo(() => {
         return items.filter(item => {
             const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase());
@@ -136,43 +123,6 @@ export function AdminPortfolioClient({ initialItems }: AdminPortfolioClientProps
 
     return (
         <div className="space-y-6">
-            {/* Header */}
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-3xl font-bold text-gray-900">Portfólio</h1>
-                    <p className="text-gray-600 mt-2">
-                        Gerencie os projetos do portfólio da Cícero Joias
-                    </p>
-                </div>
-                <div className="flex gap-2">
-                    <Button
-                        variant="outline"
-                        onClick={handleRefresh}
-                        disabled={isRefreshing}
-                        size="sm"
-                    >
-                        {isRefreshing ? (
-                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
-                        ) : (
-                            <RefreshCw className="h-4 w-4 mr-2" />
-                        )}
-                        {isRefreshing ? 'Atualizando...' : 'Atualizar'}
-                    </Button>
-                    <Button variant="secondary" asChild>
-                        <Link href="/admin/portfolio/trash">
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Lixeira
-                        </Link>
-                    </Button>
-                    <Button asChild>
-                        <Link href="/admin/portfolio/new">
-                            <Plus className="h-4 w-4 mr-2" />
-                            Novo Projeto
-                        </Link>
-                    </Button>
-                </div>
-            </div>
-
             {/* Stats */}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
                 <Card>
@@ -268,6 +218,7 @@ export function AdminPortfolioClient({ initialItems }: AdminPortfolioClientProps
                                                 alt={item.title}
                                                 fill
                                                 className="object-cover"
+                                                sizes="48px"
                                             />
                                         </div>
                                     </TableCell>

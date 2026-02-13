@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Plus, Search, Edit, Trash2, Eye, MoreHorizontal, Package, RefreshCw } from 'lucide-react';
+import { Search, Edit, Trash2, Eye, MoreHorizontal, Package } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -69,21 +69,8 @@ export function AdminProductsClient({ initialProducts }: AdminProductsClientProp
     const [categoryFilter, setCategoryFilter] = useState<string>('all');
     const [statusFilter, setStatusFilter] = useState<string>('all');
     const [stockFilter, setStockFilter] = useState<string>('all');
-    const [isRefreshing, setIsRefreshing] = useState(false);
     const { toast } = useToast();
     const router = useRouter();
-
-    const handleRefresh = () => {
-        setIsRefreshing(true);
-        router.refresh();
-        setTimeout(() => {
-            setIsRefreshing(false);
-            toast({
-                title: "Atualizado",
-                description: "Lista de produtos atualizada.",
-            });
-        }, 1000);
-    };
 
     const handleDelete = async (id: string, name: string) => {
         if (!confirm(`Tem certeza que deseja deletar "${name}"?`)) {
@@ -149,37 +136,6 @@ export function AdminProductsClient({ initialProducts }: AdminProductsClientProp
 
     return (
         <div className="space-y-6">
-            {/* Header */}
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-3xl font-bold text-gray-900">Produtos</h1>
-                    <p className="text-gray-600 mt-2">
-                        Gerencie o catálogo de produtos da Cícero Joias
-                    </p>
-                </div>
-                <div className="flex gap-2">
-                    <Button
-                        variant="outline"
-                        onClick={handleRefresh}
-                        disabled={isRefreshing}
-                        size="sm"
-                    >
-                        {isRefreshing ? (
-                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
-                        ) : (
-                            <RefreshCw className="h-4 w-4 mr-2" />
-                        )}
-                        {isRefreshing ? 'Atualizando...' : 'Atualizar'}
-                    </Button>
-                    <Button asChild>
-                        <Link href="/admin/products/new">
-                            <Plus className="h-4 w-4 mr-2" />
-                            Novo Produto
-                        </Link>
-                    </Button>
-                </div>
-            </div>
-
             {/* Stats - Memoized for performance */}
             <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <Card>
@@ -294,6 +250,7 @@ export function AdminProductsClient({ initialProducts }: AdminProductsClientProp
                                                     alt={product.name}
                                                     fill
                                                     className="object-cover"
+                                                    sizes="48px"
                                                 />
                                             ) : (
                                                 <div className="w-full h-full flex items-center justify-center">

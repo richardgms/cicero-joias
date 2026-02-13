@@ -117,7 +117,7 @@ export async function PUT(request: NextRequest) {
     if ('error' in authResult) {
       return NextResponse.json({ error: authResult.error }, { status: authResult.status })
     }
-    const { userId, user } = authResult;
+    const { userId } = authResult;
 
     const body = await request.json()
     const { slug, isVisible, changeReason } = updateVisibilitySchema.parse(body)
@@ -189,7 +189,7 @@ export async function PUT(request: NextRequest) {
             previousStatus: false,
             newStatus: isVisible,
             adminUserId: userId,
-            adminEmail: user?.emailAddresses[0]?.emailAddress || 'unknown',
+            adminEmail: 'admin',
             changeReason: changeReason || 'Page created and configured'
           }
         });
@@ -216,7 +216,7 @@ export async function PUT(request: NextRequest) {
             previousStatus: currentPage.isVisible,
             newStatus: isVisible,
             adminUserId: userId,
-            adminEmail: user?.emailAddresses[0]?.emailAddress || 'unknown',
+            adminEmail: 'admin',
             changeReason
           }
         })
@@ -256,7 +256,7 @@ export async function POST(request: NextRequest) {
     if ('error' in authResult) {
       return NextResponse.json({ error: authResult.error }, { status: authResult.status })
     }
-    const { userId, user } = authResult;
+    const { userId } = authResult;
 
     const createPageSchema = z.object({
       slug: z.string().min(1),
@@ -280,7 +280,7 @@ export async function POST(request: NextRequest) {
         previousStatus: false,
         newStatus: newPage.isVisible,
         adminUserId: userId,
-        adminEmail: user?.emailAddresses[0]?.emailAddress || 'unknown',
+        adminEmail: 'admin',
         changeReason: 'Page configuration created'
       }
     })

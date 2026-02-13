@@ -4,6 +4,10 @@ import { checkAdminAuth } from '@/lib/check-admin';
 import { AdminProductsClient } from './admin-products-client';
 import { LoadingScreen } from '@/components/ui/loading-screen';
 import { redirect } from 'next/navigation';
+import { AdminPageHeader } from '@/components/admin/admin-page-header';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { Plus } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -26,7 +30,6 @@ async function getProducts() {
           portfolioItems: true,
         },
       },
-      // Omitting 'images', 'weight', 'material', 'size', 'deliveryTime', etc.
     },
     orderBy: { createdAt: 'desc' },
   });
@@ -41,6 +44,11 @@ async function getProducts() {
   }));
 }
 
+async function ProductsContent() {
+  const products = await getProducts();
+  return <AdminProductsClient initialProducts={products} />;
+}
+
 export default async function AdminProductsPage() {
   const authResult = await checkAdminAuth();
 
@@ -48,11 +56,24 @@ export default async function AdminProductsPage() {
     redirect('/');
   }
 
-  const products = await getProducts();
-
   return (
-    <Suspense fallback={<LoadingScreen variant="inline" message="Carregando produtos..." />}>
-      <AdminProductsClient initialProducts={products} />
-    </Suspense>
+    <div className="space-y-6">
+      <AdminPageHeader
+        title="Produtos"
+        description="Gerencie o catálogo de produtos da Cícero Joias"
+      >
+        <Button asChild>
+          <Link href="/admin/products/new">
+            <Plus className="h-4 w-4 mr-2" />
+            Novo Produto
+          </Link>
+        </Button>
+      </AdminPageHeader>
+
+      <Suspense fallback={<div className="py-12"><LoadingScreen variant="inline" message="Carregando produtos..." /></div>}>
+        {/* @ts-expect-error Server Component */}
+        <ProductsContent />
+      </Suspense>
+    </div>
   );
 }
