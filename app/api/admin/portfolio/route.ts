@@ -3,6 +3,7 @@ import { auth, clerkClient } from '@clerk/nextjs/server';
 import prisma, { executeWithRetry } from '@/lib/prisma';
 import { z } from 'zod';
 import { checkAdminAuth } from "@/lib/check-admin";
+import { logger } from '@/lib/logger';
 
 
 
@@ -96,8 +97,7 @@ export async function GET() {
   const debugInfo: string[] = [];
 
   try {
-    debugInfo.push(`[INFO] [${requestId}] Portfolio GET: Starting request processing at ${new Date().toISOString()}`);
-    console.log(debugInfo[debugInfo.length - 1]);
+    logger.debug(`[${requestId}] Portfolio GET: Starting`);
 
     // Etapa 1: Teste de autenticação com timing
     const authStart = Date.now();
@@ -106,18 +106,15 @@ export async function GET() {
     try {
       authResult = await checkAdminAuth();
       const authDuration = Date.now() - authStart;
-      debugInfo.push(`[OK] [${requestId}] Auth completed in ${authDuration}ms`);
-      console.log(debugInfo[debugInfo.length - 1]);
+      logger.debug(`[${requestId}] Auth completed in ${authDuration}ms`);
     } catch (authError) {
       const authDuration = Date.now() - authStart;
-      debugInfo.push(`[ERROR] [${requestId}] Auth threw exception after ${authDuration}ms: ${authError instanceof Error ? authError.message : String(authError)}`);
-      console.error(debugInfo[debugInfo.length - 1]);
+      logger.error(`[${requestId}] Auth exception after ${authDuration}ms:`, authError);
       throw authError;
     }
 
     if ("error" in authResult) {
-      debugInfo.push(`[ERROR] [${requestId}] Auth failed: ${authResult.error} (status: ${authResult.status})`);
-      console.error(debugInfo[debugInfo.length - 1]);
+      logger.error(`[${requestId}] Auth failed: ${authResult.error}`);
       return NextResponse.json(
         {
           error: authResult.error,
@@ -132,36 +129,9 @@ export async function GET() {
     }
 
     const { userId } = authResult;
-    debugInfo.push(`[OK] [${requestId}] Auth successful for userId: ${userId}`);
-    console.log(debugInfo[debugInfo.length - 1]);
+    logger.debug(`[${requestId}] Auth successful for userId: ${userId}`);
 
-    // Etapa 2: Teste de conexão com banco
-    const dbConnectStart = Date.now();
-    try {
-      await prisma.$connect();
-      const dbConnectDuration = Date.now() - dbConnectStart;
-      debugInfo.push(`[DB] [${requestId}] Database connection successful in ${dbConnectDuration}ms`);
-      console.log(debugInfo[debugInfo.length - 1]);
-    } catch (dbConnectError) {
-      const dbConnectDuration = Date.now() - dbConnectStart;
-      debugInfo.push(`[DB] [${requestId}] Database connection failed after ${dbConnectDuration}ms: ${dbConnectError instanceof Error ? dbConnectError.message : String(dbConnectError)}`);
-      console.error(debugInfo[debugInfo.length - 1]);
-      throw dbConnectError;
-    }
-
-    // Etapa 3: Teste de query simples primeiro
-    const simpleQueryStart = Date.now();
-    try {
-      await prisma.$queryRaw`SELECT 1 as test`;
-      const simpleQueryDuration = Date.now() - simpleQueryStart;
-      debugInfo.push(`[OK] [${requestId}] Simple query test successful in ${simpleQueryDuration}ms`);
-      console.log(debugInfo[debugInfo.length - 1]);
-    } catch (simpleQueryError) {
-      const simpleQueryDuration = Date.now() - simpleQueryStart;
-      debugInfo.push(`[ERROR] [${requestId}] Simple query failed after ${simpleQueryDuration}ms: ${simpleQueryError instanceof Error ? simpleQueryError.message : String(simpleQueryError)}`);
-      console.error(debugInfo[debugInfo.length - 1]);
-      throw simpleQueryError;
-    }
+    // Prisma handles connection lazily — removed explicit $connect() and SELECT 1 test
 
     // Etapa 4: Teste de contagem da tabela
     const countStart = Date.now();
@@ -169,12 +139,9 @@ export async function GET() {
     try {
       itemCount = await prisma.portfolioItem.count();
       const countDuration = Date.now() - countStart;
-      debugInfo.push(`[QUERY] [${requestId}] Portfolio count query successful in ${countDuration}ms: ${itemCount} items`);
-      console.log(debugInfo[debugInfo.length - 1]);
+      logger.debug(`[${requestId}] Portfolio count: ${itemCount} items in ${countDuration}ms`);
     } catch (countError) {
-      const countDuration = Date.now() - countStart;
-      debugInfo.push(`[ERROR] [${requestId}] Portfolio count failed after ${countDuration}ms: ${countError instanceof Error ? countError.message : String(countError)}`);
-      console.error(debugInfo[debugInfo.length - 1]);
+      logger.error(`[${requestId}] Portfolio count failed:`, countError);
       throw countError;
     }
 
@@ -182,12 +149,9 @@ export async function GET() {
     const fullQueryStart = Date.now();
     let portfolioItems;
     try {
-      debugInfo.push(`[QUERY] [${requestId}] Starting full portfolio query with executeWithRetry...`);
-      console.log(debugInfo[debugInfo.length - 1]);
+      logger.debug(`[${requestId}] Starting full portfolio query...`);
 
       portfolioItems = await executeWithRetry(async () => {
-        debugInfo.push(`[INFO] [${requestId}] Executing portfolio findMany inside retry...`);
-        console.log(debugInfo[debugInfo.length - 1]);
 
         return await prisma.portfolioItem.findMany({
           include: {
@@ -206,25 +170,16 @@ export async function GET() {
       });
 
       const fullQueryDuration = Date.now() - fullQueryStart;
-      debugInfo.push(`[OK] [${requestId}] Full portfolio query successful in ${fullQueryDuration}ms: Found ${portfolioItems.length} items`);
-      console.log(debugInfo[debugInfo.length - 1]);
+      logger.debug(`[${requestId}] Full query: ${portfolioItems.length} items in ${fullQueryDuration}ms`);
     } catch (fullQueryError) {
-      const fullQueryDuration = Date.now() - fullQueryStart;
-      debugInfo.push(`[ERROR] [${requestId}] Full portfolio query failed after ${fullQueryDuration}ms: ${fullQueryError instanceof Error ? fullQueryError.message : String(fullQueryError)}`);
-      console.error(debugInfo[debugInfo.length - 1]);
-
-      // Log stack trace completo para debugging
-      if (fullQueryError instanceof Error && fullQueryError.stack) {
-        console.error(`[DEBUG] [${requestId}] Full error stack:`, fullQueryError.stack);
-        debugInfo.push(`[DEBUG] [${requestId}] Error stack: ${fullQueryError.stack.substring(0, 500)}...`);
-      }
+      const failDuration = Date.now() - fullQueryStart;
+      logger.error(`[${requestId}] Full query failed after ${failDuration}ms:`, fullQueryError);
 
       throw fullQueryError;
     }
 
     const totalDuration = Date.now() - startTime;
-    debugInfo.push(`[SUCCESS] [${requestId}] Request completed successfully in ${totalDuration}ms`);
-    console.log(debugInfo[debugInfo.length - 1]);
+    logger.debug(`[${requestId}] Request completed in ${totalDuration}ms`);
 
     return NextResponse.json(
       { portfolioItems, debug: debugInfo },
@@ -250,9 +205,7 @@ export async function GET() {
       timestamp: new Date().toISOString(),
     };
 
-    debugInfo.push(`[FAIL] [${requestId}] Request failed after ${totalDuration}ms: ${errorInfo.message}`);
-    console.error(debugInfo[debugInfo.length - 1]);
-    console.error(`[FAIL] [${requestId}] Complete error details:`, errorInfo);
+    logger.error(`[${requestId}] Request failed after ${totalDuration}ms:`, errorInfo.message);
 
     // Categorizar erro por tipo
     let statusCode = 500;
@@ -279,7 +232,7 @@ export async function GET() {
     }
 
 
-    console.error(`[DEBUG] [${requestId}] Final error categorization: ${statusCode} - ${userMessage}`);
+    logger.error(`[${requestId}] Final categorization: ${statusCode} - ${userMessage}`);
 
     // GARANTIA: Sempre retornar JSON válido mesmo em caso de erro fatal
     return NextResponse.json(

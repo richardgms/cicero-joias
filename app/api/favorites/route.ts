@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { currentUser } from '@clerk/nextjs/server';
+import { logger } from '@/lib/logger';
 
 export async function GET(request: NextRequest) {
   try {
@@ -10,16 +11,16 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Usuário não autenticado' }, { status: 401 });
     }
 
-    console.log('User object:', user);
+
 
     const email = user.emailAddresses?.[0]?.emailAddress || user.primaryEmailAddress?.emailAddress;
 
     if (!email) {
-      console.error('Email não encontrado para o usuário:', user.id);
+      logger.error('Email não encontrado para o usuário:', user.id);
       return NextResponse.json({ error: 'Email do usuário não encontrado' }, { status: 400 });
     }
 
-    console.log('Email do usuário:', email);
+    logger.debug('Email do usuário:', email);
 
     // Buscar cliente pelo email
     const client = await prisma.client.findUnique({
@@ -40,7 +41,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ favorites: client.Favorite });
   } catch (error) {
-    console.error('Erro ao buscar favoritos:', error);
+    logger.error('Erro ao buscar favoritos:', error);
     return NextResponse.json({ error: 'Erro interno do servidor' }, { status: 500 });
   }
 } 

@@ -3,6 +3,7 @@ import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { WebhookEvent, UserJSON } from '@clerk/nextjs/server';
 import prisma from '@/lib/prisma';
+import { logger } from '@/lib/logger';
 
 export async function POST(req: Request) {
   try {
@@ -35,7 +36,7 @@ export async function POST(req: Request) {
         "svix-signature": svixSignature,
       }) as WebhookEvent;
     } catch (err) {
-      console.error('Erro na verificação do webhook:', err);
+      logger.error('Erro na verificação do webhook:', err);
       return NextResponse.json(
         { error: 'Falha na verificação do webhook' },
         { status: 400 }
@@ -60,7 +61,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Erro no webhook do Clerk:', error);
+    logger.error('Erro no webhook do Clerk:', error);
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }
@@ -77,7 +78,7 @@ async function handleUserCreated(userData: UserJSON) {
     const lastName = userData.last_name || '';
 
     if (!email || !clerkUserId) {
-      console.error('Email ou ID do Clerk não encontrado nos dados do usuário');
+      logger.error('Email ou ID do Clerk não encontrado nos dados do usuário');
       return;
     }
 
@@ -100,7 +101,7 @@ async function handleUserCreated(userData: UserJSON) {
     });
 
   } catch (error) {
-    console.error('Erro ao criar usuário:', error);
+    logger.error('Erro ao criar usuário:', error);
   }
 }
 
@@ -122,7 +123,7 @@ async function handleUserUpdated(userData: UserJSON) {
     });
 
   } catch (error) {
-    console.error('Erro ao atualizar usuário:', error);
+    logger.error('Erro ao atualizar usuário:', error);
   }
 }
 
@@ -130,8 +131,8 @@ async function handleUserUpdated(userData: UserJSON) {
 async function handleUserDeleted(userData: UserJSON | { id?: string; deleted?: boolean; object?: string }) {
   try {
     const id = userData.id;
-    console.log(`[WEBHOOK] Usuário deletado no Clerk: ${id}. Ação no banco ignorada (sem vinculo de ID).`);
+    logger.debug(`Usuário deletado no Clerk: ${id}. Ação no banco ignorada.`);
   } catch (error) {
-    console.error('Erro ao processar exclusão de usuário:', error);
+    logger.error('Erro ao processar exclusão de usuário:', error);
   }
 }

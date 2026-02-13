@@ -8,7 +8,10 @@ const nextConfig = {
     ignoreDuringBuilds: false,
   },
   images: {
-    domains: ['uploadthing.com'],
+    remotePatterns: [
+      { protocol: 'https', hostname: '**.uploadthing.com' },
+      { protocol: 'https', hostname: 'utfs.io' },
+    ],
     formats: ['image/webp', 'image/avif'],
     minimumCacheTTL: 31536000,
   },

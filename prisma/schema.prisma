@@ -88,6 +88,7 @@ model PortfolioItem {
   deletedAt           DateTime?
 
   @@index([deletedAt])
+  @@index([isActive, deletedAt, category, createdAt])
   @@map("portfolio_items")
 }
 

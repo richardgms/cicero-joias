@@ -191,6 +191,7 @@ export default function AdminPage() {
                         alt={project.title}
                         fill
                         className="object-cover"
+                        sizes="48px"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
@@ -251,6 +252,7 @@ export default function AdminPage() {
                         alt={product.name}
                         fill
                         className="object-cover"
+                        sizes="48px"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">

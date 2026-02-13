@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { checkAdminAuth } from '@/lib/check-admin'
 import prisma from '@/lib/prisma'
 import { z } from 'zod'
+import { logger } from '@/lib/logger'
 
 // Schemas de validação
 const updateVisibilitySchema = z.object({
@@ -84,13 +85,13 @@ export async function GET() {
 
       const pages = await Promise.race([queryPromise, timeoutPromise]) as any[];
 
-      console.log(`[PAGE-VISIBILITY] Successfully fetched ${pages.length} pages from database`);
+      logger.debug(`Page visibility: fetched ${pages.length} pages`);
       return NextResponse.json({ pages }, { status: 200 })
     } catch (queryError) {
-      console.error('[PAGE-VISIBILITY] Database query failed:', queryError);
+      logger.error('Page visibility query failed:', queryError);
 
       // Fallback para dados padrão em caso de erro de query
-      console.warn('[PAGE-VISIBILITY] Using fallback data - query failed');
+      logger.warn('Using fallback page visibility data');
       return NextResponse.json({
         pages: DEFAULT_PAGES,
         warning: 'Using default configuration - database query failed',
@@ -98,10 +99,10 @@ export async function GET() {
       }, { status: 200 })
     }
   } catch (error) {
-    console.error('[PAGE-VISIBILITY] Error fetching page visibility:', error)
+    logger.error('Page visibility error:', error)
 
     // Ultimate fallback
-    console.warn('[PAGE-VISIBILITY] Using ultimate fallback data');
+    logger.warn('Using ultimate fallback page visibility data');
     return NextResponse.json({
       pages: DEFAULT_PAGES,
       warning: 'Using default configuration - system error'
@@ -131,10 +132,10 @@ export async function PUT(request: NextRequest) {
           );
 
           await Promise.race([testPromise, timeoutPromise]);
-          console.log(`[PAGE-VISIBILITY-PUT] Database connection successful (attempt ${attempt})`);
+          logger.debug(`Database connection successful (attempt ${attempt})`);
           return true;
         } catch (dbError) {
-          console.error(`[PAGE-VISIBILITY-PUT] Database connection failed (attempt ${attempt}):`, dbError);
+          logger.error(`Database connection failed (attempt ${attempt}):`, dbError);
 
           if (attempt === retries) {
             return false;
@@ -193,7 +194,7 @@ export async function PUT(request: NextRequest) {
           }
         });
 
-        console.log(`[PAGE-VISIBILITY-PUT] Created new page configuration for ${slug}`);
+        logger.debug(`Created page configuration for ${slug}`);
         return NextResponse.json({
           page: newPage,
           message: `Page "${defaultPage.title}" created and visibility set successfully`
@@ -221,14 +222,14 @@ export async function PUT(request: NextRequest) {
         })
       ])
 
-      console.log(`[PAGE-VISIBILITY-PUT] Updated ${slug} visibility to ${isVisible}`);
+      logger.debug(`Updated ${slug} visibility to ${isVisible}`);
       return NextResponse.json({
         page: updatedPage,
         log,
         message: `Page "${currentPage.title}" visibility updated successfully`
       }, { status: 200 })
     } catch (queryError) {
-      console.error('[PAGE-VISIBILITY-PUT] Database query failed:', queryError);
+      logger.error('Page visibility update failed:', queryError);
       return NextResponse.json({
         error: 'Database operation failed',
         message: 'Unable to update page visibility due to database error. Please try again.',
@@ -240,7 +241,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid request data', details: error.errors }, { status: 400 })
     }
 
-    console.error('[PAGE-VISIBILITY-PUT] Error updating page visibility:', error)
+    logger.error('Page visibility update error:', error)
     return NextResponse.json({
       error: 'Internal server error',
       message: 'An unexpected error occurred. Please try again.'
@@ -293,7 +294,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid request data', details: error.errors }, { status: 400 })
     }
 
-    console.error('Error creating page visibility:', error)
+    logger.error('Error creating page visibility:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

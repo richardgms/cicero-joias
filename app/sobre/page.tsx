@@ -87,6 +87,7 @@ export default function SobrePage() {
               fill
               className="object-cover opacity-30"
               priority
+              sizes="100vw"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-esmeralda-deep/70 via-esmeralda-deep/60 to-esmeralda-deep/90" />
             <div className="absolute -top-32 right-0 h-64 w-64 rounded-full bg-action-strong/20 blur-[120px]" />

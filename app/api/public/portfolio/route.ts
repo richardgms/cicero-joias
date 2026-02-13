@@ -1,22 +1,9 @@
 ﻿import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { logger } from '@/lib/logger';
 
 export async function GET(request: Request) {
   try {
-    // Verificar conexão com o banco primeiro
-    try {
-      await prisma.$connect();
-    } catch (connectError) {
-      console.error('Database connection failed:', connectError);
-      return NextResponse.json(
-        {
-          error: 'Não foi possível conectar ao banco de dados. Por favor, verifique se o serviço está disponível.',
-          details: connectError instanceof Error ? connectError.message : 'Unknown connection error'
-        },
-        { status: 503 }, // Service Unavailable
-      );
-    }
-
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category');
     const featured = searchParams.get('featured');
@@ -37,7 +24,6 @@ export async function GET(request: Request) {
       where.isFeatured = true;
     }
 
-    // Verificar se a tabela existe e executar query
     const [portfolioItems, total] = await Promise.all([
       prisma.portfolioItem.findMany({
         where,
@@ -50,28 +36,20 @@ export async function GET(request: Request) {
           id: true,
           title: true,
           description: true,
-          detailedDescription: true,
-          specifications: true,
           category: true,
           mainImage: true,
           images: true,
           createdAt: true,
         },
-      }).catch((error) => {
-        console.error('Error querying portfolioItem:', error);
-        throw new Error(`Erro ao buscar itens do portfólio: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
       }),
-      prisma.portfolioItem.count({ where }).catch((error) => {
-        console.error('Error counting portfolioItem:', error);
-        throw new Error(`Erro ao contar itens do portfólio: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
-      }),
+      prisma.portfolioItem.count({ where }),
     ]);
 
     const totalPages = Math.ceil(total / limit);
     const hasNextPage = page < totalPages;
     const hasPrevPage = page > 1;
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       portfolioItems,
       pagination: {
         page,
@@ -82,20 +60,19 @@ export async function GET(request: Request) {
         hasPrevPage,
       },
     });
+
+    response.headers.set(
+      'Cache-Control',
+      'public, s-maxage=60, stale-while-revalidate=300'
+    );
+
+    return response;
   } catch (error) {
-    console.error('Erro ao buscar portfólio público:', error);
+    logger.error('Erro ao buscar portfólio público:', error);
 
-    // Log mais detalhado para depuração
-    if (error instanceof Error) {
-      console.error('Error message:', error.message);
-      console.error('Error stack:', error.stack);
-    }
-
-    // Verificar tipos específicos de erro
     const errorMessage = error instanceof Error ? error.message.toLowerCase() : '';
 
     if (errorMessage.includes('connect') || errorMessage.includes('econnrefused') || errorMessage.includes('enotfound')) {
-      console.error('Database connection error detected');
       return NextResponse.json(
         {
           error: 'Não foi possível conectar ao banco de dados. O serviço pode estar temporariamente indisponível.',
