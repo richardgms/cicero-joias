@@ -143,8 +143,7 @@ export async function GET() {
         NODE_ENV: process.env.NODE_ENV,
         CLERK_SECRET_KEY: !!process.env.CLERK_SECRET_KEY,
         NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
-        UPLOADTHING_SECRET: !!process.env.UPLOADTHING_SECRET,
-        UPLOADTHING_APP_ID: !!process.env.UPLOADTHING_APP_ID,
+        UPLOADTHING_TOKEN: !!process.env.UPLOADTHING_TOKEN,
       };
 
       const missingVars = Object.entries(envVars)

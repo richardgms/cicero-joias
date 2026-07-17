@@ -1,0 +1,21 @@
+.env
+.env.*
+.vercel
+.next
+node_modules
+
+.claude
+.clerk
+.serena
+Python
+
+Design system Cícero Joias
+Snipaste_*.png
+*.artifact.json
+cicero-home-v2*.html
+home-v2-preview.html
+ver-hero-v2-home.html
+server-error.log
+*.tsbuildinfo
+public/assets/photosproducts/aliancas/iloveimg-resized.zip
+netlify.toml

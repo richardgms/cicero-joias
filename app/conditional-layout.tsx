@@ -15,7 +15,9 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
   const isAdminRoute = pathname?.startsWith('/admin');
   const normalizedPath = pathname ?? '/';
   const showEngagementWidgets =
-    normalizedPath === '/' || normalizedPath.startsWith('/servicos');
+    normalizedPath === '/' ||
+    normalizedPath === '/home-v2' ||
+    normalizedPath.startsWith('/servicos');
 
   if (isAdminRoute) {
     // Layout para páginas admin (sem header/footer público)

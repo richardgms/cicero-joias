@@ -27,6 +27,8 @@ tsconfig.tsbuildinfo
 # Tooling folders
 .bolt/
 .ai-guards/
+.claude/worktrees/
+Python/
 
 # Turbo
 .turbo
@@ -55,3 +57,5 @@ public/assets/photosproducts/
 
 # Temporary Scripts
 scripts/inspect_remaining_files.js
+.vercel
+.env*

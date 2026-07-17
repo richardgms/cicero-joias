@@ -39,8 +39,12 @@ CLERK_WEBHOOK_SECRET="whsec_SUBSTITUA_PELO_SECRET_REAL"
 # URLs das páginas de autenticação (podem manter os valores padrão)
 NEXT_PUBLIC_CLERK_SIGN_IN_URL="/sign-in"
 NEXT_PUBLIC_CLERK_SIGN_UP_URL="/sign-up"
-NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL="/"
-NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL="/"
+
+# UploadThing v7
+UPLOADTHING_TOKEN="SUBSTITUA_PELO_TOKEN_V7"
+
+# Autenticacao das chamadas do cron
+CRON_SECRET="SUBSTITUA_POR_UM_SEGREDO_ALEATORIO"
 
 # ===========================================
 # CONFIGURAÇÕES OPCIONAIS
