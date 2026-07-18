@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { UserButton, useUser } from '@clerk/nextjs';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import { WhatsappIcon } from '@/components/icons';
 
@@ -18,6 +19,7 @@ const whatsappMessage =
 
 export function HomeHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
   const { isSignedIn, user } = useUser();
   const { visiblePages, loading, isAdmin } = usePageVisibility();
 
@@ -71,7 +73,7 @@ export function HomeHeader() {
           aria-label="Navegação principal"
         >
           {navigation.map((item) => {
-            const isActive = item.href === '/';
+            const isActive = item.href === pathname;
 
             return (
               <Link
@@ -149,7 +151,7 @@ export function HomeHeader() {
               aria-label="Navegação principal mobile"
             >
               {navigation.map((item) => {
-                const isActive = item.href === '/';
+                const isActive = item.href === pathname;
 
                 return (
                   <Link

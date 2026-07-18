@@ -3,7 +3,7 @@
 > [!IMPORTANT]
 > Este é o **único** documento de referência para o Design System. Use os tokens e padrões aqui definidos, não valores arbitrários.
 
-> Última atualização: **18/07/2026** — fundações e Home concluídas; próximas páginas públicas documentadas na seção 10.
+> Última atualização: **18/07/2026** — fundações, Home e `/servicos` concluídos; próximas páginas públicas documentadas na seção 10.
 
 ---
 
@@ -154,7 +154,10 @@ Os arquivos variáveis regular e itálico são auto-hospedados em `app/fonts/lib
 | **Transição base** | `duration-200` | - |
 | **Glow opcional** | `opacity-0` | `group-hover:opacity-100 duration-700` |
 | **Contorno do ícone (Serviços)** | `border-action-primary/30` | `group-hover:border-action-strong` |
+| **Fundo do ícone (Serviços em card claro)** | `bg-surface-subtle` | `group-hover:bg-action-strong` |
 | **Cor do ícone (Serviços)** | `text-text-primary` | `group-hover:text-text-on-dark` |
+
+Nos cards claros de serviços, o círculo do ícone assume obrigatoriamente fundo dourado no hover, com ícone branco. Não use `bg-action-primary` nesse estado.
 
 Em seções escuras, use `Card variant="dark"` com `border-border-on-dark`, `bg-surface-dark-elevated` e `hover:border-action-on-dark`. Títulos e descrições usam `text-text-on-dark`; o círculo do ícone parte de `border-border-on-dark` e assume fundo dourado somente no hover.
 
@@ -392,6 +395,7 @@ Antes de finalizar qualquer componente, verifique:
 - Fundações: primitivas oficiais, tokens semânticos, tema público isolado em `.public-theme`, Libre Caslon Text, Jost e Marcellus.
 - Componentes fundamentais: `Button`, `Input`, `Textarea`, `Badge`, `Card`, `Container`, `Section` e `SectionHeading`.
 - Home `/`: header, hero, confiança, serviços, alianças, portfólio, depoimentos, CTA e footer.
+- Serviços `/servicos`: header e footer do tema público, hero, catálogo de seis serviços e CTA final; conteúdo, destinos e comportamento existentes foram preservados.
 - Conteúdo dinâmico, Clerk, Prisma/Supabase, UploadThing, links, WhatsApp e rotas públicas existentes foram preservados.
 - O ícone oficial do WhatsApp substituiu símbolos genéricos nos pontos auditados.
 - A rota `/home-v2`, seus componentes e seu ativo exclusivo foram removidos definitivamente e não devem ser restaurados.
@@ -407,20 +411,19 @@ Commits do checkpoint:
 - `e648121` — template do pooler Supabase.
 - `b7c7a89` — remoção da `/home-v2`.
 
-### 10.2 Próxima fase: páginas públicas
+### 10.2 Próxima fase: páginas públicas restantes
 
 Migrar uma página por vez, nesta ordem:
 
-1. `/servicos`
-2. `/servicos/aliancas-personalizadas`
-3. `/servicos/consertos`
-4. `/servicos/banho-de-ouro`
-5. `/servicos/joias-sob-medida`
-6. `/servicos/lentes-de-oculos`
-7. `/portfolio` e `/portfolio/[slug]`
-8. `/sobre`
-9. `/pronta-entrega`
-10. Páginas auxiliares; painel administrativo somente ao final
+1. `/servicos/aliancas-personalizadas`
+2. `/servicos/consertos`
+3. `/servicos/banho-de-ouro`
+4. `/servicos/joias-sob-medida`
+5. `/servicos/lentes-de-oculos`
+6. `/portfolio` e `/portfolio/[slug]`
+7. `/sobre`
+8. `/pronta-entrega`
+9. Páginas auxiliares; painel administrativo somente ao final
 
 ### 10.3 Regras para continuar
 
