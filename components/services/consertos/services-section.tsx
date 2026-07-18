@@ -10,10 +10,10 @@ import {
   Glasses,
   Wrench,
   ShieldCheck,
-  MessageCircle,
   HelpCircle,
   type LucideIcon,
 } from 'lucide-react';
+import { WhatsappIcon } from '@/components/icons';
 
 type ServiceItem = {
   icon: LucideIcon;
@@ -68,7 +68,7 @@ const SERVICE_HIGHLIGHTS = [
       'Todos os reparos são executados dentro da Cícero Joias, com contato direto com os especialistas.',
   },
   {
-    icon: MessageCircle,
+    icon: WhatsappIcon,
     title: 'Transparência total',
     description:
       'Envie fotos pelo WhatsApp ou traga a peça. Avisamos prazos e atualizações durante o processo.',

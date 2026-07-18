@@ -1,7 +1,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { MessageCircle, Camera, Shield, Clock } from 'lucide-react';
+import { Camera, Shield, Clock } from 'lucide-react';
+import { WhatsappIcon } from '@/components/icons';
 import { AnimatedSection } from '@/components/ui/animated-section';
 
 const WHATSAPP_NUMBER = '5583991180251';
@@ -72,7 +73,7 @@ export function BanhoOuroFinalCTASection() {
             whileHover={{ scale: 1.03, y: -2 }}
             whileTap={{ scale: 0.97 }}
           >
-            <MessageCircle className="h-5 w-5" />
+            <WhatsappIcon className="h-5 w-5" aria-hidden="true" />
             Solicitar orçamento agora
           </motion.a>
 

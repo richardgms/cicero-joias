@@ -3,7 +3,8 @@
 import React from 'react';
 import { AnimatedSection } from '@/components/ui/animated-section';
 import { Button } from '@/components/ui/button';
-import { MessageCircle, MapPin, ArrowRight } from 'lucide-react';
+import { MapPin, ArrowRight } from 'lucide-react';
+import { WhatsappIcon } from '@/components/icons';
 
 const WHATSAPP_NUMBER = '5583991180251';
 const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Ola! Quero agendar um conserto na Cicero Joias.')}`;
@@ -53,7 +54,7 @@ export function ConsertosFinalCTASection() {
 
         <AnimatedSection delay={0.2} className="grid gap-4 text-sm text-marfim/75 sm:grid-cols-2">
           <div className="flex items-center justify-center gap-2 sm:justify-end">
-            <MessageCircle className="h-5 w-5 text-ouro" />
+            <WhatsappIcon className="h-5 w-5 text-ouro" aria-hidden="true" />
             <span>Atendimento personalizado e orcamento gratuito.</span>
           </div>
           <div className="flex items-center justify-center gap-2 sm:justify-start">

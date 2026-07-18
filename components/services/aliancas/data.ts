@@ -13,12 +13,11 @@ import {
   Store,
   Crown,
   Gem,
-  MessageCircle,
   Ruler,
   Palette,
   PackageCheck,
 } from 'lucide-react';
-import { AliancasIcon } from '@/components/icons';
+import { AliancasIcon, WhatsappIcon } from '@/components/icons';
 
 const WHATSAPP_NUMBER = '5583991180251';
 
@@ -152,7 +151,7 @@ export const processSteps: Array<WithIcon<{
   };
 }>> = [
   {
-    icon: MessageCircle,
+    icon: WhatsappIcon,
     time: 'ETAPA 1',
     title: 'Primeiro Contato',
     description:

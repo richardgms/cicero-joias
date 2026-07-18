@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { WhatsappIcon } from '@/components/icons';
+import { createWhatsAppLink } from '@/lib/constants';
 
 /**
  * FloatingWhatsAppButton - Botão flutuante do WhatsApp no canto inferior direito
@@ -22,7 +23,7 @@ interface FloatingWhatsAppButtonProps {
 
 export function FloatingWhatsAppButton({
   threshold = 30,
-  whatsappLink = 'https://wa.me/558399146963?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20os%20serviços%20da%20Cícero%20Joias.'
+  whatsappLink = createWhatsAppLink('Olá! Gostaria de saber mais sobre os serviços da Cícero Joias.')
 }: FloatingWhatsAppButtonProps) {
   const [isVisible, setIsVisible] = useState(false);
 
