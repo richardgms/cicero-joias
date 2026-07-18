@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import plugin from 'tailwindcss/plugin';
 
 const config: Config = {
   darkMode: ['class'],
@@ -11,6 +12,11 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: ['var(--font-sans)'],
+        heading: ['var(--font-heading)', 'serif'],
+        numeric: ['var(--font-numeric)', 'serif'],
+        'libre-caslon': ['var(--font-libre-caslon)', 'serif'],
+        cormorant: ['var(--font-cormorant)', 'serif'],
+        marcellus: ['var(--font-marcellus)', 'serif'],
         playfair: ['var(--font-playfair)', 'serif'],
         inter: ['var(--font-inter)', 'sans-serif'],
         jost: ['var(--font-jost)', 'sans-serif'],
@@ -26,13 +32,19 @@ const config: Config = {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
-        // Semantic Tokens
-        'radius-sm': '6px',
-        'radius-md': '8px',
-        'radius-lg': '12px',
-        'radius-xl': '16px',
-        'radius-2xl': '24px',
-        'radius-full': '9999px',
+        control: 'var(--radius-control)',
+        card: 'var(--radius-card)',
+        pill: 'var(--radius-pill)',
+      },
+      spacing: {
+        control: 'var(--control-min-height)',
+      },
+      minHeight: {
+        control: 'var(--control-min-height)',
+      },
+      letterSpacing: {
+        label: '0.16em',
+        eyebrow: '0.3em',
       },
       boxShadow: {
         'card-sm': '0 15px 35px -20px rgba(24, 68, 52, 0.15)',
@@ -40,41 +52,50 @@ const config: Config = {
         'card-md': '0 24px 55px -34px rgba(24, 68, 52, 0.35)',
         'button-gold': '0 10px 25px -10px rgba(200, 155, 60, 0.2)',
         'button-gold-strong': '0 10px 25px -10px rgba(200, 155, 60, 0.3)',
-        // Semantic Tokens
-        'shadow-sm': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-        'shadow-md': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-        'shadow-card': '0 4px 20px -4px rgba(24,68,52,0.05)',
-        'shadow-card-hover': '0 20px 40px -12px rgba(24,68,52,0.15)',
-        'shadow-button-primary': '0 25px 45px -20px rgba(207,154,36,0.45)',
+        card: '0 4px 20px -4px rgba(24, 68, 52, 0.05)',
+        'card-hover': '0 20px 40px -12px rgba(24, 68, 52, 0.15)',
+        'button-primary': '0 25px 45px -20px rgba(199, 154, 52, 0.45)',
       },
       colors: {
-        // Tokens Semânticos (Design System)
-        // Texto
-        'text-primary': '#184434', // Esmeralda
-        'text-secondary': '#2E363D', // Grafite
-        'text-muted': '#2d6854', // Esmeralda Light
-        'text-on-dark': '#F5F3EE', // Marfim
-        'text-on-brand': '#184434', // Esmeralda (on Gold)
+        // Primitivas oficiais da marca. Os canais RGB preservam suporte a /opacity.
+        'brand-emerald-950': 'rgb(var(--brand-emerald-950) / <alpha-value>)',
+        'brand-emerald-900': 'rgb(var(--brand-emerald-900) / <alpha-value>)',
+        'brand-emerald-800': 'rgb(var(--brand-emerald-800) / <alpha-value>)',
+        'brand-emerald-700': 'rgb(var(--brand-emerald-700) / <alpha-value>)',
+        'brand-gold-600': 'rgb(var(--brand-gold-600) / <alpha-value>)',
+        'brand-gold-300': 'rgb(var(--brand-gold-300) / <alpha-value>)',
+        'brand-ivory': 'rgb(var(--brand-ivory) / <alpha-value>)',
+        'brand-white': 'rgb(var(--brand-white) / <alpha-value>)',
+        'brand-graphite': 'rgb(var(--brand-graphite) / <alpha-value>)',
+        'brand-text-secondary': 'rgb(var(--brand-text-secondary) / <alpha-value>)',
 
-        // Superfícies
-        'surface-page': '#F8F5F0', // Marfim/Off-white
-        'surface-section': '#FFFFFF', // Branco
-        'surface-card': 'rgba(255, 255, 255, 0.6)', // Glass
-        'surface-subtle': 'rgba(24, 68, 52, 0.05)', // Esmeralda Ultra-Light
-        // surface-hero é tratado via classes de gradiente
+        // Tokens semânticos. O layout público redefine as variáveis sem afetar o admin.
+        'text-primary': 'rgb(var(--ds-text-primary) / <alpha-value>)',
+        'text-body': 'rgb(var(--ds-text-body) / <alpha-value>)',
+        'text-secondary': 'rgb(var(--ds-text-secondary) / <alpha-value>)',
+        'text-muted': 'rgb(var(--ds-text-muted) / <alpha-value>)',
+        'text-on-dark': 'rgb(var(--ds-text-on-dark) / <alpha-value>)',
+        'text-on-brand': 'rgb(var(--ds-text-on-brand) / <alpha-value>)',
+        'surface-page': 'rgb(var(--ds-surface-page) / <alpha-value>)',
+        'surface-section': 'rgb(var(--ds-surface-section) / <alpha-value>)',
+        'surface-card': 'rgb(var(--ds-surface-card) / <alpha-value>)',
+        'surface-subtle': 'rgb(var(--ds-surface-subtle) / <alpha-value>)',
+        'surface-dark': 'rgb(var(--ds-surface-dark) / <alpha-value>)',
+        'surface-dark-elevated': 'rgb(var(--ds-surface-dark-elevated) / <alpha-value>)',
+        'action-primary': 'rgb(var(--ds-action-primary) / <alpha-value>)',
+        'action-primary-hover': 'rgb(var(--ds-action-primary-hover) / <alpha-value>)',
+        'action-strong': 'rgb(var(--ds-action-strong) / <alpha-value>)',
+        'action-strong-hover': 'rgb(var(--ds-action-strong-hover) / <alpha-value>)',
+        'action-on-dark': 'rgb(var(--ds-action-on-dark) / <alpha-value>)',
+        'border-default': 'rgb(var(--ds-border-default) / <alpha-value>)',
+        'border-subtle': 'rgb(var(--ds-border-subtle) / <alpha-value>)',
+        'border-on-dark': 'rgb(var(--ds-border-on-dark) / <alpha-value>)',
+        'border-focus': 'rgb(var(--ds-border-focus) / <alpha-value>)',
+        'focus-ring': 'rgb(var(--ds-focus-ring) / <alpha-value>)',
+        error: 'rgb(var(--ds-error) / <alpha-value>)',
+        whatsapp: 'rgb(var(--ds-whatsapp) / <alpha-value>)',
 
-        // Ações
-        'action-primary': '#184434', // Esmeralda
-        'action-primary-hover': '#0f2b21', // Esmeralda Dark
-        'action-strong': '#CF9A24', // Ouro
-        'action-strong-hover': '#B88820', // Ouro Dark
-
-        // Bordas
-        'border-default': 'rgba(166, 166, 166, 0.2)',
-        'border-subtle': 'rgba(207, 154, 36, 0.3)', // Ouro Low Opacity
-        'border-focus': '#CF9A24', // Ouro
-
-        // Paleta Esmeralda Solar (Base)
+        // Paleta legada: mantida até a migração das páginas existentes.
         esmeralda: {
           DEFAULT: '#184434', // Esmeralda Profundo (cor-base)
           light: '#2A6A52',
@@ -182,6 +203,11 @@ const config: Config = {
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [
+    require('tailwindcss-animate'),
+    plugin(({ addVariant }) => {
+      addVariant('public', '.public-theme &');
+    }),
+  ],
 };
 export default config;

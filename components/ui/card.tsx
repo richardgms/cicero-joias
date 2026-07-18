@@ -1,23 +1,37 @@
 import * as React from 'react';
+import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
 
+const cardVariants = cva('rounded-lg border shadow-sm public:rounded-card', {
+  variants: {
+    variant: {
+      default: 'border-border bg-card text-card-foreground',
+      light: 'border-border-default bg-surface-card text-text-body',
+      dark:
+        'border-border-on-dark bg-surface-dark-elevated text-text-on-dark',
+      emerald: 'border-esmeralda-light/30 bg-esmeralda text-marfim',
+      gold: 'border-ouro-light/30 bg-ouro text-grafite',
+    },
+  },
+  defaultVariants: {
+    variant: 'default',
+  },
+})
 const Card = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & { variant?: 'default' | 'emerald' | 'gold' }
->(({ className, variant = 'default', ...props }, ref) => {
-  const variantClasses = {
-    default: 'bg-card text-card-foreground',
-    emerald: 'bg-esmeralda text-marfim',
-    gold: 'bg-ouro text-grafite',
-  };
-
+  React.HTMLAttributes<HTMLDivElement> &
+    VariantProps<typeof cardVariants> & {
+      interactive?: boolean;
+    }
+>(({ className, interactive = false, variant, ...props }, ref) => {
   return (
     <div
       ref={ref}
       className={cn(
-        'rounded-lg border shadow-sm',
-        variantClasses[variant],
+        cardVariants({ variant }),
+        interactive &&
+          'transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-1 hover:shadow-card-hover focus-within:border-border-focus motion-reduce:transform-none',
         className
       )}
       {...props}
@@ -87,6 +101,7 @@ CardFooter.displayName = 'CardFooter';
 
 export {
   Card,
+  cardVariants,
   CardHeader,
   CardFooter,
   CardTitle,

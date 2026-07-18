@@ -1,6 +1,15 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Inter, Playfair_Display, Jost, Philosopher, Montserrat } from 'next/font/google';
+import localFont from 'next/font/local';
+import {
+  Cormorant_Garamond,
+  Inter,
+  Jost,
+  Marcellus,
+  Montserrat,
+  Philosopher,
+  Playfair_Display,
+} from 'next/font/google';
 import { Toaster } from '@/components/ui/toaster';
 import { Providers } from './providers';
 import { ConditionalLayout } from './conditional-layout';
@@ -26,6 +35,39 @@ const jost = Jost({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
   variable: '--font-jost',
+  display: 'swap',
+});
+
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  style: ['normal', 'italic'],
+  variable: '--font-cormorant',
+  display: 'swap',
+});
+
+const libreCaslon = localFont({
+  src: [
+    {
+      path: './fonts/libre-caslon/LibreCaslonText-Variable.ttf',
+      weight: '400 700',
+      style: 'normal',
+    },
+    {
+      path: './fonts/libre-caslon/LibreCaslonText-Italic-Variable.ttf',
+      weight: '400 700',
+      style: 'italic',
+    },
+  ],
+  variable: '--font-libre-caslon',
+  display: 'swap',
+  fallback: ['Georgia', 'serif'],
+});
+
+const marcellus = Marcellus({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-marcellus',
   display: 'swap',
 });
 
@@ -94,7 +136,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR" className={`${inter.variable} ${playfair.variable} ${jost.variable} ${philosopher.variable} ${montserrat.variable}`}>
+    <html lang="pt-BR" className={`${inter.variable} ${playfair.variable} ${jost.variable} ${cormorant.variable} ${libreCaslon.variable} ${marcellus.variable} ${philosopher.variable} ${montserrat.variable}`}>
       <body suppressHydrationWarning className="min-h-screen bg-[#04160f] font-inter antialiased">
         <Providers>
           <ConditionalLayout>{children}</ConditionalLayout>

@@ -8,8 +8,7 @@
 
 /* Focus Visible - WCAG 2.1 Level AAA */
 :focus-visible {
-  outline: 2px solid #184438;
-  /* esmeralda */
+  outline: 2px solid rgb(var(--ds-focus-ring));
   outline-offset: 2px;
 }
 
@@ -50,6 +49,55 @@ html {
 }
 
 :root {
+  /* Primitivas oficiais da marca (equivalentes exatos aos valores hex oficiais). */
+  --brand-emerald-950: 12 34 26;
+  --brand-emerald-900: 17 49 37;
+  --brand-emerald-800: 20 58 44;
+  --brand-emerald-700: 24 68 52;
+  --brand-gold-600: 199 154 52;
+  --brand-gold-300: 213 179 103;
+  --brand-ivory: 247 245 240;
+  --brand-white: 255 255 255;
+  --brand-graphite: 46 54 61;
+  --brand-text-secondary: 92 107 98;
+  --brand-error: 156 58 46;
+  --brand-whatsapp: 37 211 102;
+
+  /* Semântica legada fora do layout público, preservando o admin. */
+  --ds-text-primary: 24 68 52;
+  --ds-text-body: 46 54 61;
+  --ds-text-secondary: 46 54 61;
+  --ds-text-muted: 45 104 84;
+  --ds-text-on-dark: 245 243 238;
+  --ds-text-on-brand: 24 68 52;
+  --ds-surface-page: 248 245 240;
+  --ds-surface-section: 255 255 255;
+  --ds-surface-card: 255 255 255;
+  --ds-surface-subtle: 243 246 245;
+  --ds-surface-dark: 15 42 32;
+  --ds-surface-dark-elevated: 24 68 52;
+  --ds-action-primary: 24 68 52;
+  --ds-action-primary-hover: 42 106 82;
+  --ds-action-strong: 207 154 36;
+  --ds-action-strong-hover: 225 185 89;
+  --ds-action-on-dark: 225 185 89;
+  --ds-border-default: 237 237 237;
+  --ds-border-subtle: 241 225 189;
+  --ds-border-on-dark: 63 82 57;
+  --ds-border-focus: 235 230 220;
+  --ds-focus-ring: 24 68 52;
+  --ds-error: 239 68 68;
+  --ds-whatsapp: var(--brand-whatsapp);
+
+  /* Tipografia, forma e dimensão semânticas. */
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-playfair);
+  --font-numeric: var(--font-inter);
+  --radius-control: 0.375rem;
+  --radius-card: 0.5rem;
+  --radius-pill: 9999px;
+  --control-min-height: 2.5rem;
+
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
@@ -96,6 +144,44 @@ html {
   --marfim: 36 33% 97%;
   --marfim-dark: 36 15% 85%;
   --grafite: 210 14% 21%;
+}
+
+/* O novo tema vive somente nas rotas públicas durante a migração. */
+.public-theme {
+  --ds-text-primary: var(--brand-emerald-700);
+  --ds-text-body: var(--brand-graphite);
+  --ds-text-secondary: var(--brand-text-secondary);
+  --ds-text-muted: var(--brand-text-secondary);
+  --ds-text-on-dark: var(--brand-ivory);
+  --ds-text-on-brand: var(--brand-emerald-900);
+  --ds-surface-page: var(--brand-ivory);
+  --ds-surface-section: var(--brand-ivory);
+  --ds-surface-card: var(--brand-white);
+  --ds-surface-subtle: 236 236 231;
+  --ds-surface-dark: var(--brand-emerald-900);
+  --ds-surface-dark-elevated: var(--brand-emerald-800);
+  --ds-action-primary: var(--brand-emerald-700);
+  --ds-action-primary-hover: var(--brand-emerald-900);
+  --ds-action-strong: var(--brand-gold-600);
+  --ds-action-strong-hover: var(--brand-gold-600);
+  --ds-action-on-dark: var(--brand-gold-300);
+  --ds-border-default: 198 206 199;
+  --ds-border-subtle: 233 218 184;
+  --ds-border-on-dark: 56 75 50;
+  --ds-border-focus: var(--brand-gold-600);
+  --ds-focus-ring: var(--brand-emerald-700);
+  --ds-error: var(--brand-error);
+  --ds-whatsapp: var(--brand-whatsapp);
+  --font-sans: var(--font-jost);
+  --font-heading: var(--font-libre-caslon);
+  --font-numeric: var(--font-marcellus);
+  --radius-control: 2px;
+  --radius-card: 4px;
+  --control-min-height: 2.75rem;
+
+  background-color: rgb(var(--ds-surface-page));
+  color: rgb(var(--ds-text-body));
+  font-family: var(--font-sans);
 }
 
 @media (prefers-color-scheme: dark) {
