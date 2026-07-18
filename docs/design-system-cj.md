@@ -3,6 +3,8 @@
 > [!IMPORTANT]
 > Este é o **único** documento de referência para o Design System. Use os tokens e padrões aqui definidos, não valores arbitrários.
 
+> Última atualização: **18/07/2026** — fundações e Home concluídas; próximas páginas públicas documentadas na seção 10.
+
 ---
 
 ## 1. Princípios Visuais
@@ -44,10 +46,11 @@ Os arquivos variáveis regular e itálico são auto-hospedados em `app/fonts/lib
 
 | Nome | Token | Hex (Ref) | Descrição |
 | :--- | :--- | :--- | :--- |
-| **Esmeralda** | `esmeralda` / `text-primary` | `#184434` | Cor primária da marca. Sofisticação e tradição. |
-| **Ouro** | `ouro` / `action-strong` | `#CF9A24` | Acentos, botões de ação e detalhes nobres. |
-| **Marfim** | `marfim` / `surface-page` | `#F8F5F0` | Fundo principal da página (Light theme). |
-| **Grafite** | `grafite` / `text-secondary` | `#2E363D` | Texto secundário e contrastes suaves. |
+| **Esmeralda 700** | `brand-emerald-700` / `action-primary` | `#184434` | Cor primária da marca. Sofisticação e tradição. |
+| **Ouro 600** | `brand-gold-600` / `action-strong` | `#C79A34` | Acentos, botões de ação e detalhes nobres. |
+| **Marfim** | `brand-ivory` / `surface-page` | `#F7F5F0` | Fundo principal das seções claras. |
+| **Grafite** | `brand-graphite` / `text-body` | `#2E363D` | Texto principal sobre fundos claros. |
+| **Texto secundário** | `brand-text-secondary` / `text-secondary` | `#5C6B62` | Apoio, descrições e metadados. |
 
 > [!TIP]
 > Use sempre os tokens semânticos (`bg-surface-page`, `text-primary`) em vez dos nomes das cores.
@@ -132,32 +135,30 @@ Os arquivos variáveis regular e itálico são auto-hospedados em `app/fonts/lib
 ### 4.4 Card com Hover
 
 ```tsx
-<div className="group relative 
-  bg-surface-section rounded-xl 
-  border border-ouro/15 
-  shadow-card
-  transition-all duration-500
-  hover:border-ouro/50 hover:shadow-card-hover hover:-translate-y-1"
+<Card
+  variant="light"
+  interactive
+  className="group hover:border-action-strong"
 >
-  {/* Glow decorativo opcional */}
-  <div className="absolute -bottom-10 -left-10 w-24 h-24 bg-ouro/20 rounded-full blur-3xl 
-    opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-  
   {/* Conteúdo */}
-</div>
+</Card>
 ```
+
+
 
 | Propriedade | Base | Hover |
 | :--- | :--- | :--- |
 | **Borda** | `border-border-default` | `hover:border-action-strong` |
 | **Sombra** | `shadow-card` | `hover:shadow-card-hover` |
 | **Elevação** | - | `hover:-translate-y-1` |
-| **Transição** | `duration-500` | - |
-| **Glow** | `opacity-0` | `group-hover:opacity-100 duration-700` |
+| **Transição base** | `duration-200` | - |
+| **Glow opcional** | `opacity-0` | `group-hover:opacity-100 duration-700` |
 | **Contorno do ícone (Serviços)** | `border-action-primary/30` | `group-hover:border-action-strong` |
 | **Cor do ícone (Serviços)** | `text-text-primary` | `group-hover:text-text-on-dark` |
 
 Em seções escuras, use `Card variant="dark"` com `border-border-on-dark`, `bg-surface-dark-elevated` e `hover:border-action-on-dark`. Títulos e descrições usam `text-text-on-dark`; o círculo do ícone parte de `border-border-on-dark` e assume fundo dourado somente no hover.
+
+`interactive` fornece elevação e sombra de hover por padrão. Quando a composição pedir apenas borda e deslocamento, mantenha a sombra-base com `hover:shadow-sm`, como nos depoimentos da Home.
 
 ---
 
@@ -213,7 +214,7 @@ Used in product details or technical specifications.
 
 ### 4.8 Card de Depoimento (Fundo Claro)
 
-A Home preserva a composição pública com quatro depoimentos em grade: uma coluna no mobile e duas a partir de `md`.
+A Home preserva quatro depoimentos. No mobile eles passam em uma esteira horizontal contínua; a partir de `md`, aparecem em uma grade de duas colunas.
 
 | Elemento | Padrão |
 | :--- | :--- |
@@ -224,8 +225,12 @@ A Home preserva a composição pública com quatro depoimentos em grade: uma col
 | **Relato** | Jost em itálico, `text-text-body`, dentro de `blockquote` |
 | **Autoria** | Nome em `font-heading`; local em Jost, caixa alta e `text-text-secondary` |
 | **Avatar** | Iniciais em círculo com borda e fundo esmeralda semântico |
+| **Hover** | Borda dourada e leve elevação; a sombra permanece em `shadow-sm` |
+| **Mobile** | Autoplay suave; pressionar pausa, arrastar navega e soltar retoma |
 
 O badge da seção usa `sectionLight` e permanece estático. O dourado fica reservado para “Brilham”, estrelas e borda de hover; textos pequenos mantêm os tokens de maior contraste.
+
+A esteira respeita `prefers-reduced-motion`, usa `touch-pan-y`, mantém 4px de folga superior para não recortar a borda durante a elevação e expõe apenas uma cópia semântica dos depoimentos às tecnologias assistivas.
 
 ### 4.9 CTA Final da Home (Fundo Escuro)
 
@@ -285,8 +290,9 @@ const itemVariants = {
 
 | Tipo | Duração | Uso |
 | :--- | :--- | :--- |
-| **Links / Micro-interações** | `duration-300` | Links de texto, ícones pequenos |
-| **Botões / Cards** | `duration-500` | CTAs, cards, elementos principais |
+| **Controles fundamentais** | `duration-200` | `Button`, `Card`, campos e estados de foco/hover |
+| **Links / Micro-interações editoriais** | `duration-300` | Links de texto, ícones pequenos |
+| **Imagens / Composições especiais** | `duration-500` | Zoom de portfólio e CTAs editoriais existentes |
 | **Glow / Blur effects** | `duration-700` | Efeitos decorativos de luz |
 
 ### 5.3 Animações de Hover - Padrão
@@ -305,7 +311,7 @@ const itemVariants = {
 | Token | Uso |
 | :--- | :--- |
 | `shadow-card` | Sombra suave para cards em repouso |
-| `shadow-card-hover` | Sombra mais projetada para hover |
+| `shadow-card-hover` | Sombra mais projetada para hover, apenas quando a elevação for desejada |
 | `shadow-card-sm` | Sombra leve para cards sobre fundo escuro |
 | `shadow-button-primary` | "Glow" dourado para botões (default) |
 | `shadow-button-gold-strong` | "Glow" dourado intenso (hover) |
@@ -326,11 +332,9 @@ Para garantir que o conteúdo do Hero tenha o mesmo espaçamento visual no topo 
 - **Padding Bottom**: `pb-32` (8rem) -> *8rem total - 4rem overlap = 4rem visível*
 - **Visual Resultante**: 4rem de respiro em cima e embaixo.
 
-- **Visual Resultante**: 4rem de respiro em cima e embaixo.
-
 ---
 
-### 8. Loading States (Novo Padrão)
+## 8. Loading States
 
 Para manter a consistência e a percepção de performance premium, usamos um único componente: `<LoadingScreen />`.
 **IMPORTANTE**: Sempre forneça uma mensagem contextual na *prop* `message` (ex: "Carregando usuários...", "Salvando alterações...").
@@ -366,11 +370,67 @@ Usado dentro de cards, grades ou seções que carregam dados dinâmicos. Possui 
 Antes de finalizar qualquer componente, verifique:
 
 - [ ] Botões CTA usam `bg-action-strong` (não `bg-ouro` diretamente)
-- [ ] Botões CTA têm `<ArrowRight>` com `group-hover:translate-x-1`
-- [ ] Botões CTA estão envoltos em `motion.a/div` com `scale: 1.02 / 0.98`
+- [ ] Botões CTA usam o componente `Button` sempre que a composição permitir
+- [ ] Botões CTA têm `<ArrowRight>` com `group-hover:translate-x-1` quando houver seta
 - [ ] Hover de botões usa `hover:bg-action-strong/90` (escurece, não clareia)
-- [ ] Sombras usam tokens (`shadow-button-primary`, `shadow-card`)
-- [ ] Transições de botões usam `duration-500`
+- [ ] Sombras usam tokens e só aumentam no hover quando a composição exigir
+- [ ] Controles fundamentais usam `duration-200`
 - [ ] Transições de links usam `duration-300`
 - [ ] Animação de seta usa `translate-x-1` (não `translate-x-2`)
-- [ ] Cards têm `hover:-translate-y-1` e `hover:border-ouro/50`
+- [ ] Cards usam bordas semânticas (`border-border-*` / `hover:border-action-*`)
+- [ ] Badges informativos permanecem estáticos no hover
+- [ ] Alvos de toque têm pelo menos 44×44px e estados `focus-visible`
+- [ ] Animações respeitam `prefers-reduced-motion`
+- [ ] Páginas não introduzem valores hexadecimais ou espaçamentos arbitrários
+
+---
+
+## 10. Estado da Migração
+
+### 10.1 Concluído
+
+- Fundações: primitivas oficiais, tokens semânticos, tema público isolado em `.public-theme`, Libre Caslon Text, Jost e Marcellus.
+- Componentes fundamentais: `Button`, `Input`, `Textarea`, `Badge`, `Card`, `Container`, `Section` e `SectionHeading`.
+- Home `/`: header, hero, confiança, serviços, alianças, portfólio, depoimentos, CTA e footer.
+- Conteúdo dinâmico, Clerk, Prisma/Supabase, UploadThing, links, WhatsApp e rotas públicas existentes foram preservados.
+- O ícone oficial do WhatsApp substituiu símbolos genéricos nos pontos auditados.
+- A rota `/home-v2`, seus componentes e seu ativo exclusivo foram removidos definitivamente e não devem ser restaurados.
+- O painel administrativo continua fora do novo tema visual.
+
+Validação do checkpoint de 18/07/2026: ESLint, `tsc --noEmit` e build de produção concluídos; 43 páginas foram geradas com sucesso.
+
+Commits do checkpoint:
+
+- `495a35d` — fundações do Design System público.
+- `0ef8fa9` — migração da Home.
+- `e3197b1` — consistência de WhatsApp.
+- `e648121` — template do pooler Supabase.
+- `b7c7a89` — remoção da `/home-v2`.
+
+### 10.2 Próxima fase: páginas públicas
+
+Migrar uma página por vez, nesta ordem:
+
+1. `/servicos`
+2. `/servicos/aliancas-personalizadas`
+3. `/servicos/consertos`
+4. `/servicos/banho-de-ouro`
+5. `/servicos/joias-sob-medida`
+6. `/servicos/lentes-de-oculos`
+7. `/portfolio` e `/portfolio/[slug]`
+8. `/sobre`
+9. `/pronta-entrega`
+10. Páginas auxiliares; painel administrativo somente ao final
+
+### 10.3 Regras para continuar
+
+- A página pública atual define composição, conteúdo e comportamento; o HTML do Design System é apenas especificação visual.
+- Nunca importar ou copiar `support.js` para a aplicação.
+- Preservar dados dinâmicos, autenticação, uploads, links, WhatsApp e comportamento existente.
+- Usar tokens semânticos e os componentes fundamentais; não criar um Design System paralelo.
+- Manter o tema novo restrito ao layout público enquanto o admin não for migrado.
+- Alternar seções claras e escuras quando isso melhorar o ritmo, sem sacrificar a estrutura da página original.
+- Antes de substituir ou remover código, localizar referências e consumidores.
+- Fazer mudanças pequenas e reversíveis, com revisão desktop/mobile.
+- Ao concluir cada página: ESLint, `tsc --noEmit`, build e commit próprio; não fazer push ou deploy sem autorização.
+- Não versionar `.serena/`, screenshots, previews HTML, artefatos gerados nem a pasta da especificação visual, salvo decisão explícita.
