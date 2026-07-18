@@ -4,9 +4,14 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight, Sparkles, Star } from 'lucide-react';
 import { AnimatedSection } from '@/components/ui/animated-section';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Container } from '@/components/ui/container';
+import { Section } from '@/components/ui/section';
+import { SectionHeading } from '@/components/ui/section-heading';
 import { generatePortfolioSlug } from '@/lib/slug-utils';
 
 const categoryLabels = {
@@ -30,7 +35,13 @@ interface ApiResponse {
   portfolioItems: PortfolioItem[];
 }
 
-export function PortfolioPreviewSection() {
+interface PortfolioPreviewSectionProps {
+  appearance?: 'legacy' | 'home-dark';
+}
+
+export function PortfolioPreviewSection({
+  appearance = 'legacy',
+}: PortfolioPreviewSectionProps) {
   const [items, setItems] = useState<PortfolioItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -58,6 +69,141 @@ export function PortfolioPreviewSection() {
 
     fetchFeaturedPortfolio();
   }, []);
+
+  if (appearance === 'home-dark') {
+    return (
+      <Section
+        tone="dark"
+        spacing="lg"
+        aria-labelledby="portfolio-heading"
+        className="overflow-hidden"
+      >
+        <Container size="lg" className="space-y-12 md:space-y-16">
+          <SectionHeading
+            align="center"
+            tone="dark"
+            titleId="portfolio-heading"
+            eyebrow={
+              <Badge variant="dark" className="gap-2">
+                <Star className="h-3 w-3 fill-current" aria-hidden="true" />
+                Trabalhos em destaque
+              </Badge>
+            }
+            title="Nossos trabalhos"
+            description="Conheça alguns dos projetos que realizamos"
+          />
+
+          {loading ? (
+            <div
+              className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+              aria-label="Carregando trabalhos em destaque"
+              aria-busy="true"
+            >
+              {[1, 2, 3].map((item) => (
+                <Card
+                  key={item}
+                  variant="dark"
+                  className="aspect-[4/5] animate-pulse bg-surface-dark-elevated sm:aspect-[3/4] motion-reduce:animate-none"
+                />
+              ))}
+            </div>
+          ) : error ? null : items.length === 0 ? (
+            <div className="flex flex-col items-center gap-8 text-center">
+              <Card variant="dark" className="max-w-lg p-8 md:p-10">
+                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-border-on-dark bg-brand-white/5">
+                  <Sparkles
+                    className="h-7 w-7 text-action-on-dark"
+                    aria-hidden="true"
+                  />
+                </div>
+                <p className="font-heading text-2xl font-semibold text-text-on-dark">
+                  Nenhum projeto em destaque no momento
+                </p>
+                <p className="mt-3 text-sm leading-relaxed text-text-on-dark/75">
+                  Em breve, novos trabalhos especiais serão destacados aqui.
+                </p>
+              </Card>
+              <Button asChild variant="outlineDark">
+                <Link href="/portfolio">Ver todo o portfólio</Link>
+              </Button>
+            </div>
+          ) : (
+            <>
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {items.map((item, index) => (
+                  <Card
+                    key={item.id}
+                    variant="dark"
+                    interactive
+                    className="group overflow-hidden hover:border-action-on-dark"
+                  >
+                    <Link
+                      href={`/portfolio/${generatePortfolioSlug({
+                        title: item.title,
+                        category: item.category,
+                        id: item.id,
+                      })}`}
+                      className="relative block aspect-[4/5] overflow-hidden sm:aspect-[3/4]"
+                    >
+                      <Image
+                        src={
+                          item.mainImage ||
+                          '/assets/images/placeholder-jewelry.svg'
+                        }
+                        alt={item.title}
+                        fill
+                        priority={index === 0}
+                        loading={index === 0 ? 'eager' : 'lazy'}
+                        className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      />
+
+                      <div className="absolute inset-x-0 bottom-0 h-5/6 bg-gradient-to-t from-brand-emerald-950/90 via-brand-emerald-950/30 to-transparent" />
+
+                      <div className="absolute inset-x-0 bottom-0 space-y-4 p-6 text-text-on-dark">
+                        <Badge variant="dark">
+                          {categoryLabels[
+                            item.category as keyof typeof categoryLabels
+                          ] || item.category}
+                        </Badge>
+
+                        <h3 className="line-clamp-2 font-heading text-2xl font-semibold leading-tight">
+                          {item.title}
+                        </h3>
+
+                        <span className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-label text-action-on-dark transition-[gap] duration-200 group-hover:gap-3">
+                          Ver detalhes
+                          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                        </span>
+                      </div>
+                    </Link>
+                  </Card>
+                ))}
+              </div>
+
+              <div className="space-y-6 text-center">
+                <div className="space-y-3">
+                  <p className="text-xs font-bold uppercase tracking-label text-action-on-dark">
+                    Quer ver mais trabalhos nossos?
+                  </p>
+                  <p className="mx-auto max-w-xl text-text-on-dark/75">
+                    Explore nossa coleção completa de alianças personalizadas e
+                    restaurações especiais.
+                  </p>
+                </div>
+                <Button asChild variant="goldOnDark" size="lg">
+                  <Link href="/portfolio">
+                    Ver portfólio completo
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  </Link>
+                </Button>
+              </div>
+            </>
+          )}
+        </Container>
+      </Section>
+    );
+  }
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-esmeralda via-esmeralda-dark to-esmeralda-dark py-10 sm:py-16 text-text-on-dark">

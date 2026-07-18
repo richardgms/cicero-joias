@@ -5,22 +5,24 @@ import { LoadingScreen } from '@/components/ui/loading-screen';
 
 // Priority 1: Critical rendering path - Above the fold (immediate load)
 import { HeroSection } from '@/components/home/hero-section';
+import { TrustSection } from '@/components/home/trust-section';
 import { ServicesGridSection } from '@/components/home/services-grid-section';
+import { AlliancesSection } from '@/components/home/alliances-section';
 
 // Priority 2: Below fold - Viewport threshold (lazy load with high priority)
 const PortfolioPreviewSection = dynamic(
   () => import('@/components/home/portfolio-preview-section').then(mod => mod.PortfolioPreviewSection),
-  { ssr: true, loading: () => <div className="min-h-[600px] flex items-center justify-center"><LoadingScreen variant="inline" message="Carregando portfólio..." /></div> }
+  { ssr: true, loading: () => <div className="flex min-h-96 items-center justify-center bg-surface-dark text-text-on-dark"><LoadingScreen variant="inline" message="Carregando portfólio..." /></div> }
 );
 
 const TestimonialsSection = dynamic(
   () => import('@/components/home/testimonials-section').then(mod => mod.TestimonialsSection),
-  { ssr: true, loading: () => <div className="min-h-[500px] flex items-center justify-center"><LoadingScreen variant="inline" message="Carregando depoimentos..." /></div> }
+  { ssr: true, loading: () => <div className="flex min-h-96 items-center justify-center bg-surface-page text-text-body"><LoadingScreen variant="inline" message="Carregando depoimentos..." /></div> }
 );
 
 const FinalCTASection = dynamic(
   () => import('@/components/home/final-cta-section').then(mod => mod.FinalCTASection),
-  { ssr: true, loading: () => <div className="min-h-[300px] flex items-center justify-center"><LoadingScreen variant="inline" message="Carregando..." /></div> }
+  { ssr: true, loading: () => <div className="flex min-h-80 items-center justify-center bg-surface-dark text-text-on-dark"><LoadingScreen variant="inline" message="Carregando..." /></div> }
 );
 
 export const metadata: Metadata = {
@@ -45,29 +47,39 @@ export default function HomePage() {
   return (
     <main className="min-h-screen">
       {/* 1. Hero - Apresentação inicial com proposta de valor */}
-      <section id="hero">
+      <div id="hero">
         <HeroSection />
-      </section>
+      </div>
 
-      {/* 2. Services - Catálogo completo de serviços */}
-      <section id="servicos">
+      {/* 2. Trust - Indicadores de experiência e autoridade */}
+      <div id="confianca" className="scroll-mt-20">
+        <TrustSection />
+      </div>
+
+      {/* 3. Services - Catálogo completo de serviços */}
+      <div id="servicos" className="scroll-mt-20">
         <ServicesGridSection />
-      </section>
+      </div>
 
-      {/* 3. Portfolio - Trabalhos em destaque */}
-      <section id="portfolio">
-        <PortfolioPreviewSection />
-      </section>
+      {/* 4. Alliances - Especialidade em alianças sob medida */}
+      <div id="aliancas" className="scroll-mt-20">
+        <AlliancesSection />
+      </div>
 
-      {/* 4. Testimonials - Depoimentos de clientes */}
-      <section id="depoimentos">
+      {/* 5. Portfolio - Trabalhos em destaque */}
+      <div id="portfolio" className="scroll-mt-20">
+        <PortfolioPreviewSection appearance="home-dark" />
+      </div>
+
+      {/* 6. Testimonials - Depoimentos de clientes */}
+      <div id="depoimentos" className="scroll-mt-20">
         <TestimonialsSection />
-      </section>
+      </div>
 
-      {/* 5. Final CTA - Chamada final para ação */}
-      <section id="contato">
-        <FinalCTASection />
-      </section>
+      {/* 7. Final CTA - Chamada final para ação */}
+      <div id="contato" className="scroll-mt-20">
+        <FinalCTASection appearance="home-dark" />
+      </div>
     </main>
   );
 }

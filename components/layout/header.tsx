@@ -6,8 +6,17 @@ import Image from 'next/image';
 import { Menu, X } from 'lucide-react';
 import { useUser, UserButton } from '@clerk/nextjs';
 import { usePageVisibility } from '@/hooks/use-page-visibility';
+import { HomeHeader } from '@/components/layout/home-header';
 
-export function Header() {
+export interface HeaderProps {
+  variant?: 'legacy' | 'home';
+}
+
+export function Header({ variant = 'legacy' }: HeaderProps) {
+  return variant === 'home' ? <HomeHeader /> : <LegacyHeader />;
+}
+
+function LegacyHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { isSignedIn, user } = useUser();
   const { visiblePages, loading, isAdmin } = usePageVisibility();

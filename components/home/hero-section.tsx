@@ -1,234 +1,87 @@
-'use client';
-
-import React from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
-import { ArrowRight, Star } from 'lucide-react';
-import { heroStats, whatsappLinks } from './home-data';
-import CountUp from '@/components/ui/count-up';
+import Link from 'next/link';
+import { ArrowRight, ChevronDown, Star } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Container } from '@/components/ui/container';
+import { WhatsAppLink } from '@/components/ui/whatsapp-link';
+
+const whatsappMessage =
+  'Olá! Quero solicitar um orçamento com a Cícero Joias.';
 
 export function HeroSection() {
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.2
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { y: 30, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 50,
-        damping: 20
-      }
-    }
-  };
-
-  const blobVariants = {
-    animate: {
-      scale: [1, 1.1, 0.9, 1],
-      rotate: [0, 10, -10, 0],
-      opacity: [0.6, 0.8, 0.6],
-      transition: {
-        duration: 15,
-        repeat: Infinity,
-        ease: "easeInOut"
-      }
-    }
-  };
-
   return (
-    <section className="relative h-[calc(100dvh-80px)] md:h-[calc(100dvh-80px)] flex items-center justify-center overflow-hidden py-4 md:py-6">
-      {/* Background Image - 100% opacity */}
-      <div className="absolute inset-0 z-0">
-        <Image
-          src="/assets/images/home-hero.webp"
-          alt="Cícero Joias Atelier"
-          fill
-          priority
-          className="object-cover"
-          sizes="100vw"
-        />
-      </div>
-
-      {/* Cinematic Overlays - Gradients using Tokens where possible, but preserving complex gradients */}
-      <div className="absolute inset-0 z-[1] bg-gradient-to-br from-esmeralda-dark/80 via-esmeralda/80 to-esmeralda-deep/80" />
-      <div className="absolute inset-0 z-[1] bg-[url('/assets/noise.webp')] opacity-[0.03] mix-blend-overlay" />
-
-      {/* Active Ambient Blobs */}
-      <motion.div
-        variants={blobVariants}
-        animate="animate"
-        className="absolute -top-[20%] -left-[10%] w-[60vw] h-[60vw] z-[2] bg-gradient-radial from-esmeralda-light/40 to-transparent rounded-full blur-[100px]"
-      />
-      <motion.div
-        variants={blobVariants}
-        animate="animate"
-        transition={{ delay: 2, duration: 18, repeat: Infinity }}
-        className="absolute -bottom-[20%] -right-[10%] w-[50vw] h-[50vw] z-[2] bg-gradient-radial from-ouro/20 to-transparent rounded-full blur-[120px]"
+    <section
+      className="relative isolate flex min-h-[calc(100svh-5rem)] items-center overflow-hidden bg-surface-dark text-text-on-dark"
+      aria-labelledby="home-hero-title"
+    >
+      <Image
+        src="/assets/images/home-hero.webp"
+        alt="Oficina e joias da Cícero Joias"
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover object-center"
       />
 
-      {/* Content Container - Flex Layout with Desktop Upscaling */}
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="relative z-10 container mx-auto px-4 text-center text-text-on-dark flex flex-col items-center justify-between h-full max-h-[720px] md:max-h-none lg:max-h-[1100px]"
+      <div
+        className="absolute inset-0 bg-surface-dark/65"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute inset-0 bg-gradient-to-b from-surface-dark/80 via-surface-dark/55 to-surface-dark/95"
+        aria-hidden="true"
+      />
+
+      <Container
+        size="lg"
+        className="relative z-10 flex flex-col items-center py-10 text-center sm:py-12 lg:py-16"
       >
+        <Badge variant="dark" className="gap-2">
+          <Star className="h-3 w-3 fill-current" aria-hidden="true" />
+          Excelência artesanal
+        </Badge>
 
-        {/* Top Space */}
-        <div className="flex-1 min-h-[1rem] md:min-h-[2rem]" />
+        <h1
+          id="home-hero-title"
+          className="mt-5 font-heading text-6xl font-medium leading-none sm:text-7xl lg:text-8xl"
+        >
+          <span className="block text-text-on-dark">Desde 1985</span>{' '}
+          <span className="mt-1 block italic text-action-on-dark">
+            criando legado
+          </span>
+        </h1>
 
-        {/* Main Content Group */}
-        <div className="flex flex-col items-center gap-4 md:gap-10 lg:gap-12 w-full">
+        <p className="mt-6 max-w-3xl font-sans text-base leading-relaxed text-text-on-dark/75 sm:text-lg">
+          Oficina própria, ourives especializados e atendimento exclusivo.
+          Transformamos metais e pedras preciosas em{' '}
+          <span className="font-medium text-text-on-dark">emoções eternas</span>.
+        </p>
 
-          {/* Badge & Headlines */}
-          <div className="flex flex-col items-center gap-3 md:gap-5">
-            <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md shadow-lg">
-              <Star className="w-2.5 h-2.5 md:w-3.5 md:h-3.5 text-ouro fill-ouro" />
-              <span className="text-[9px] md:text-xs font-jost font-semibold uppercase tracking-widest text-ouro/90">
-                Excelência Artesanal
-              </span>
-            </motion.div>
+        <div className="mt-8 flex w-full max-w-xl flex-col justify-center gap-3 sm:flex-row">
+          <Button asChild variant="goldOnDark" size="lg" className="sm:flex-1">
+            <WhatsAppLink message={whatsappMessage}>
+              Solicitar orçamento
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </WhatsAppLink>
+          </Button>
 
-            <div className="relative">
-              <motion.h1
-                variants={itemVariants}
-                className="font-philosopher font-bold leading-[0.9] tracking-tighter"
-              >
-                <span className="block text-[clamp(32px,7vh,110px)] text-transparent bg-clip-text bg-gradient-to-b from-white to-white/80 filter drop-shadow-2xl">
-                  Desde 1985
-                </span>
-                <span className="block text-[clamp(20px,4.5vh,80px)] text-ouro/90 mt-2 filter drop-shadow-lg">
-                  criando legado
-                </span>
-                <span className="sr-only">Desde 1985 criando e cuidando de joias</span>
-              </motion.h1>
-            </div>
-
-            <motion.p
-              variants={itemVariants}
-              className="font-montserrat text-[clamp(13px,1.6vh,20px)] text-white/75 max-w-2xl md:max-w-3xl mx-auto leading-relaxed hidden sm:block"
-            >
-              Oficina própria, ourives especializados e atendimento exclusivo. <br className="hidden lg:block" />
-              Transformamos metais e pedras preciosas em <span className="text-white font-medium italic">emoções eternas</span>.
-            </motion.p>
-          </div>
-
-          {/* Action Area */}
-          <div className="flex flex-col items-center gap-6 md:gap-12 lg:gap-16 w-full mt-2">
-
-            {/* CTAs */}
-            <motion.div
-              variants={itemVariants}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 w-full md:w-auto"
-            >
-              <motion.a
-                href={whatsappLinks.primary}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <Button
-                  className="group w-full sm:w-auto gap-3 rounded-full bg-action-strong px-6 py-6 md:px-10 md:py-8 text-xs md:text-sm font-bold uppercase tracking-[0.2em] text-text-on-brand shadow-button-primary transition-all duration-500 hover:bg-action-strong/90 hover:shadow-button-gold-strong hover:-translate-y-0.5"
-                >
-                  <span className="relative z-10 flex items-center gap-2">
-                    Solicitar Orçamento
-                    <ArrowRight className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" />
-                  </span>
-                </Button>
-              </motion.a>
-
-              <motion.a
-                href="#servicos"
-                whileTap={{ scale: 0.98 }}
-              >
-                <Button
-                  variant="outline"
-                  className="group relative w-full sm:w-auto gap-2 overflow-hidden rounded-full border-white/20 bg-white/[0.03] px-6 py-6 md:px-10 md:py-8 text-xs md:text-sm font-bold uppercase tracking-[0.2em] text-white/[0.65] transition-all duration-500 hover:text-white hover:bg-white/[0.07] hover:border-ouro/30 backdrop-blur-sm shadow-none hover:shadow-lg"
-                >
-                  <div className="absolute -bottom-10 -left-10 w-24 h-24 bg-ouro/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                  <span className="relative z-10">Nossos Serviços</span>
-                </Button>
-              </motion.a>
-            </motion.div>
-
-            {/* Stats Cards - Upscaled for Desktop */}
-            <motion.div
-              variants={itemVariants}
-              className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6 lg:gap-8 w-full max-w-6xl mx-auto px-2 md:px-0"
-            >
-              {heroStats.map((stat, index) => (
-                <div key={stat.number}
-                  className="group relative overflow-hidden rounded-xl md:rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/20 p-4 md:p-8 lg:p-10
-                    shadow-card-sm
-                    transition-all duration-500
-                    hover:bg-white/[0.07] hover:border-ouro/30 hover:shadow-card-sm-hover
-                  "
-                >
-                  <div className="absolute -bottom-10 -left-10 w-24 h-24 md:w-40 md:h-40 bg-ouro/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-
-                  <h3 className="relative font-philosopher text-2xl md:text-4xl lg:text-5xl font-bold text-ouro mb-1 tracking-tight">
-                    <CountUp
-                      to={stat.number}
-                      from={0}
-                      duration={2.5}
-                      delay={0.5 + (index * 0.1)}
-                      prefix={stat.prefix}
-                      suffix={stat.suffix}
-                    />
-                  </h3>
-                  <p className="relative font-jost text-[10px] md:text-xs lg:text-sm font-bold text-white/90 mb-2 md:mb-3 uppercase tracking-wider">
-                    {stat.label}
-                  </p>
-                  <p className="relative font-montserrat text-[10px] md:text-xs lg:text-sm text-white/[0.65] leading-relaxed group-hover:text-white transition-colors hidden sm:block">
-                    {stat.description}
-                  </p>
-                </div>
-              ))}
-            </motion.div>
-          </div>
+          <Button asChild variant="outlineDark" size="lg" className="sm:flex-1">
+            <Link href="#servicos">Nossos serviços</Link>
+          </Button>
         </div>
 
-        {/* Bottom Area - Scroll Arrow */}
-        <div className="flex-1 flex items-end justify-center pb-2 md:pb-4">
-          <motion.a
-            href="#servicos"
-            animate={{ y: [0, 6, 0] }}
-            transition={{
-              duration: 2.5,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            className="block text-white/30 hover:text-white transition-colors duration-300 cursor-pointer p-2"
-            aria-label="Rolar para serviços"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="w-6 h-6 md:w-8 md:h-8"
-            >
-              <polyline points="6 9 12 15 18 9" />
-            </svg>
-          </motion.a>
-        </div>
-
-      </motion.div>
+        <Button
+          asChild
+          variant="ghostDark"
+          size="icon"
+          className="mt-8 rounded-full"
+        >
+          <Link href="#confianca" aria-label="Rolar para os indicadores de confiança">
+            <ChevronDown className="h-5 w-5" aria-hidden="true" />
+          </Link>
+        </Button>
+      </Container>
     </section>
   );
 }

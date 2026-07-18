@@ -1,10 +1,17 @@
 'use client';
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import { useCallback, useEffect, useRef } from 'react';
 import { ArrowRight, Quote, Star } from 'lucide-react';
-import { AnimatedSection } from '@/components/ui/animated-section';
-import { testimonials } from './home-data';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Container } from '@/components/ui/container';
+import { Section } from '@/components/ui/section';
+import { SectionHeading } from '@/components/ui/section-heading';
+import { cn } from '@/lib/utils';
+import { testimonials, type Testimonial } from './home-data';
+
+const MOBILE_CAROUSEL_SPEED = 18;
 
 // Função para extrair iniciais do nome (suporta "&" para casais)
 function getInitials(name: string): string {
@@ -22,103 +29,286 @@ function getInitials(name: string): string {
   return (firstInitial + lastInitial).toUpperCase();
 }
 
+type TestimonialCardProps = {
+  testimonial: Testimonial;
+  className?: string;
+};
+
+function TestimonialCard({ testimonial, className }: TestimonialCardProps) {
+  return (
+    <Card
+      variant="light"
+      interactive
+      role="article"
+      className={cn(
+        'group relative flex h-full flex-col overflow-hidden p-6 hover:border-action-strong hover:shadow-sm md:p-8',
+        className
+      )}
+    >
+      <Quote
+        className="pointer-events-none absolute right-6 top-6 h-8 w-8 -scale-x-100 text-action-primary/20"
+        strokeWidth={1.25}
+        aria-hidden="true"
+      />
+
+      <div
+        className="relative z-10 flex gap-1"
+        aria-label={`${testimonial.rating || 5} de 5 estrelas`}
+      >
+        {Array.from({ length: 5 }).map((_, index) => (
+          <Star
+            key={index}
+            className={
+              index < (testimonial.rating || 5)
+                ? 'h-4 w-4 fill-current text-action-strong'
+                : 'h-4 w-4 fill-current text-border-default'
+            }
+            aria-hidden="true"
+          />
+        ))}
+      </div>
+
+      <blockquote className="relative z-10 mt-6 flex-1 text-base italic leading-relaxed text-text-body">
+        &ldquo;{testimonial.quote}&rdquo;
+      </blockquote>
+
+      <footer className="relative z-10 mt-8 flex items-center gap-4 border-t border-border-subtle pt-6">
+        <div
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-action-primary/25 bg-action-primary/5 font-heading text-sm font-semibold text-text-primary"
+          aria-hidden="true"
+        >
+          {getInitials(testimonial.name)}
+        </div>
+
+        <div>
+          <cite className="block font-heading text-xl font-semibold not-italic leading-tight text-text-primary">
+            {testimonial.name}
+          </cite>
+          <p className="mt-1 text-xs font-bold uppercase tracking-label text-text-secondary">
+            {testimonial.location}
+          </p>
+        </div>
+      </footer>
+    </Card>
+  );
+}
+
+function MobileTestimonialsCarousel() {
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const segmentRef = useRef<HTMLDivElement>(null);
+  const isPausedRef = useRef(false);
+  const scrollPositionRef = useRef(0);
+  const dragRef = useRef<{
+    pointerId: number;
+    startX: number;
+    startScrollLeft: number;
+  } | null>(null);
+
+  const normalizeScrollPosition = useCallback(() => {
+    const viewport = viewportRef.current;
+    const segmentWidth = segmentRef.current?.offsetWidth;
+
+    if (!viewport || !segmentWidth) return;
+
+    let normalizedScrollLeft = viewport.scrollLeft;
+
+    while (normalizedScrollLeft >= segmentWidth * 2) {
+      normalizedScrollLeft -= segmentWidth;
+    }
+
+    while (normalizedScrollLeft < segmentWidth) {
+      normalizedScrollLeft += segmentWidth;
+    }
+
+    if (normalizedScrollLeft !== viewport.scrollLeft) {
+      viewport.scrollLeft = normalizedScrollLeft;
+      scrollPositionRef.current = normalizedScrollLeft;
+    }
+  }, []);
+
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    if (!viewport) return;
+
+    let animationFrame = 0;
+    let previousTime = 0;
+    let reduceMotion = motionPreference.matches;
+
+    const initializePosition = window.requestAnimationFrame(() => {
+      const segmentWidth = segmentRef.current?.offsetWidth;
+      if (segmentWidth) {
+        viewport.scrollLeft = segmentWidth;
+        scrollPositionRef.current = segmentWidth;
+      }
+    });
+
+    const handleMotionPreference = (event: MediaQueryListEvent) => {
+      reduceMotion = event.matches;
+    };
+
+    const moveCarousel = (time: number) => {
+      const elapsed = previousTime ? Math.min(time - previousTime, 64) : 0;
+      previousTime = time;
+
+      if (
+        !reduceMotion &&
+        !isPausedRef.current &&
+        document.visibilityState === 'visible'
+      ) {
+        scrollPositionRef.current +=
+          (MOBILE_CAROUSEL_SPEED * elapsed) / 1000;
+        viewport.scrollLeft = scrollPositionRef.current;
+        normalizeScrollPosition();
+      }
+
+      animationFrame = window.requestAnimationFrame(moveCarousel);
+    };
+
+    motionPreference.addEventListener('change', handleMotionPreference);
+    animationFrame = window.requestAnimationFrame(moveCarousel);
+
+    return () => {
+      window.cancelAnimationFrame(initializePosition);
+      window.cancelAnimationFrame(animationFrame);
+      motionPreference.removeEventListener('change', handleMotionPreference);
+    };
+  }, [normalizeScrollPosition]);
+
+  const finishInteraction = (pointerId: number) => {
+    if (dragRef.current?.pointerId !== pointerId) return;
+
+    dragRef.current = null;
+    isPausedRef.current = false;
+    normalizeScrollPosition();
+  };
+
+  return (
+    <div className="md:hidden">
+      <p id="testimonials-carousel-instructions" className="sr-only">
+        As avaliações passam automaticamente. Toque ou clique e mantenha
+        pressionado para pausar; arraste para navegar e solte para retomar.
+      </p>
+
+      <div
+        ref={viewportRef}
+        role="region"
+        aria-roledescription="carrossel"
+        aria-label="Avaliações de clientes"
+        aria-describedby="testimonials-carousel-instructions"
+        className="-mx-4 cursor-grab touch-pan-y select-none overflow-x-auto overscroll-x-contain px-4 pb-3 pt-1 scrollbar-hide active:cursor-grabbing"
+        onPointerDown={(event) => {
+          if (event.pointerType === 'mouse' && event.button !== 0) return;
+
+          isPausedRef.current = true;
+          scrollPositionRef.current = event.currentTarget.scrollLeft;
+          dragRef.current = {
+            pointerId: event.pointerId,
+            startX: event.clientX,
+            startScrollLeft: event.currentTarget.scrollLeft,
+          };
+          event.currentTarget.setPointerCapture(event.pointerId);
+        }}
+        onPointerMove={(event) => {
+          const drag = dragRef.current;
+          if (!drag || drag.pointerId !== event.pointerId) return;
+
+          const nextScrollLeft =
+            drag.startScrollLeft - (event.clientX - drag.startX);
+          event.currentTarget.scrollLeft = nextScrollLeft;
+          scrollPositionRef.current = nextScrollLeft;
+        }}
+        onPointerUp={(event) => finishInteraction(event.pointerId)}
+        onPointerCancel={(event) => finishInteraction(event.pointerId)}
+        onLostPointerCapture={(event) => finishInteraction(event.pointerId)}
+      >
+        <div className="flex w-max">
+          {[0, 1, 2].map(copyIndex => (
+            <div
+              key={copyIndex}
+              ref={copyIndex === 0 ? segmentRef : undefined}
+              aria-hidden={copyIndex !== 1}
+              className="flex shrink-0 gap-4 pr-4"
+            >
+              {testimonials.map(testimonial => (
+                <TestimonialCard
+                  key={`${copyIndex}-${testimonial.name}`}
+                  testimonial={testimonial}
+                  className="w-80 shrink-0 sm:w-96"
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function TestimonialsSection() {
   return (
-    <section className="relative overflow-hidden bg-surface-page py-12 sm:py-16 md:py-20 lg:py-24">
-      {/* Background decoration - Subtle Noise & Gradient */}
-      <div className="absolute inset-0 bg-[url('/assets/noise.webp')] opacity-[0.03] mix-blend-multiply pointer-events-none" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(199,154,52,0.03),transparent_40%),radial-gradient(circle_at_100%_100%,rgba(24,68,52,0.03),transparent_40%)]" />
-
-      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <AnimatedSection className="flex flex-col items-center gap-4 text-center" delay={0.05}>
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/50 border border-ouro/30 shadow-sm backdrop-blur-sm">
-            <Quote className="w-3.5 h-3.5 text-ouro fill-ouro" />
-            <span className="text-[10px] font-jost font-semibold uppercase tracking-widest text-text-primary">
-              Depoimentos
-            </span>
-          </div>
-
-          <h2 className="font-philosopher text-[clamp(32px,4vw+1rem,48px)] font-bold text-text-primary leading-[1.1]">
-            Histórias que <span className="text-ouro">Brilham</span>
-          </h2>
-
-          <p className="font-montserrat mx-auto max-w-2xl text-[clamp(14px,1.5vw,16px)] text-text-secondary/70 leading-relaxed">
-            A confiança de quem escolheu eternizar momentos com nossa joalheria.
-            Mais do que clientes, amigos que fazem parte dos nossos 40 anos de tradição.
-          </p>
-        </AnimatedSection>
-
-        {/* Testimonials Grid */}
-        <AnimatedSection
-          className="grid gap-6 sm:grid-cols-2 lg:gap-8"
-          delay={0.12}
-          stagger
-        >
-          {testimonials.map((testimonial, index) => (
-            <motion.article
-              key={testimonial.name}
-              className="group relative flex flex-col justify-between h-full bg-white rounded-2xl p-6 md:p-8 
-                border border-ouro/10 
-                shadow-card
-                transition-all duration-500 ease-out
-                hover:-translate-y-1 hover:border-ouro/40 hover:shadow-card-hover"
-            >
-              {/* Decorative Quote Icon Background */}
+    <Section
+      tone="light"
+      spacing="lg"
+      aria-labelledby="testimonials-heading"
+    >
+      <Container size="md" className="space-y-12 md:space-y-16">
+        <SectionHeading
+          align="center"
+          tone="light"
+          titleId="testimonials-heading"
+          eyebrow={
+            <Badge variant="sectionLight" className="gap-2">
               <Quote
-                className="absolute top-6 right-6 w-12 h-12 text-ouro/10 transform -scale-x-100 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6"
-                strokeWidth={0}
-                fill="currentColor"
+                className="h-3 w-3"
+                strokeWidth={1.5}
+                aria-hidden="true"
               />
+              Depoimentos
+            </Badge>
+          }
+          title={
+            <>
+              Histórias que{' '}
+              <span className="font-normal italic text-action-strong">
+                Brilham
+              </span>
+            </>
+          }
+          description={
+            <>
+              A confiança de quem escolheu eternizar momentos com nossa
+              joalheria. Mais do que clientes, amigos que fazem parte dos nossos
+              40 anos de tradição.
+            </>
+          }
+        />
 
-              {/* Content */}
-              <div className="relative z-10 flex flex-col gap-6">
-                <div className="flex gap-1 mb-2">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`w-3.5 h-3.5 ${i < (testimonial.rating || 5) ? 'text-ouro fill-ouro' : 'text-gray-200 fill-gray-200'}`}
-                    />
-                  ))}
-                </div>
+        <MobileTestimonialsCarousel />
 
-                <p className="font-montserrat text-text-secondary/80 text-[15px] md:text-[16px] leading-relaxed italic relative">
-                  &ldquo;{testimonial.quote}&rdquo;
-                </p>
-
-                <div className="flex items-center gap-4 mt-auto pt-4 border-t border-surface-page">
-                  {/* Avatar Initials */}
-                  <div className="w-10 h-10 rounded-full bg-text-primary/5 border border-text-primary/10 flex items-center justify-center text-text-primary font-philosopher font-bold text-sm">
-                    {getInitials(testimonial.name)}
-                  </div>
-
-                  <div>
-                    <h4 className="font-philosopher font-bold text-text-primary text-lg leading-none mb-1">
-                      {testimonial.name}
-                    </h4>
-                    <p className="font-jost text-[10px] uppercase tracking-wider text-ouro font-semibold">
-                      {testimonial.location}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </motion.article>
+        <div className="hidden gap-6 md:grid md:grid-cols-2 lg:gap-8">
+          {testimonials.map(testimonial => (
+            <TestimonialCard
+              key={testimonial.name}
+              testimonial={testimonial}
+            />
           ))}
-        </AnimatedSection>
+        </div>
 
-        {/* Bottom CTA */}
-        <AnimatedSection className="text-center mt-4" delay={0.2}>
-          <a
-            href="https://g.page/cicerojoias"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group inline-flex items-center gap-2 text-text-primary font-jost text-xs uppercase tracking-widest font-semibold border-b border-ouro/30 pb-0.5 hover:text-ouro hover:border-ouro transition-all duration-300"
-          >
-            Ver mais avaliações no Google
-            <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" />
-          </a>
-        </AnimatedSection>
-      </div>
-    </section>
+        <div className="text-center">
+          <Button asChild variant="outline" size="lg">
+            <a
+              href="https://g.page/cicerojoias"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Ver mais avaliações no Google
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </a>
+          </Button>
+        </div>
+      </Container>
+    </Section>
   );
 }

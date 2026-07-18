@@ -2,15 +2,73 @@
 
 import { motion } from 'framer-motion';
 import { Clock, Tag, User, ArrowRight } from 'lucide-react';
-import { AnimatedSection } from '@/components/ui/animated-section';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Container } from '@/components/ui/container';
+import { Section } from '@/components/ui/section';
+import { SectionHeading } from '@/components/ui/section-heading';
 import { whatsappLinks } from './home-data';
 
-export function FinalCTASection() {
+interface FinalCTASectionProps {
+  appearance?: 'legacy' | 'home-dark';
+}
+
+export function FinalCTASection({
+  appearance = 'legacy',
+}: FinalCTASectionProps) {
   const benefits = [
     { icon: Clock, text: 'Resposta em 24h' },
     { icon: Tag, text: 'Orçamento gratuito' },
     { icon: User, text: 'Atendimento personalizado' },
   ];
+
+  if (appearance === 'home-dark') {
+    return (
+      <Section
+        tone="dark"
+        spacing="lg"
+        aria-labelledby="final-cta-heading"
+      >
+        <Container
+          size="md"
+          className="flex flex-col items-center text-center"
+        >
+          <SectionHeading
+            align="center"
+            tone="dark"
+            titleId="final-cta-heading"
+            title="Pronto para seu projeto?"
+            description="Fale conosco pelo WhatsApp para tirar dúvidas, solicitar orçamento ou agendar uma visita. Nossa equipe está pronta para atender você."
+          />
+
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+            {benefits.map((benefit) => (
+              <Badge key={benefit.text} variant="dark" className="gap-2">
+                <benefit.icon className="h-4 w-4" aria-hidden="true" />
+                {benefit.text}
+              </Badge>
+            ))}
+          </div>
+
+          <Button
+            asChild
+            variant="goldOnDark"
+            size="lg"
+            className="mt-10"
+          >
+            <a
+              href={whatsappLinks.primary}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Falar no WhatsApp
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </a>
+          </Button>
+        </Container>
+      </Section>
+    );
+  }
 
   return (
     <section className="relative z-0 overflow-hidden bg-esmeralda-deep py-8 text-center text-text-on-dark md:py-12 lg:py-14">

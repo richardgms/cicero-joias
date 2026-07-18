@@ -14,9 +14,9 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
   const pathname = usePathname();
   const isAdminRoute = pathname?.startsWith('/admin');
   const normalizedPath = pathname ?? '/';
+  const isHomeRoute = normalizedPath === '/';
   const showEngagementWidgets =
-    normalizedPath === '/' ||
-    normalizedPath === '/home-v2' ||
+    isHomeRoute ||
     normalizedPath.startsWith('/servicos');
 
   if (isAdminRoute) {
@@ -26,7 +26,7 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
 
   // Layout para páginas públicas (com header/footer)
   return (
-    <>
+    <div className="public-theme">
       {showEngagementWidgets && (
         <>
           <ScrollProgress />
@@ -34,14 +34,23 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
         </>
       )}
       <div className="flex min-h-screen flex-col">
-        <Header />
+        <Header variant={isHomeRoute ? 'home' : 'legacy'} />
         <main className="flex-1">{children}</main>
         {/* Conector físico para evitar linhas brancas (gap fix) */}
-        <div className="relative z-20 h-1 -mb-1 w-full bg-esmeralda-dark" aria-hidden="true" />
-        <div className="relative z-10 bg-esmeralda-dark">
-          <Footer />
+        <div
+          className={`relative z-20 -mb-1 h-1 w-full ${
+            isHomeRoute ? 'bg-brand-emerald-950' : 'bg-esmeralda-dark'
+          }`}
+          aria-hidden="true"
+        />
+        <div
+          className={`relative z-10 ${
+            isHomeRoute ? 'bg-brand-emerald-950' : 'bg-esmeralda-dark'
+          }`}
+        >
+          <Footer appearance={isHomeRoute ? 'home-dark' : 'legacy'} />
         </div>
       </div>
-    </>
+    </div>
   );
 }

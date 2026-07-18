@@ -39,6 +39,7 @@ export const whatsappLinks = {
   primary: createWhatsAppLink('Olá! Quero falar com a Cícero Joias.'),
   visit: createWhatsAppLink('Olá! Quero agendar uma visita presencial na Cícero Joias.'),
   services: createWhatsAppLink('Olá! Gostaria de conhecer os serviços da Cícero Joias.'),
+  rings: createWhatsAppLink('Olá! Quero um orçamento de alianças sob medida.'),
 };
 
 export const heroContent = {
@@ -203,6 +204,29 @@ export const unifiedDifferentiators: Array<WithIcon<{ title: string; description
   },
 ];
 
+
+export const ringsHighlights: Array<
+  WithIcon<{ title: string; description: string }>
+> = [
+  {
+    title: 'Técnica sem emendas',
+    description:
+      'Círculo contínuo, mais resistente e confortável para acompanhar o uso diário.',
+    icon: Infinity,
+  },
+  {
+    title: 'Personalização completa',
+    description:
+      'Largura, acabamento e gravação definidos para representar a história de vocês.',
+    icon: PenLine,
+  },
+  {
+    title: 'Certificado vitalício',
+    description:
+      'Autenticidade do metal e acompanhamento especializado depois da entrega.',
+    icon: ShieldCheck,
+  },
+];
 
 export type PortfolioCase = {
   slug: string;
