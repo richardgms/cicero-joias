@@ -36,7 +36,7 @@ interface ApiResponse {
 }
 
 interface PortfolioPreviewSectionProps {
-  appearance?: 'legacy' | 'home-dark';
+  appearance?: 'legacy' | 'home-dark' | 'aliancas-dark';
 }
 
 export function PortfolioPreviewSection({
@@ -70,7 +70,7 @@ export function PortfolioPreviewSection({
     fetchFeaturedPortfolio();
   }, []);
 
-  if (appearance === 'home-dark') {
+  if (appearance === 'home-dark' || appearance === 'aliancas-dark') {
     return (
       <Section
         tone="dark"
@@ -86,10 +86,16 @@ export function PortfolioPreviewSection({
             eyebrow={
               <Badge variant="dark" className="gap-2">
                 <Star className="h-3 w-3 fill-current" aria-hidden="true" />
-                Trabalhos em destaque
+                {appearance === 'aliancas-dark'
+                  ? 'Trabalhos em Destaque'
+                  : 'Trabalhos em destaque'}
               </Badge>
             }
-            title="Nossos trabalhos"
+            title={
+              appearance === 'aliancas-dark'
+                ? 'Nossos Trabalhos'
+                : 'Nossos trabalhos'
+            }
             description="Conheça alguns dos projetos que realizamos"
           />
 

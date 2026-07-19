@@ -3,7 +3,7 @@
 > [!IMPORTANT]
 > Este é o **único** documento de referência para o Design System. Use os tokens e padrões aqui definidos, não valores arbitrários.
 
-> Última atualização: **18/07/2026** — fundações, Home e `/servicos` concluídos; próximas páginas públicas documentadas na seção 10.
+> Última atualização: **19/07/2026** — fundações, Home, `/servicos` e `/servicos/aliancas-personalizadas` concluídos; próximas páginas públicas documentadas na seção 10.
 
 ---
 
@@ -247,22 +247,23 @@ O CTA final preserva a composição da Home pública: título, descrição, trê
 | **Ação principal** | `Button variant="goldOnDark" size="lg"` com o link dinâmico existente |
 | **Mobile** | Benefícios quebram em linhas; botão mantém pelo menos 44px de altura |
 
-A nova aparência é ativada pela Home. Páginas que reutilizam `FinalCTASection` permanecem na variante legada até sua fase de migração.
+A aparência `home-dark` é ativada pela Home. A rota `/servicos/aliancas-personalizadas` usa `service-light` para preservar a alternância clara/escura; páginas ainda não migradas permanecem na variante legada.
 
-### 4.10 Footer da Home
+### 4.10 Footer do tema público
 
-O footer encerra a Home em `bg-brand-emerald-950`, um tom abaixo do CTA, e preserva toda a informação da página pública atual.
+O footer público usa `bg-brand-emerald-950`, preserva as informações e destinos existentes e mantém contraste, foco visível e alvos de toque mínimos de 44px.
 
 | Elemento | Padrão |
 | :--- | :--- |
-| **Estrutura** | Duas colunas no desktop e uma no mobile: marca/serviços e contato/redes |
+| **Estrutura padrão** | Duas colunas no desktop e uma no mobile: marca/serviços e contato/redes |
 | **Tipografia** | Marca em `font-heading`; corpo, navegação e rótulos em `font-sans` |
 | **Links** | `text-text-on-dark/75` com `hover:text-action-on-dark` |
 | **Contato** | Telefone e e-mail com `min-h-control`; endereço e horário permanecem informativos |
 | **Redes sociais** | Círculos de 44×44px, contorno semântico e rótulo acessível |
 | **Encerramento** | Copyright em `font-numeric` e links legais separados por borda semântica |
+| **Alianças no mobile** | Aparência `service-compact`: conteúdo centralizado, serviços em duas colunas e contato condensado, sem remover dados ou destinos |
 
-A variante `home-dark` é selecionada no `ConditionalLayout` somente para `/`. As demais páginas públicas e páginas legais mantêm o footer legado até sua própria fase.
+A variante `home-dark` é selecionada em `/` e `/servicos`. Em `/servicos/aliancas-personalizadas`, `service-compact` mantém o footer padrão no desktop e reduz a altura apenas no mobile. As demais páginas continuam no footer legado até sua própria fase.
 
 ---
 
@@ -396,12 +397,15 @@ Antes de finalizar qualquer componente, verifique:
 - Componentes fundamentais: `Button`, `Input`, `Textarea`, `Badge`, `Card`, `Container`, `Section` e `SectionHeading`.
 - Home `/`: header, hero, confiança, serviços, alianças, portfólio, depoimentos, CTA e footer.
 - Serviços `/servicos`: header e footer do tema público, hero, catálogo de seis serviços e CTA final; conteúdo, destinos e comportamento existentes foram preservados.
+- Alianças personalizadas `/servicos/aliancas-personalizadas`: composição e conteúdo existentes migrados para os tokens e componentes fundamentais; portfólio dinâmico, WhatsApp e destinos preservados; avaliações em tema escuro com carrossel mobile; autoridade compacta, prazo de resposta em 24h e footer mobile centralizado e reduzido.
 - Conteúdo dinâmico, Clerk, Prisma/Supabase, UploadThing, links, WhatsApp e rotas públicas existentes foram preservados.
 - O ícone oficial do WhatsApp substituiu símbolos genéricos nos pontos auditados.
 - A rota `/home-v2`, seus componentes e seu ativo exclusivo foram removidos definitivamente e não devem ser restaurados.
 - O painel administrativo continua fora do novo tema visual.
 
 Validação do checkpoint de 18/07/2026: ESLint, `tsc --noEmit` e build de produção concluídos; 43 páginas foram geradas com sucesso.
+
+Validação de `/servicos/aliancas-personalizadas` em 19/07/2026: revisão visual desktop/mobile aprovada; ESLint e `tsc --noEmit --incremental false` concluídos; `npm run build` bloqueado localmente pelo Windows no rename da DLL do Prisma (`EPERM`), e `npx next build` concluído com 43 páginas.
 
 Commits do checkpoint:
 
@@ -415,15 +419,14 @@ Commits do checkpoint:
 
 Migrar uma página por vez, nesta ordem:
 
-1. `/servicos/aliancas-personalizadas`
-2. `/servicos/consertos`
-3. `/servicos/banho-de-ouro`
-4. `/servicos/joias-sob-medida`
-5. `/servicos/lentes-de-oculos`
-6. `/portfolio` e `/portfolio/[slug]`
-7. `/sobre`
-8. `/pronta-entrega`
-9. Páginas auxiliares; painel administrativo somente ao final
+1. `/servicos/consertos`
+2. `/servicos/banho-de-ouro`
+3. `/servicos/joias-sob-medida`
+4. `/servicos/lentes-de-oculos`
+5. `/portfolio` e `/portfolio/[slug]`
+6. `/sobre`
+7. `/pronta-entrega`
+8. Páginas auxiliares; painel administrativo somente ao final
 
 ### 10.3 Regras para continuar
 

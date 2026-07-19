@@ -16,17 +16,18 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
   const normalizedPath = pathname ?? '/';
   const isHomeRoute = normalizedPath === '/';
   const isServicesIndexRoute = normalizedPath === '/servicos';
-  const usesPublicDesignSystem = isHomeRoute || isServicesIndexRoute;
+  const isPersonalizedRingsRoute =
+    normalizedPath === '/servicos/aliancas-personalizadas';
+  const usesPublicDesignSystem =
+    isHomeRoute || isServicesIndexRoute || isPersonalizedRingsRoute;
   const showEngagementWidgets =
     isHomeRoute ||
     normalizedPath.startsWith('/servicos');
 
   if (isAdminRoute) {
-    // Layout para páginas admin (sem header/footer público)
     return <main className="min-h-screen">{children}</main>;
   }
 
-  // Layout para páginas públicas (com header/footer)
   return (
     <div className="public-theme">
       {showEngagementWidgets && (
@@ -38,7 +39,6 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
       <div className="flex min-h-screen flex-col">
         <Header variant={usesPublicDesignSystem ? 'home' : 'legacy'} />
         <main className="flex-1">{children}</main>
-        {/* Conector físico para evitar linhas brancas (gap fix) */}
         <div
           className={`relative z-20 -mb-1 h-1 w-full ${
             usesPublicDesignSystem
@@ -54,7 +54,15 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
               : 'bg-esmeralda-dark'
           }`}
         >
-          <Footer appearance={usesPublicDesignSystem ? 'home-dark' : 'legacy'} />
+          <Footer
+            appearance={
+              isPersonalizedRingsRoute
+                ? 'service-compact'
+                : usesPublicDesignSystem
+                  ? 'home-dark'
+                  : 'legacy'
+            }
+          />
         </div>
       </div>
     </div>

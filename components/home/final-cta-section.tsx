@@ -10,7 +10,7 @@ import { SectionHeading } from '@/components/ui/section-heading';
 import { whatsappLinks } from './home-data';
 
 interface FinalCTASectionProps {
-  appearance?: 'legacy' | 'home-dark';
+  appearance?: 'legacy' | 'home-dark' | 'service-light';
 }
 
 export function FinalCTASection({
@@ -21,6 +21,61 @@ export function FinalCTASection({
     { icon: Tag, text: 'Orçamento gratuito' },
     { icon: User, text: 'Atendimento personalizado' },
   ];
+
+  if (appearance === 'service-light') {
+    return (
+      <Section
+        tone="light"
+        spacing="md"
+        aria-labelledby="final-cta-heading"
+      >
+        <Container
+          size="md"
+          className="flex flex-col items-center text-center"
+        >
+          <SectionHeading
+            align="center"
+            tone="light"
+            titleId="final-cta-heading"
+            title="Pronto para seu projeto?"
+            description="Fale conosco pelo WhatsApp para tirar dúvidas, solicitar orçamento ou agendar uma visita. Nossa equipe está pronta para atender você."
+          />
+
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+            {benefits.map((benefit) => (
+              <Badge
+                key={benefit.text}
+                variant="sectionLight"
+                className="gap-2"
+              >
+                <benefit.icon className="h-4 w-4" aria-hidden="true" />
+                {benefit.text}
+              </Badge>
+            ))}
+          </div>
+
+          <Button
+            asChild
+            variant="gold"
+            size="lg"
+            className="group mt-10"
+          >
+            <a
+              href={whatsappLinks.primary}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Falar no WhatsApp
+              <ArrowRight
+                className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 motion-reduce:transform-none"
+                aria-hidden="true"
+              />
+            </a>
+          </Button>
+        </Container>
+      </Section>
+    );
+  }
 
   if (appearance === 'home-dark') {
     return (

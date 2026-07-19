@@ -30,7 +30,7 @@ const socials = [
 ];
 
 interface FooterProps {
-  appearance?: 'legacy' | 'home-dark';
+  appearance?: 'legacy' | 'home-dark' | 'service-compact';
 }
 
 interface HomeFooterProps {
@@ -192,11 +192,172 @@ function HomeFooter({ year }: HomeFooterProps) {
   );
 }
 
+function CompactServiceFooter({ year }: HomeFooterProps) {
+  return (
+    <footer className="w-full bg-brand-emerald-950 text-text-on-dark md:hidden">
+      <Container size="lg" className="py-10 text-center">
+        <Link
+          href="/"
+          className="group inline-flex min-h-control items-center gap-3 focus-visible:outline-none focus-visible:ring-focus-ring"
+        >
+          <span className="relative h-10 w-10 overflow-hidden rounded-full border border-border-on-dark transition-colors group-hover:border-action-on-dark">
+            <Image
+              src="/assets/logos/circle-monogram.webp"
+              alt="Cícero Joias"
+              fill
+              sizes="40px"
+              className="object-cover"
+            />
+          </span>
+          <span className="flex flex-col">
+            <span className="font-heading text-xl font-semibold leading-tight">
+              Cícero Joias
+            </span>
+            <span className="mt-1 text-xs font-bold uppercase tracking-label text-action-on-dark">
+              Desde 1985
+            </span>
+          </span>
+        </Link>
+
+        <nav
+          aria-labelledby="compact-footer-services-heading"
+          className="mt-6 border-y border-border-on-dark py-4"
+        >
+          <h2
+            id="compact-footer-services-heading"
+            className="text-xs font-bold uppercase tracking-label text-text-on-dark/60"
+          >
+            Serviços
+          </h2>
+          <ul className="mt-2 grid grid-cols-2 gap-x-4">
+            {services.map((item) => (
+              <li key={item.name}>
+                <Link
+                  href={item.href}
+                  className="inline-flex min-h-control items-center text-xs leading-snug text-text-on-dark/75 transition-colors hover:text-action-on-dark focus-visible:outline-none focus-visible:ring-focus-ring"
+                >
+                  {item.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <div className="mt-6">
+          <h2 className="text-xs font-bold uppercase tracking-label text-text-on-dark/60">
+            Contato
+          </h2>
+
+          <address className="mt-4 grid grid-cols-2 gap-4 text-xs not-italic text-text-on-dark/70">
+            <div className="flex flex-col items-center gap-2">
+              <MapPin
+                className="mt-0.5 h-4 w-4 shrink-0 text-action-on-dark"
+                aria-hidden="true"
+              />
+              <p className="leading-relaxed">
+                Galeria Jardim
+                <br />
+                Rua Duque de Caxias, 516
+                <br />
+                Centro · João Pessoa – PB
+                <br />
+                CEP 58010-821
+              </p>
+            </div>
+
+            <div className="flex flex-col items-center gap-2">
+              <Clock
+                className="mt-0.5 h-4 w-4 shrink-0 text-action-on-dark"
+                aria-hidden="true"
+              />
+              <p className="leading-relaxed">
+                Seg a Sex · 10h às 17h
+                <br />
+                Sábado · 10h às 14h
+              </p>
+            </div>
+          </address>
+
+          <div className="mt-5 grid gap-2">
+            <Link
+              href="tel:+5583991180251"
+              className="flex min-h-control items-center justify-center gap-2 rounded-full border border-border-on-dark text-xs text-text-on-dark/75 transition-colors hover:border-action-on-dark hover:text-action-on-dark focus-visible:outline-none focus-visible:ring-focus-ring"
+            >
+              <Phone
+                className="h-4 w-4 shrink-0 text-action-on-dark"
+                aria-hidden="true"
+              />
+              (83) 99118-0251
+            </Link>
+            <Link
+              href="mailto:contato@cicerojoias.com.br"
+              aria-label="Enviar e-mail para contato@cicerojoias.com.br"
+              className="flex min-h-control items-center justify-center gap-2 rounded-full border border-border-on-dark text-xs text-text-on-dark/75 transition-colors hover:border-action-on-dark hover:text-action-on-dark focus-visible:outline-none focus-visible:ring-focus-ring"
+            >
+              <Mail
+                className="h-4 w-4 shrink-0 text-action-on-dark"
+                aria-hidden="true"
+              />
+              contato@cicerojoias.com.br
+            </Link>
+          </div>
+
+          <div className="mt-5 flex justify-center gap-3">
+            {socials.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                target={item.external ? '_blank' : undefined}
+                rel={item.external ? 'noopener noreferrer' : undefined}
+                className="flex h-control w-control items-center justify-center rounded-full border border-border-on-dark text-text-on-dark/70 transition-colors hover:border-action-on-dark hover:text-action-on-dark focus-visible:outline-none focus-visible:ring-focus-ring"
+                aria-label={item.label}
+              >
+                <item.icon className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-6 border-t border-border-on-dark pt-5 text-center text-xs text-text-on-dark/60">
+          <p className="font-numeric">
+            © {year} Cícero Joias. Todos os direitos reservados.
+          </p>
+          <div className="mt-2 flex flex-wrap items-center justify-center gap-x-6">
+            <Link
+              href="/termos-uso"
+              className="inline-flex min-h-control items-center transition-colors hover:text-action-on-dark focus-visible:outline-none focus-visible:ring-focus-ring"
+            >
+              Termos de Uso
+            </Link>
+            <Link
+              href="/politica-privacidade"
+              className="inline-flex min-h-control items-center transition-colors hover:text-action-on-dark focus-visible:outline-none focus-visible:ring-focus-ring"
+            >
+              Política de Privacidade
+            </Link>
+          </div>
+        </div>
+      </Container>
+    </footer>
+  );
+}
+
 export function Footer({ appearance = 'legacy' }: FooterProps) {
   const year = new Date().getFullYear();
 
   if (appearance === 'home-dark') {
     return <HomeFooter year={year} />;
+  }
+
+  if (appearance === 'service-compact') {
+    return (
+      <>
+        <CompactServiceFooter year={year} />
+        <div className="hidden md:block">
+          <HomeFooter year={year} />
+        </div>
+      </>
+    );
   }
 
   return (

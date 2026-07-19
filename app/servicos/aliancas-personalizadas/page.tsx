@@ -32,10 +32,10 @@ export default function AliancasPersonalizadasPage() {
       <section id="metais"><MetalOptionsSection /></section>
       <section id="diferenciais"><FeaturesSection /></section>
       <section id="processo"><ProcessSection /></section>
-      <section id="portfolio"><PortfolioPreviewSection /></section>
+      <section id="portfolio"><PortfolioPreviewSection appearance="aliancas-dark" /></section>
       <section id="autoridade"><AuthoritySection /></section>
       <section id="depoimentos"><AliancasTestimonialsSection /></section>
-      <section id="contato"><FinalCTASection /></section>
+      <section id="contato"><FinalCTASection appearance="service-light" /></section>
     </div>
   );
 }

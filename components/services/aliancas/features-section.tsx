@@ -1,8 +1,11 @@
 'use client';
 
 import React, { useRef, useState, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
-import { AnimatedSection } from '@/components/ui/animated-section';
+import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/card';
+import { Container } from '@/components/ui/container';
+import { Section } from '@/components/ui/section';
+import { SectionHeading } from '@/components/ui/section-heading';
 import { keyDifferentiators } from './data';
 
 // Debounce helper function for scroll performance
@@ -19,126 +22,144 @@ export function FeaturesSection() {
   const [activeIndex, setActiveIndex] = useState(0);
 
   const scrollToCard = useCallback((index: number) => {
-    if (!scrollRef.current) return;
+    const container = scrollRef.current;
+    const cards = container?.querySelectorAll<HTMLElement>('[data-feature-card]');
 
-    const cardWidth = 280 + 16; // card width + gap
-    scrollRef.current.scrollTo({
-      left: index * cardWidth,
-      behavior: 'smooth'
+    if (!container || !cards?.[index]) return;
+
+    const card = cards[index];
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+
+    container.scrollTo({
+      left: card.offsetLeft - (container.clientWidth - card.clientWidth) / 2,
+      behavior: prefersReducedMotion ? 'auto' : 'smooth',
     });
   }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (!scrollRef.current) return;
+    const container = scrollRef.current;
+    if (!container) return;
 
-      const container = scrollRef.current;
-      const scrollLeft = container.scrollLeft;
-      const cardWidth = 280 + 16; // card width + gap
-      const newIndex = Math.round(scrollLeft / cardWidth);
-      setActiveIndex(Math.min(newIndex, keyDifferentiators.length - 1));
+    const handleScroll = () => {
+      const cards = Array.from(
+        container.querySelectorAll<HTMLElement>('[data-feature-card]')
+      );
+
+      const nearestIndex = cards.reduce(
+        (nearest, card, index) => {
+          const distance = Math.abs(card.offsetLeft - container.scrollLeft);
+          return distance < nearest.distance
+            ? { index, distance }
+            : nearest;
+        },
+        { index: 0, distance: Number.POSITIVE_INFINITY }
+      );
+
+      setActiveIndex(nearestIndex.index);
     };
 
-    // Debounce scroll handler to reduce unnecessary state updates (100ms delay)
     const debouncedHandleScroll = debounce(handleScroll, 100);
+    container.addEventListener('scroll', debouncedHandleScroll);
 
-    const container = scrollRef.current;
-    if (container) {
-      container.addEventListener('scroll', debouncedHandleScroll);
-      return () => {
-        container.removeEventListener('scroll', debouncedHandleScroll);
-      };
-    }
+    return () => {
+      container.removeEventListener('scroll', debouncedHandleScroll);
+    };
   }, []);
 
-  return (
-    <section className="relative overflow-hidden bg-[#F9F6EE] py-6 sm:py-14">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(24,68,52,0.08),transparent_55%)]" />
-
-      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-16 px-4 sm:px-6 lg:px-8">
-        <AnimatedSection className="space-y-6 text-center" delay={0.05}>
-          <span className="font-jost inline-flex items-center justify-center rounded-full border border-esmeralda/20 bg-white px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-esmeralda/80">
-            NOSSOS DIFERENCIAIS
-          </span>
-          <h2 className="font-philosopher text-3xl sm:text-5xl lg:text-6xl font-bold text-esmeralda">
-            Por que escolher a Cícero Joias
-          </h2>
-          <p className="font-montserrat mx-auto max-w-3xl text-base sm:text-lg text-grafite/75">
-            Somos joalheria própria com produção exclusiva e atendimento próximo. Cada aliança é uma promessa de eternidade, com materiais nobres e técnicas refinadas que garantem resistência incomparável.
+  const renderCard = (item: (typeof keyDifferentiators)[number]) => (
+    <Card
+      key={item.title}
+      variant="dark"
+      interactive
+      role="article"
+      className="group flex h-full flex-col gap-4 p-6 hover:border-action-on-dark"
+    >
+      <div className="flex items-center gap-4">
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-border-on-dark bg-surface-dark text-text-on-dark transition-colors duration-200 group-hover:border-action-on-dark group-hover:bg-action-on-dark group-hover:text-text-on-brand">
+          <item.icon className="h-6 w-6" aria-hidden="true" />
+        </span>
+        <div>
+          <p className="text-xs font-bold uppercase tracking-label text-action-on-dark">
+            {item.helper}
           </p>
-        </AnimatedSection>
-
-        {/* Desktop Grid Layout */}
-        <AnimatedSection className="hidden sm:grid gap-4 sm:grid-cols-2 lg:grid-cols-2" delay={0.12} stagger>
-          {keyDifferentiators.map((item) => (
-            <motion.article
-              key={item.title}
-              className="group relative flex h-full flex-col gap-4 rounded-3xl border border-esmeralda/10 bg-white/95 p-6 shadow-[0_22px_45px_-32px_rgba(24,68,52,0.28)] backdrop-blur-sm transition-all duration-300"
-              whileHover={{ y: -6, boxShadow: '0 36px 65px -40px rgba(24,68,52,0.35)' }}
-            >
-              <div className="flex items-center gap-3">
-                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-esmeralda-light to-esmeralda text-white shadow-[0_15px_30px_-18px_rgba(24,68,52,0.4)]">
-                  <item.icon className="h-6 w-6" />
-                </span>
-                <div className="space-y-1">
-                  <p className="font-jost text-xs uppercase tracking-[0.3em] text-esmeralda/80">{item.helper}</p>
-                  <h4 className="font-philosopher font-semibold text-lg text-esmeralda">{item.title}</h4>
-                </div>
-              </div>
-              <p className="font-montserrat text-sm leading-relaxed text-grafite/75">{item.description}</p>
-            </motion.article>
-          ))}
-        </AnimatedSection>
-
-        {/* Mobile Carousel Layout */}
-        <AnimatedSection className="sm:hidden -mx-4" delay={0.12}>
-          <div className="relative">
-            <div
-              ref={scrollRef}
-              className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide"
-              style={{ scrollPadding: '0 1rem', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-              <div className="w-4 flex-shrink-0" />
-              {keyDifferentiators.map((item, index) => (
-                <motion.article
-                  key={item.title}
-                  className="group relative flex min-w-[280px] flex-col gap-4 rounded-3xl border border-esmeralda/10 bg-white/95 p-6 shadow-[0_10px_20px_-10px_rgba(24,68,52,0.15)] backdrop-blur-sm snap-start"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-esmeralda-light to-esmeralda text-white shadow-[0_15px_30px_-18px_rgba(24,68,52,0.4)]">
-                      <item.icon className="h-6 w-6" />
-                    </span>
-                    <div className="space-y-1">
-                      <p className="font-jost text-xs uppercase tracking-[0.3em] text-esmeralda/80">{item.helper}</p>
-                      <h4 className="font-philosopher font-semibold text-lg text-esmeralda">{item.title}</h4>
-                    </div>
-                  </div>
-                  <p className="font-montserrat text-sm leading-relaxed text-grafite/75">{item.description}</p>
-                </motion.article>
-              ))}
-              <div className="w-4 flex-shrink-0" />
-            </div>
-
-            {/* Indicadores de scroll */}
-            <div className="flex justify-center gap-4 mt-12" role="tablist" aria-label="Navegação dos diferenciais">
-              {keyDifferentiators.map((item, index) => (
-                <button
-                  key={index}
-                  onClick={() => scrollToCard(index)}
-                  className={`h-3 w-3 rounded-full transition-colors duration-300 cursor-pointer ${
-                    index === activeIndex ? 'bg-esmeralda' : 'bg-esmeralda/30'
-                  }`}
-                  role="tab"
-                  aria-label={`Ver ${item.title}`}
-                  aria-selected={index === activeIndex}
-                />
-              ))}
-            </div>
-          </div>
-        </AnimatedSection>
+          <h3 className="mt-1 font-heading text-xl font-semibold text-text-on-dark">
+            {item.title}
+          </h3>
+        </div>
       </div>
-    </section>
+      <p className="text-sm leading-relaxed text-text-on-dark/75">
+        {item.description}
+      </p>
+    </Card>
+  );
+
+  return (
+    <Section
+      tone="dark"
+      spacing="lg"
+      aria-labelledby="features-heading"
+      className="overflow-hidden"
+    >
+      <Container className="space-y-12 md:space-y-16">
+        <SectionHeading
+          align="center"
+          tone="dark"
+          titleId="features-heading"
+          eyebrow={<Badge variant="dark">NOSSOS DIFERENCIAIS</Badge>}
+          title="Por que escolher a Cícero Joias"
+          description="Somos joalheria própria com produção exclusiva e atendimento próximo. Cada aliança é uma promessa de eternidade, com materiais nobres e técnicas refinadas que garantem resistência incomparável."
+        />
+
+        <div className="hidden gap-6 sm:grid sm:grid-cols-2">
+          {keyDifferentiators.map((item) => renderCard(item))}
+        </div>
+
+        <div className="-mx-4 sm:hidden">
+          <div
+            ref={scrollRef}
+            className="flex touch-pan-y snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 scrollbar-hide"
+          >
+            {keyDifferentiators.map((item) => (
+              <div
+                key={item.title}
+                data-feature-card
+                className="min-w-full snap-center"
+              >
+                {renderCard(item)}
+              </div>
+            ))}
+          </div>
+
+          <div
+            className="mt-6 flex justify-center gap-1"
+            role="tablist"
+            aria-label="Navegação dos diferenciais"
+          >
+            {keyDifferentiators.map((item, index) => (
+              <button
+                key={item.title}
+                type="button"
+                onClick={() => scrollToCard(index)}
+                className="flex h-control w-control cursor-pointer items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-on-dark"
+                role="tab"
+                aria-label={`Ver ${item.title}`}
+                aria-selected={index === activeIndex}
+              >
+                <span
+                  className={`h-2 w-2 rounded-full transition-colors duration-200 ${
+                    index === activeIndex
+                      ? 'bg-action-on-dark'
+                      : 'bg-text-on-dark/30'
+                  }`}
+                  aria-hidden="true"
+                />
+              </button>
+            ))}
+          </div>
+        </div>
+      </Container>
+    </Section>
   );
 }

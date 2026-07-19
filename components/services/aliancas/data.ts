@@ -84,9 +84,9 @@ export const authorityGroups: Record<string, {
     items: [
       {
         icon: Clock,
-        value: '72h',
+        value: '24h',
         label: 'resposta garantida',
-        description: 'Orçamento detalhado com valores, fotos e prazos em até 72 horas para sua tranquilidade.',
+        description: 'Orçamento detalhado com valores, fotos e prazos em até 24 horas para sua tranquilidade.',
       },
       {
         icon: CalendarDays,
@@ -145,10 +145,6 @@ export const processSteps: Array<WithIcon<{
   time: string;
   title: string;
   description: string;
-  cta?: {
-    label: string;
-    link: string;
-  };
 }>> = [
   {
     icon: WhatsappIcon,
@@ -156,14 +152,10 @@ export const processSteps: Array<WithIcon<{
     title: 'Primeiro Contato',
     description:
       'Entre em contato pelo WhatsApp com suas ideias ou referências. Conversamos sobre estilo, material e orçamento.',
-    cta: {
-      label: 'Iniciar conversa',
-      link: createWhatsAppLink('Olá! Quero conhecer o processo de alianças personalizadas.'),
-    },
   },
   {
     icon: Ruler,
-    time: '24-72h',
+    time: '24h',
     title: 'Orçamento Detalhado',
     description:
       'Receba proposta completa com valores, fotos de modelos similares, prazos e opções de personalização.',

@@ -1,9 +1,13 @@
 'use client';
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Quote } from 'lucide-react';
-import { AnimatedSection } from '@/components/ui/animated-section';
+import { useCallback, useEffect, useRef } from 'react';
+import { Quote, Star } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/card';
+import { Container } from '@/components/ui/container';
+import { Section } from '@/components/ui/section';
+import { SectionHeading } from '@/components/ui/section-heading';
+import { cn } from '@/lib/utils';
 
 // Depoimentos específicos de alianças personalizadas
 const testimonials = [
@@ -53,114 +57,270 @@ function getInitials(name: string): string {
   return (firstInitial + lastInitial).toUpperCase();
 }
 
-// Função para gerar cor baseada no nome
-function getColorFromName(name: string): string {
-  const colors = [
-    'bg-esmeralda/10 text-esmeralda border-esmeralda/20', // Esmeralda
-    'bg-ouro/10 text-ouro border-ouro/20',                // Ouro
-    'bg-blue-500/10 text-blue-700 border-blue-500/20',    // Azul
-    'bg-purple-500/10 text-purple-700 border-purple-500/20', // Roxo
-  ];
+const MOBILE_CAROUSEL_SPEED = 18;
 
-  // Gera hash simples do nome
-  let hash = 0;
-  for (let i = 0; i < name.length; i++) {
-    hash = name.charCodeAt(i) + ((hash << 5) - hash);
-  }
+type AllianceTestimonial = (typeof testimonials)[number];
 
-  // Usa hash para selecionar cor
-  const index = Math.abs(hash) % colors.length;
-  return colors[index];
+type TestimonialCardProps = {
+  testimonial: AllianceTestimonial;
+  className?: string;
+};
+
+function TestimonialCard({ testimonial, className }: TestimonialCardProps) {
+  return (
+    <Card
+      variant="dark"
+      interactive
+      role="article"
+      className={cn(
+        'group relative flex h-full flex-col overflow-hidden p-6 hover:border-action-on-dark hover:shadow-sm md:p-8',
+        className
+      )}
+    >
+      <Quote
+        className="pointer-events-none absolute right-6 top-6 h-8 w-8 -scale-x-100 text-action-on-dark/20"
+        strokeWidth={1.25}
+        aria-hidden="true"
+      />
+
+      <div
+        className="relative z-10 flex gap-1"
+        aria-label={`${testimonial.rating} de 5 estrelas`}
+      >
+        {Array.from({ length: 5 }).map((_, index) => (
+          <Star
+            key={index}
+            className={
+              index < testimonial.rating
+                ? 'h-4 w-4 fill-current text-action-on-dark'
+                : 'h-4 w-4 fill-current text-border-on-dark'
+            }
+            aria-hidden="true"
+          />
+        ))}
+      </div>
+
+      <blockquote className="relative z-10 mt-6 flex-1 text-base italic leading-relaxed text-text-on-dark/85">
+        &ldquo;{testimonial.quote}&rdquo;
+      </blockquote>
+
+      <footer className="relative z-10 mt-8 flex items-center gap-4 border-t border-border-on-dark pt-6">
+        <div
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-action-on-dark/25 bg-action-on-dark/10 font-heading text-sm font-semibold text-action-on-dark"
+          aria-hidden="true"
+        >
+          {getInitials(testimonial.name)}
+        </div>
+
+        <div className="min-w-0">
+          <cite className="block font-heading text-xl font-semibold not-italic leading-tight text-text-on-dark">
+            {testimonial.name}
+          </cite>
+          <p className="mt-1 text-xs font-bold uppercase tracking-label text-text-on-dark/65">
+            {testimonial.location}
+            <span aria-hidden="true"> · </span>
+            {testimonial.source}
+          </p>
+        </div>
+      </footer>
+    </Card>
+  );
+}
+
+function MobileTestimonialsCarousel() {
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const segmentRef = useRef<HTMLDivElement>(null);
+  const isPausedRef = useRef(false);
+  const scrollPositionRef = useRef(0);
+  const dragRef = useRef<{
+    pointerId: number;
+    startX: number;
+    startScrollLeft: number;
+  } | null>(null);
+
+  const normalizeScrollPosition = useCallback(() => {
+    const viewport = viewportRef.current;
+    const segmentWidth = segmentRef.current?.offsetWidth;
+
+    if (!viewport || !segmentWidth) return;
+
+    let normalizedScrollLeft = viewport.scrollLeft;
+
+    while (normalizedScrollLeft >= segmentWidth * 2) {
+      normalizedScrollLeft -= segmentWidth;
+    }
+
+    while (normalizedScrollLeft < segmentWidth) {
+      normalizedScrollLeft += segmentWidth;
+    }
+
+    if (normalizedScrollLeft !== viewport.scrollLeft) {
+      viewport.scrollLeft = normalizedScrollLeft;
+      scrollPositionRef.current = normalizedScrollLeft;
+    }
+  }, []);
+
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    const motionPreference = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    );
+
+    if (!viewport) return;
+
+    let animationFrame = 0;
+    let previousTime = 0;
+    let reduceMotion = motionPreference.matches;
+
+    const initializePosition = window.requestAnimationFrame(() => {
+      const segmentWidth = segmentRef.current?.offsetWidth;
+      if (segmentWidth) {
+        viewport.scrollLeft = segmentWidth;
+        scrollPositionRef.current = segmentWidth;
+      }
+    });
+
+    const handleMotionPreference = (event: MediaQueryListEvent) => {
+      reduceMotion = event.matches;
+    };
+
+    const moveCarousel = (time: number) => {
+      const elapsed = previousTime ? Math.min(time - previousTime, 64) : 0;
+      previousTime = time;
+
+      if (
+        !reduceMotion &&
+        !isPausedRef.current &&
+        document.visibilityState === 'visible'
+      ) {
+        scrollPositionRef.current +=
+          (MOBILE_CAROUSEL_SPEED * elapsed) / 1000;
+        viewport.scrollLeft = scrollPositionRef.current;
+        normalizeScrollPosition();
+      }
+
+      animationFrame = window.requestAnimationFrame(moveCarousel);
+    };
+
+    motionPreference.addEventListener('change', handleMotionPreference);
+    animationFrame = window.requestAnimationFrame(moveCarousel);
+
+    return () => {
+      window.cancelAnimationFrame(initializePosition);
+      window.cancelAnimationFrame(animationFrame);
+      motionPreference.removeEventListener('change', handleMotionPreference);
+    };
+  }, [normalizeScrollPosition]);
+
+  const finishInteraction = (pointerId: number) => {
+    if (dragRef.current?.pointerId !== pointerId) return;
+
+    dragRef.current = null;
+    isPausedRef.current = false;
+    normalizeScrollPosition();
+  };
+
+  return (
+    <div className="md:hidden">
+      <p id="alliances-testimonials-instructions" className="sr-only">
+        As avaliações passam automaticamente. Toque ou clique e mantenha
+        pressionado para pausar; arraste para navegar e solte para retomar.
+      </p>
+
+      <div
+        ref={viewportRef}
+        role="region"
+        aria-roledescription="carrossel"
+        aria-label="Avaliações de alianças personalizadas"
+        aria-describedby="alliances-testimonials-instructions"
+        className="-mx-4 cursor-grab touch-pan-y select-none overflow-x-auto overscroll-x-contain px-4 pb-3 pt-1 scrollbar-hide active:cursor-grabbing"
+        onPointerDown={event => {
+          if (event.pointerType === 'mouse' && event.button !== 0) return;
+
+          isPausedRef.current = true;
+          scrollPositionRef.current = event.currentTarget.scrollLeft;
+          dragRef.current = {
+            pointerId: event.pointerId,
+            startX: event.clientX,
+            startScrollLeft: event.currentTarget.scrollLeft,
+          };
+          event.currentTarget.setPointerCapture(event.pointerId);
+        }}
+        onPointerMove={event => {
+          const drag = dragRef.current;
+          if (!drag || drag.pointerId !== event.pointerId) return;
+
+          const nextScrollLeft =
+            drag.startScrollLeft - (event.clientX - drag.startX);
+          event.currentTarget.scrollLeft = nextScrollLeft;
+          scrollPositionRef.current = nextScrollLeft;
+        }}
+        onPointerUp={event => finishInteraction(event.pointerId)}
+        onPointerCancel={event => finishInteraction(event.pointerId)}
+        onLostPointerCapture={event => finishInteraction(event.pointerId)}
+      >
+        <div className="flex w-max">
+          {[0, 1, 2].map(copyIndex => (
+            <div
+              key={copyIndex}
+              ref={copyIndex === 0 ? segmentRef : undefined}
+              aria-hidden={copyIndex !== 1}
+              className="flex shrink-0 gap-4 pr-4"
+            >
+              {testimonials.map(testimonial => (
+                <TestimonialCard
+                  key={`${copyIndex}-${testimonial.name}`}
+                  testimonial={testimonial}
+                  className="w-80 shrink-0 sm:w-96"
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export function AliancasTestimonialsSection() {
   return (
-    <section className="relative overflow-hidden bg-[#F8F5F0] py-8 sm:py-12 md:py-14">
-      {/* Background decoration */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_10%_20%,rgba(24,68,52,0.04),transparent_55%)]" />
+    <Section
+      tone="dark"
+      spacing="md"
+      aria-labelledby="testimonials-heading"
+      className="overflow-hidden"
+    >
+      <Container size="md" className="space-y-12 md:space-y-16">
+        <SectionHeading
+          align="center"
+          tone="dark"
+          titleId="testimonials-heading"
+          eyebrow={
+            <Badge variant="dark" className="gap-2">
+              <Quote className="h-3 w-3" aria-hidden="true" />
+              Casais que confiaram
+            </Badge>
+          }
+          title="Depoimentos de quem selou o compromisso conosco"
+          description="A confiança de casais que escolheram nossas alianças personalizadas para celebrar seu amor."
+        />
 
-      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <AnimatedSection className="space-y-6 text-center" delay={0.05}>
-          <span className="font-jost inline-flex items-center justify-center gap-2 rounded-full border border-esmeralda/30 bg-white/70 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-esmeralda/80 hover:scale-105 hover:border-esmeralda/40 hover:bg-white/90 transition-all duration-500 cursor-default">
-            <Quote className="h-4 w-4" />
-            Casais que confiaram
-          </span>
-          <h2 className="font-philosopher text-[clamp(28px,3.5vw+12px,42px)] font-bold text-esmeralda">
-            Depoimentos de quem selou o compromisso conosco
-          </h2>
-          <p className="font-montserrat mx-auto max-w-3xl text-[clamp(16px,2vw+10px,18px)] text-grafite/75">
-            A confiança de casais que escolheram nossas alianças personalizadas para celebrar seu amor.
-          </p>
-        </AnimatedSection>
+        <MobileTestimonialsCarousel />
 
-        {/* Testimonials Grid */}
-        <AnimatedSection
-          className="grid gap-6 sm:grid-cols-2 md:gap-8"
-          delay={0.12}
-          stagger
-        >
-          {testimonials.map((testimonial) => (
-            <motion.article
+        <div className="hidden gap-6 md:grid md:grid-cols-2 lg:gap-8">
+          {testimonials.map(testimonial => (
+            <TestimonialCard
               key={testimonial.name}
-              className="group relative flex h-full flex-col gap-5 justify-between rounded-3xl border border-esmeralda/10 bg-white/90 backdrop-blur-sm p-6 shadow-[0_24px_55px_-34px_rgba(24,68,52,0.35)] transition-all duration-500 ease-in-out hover:shadow-[0_20px_60px_-20px_rgba(24,68,52,0.35)] hover:-translate-y-1.5 hover:scale-[1.01] hover:border-esmeralda/15 overflow-hidden"
-            >
-              {/* Quote Text */}
-              <p className="relative text-[clamp(14px,1.5vw+10px,16px)] leading-relaxed text-grafite/80">
-                <span className="absolute -right-2 -top-4 text-3xl text-ouro/40 scale-x-[-1]" aria-hidden="true">&ldquo;</span>
-                {testimonial.quote}
-              </p>
-
-              {/* Footer: Avatar + Info + Rating */}
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  {/* Avatar com Iniciais */}
-                  <div
-                    className={`flex h-12 w-12 items-center justify-center rounded-full border-2 font-semibold transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 ${getColorFromName(testimonial.name)}`}
-                    aria-hidden="true"
-                  >
-                    {getInitials(testimonial.name)}
-                  </div>
-
-                  {/* Nome e Localização */}
-                  <div className="space-y-0.5">
-                    <p className="text-sm font-semibold text-esmeralda">{testimonial.name}</p>
-                    <p className="text-xs uppercase tracking-wide text-esmeralda/60">
-                      {testimonial.location}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Rating */}
-                {testimonial.rating && (
-                  <div className="flex flex-col items-end gap-0.5">
-                    <div className="flex items-center gap-1 text-sm font-semibold text-grafite">
-                      {testimonial.rating.toFixed(1)} ⭐
-                    </div>
-                    {testimonial.source && (
-                      <span className="text-xs text-grafite/60">{testimonial.source}</span>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {/* Quote Icon Decorativo */}
-              <Quote
-                aria-hidden="true"
-                className="pointer-events-none absolute -bottom-2 -right-4 h-20 w-20 -rotate-12 text-esmeralda/5 sm:h-24 sm:w-24 lg:h-32 lg:w-32 transition-all duration-500 group-hover:scale-110 group-hover:opacity-10 group-hover:-rotate-[15deg]"
-                strokeWidth={1.5}
-              />
-            </motion.article>
+              testimonial={testimonial}
+            />
           ))}
-        </AnimatedSection>
+        </div>
 
-        {/* Footer Text */}
-        <AnimatedSection className="text-center" delay={0.18}>
-          <p className="text-sm sm:text-base text-grafite/70">
-            Atendimento personalizado em cada etapa: da escolha do modelo à entrega com certificado vitalício.
-          </p>
-        </AnimatedSection>
-      </div>
-    </section>
+        <p className="text-center text-sm leading-relaxed text-text-on-dark/70 sm:text-base">
+          Atendimento personalizado em cada etapa: da escolha do modelo à
+          entrega com certificado vitalício.
+        </p>
+      </Container>
+    </Section>
   );
 }
