@@ -3,7 +3,7 @@
 > [!IMPORTANT]
 > Este é o **único** documento de referência para o Design System. Use os tokens e padrões aqui definidos, não valores arbitrários.
 
-> Última atualização: **19/07/2026** — fundações, Home, `/servicos` e `/servicos/aliancas-personalizadas` concluídos; próximas páginas públicas documentadas na seção 10.
+> Última atualização: **22/07/2026** — fundações, Home, `/servicos`, `/servicos/aliancas-personalizadas` e `/servicos/consertos` concluídos; próximas páginas públicas documentadas na seção 10.
 
 ---
 
@@ -398,6 +398,7 @@ Antes de finalizar qualquer componente, verifique:
 - Home `/`: header, hero, confiança, serviços, alianças, portfólio, depoimentos, CTA e footer.
 - Serviços `/servicos`: header e footer do tema público, hero, catálogo de seis serviços e CTA final; conteúdo, destinos e comportamento existentes foram preservados.
 - Alianças personalizadas `/servicos/aliancas-personalizadas`: composição e conteúdo existentes migrados para os tokens e componentes fundamentais; portfólio dinâmico, WhatsApp e destinos preservados; avaliações em tema escuro com carrossel mobile; autoridade compacta, prazo de resposta em 24h e footer mobile centralizado e reduzido.
+- Consertos especializados `/servicos/consertos`: composição, conteúdo e destinos existentes migrados para os tokens e componentes fundamentais; hero com imagem de fundo e estatísticas no padrão da Home; seções refinadas uma a uma (cards com ícone alinhado ao título, número editorial na linha do tempo, diferenciais em 2×2 com carrossel no mobile); avaliações em tema escuro no padrão da Home/alianças, com carrossel mobile e link do perfil no Google; alternância clara/escura fechada com Cuidados em tema escuro; WhatsApp, link do Maps e destinos preservados. Header e footer do tema público ativados apenas para a rota exata, com footer `home-dark` (não `service-compact`).
 - Conteúdo dinâmico, Clerk, Prisma/Supabase, UploadThing, links, WhatsApp e rotas públicas existentes foram preservados.
 - O ícone oficial do WhatsApp substituiu símbolos genéricos nos pontos auditados.
 - A rota `/home-v2`, seus componentes e seu ativo exclusivo foram removidos definitivamente e não devem ser restaurados.
@@ -406,6 +407,8 @@ Antes de finalizar qualquer componente, verifique:
 Validação do checkpoint de 18/07/2026: ESLint, `tsc --noEmit` e build de produção concluídos; 43 páginas foram geradas com sucesso.
 
 Validação de `/servicos/aliancas-personalizadas` em 19/07/2026: revisão visual desktop/mobile aprovada; ESLint e `tsc --noEmit --incremental false` concluídos; `npm run build` bloqueado localmente pelo Windows no rename da DLL do Prisma (`EPERM`), e `npx next build` concluído com 43 páginas.
+
+Validação de `/servicos/consertos` em 22/07/2026: revisão visual desktop/mobile por seção aprovada; ESLint e `tsc --noEmit --incremental false` concluídos; build de produção concluído em dist isolado (`NEXT_DIST_DIR=.next-preview`) para não interferir no `.next` do servidor de desenvolvimento, com `/servicos/consertos` gerada como estática. O `distDir` configurável por variável de ambiente (default `.next`) foi adicionado ao `next.config.js` para isolar previews.
 
 Commits do checkpoint:
 
@@ -419,14 +422,13 @@ Commits do checkpoint:
 
 Migrar uma página por vez, nesta ordem:
 
-1. `/servicos/consertos`
-2. `/servicos/banho-de-ouro`
-3. `/servicos/joias-sob-medida`
-4. `/servicos/lentes-de-oculos`
-5. `/portfolio` e `/portfolio/[slug]`
-6. `/sobre`
-7. `/pronta-entrega`
-8. Páginas auxiliares; painel administrativo somente ao final
+1. `/servicos/banho-de-ouro`
+2. `/servicos/joias-sob-medida`
+3. `/servicos/lentes-de-oculos`
+4. `/portfolio` e `/portfolio/[slug]`
+5. `/sobre`
+6. `/pronta-entrega`
+7. Páginas auxiliares; painel administrativo somente ao final
 
 ### 10.3 Regras para continuar
 

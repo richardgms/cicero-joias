@@ -4,6 +4,9 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Permite isolar o build de preview em uma pasta separada (ex.: NEXT_DIST_DIR=.next-preview)
+  // sem interferir no `.next` do servidor de desenvolvimento padrão. Default: `.next`.
+  distDir: process.env.NEXT_DIST_DIR || '.next',
   eslint: {
     ignoreDuringBuilds: false,
   },

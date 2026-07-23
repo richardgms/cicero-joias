@@ -1,7 +1,12 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import { AnimatedSection } from '@/components/ui/animated-section';
+import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/card';
+import { Container } from '@/components/ui/container';
+import { Section } from '@/components/ui/section';
+import { SectionHeading } from '@/components/ui/section-heading';
 import {
   Zap,
   CircleDot,
@@ -9,11 +14,8 @@ import {
   Watch,
   Glasses,
   Wrench,
-  ShieldCheck,
-  HelpCircle,
   type LucideIcon,
 } from 'lucide-react';
-import { WhatsappIcon } from '@/components/icons';
 
 type ServiceItem = {
   icon: LucideIcon;
@@ -44,7 +46,7 @@ const SERVICE_ITEMS: ServiceItem[] = [
     icon: Watch,
     title: 'Relógios',
     description:
-      'Troca de bateria (garantia 1 ano), revisão de máquinas, ajustes de pulseira e vedação básica.',
+      'Troca de bateria com garantia, revisão de máquinas, ajustes de pulseira e vedação básica.',
   },
   {
     icon: Glasses,
@@ -60,88 +62,50 @@ const SERVICE_ITEMS: ServiceItem[] = [
   },
 ];
 
-const SERVICE_HIGHLIGHTS = [
-  {
-    icon: ShieldCheck,
-    title: 'Atendimento interno',
-    description:
-      'Todos os reparos são executados dentro da Cícero Joias, com contato direto com os especialistas.',
-  },
-  {
-    icon: WhatsappIcon,
-    title: 'Transparência total',
-    description:
-      'Envie fotos pelo WhatsApp ou traga a peça. Avisamos prazos e atualizações durante o processo.',
-  },
-  {
-    icon: HelpCircle,
-    title: 'Garantias e orientações',
-    description:
-      'Garantia para relógios, comprovante em duplicidade e orientações de uso para evitar novas quebras.',
-  },
-];
-
 export function ConsertosServicesSection() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-white via-marfim-light to-white py-14 sm:py-18 lg:py-20">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_10%_15%,rgba(24,68,52,0.05),transparent_55%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_25%,rgba(199,154,52,0.08),transparent_60%)]" />
-        <div className="absolute -bottom-32 right-10 h-72 w-72 rounded-full bg-ouro/10 blur-3xl" />
-      </div>
-
-      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-16 px-4 sm:px-6 lg:px-8">
-        <AnimatedSection className="space-y-6 text-center" delay={0.05}>
-          <span className="inline-flex items-center justify-center gap-2 rounded-full border border-esmeralda/15 bg-esmeralda/5 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-esmeralda">
-            O que consertamos
-          </span>
-          <h2 className="font-playfair text-3xl font-semibold text-esmeralda sm:text-4xl lg:text-5xl">
-            O que consertamos todos os dias
-          </h2>
-          <p className="mx-auto max-w-3xl text-base text-grafite/75 sm:text-lg">
-            Do reparo rápido ao desafio delicado, tratamos cada peça com a mesma precisão artesanal.
-          </p>
+    <Section
+      tone="light"
+      spacing="md"
+      aria-labelledby="consertos-services-heading"
+    >
+      <Container className="space-y-12 md:space-y-16">
+        <AnimatedSection delay={0.05}>
+          <SectionHeading
+            align="center"
+            tone="light"
+            titleId="consertos-services-heading"
+            eyebrow={<Badge variant="sectionLight">Serviços do dia a dia</Badge>}
+            title="O que consertamos"
+            description="Do reparo rápido ao desafio delicado, tratamos cada peça com a mesma precisão artesanal."
+          />
         </AnimatedSection>
 
         <AnimatedSection className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" delay={0.12} stagger>
           {SERVICE_ITEMS.map((item) => {
             const Icon = item.icon;
             return (
-              <div
+              <Card
                 key={item.title}
-                className="flex h-full flex-col gap-4 rounded-3xl border border-esmeralda/10 bg-white/95 p-6 shadow-[0_24px_60px_-38px_rgba(24,68,52,0.25)] transition-transform hover:-translate-y-1 hover:shadow-[0_28px_70px_-42px_rgba(24,68,52,0.28)]"
+                variant="light"
+                className="flex h-full flex-col gap-4 p-6"
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-esmeralda-dark to-esmeralda text-marfim shadow-lg">
-                  <Icon className="h-6 w-6" />
+                <div className="flex items-center gap-4">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-action-primary/30 bg-surface-subtle text-text-primary">
+                    <Icon className="h-6 w-6" aria-hidden="true" />
+                  </span>
+                  <h3 className="font-heading text-xl font-medium text-text-primary">
+                    {item.title}
+                  </h3>
                 </div>
-                <div className="space-y-2">
-                  <h3 className="font-playfair text-xl font-semibold text-esmeralda">{item.title}</h3>
-                  <p className="text-sm leading-relaxed text-grafite/75">{item.description}</p>
-                </div>
-              </div>
+                <p className="text-sm leading-relaxed text-text-secondary">
+                  {item.description}
+                </p>
+              </Card>
             );
           })}
         </AnimatedSection>
-
-        <AnimatedSection className="grid gap-6 rounded-3xl border border-esmeralda/10 bg-white/95 p-8 shadow-[0_24px_60px_-38px_rgba(24,68,52,0.25)] lg:grid-cols-3" delay={0.25}>
-          {SERVICE_HIGHLIGHTS.map((highlight) => {
-            const Icon = highlight.icon;
-            return (
-              <div key={highlight.title} className="flex flex-col gap-4 text-center lg:text-left">
-                <div className="flex items-center justify-center lg:justify-start">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-ouro/10">
-                    <Icon className="h-5 w-5 text-ouro" />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <h4 className="font-semibold text-esmeralda">{highlight.title}</h4>
-                  <p className="text-sm leading-relaxed text-grafite/75">{highlight.description}</p>
-                </div>
-              </div>
-            );
-          })}
-        </AnimatedSection>
-      </div>
-    </section>
+      </Container>
+    </Section>
   );
 }

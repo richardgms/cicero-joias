@@ -14,7 +14,7 @@ import {
 import { WhatsappIcon } from '@/components/icons';
 import { Container } from '@/components/ui/container';
 
-const whatsappUrl = 'https://wa.me/5583991180251?text=Ola! Quero falar com a Cícero Joias.';
+const whatsappUrl = 'https://wa.me/5583991180251?text=Olá! Quero falar com a Cícero Joias.';
 
 const services = [
   { name: 'Alianças personalizadas', href: '/servicos/aliancas-personalizadas' },

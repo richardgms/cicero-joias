@@ -1,46 +1,272 @@
-﻿'use client';
+'use client';
 
-import React from 'react';
-import { AnimatedSection } from '@/components/ui/animated-section';
-import { Quote, Sparkles } from 'lucide-react';
+import { useCallback, useEffect, useRef } from 'react';
+import { ArrowRight, Quote, Star } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Container } from '@/components/ui/container';
+import { Section } from '@/components/ui/section';
+import { SectionHeading } from '@/components/ui/section-heading';
+import { cn } from '@/lib/utils';
 
-const TESTIMONIALS = [
+// Depoimentos específicos de consertos especializados
+const testimonials = [
   {
-    quote:
-      'Meu cordao arrebentou em dois pontos e voltou como se fosse novo. A solda ficou imperceptivel e ainda entregaram limpo e polido.',
     name: 'Juliana Ferreira',
     service: 'Conserto de corrente de ouro',
+    quote:
+      'Meu cordão arrebentou em dois pontos e voltou como se fosse novo. A solda ficou imperceptível e ainda entregaram limpo e polido.',
+    rating: 5,
   },
   {
-    quote:
-      'Trouxe o relogio do meu pai e recebi acompanhamento em cada etapa. A troca da maquina ficou perfeita e a garantia trouxe tranquilidade.',
     name: 'Carlos Moura',
-    service: 'Revisao de relogio herdado',
+    service: 'Revisão de relógio herdado',
+    quote:
+      'Trouxe o relógio do meu pai e recebi acompanhamento em cada etapa. A troca da máquina ficou perfeita e a garantia trouxe tranquilidade.',
+    rating: 5,
   },
   {
-    quote:
-      'Resolveram o angulo da haste dos meus oculos e aproveitaram para ajustar o aro do meu anel. Atendimento cuidadoso e muito rapido.',
     name: 'Ana Paula Brito',
-    service: 'Ajuste de oculos e anel',
+    service: 'Ajuste de óculos e anel',
+    quote:
+      'Resolveram o ângulo da haste dos meus óculos e aproveitaram para ajustar o aro do meu anel. Atendimento cuidadoso e muito rápido.',
+    rating: 5,
   },
 ];
 
-function TestimonialCard({
-  quote,
-  name,
-  service,
-}: {
-  quote: string;
-  name: string;
-  service: string;
-}) {
+// Função para extrair iniciais do nome (suporta "&" para casais)
+function getInitials(name: string): string {
+  const cleanName = name.replace(/&/g, '').trim();
+  const words = cleanName.split(' ').filter(word => word.length > 0);
+
+  if (words.length === 0) return '?';
+  if (words.length === 1) return words[0].charAt(0).toUpperCase();
+
+  const firstInitial = words[0].charAt(0);
+  const lastInitial = words[words.length - 1].charAt(0);
+
+  return (firstInitial + lastInitial).toUpperCase();
+}
+
+const MOBILE_CAROUSEL_SPEED = 18;
+
+type RepairTestimonial = (typeof testimonials)[number];
+
+type TestimonialCardProps = {
+  testimonial: RepairTestimonial;
+  className?: string;
+};
+
+function TestimonialCard({ testimonial, className }: TestimonialCardProps) {
   return (
-    <div className="flex h-full flex-col gap-4 rounded-3xl border border-esmeralda/10 bg-white/95 p-6 shadow-[0_24px_60px_-38px_rgba(24,68,52,0.25)]">
-      <Quote className="h-6 w-6 text-ouro" />
-      <p className="text-sm leading-relaxed text-grafite/75">“{quote}”</p>
-      <div className="text-xs font-semibold uppercase tracking-[0.28em] text-ouro/85">
-        <span className="block text-esmeralda">{name}</span>
-        <span className="block text-ouro/60">{service}</span>
+    <Card
+      variant="dark"
+      interactive
+      role="article"
+      className={cn(
+        'group relative flex h-full flex-col overflow-hidden p-6 hover:border-action-on-dark hover:shadow-sm md:p-8',
+        className
+      )}
+    >
+      <Quote
+        className="pointer-events-none absolute right-6 top-6 h-8 w-8 -scale-x-100 text-action-on-dark/20"
+        strokeWidth={1.25}
+        aria-hidden="true"
+      />
+
+      <div
+        className="relative z-10 flex gap-1"
+        aria-label={`${testimonial.rating} de 5 estrelas`}
+      >
+        {Array.from({ length: 5 }).map((_, index) => (
+          <Star
+            key={index}
+            className={
+              index < testimonial.rating
+                ? 'h-4 w-4 fill-current text-action-on-dark'
+                : 'h-4 w-4 fill-current text-border-on-dark'
+            }
+            aria-hidden="true"
+          />
+        ))}
+      </div>
+
+      <blockquote className="relative z-10 mt-6 flex-1 text-base italic leading-relaxed text-text-on-dark/85">
+        &ldquo;{testimonial.quote}&rdquo;
+      </blockquote>
+
+      <footer className="relative z-10 mt-8 flex items-center gap-4 border-t border-border-on-dark pt-6">
+        <div
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-action-on-dark/25 bg-action-on-dark/10 font-heading text-sm font-semibold text-action-on-dark"
+          aria-hidden="true"
+        >
+          {getInitials(testimonial.name)}
+        </div>
+
+        <div className="min-w-0">
+          <cite className="block font-heading text-xl font-semibold not-italic leading-tight text-text-on-dark">
+            {testimonial.name}
+          </cite>
+          <p className="mt-1 text-xs font-bold uppercase tracking-label text-text-on-dark/65">
+            {testimonial.service}
+          </p>
+        </div>
+      </footer>
+    </Card>
+  );
+}
+
+function MobileTestimonialsCarousel() {
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const segmentRef = useRef<HTMLDivElement>(null);
+  const isPausedRef = useRef(false);
+  const scrollPositionRef = useRef(0);
+  const dragRef = useRef<{
+    pointerId: number;
+    startX: number;
+    startScrollLeft: number;
+  } | null>(null);
+
+  const normalizeScrollPosition = useCallback(() => {
+    const viewport = viewportRef.current;
+    const segmentWidth = segmentRef.current?.offsetWidth;
+
+    if (!viewport || !segmentWidth) return;
+
+    let normalizedScrollLeft = viewport.scrollLeft;
+
+    while (normalizedScrollLeft >= segmentWidth * 2) {
+      normalizedScrollLeft -= segmentWidth;
+    }
+
+    while (normalizedScrollLeft < segmentWidth) {
+      normalizedScrollLeft += segmentWidth;
+    }
+
+    if (normalizedScrollLeft !== viewport.scrollLeft) {
+      viewport.scrollLeft = normalizedScrollLeft;
+      scrollPositionRef.current = normalizedScrollLeft;
+    }
+  }, []);
+
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    const motionPreference = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    );
+
+    if (!viewport) return;
+
+    let animationFrame = 0;
+    let previousTime = 0;
+    let reduceMotion = motionPreference.matches;
+
+    const initializePosition = window.requestAnimationFrame(() => {
+      const segmentWidth = segmentRef.current?.offsetWidth;
+      if (segmentWidth) {
+        viewport.scrollLeft = segmentWidth;
+        scrollPositionRef.current = segmentWidth;
+      }
+    });
+
+    const handleMotionPreference = (event: MediaQueryListEvent) => {
+      reduceMotion = event.matches;
+    };
+
+    const moveCarousel = (time: number) => {
+      const elapsed = previousTime ? Math.min(time - previousTime, 64) : 0;
+      previousTime = time;
+
+      if (
+        !reduceMotion &&
+        !isPausedRef.current &&
+        document.visibilityState === 'visible'
+      ) {
+        scrollPositionRef.current +=
+          (MOBILE_CAROUSEL_SPEED * elapsed) / 1000;
+        viewport.scrollLeft = scrollPositionRef.current;
+        normalizeScrollPosition();
+      }
+
+      animationFrame = window.requestAnimationFrame(moveCarousel);
+    };
+
+    motionPreference.addEventListener('change', handleMotionPreference);
+    animationFrame = window.requestAnimationFrame(moveCarousel);
+
+    return () => {
+      window.cancelAnimationFrame(initializePosition);
+      window.cancelAnimationFrame(animationFrame);
+      motionPreference.removeEventListener('change', handleMotionPreference);
+    };
+  }, [normalizeScrollPosition]);
+
+  const finishInteraction = (pointerId: number) => {
+    if (dragRef.current?.pointerId !== pointerId) return;
+
+    dragRef.current = null;
+    isPausedRef.current = false;
+    normalizeScrollPosition();
+  };
+
+  return (
+    <div className="md:hidden">
+      <p id="consertos-testimonials-instructions" className="sr-only">
+        As avaliações passam automaticamente. Toque ou clique e mantenha
+        pressionado para pausar; arraste para navegar e solte para retomar.
+      </p>
+
+      <div
+        ref={viewportRef}
+        role="region"
+        aria-roledescription="carrossel"
+        aria-label="Avaliações de consertos especializados"
+        aria-describedby="consertos-testimonials-instructions"
+        className="-mx-4 cursor-grab touch-pan-y select-none overflow-x-auto overscroll-x-contain px-4 pb-3 pt-1 scrollbar-hide active:cursor-grabbing"
+        onPointerDown={event => {
+          if (event.pointerType === 'mouse' && event.button !== 0) return;
+
+          isPausedRef.current = true;
+          scrollPositionRef.current = event.currentTarget.scrollLeft;
+          dragRef.current = {
+            pointerId: event.pointerId,
+            startX: event.clientX,
+            startScrollLeft: event.currentTarget.scrollLeft,
+          };
+          event.currentTarget.setPointerCapture(event.pointerId);
+        }}
+        onPointerMove={event => {
+          const drag = dragRef.current;
+          if (!drag || drag.pointerId !== event.pointerId) return;
+
+          const nextScrollLeft =
+            drag.startScrollLeft - (event.clientX - drag.startX);
+          event.currentTarget.scrollLeft = nextScrollLeft;
+          scrollPositionRef.current = nextScrollLeft;
+        }}
+        onPointerUp={event => finishInteraction(event.pointerId)}
+        onPointerCancel={event => finishInteraction(event.pointerId)}
+        onLostPointerCapture={event => finishInteraction(event.pointerId)}
+      >
+        <div className="flex w-max">
+          {[0, 1, 2].map(copyIndex => (
+            <div
+              key={copyIndex}
+              ref={copyIndex === 0 ? segmentRef : undefined}
+              aria-hidden={copyIndex !== 1}
+              className="flex shrink-0 gap-4 pr-4"
+            >
+              {testimonials.map(testimonial => (
+                <TestimonialCard
+                  key={`${copyIndex}-${testimonial.name}`}
+                  testimonial={testimonial}
+                  className="w-80 shrink-0 sm:w-96"
+                />
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -48,28 +274,51 @@ function TestimonialCard({
 
 export function ConsertosTestimonialsSection() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-white via-marfim-light to-white py-14 sm:py-18">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(24,68,52,0.06),transparent_55%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_20%,rgba(199,154,52,0.1),transparent_60%)]" />
-      </div>
+    <Section
+      tone="dark"
+      spacing="md"
+      aria-labelledby="consertos-testimonials-heading"
+      className="overflow-hidden"
+    >
+      <Container size="md" className="space-y-12 md:space-y-16">
+        <SectionHeading
+          align="center"
+          tone="dark"
+          titleId="consertos-testimonials-heading"
+          eyebrow={
+            <Badge variant="dark" className="gap-2">
+              <Quote className="h-3 w-3" aria-hidden="true" />
+              Quem já confiou
+            </Badge>
+          }
+          title="Depoimentos reais de quem voltou a usar suas peças"
+          description="A confiança de quem trouxe joias, relógios e óculos para recuperar com a gente."
+        />
 
-      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 sm:px-6 lg:px-8">
-        <AnimatedSection className="space-y-6 text-center" delay={0.05}>
-          <span className="inline-flex items-center justify-center gap-2 rounded-full border border-esmeralda/15 bg-esmeralda/5 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-esmeralda">
-            Quem ja confiou
-          </span>
-          <h2 className="font-playfair text-3xl font-semibold text-esmeralda sm:text-4xl lg:text-5xl">
-            Depoimentos reais de quem voltou a usar suas pecas
-          </h2>
-        </AnimatedSection>
+        <MobileTestimonialsCarousel />
 
-        <AnimatedSection className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" delay={0.12} stagger>
-          {TESTIMONIALS.map((testimonial) => (
-            <TestimonialCard key={testimonial.name} {...testimonial} />
+        <div className="hidden gap-6 md:grid md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+          {testimonials.map(testimonial => (
+            <TestimonialCard
+              key={testimonial.name}
+              testimonial={testimonial}
+            />
           ))}
-        </AnimatedSection>
-      </div>
-    </section>
+        </div>
+
+        <div className="text-center">
+          <Button asChild variant="outlineDark" size="lg">
+            <a
+              href="https://share.google/sMlZK8rGLMyapODoF"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Ver mais avaliações no Google
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </a>
+          </Button>
+        </div>
+      </Container>
+    </Section>
   );
 }

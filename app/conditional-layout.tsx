@@ -18,8 +18,12 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
   const isServicesIndexRoute = normalizedPath === '/servicos';
   const isPersonalizedRingsRoute =
     normalizedPath === '/servicos/aliancas-personalizadas';
+  const isRepairsRoute = normalizedPath === '/servicos/consertos';
   const usesPublicDesignSystem =
-    isHomeRoute || isServicesIndexRoute || isPersonalizedRingsRoute;
+    isHomeRoute ||
+    isServicesIndexRoute ||
+    isPersonalizedRingsRoute ||
+    isRepairsRoute;
   const showEngagementWidgets =
     isHomeRoute ||
     normalizedPath.startsWith('/servicos');

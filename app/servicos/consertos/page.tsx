@@ -14,7 +14,7 @@ import {
 
 export default function ConsertosPage() {
   return (
-    <div className="min-h-screen bg-marfim">
+    <div className="min-h-screen">
       <section id="hero"><ConsertosHeroSection /></section>
       <section id="sobre"><ConsertosAboutSection /></section>
       <section id="diferenciais"><ConsertosDifferentialsSection /></section>
