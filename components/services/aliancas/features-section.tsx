@@ -119,7 +119,7 @@ export function FeaturesSection() {
         <div className="-mx-4 sm:hidden">
           <div
             ref={scrollRef}
-            className="flex touch-pan-y snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 scrollbar-hide"
+            className="flex touch-pan-x snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 scrollbar-hide"
           >
             {keyDifferentiators.map((item) => (
               <div
@@ -142,7 +142,7 @@ export function FeaturesSection() {
                 key={item.title}
                 type="button"
                 onClick={() => scrollToCard(index)}
-                className="flex h-control w-control cursor-pointer items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-on-dark"
+                className="flex h-control w-control cursor-pointer items-center justify-center rounded-full [-webkit-tap-highlight-color:transparent] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-on-dark"
                 role="tab"
                 aria-label={`Ver ${item.title}`}
                 aria-selected={index === activeIndex}
