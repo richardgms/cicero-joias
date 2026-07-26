@@ -3,7 +3,7 @@
 > [!IMPORTANT]
 > Este é o **único** documento de referência para o Design System. Use os tokens e padrões aqui definidos, não valores arbitrários.
 
-> Última atualização: **22/07/2026** — fundações, Home, `/servicos`, `/servicos/aliancas-personalizadas` e `/servicos/consertos` concluídos; próximas páginas públicas documentadas na seção 10.
+> Última atualização: **26/07/2026** — fundações, Home, `/servicos`, `/servicos/aliancas-personalizadas`, `/servicos/consertos` e `/servicos/banho-de-ouro` concluídos; próximas páginas públicas documentadas na seção 10.
 
 ---
 
@@ -249,7 +249,21 @@ O CTA final preserva a composição da Home pública: título, descrição, trê
 
 A aparência `home-dark` é ativada pela Home. A rota `/servicos/aliancas-personalizadas` usa `service-light` para preservar a alternância clara/escura; páginas ainda não migradas permanecem na variante legada.
 
-### 4.10 Footer do tema público
+### 4.10 Timeline de Processo (Linha do Tempo)
+
+Usada em seções de "nosso processo" (`/servicos/consertos`, `/servicos/banho-de-ouro`): lista numerada com linha tracejada central, alternando esquerda/direita no desktop e empilhada no mobile.
+
+| Elemento | Padrão |
+| :--- | :--- |
+| **Linha central** | `border-l border-dashed border-border-default`, vertical no desktop (`lg:block`), à esquerda dos cards no mobile |
+| **Selo do ícone** | Círculo/quadrado `bg-action-primary text-text-on-dark`; etapa de destaque do processo usa `bg-action-strong` (dourado) |
+| **Card da etapa** | `Card variant="light"` com fase, título (`font-heading`) e descrição |
+| **Número editorial** | `font-numeric text-5xl text-action-strong`, posicionado decorativamente no canto do card, **em opacidade total (sem `opacity-*`)** — não usar transparência nesse número |
+
+> [!IMPORTANT]
+> O número da timeline é sempre dourado sólido (`text-action-strong`, sem opacidade reduzida). Não reintroduzir `opacity-20` ou similar nesse elemento.
+
+### 4.11 Footer do tema público
 
 O footer público usa `bg-brand-emerald-950`, preserva as informações e destinos existentes e mantém contraste, foco visível e alvos de toque mínimos de 44px.
 
@@ -399,6 +413,7 @@ Antes de finalizar qualquer componente, verifique:
 - Serviços `/servicos`: header e footer do tema público, hero, catálogo de seis serviços e CTA final; conteúdo, destinos e comportamento existentes foram preservados.
 - Alianças personalizadas `/servicos/aliancas-personalizadas`: composição e conteúdo existentes migrados para os tokens e componentes fundamentais; portfólio dinâmico, WhatsApp e destinos preservados; avaliações em tema escuro com carrossel mobile; autoridade compacta, prazo de resposta em 24h e footer mobile centralizado e reduzido.
 - Consertos especializados `/servicos/consertos`: composição, conteúdo e destinos existentes migrados para os tokens e componentes fundamentais; hero com imagem de fundo e estatísticas no padrão da Home; seções refinadas uma a uma (cards com ícone alinhado ao título, número editorial na linha do tempo, diferenciais em 2×2 com carrossel no mobile); avaliações em tema escuro no padrão da Home/alianças, com carrossel mobile e link do perfil no Google; alternância clara/escura fechada com Cuidados em tema escuro; WhatsApp, link do Maps e destinos preservados. Header e footer do tema público ativados apenas para a rota exata, com footer `home-dark` (não `service-compact`).
+- Banho de ouro profissional `/servicos/banho-de-ouro`: composição, conteúdo e destinos existentes migrados para os tokens e componentes fundamentais; hero full-bleed com imagem de banho de galvanoplastia e estatísticas no padrão da Home/consertos; planos de banho (Básico/Intermediário/Avançado) e diferenciais migrados para carrossel horizontal com dots no mobile e grade no desktop/tablet, reduzindo a altura de rolagem; timeline de processo com número editorial dourado sólido (ver 4.10); FAQ e CTA final em tokens semânticos, com boxes de fechamento redundantes removidos. Header e footer do tema público ativados apenas para a rota exata, com footer `home-dark`.
 - Conteúdo dinâmico, Clerk, Prisma/Supabase, UploadThing, links, WhatsApp e rotas públicas existentes foram preservados.
 - O ícone oficial do WhatsApp substituiu símbolos genéricos nos pontos auditados.
 - A rota `/home-v2`, seus componentes e seu ativo exclusivo foram removidos definitivamente e não devem ser restaurados.
@@ -409,6 +424,8 @@ Validação do checkpoint de 18/07/2026: ESLint, `tsc --noEmit` e build de produ
 Validação de `/servicos/aliancas-personalizadas` em 19/07/2026: revisão visual desktop/mobile aprovada; ESLint e `tsc --noEmit --incremental false` concluídos; `npm run build` bloqueado localmente pelo Windows no rename da DLL do Prisma (`EPERM`), e `npx next build` concluído com 43 páginas.
 
 Validação de `/servicos/consertos` em 22/07/2026: revisão visual desktop/mobile por seção aprovada; ESLint e `tsc --noEmit --incremental false` concluídos; build de produção concluído em dist isolado (`NEXT_DIST_DIR=.next-preview`) para não interferir no `.next` do servidor de desenvolvimento, com `/servicos/consertos` gerada como estática. O `distDir` configurável por variável de ambiente (default `.next`) foi adicionado ao `next.config.js` para isolar previews.
+
+Validação de `/servicos/banho-de-ouro` em 26/07/2026: revisão visual desktop/mobile por seção aprovada; ESLint e `tsc --noEmit --incremental false` concluídos; build de produção em dist isolado (`NEXT_DIST_DIR=.next-preview`) concluído com 43 páginas, `/servicos/banho-de-ouro` gerada como estática; `.next` do servidor de desenvolvimento preservado. Refinos de UX mobile aplicados após a aprovação inicial: carrossel horizontal com dots para planos e diferenciais (reduzindo a altura de rolagem), e correção de `touch-action`/tap-highlight nos carrosséis nativos sem arraste por JS — replicada também em `/servicos/consertos` e `/servicos/aliancas-personalizadas`, que usavam o mesmo padrão.
 
 Commits do checkpoint:
 
@@ -422,13 +439,12 @@ Commits do checkpoint:
 
 Migrar uma página por vez, nesta ordem:
 
-1. `/servicos/banho-de-ouro`
-2. `/servicos/joias-sob-medida`
-3. `/servicos/lentes-de-oculos`
-4. `/portfolio` e `/portfolio/[slug]`
-5. `/sobre`
-6. `/pronta-entrega`
-7. Páginas auxiliares; painel administrativo somente ao final
+1. `/servicos/joias-sob-medida`
+2. `/servicos/lentes-de-oculos`
+3. `/portfolio` e `/portfolio/[slug]`
+4. `/sobre`
+5. `/pronta-entrega`
+6. Páginas auxiliares; painel administrativo somente ao final
 
 ### 10.3 Regras para continuar
 

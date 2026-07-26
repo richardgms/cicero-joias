@@ -1,112 +1,105 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { Camera, Shield, Clock } from 'lucide-react';
+import React from 'react';
+import { Camera, Clock, Shield } from 'lucide-react';
 import { WhatsappIcon } from '@/components/icons';
 import { AnimatedSection } from '@/components/ui/animated-section';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Container } from '@/components/ui/container';
+import { Section } from '@/components/ui/section';
+import { SectionHeading } from '@/components/ui/section-heading';
 
 const WHATSAPP_NUMBER = '5583991180251';
-const createWhatsAppLink = (message: string) =>
-  `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+const WHATSAPP_LINK = createWhatsAppLink(
+  'Olá! Gostaria de solicitar um orçamento para banho de ouro. Vou enviar foto da minha peça.'
+);
+
+function createWhatsAppLink(message: string) {
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+}
+
+const BENEFITS = [
+  { icon: Camera, text: 'Orçamento gratuito por foto' },
+  { icon: Shield, text: 'Garantia de até 1 ano' },
+  { icon: Clock, text: 'Prazo médio 14 dias' },
+];
 
 export function BanhoOuroFinalCTASection() {
-  const benefits = [
-    {
-      icon: Camera,
-      text: 'Orçamento gratuito por foto',
-    },
-    {
-      icon: Shield,
-      text: 'Garantia de até 1 ano',
-    },
-    {
-      icon: Clock,
-      text: 'Prazo médio 14 dias',
-    },
-  ];
-
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-marfim to-marfim-light py-12 text-center sm:py-16">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(24,68,52,0.06),transparent_52%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_85%,rgba(199,154,52,0.08),transparent_60%)]" />
+    <Section
+      tone="light"
+      spacing="lg"
+      aria-labelledby="banho-ouro-final-cta-heading"
+    >
+      <Container size="md" className="flex flex-col items-center gap-6 text-center sm:gap-8">
+        <AnimatedSection className="flex flex-col items-center gap-4 sm:gap-6" delay={0.05}>
+          <Badge variant="sectionLight">Transforme suas joias</Badge>
+          <SectionHeading
+            align="center"
+            titleId="banho-ouro-final-cta-heading"
+            title={
+              <>
+                Pronto para dar nova vida às suas{' '}
+                <span className="italic text-action-strong">joias</span>?
+              </>
+            }
+            description="Envie uma foto da sua peça pelo WhatsApp e receba orçamento personalizado em até 24 horas. Mais de 20 anos de experiência garantindo qualidade e durabilidade excepcional."
+          />
+        </AnimatedSection>
 
-      <AnimatedSection
-        className="relative mx-auto flex w-full max-w-3xl flex-col items-center gap-8 px-4 sm:px-6 lg:px-8"
-        delay={0.1}
-      >
-        <span className="inline-flex items-center rounded-full border border-esmeralda/20 bg-esmeralda/5 px-4 py-1 text-xs font-jost font-semibold uppercase tracking-[0.3em] text-esmeralda/80">
-          Transforme suas joias
-        </span>
-
-        <h2 className="font-philosopher font-bold text-3xl sm:text-4xl lg:text-5xl text-esmeralda">
-          Pronto para dar nova vida às suas <span className="text-ouro">joias</span>?
-        </h2>
-
-        <p className="max-w-2xl text-base font-montserrat text-grafite/75 sm:text-lg leading-relaxed">
-          Envie uma foto da sua peça pelo WhatsApp e receba orçamento personalizado em até 24 horas. Mais de 20 anos de experiência garantindo qualidade e durabilidade excepcional.
-        </p>
-
-        <div className="flex flex-wrap items-center justify-center gap-6">
-          {benefits.map((benefit, index) => (
-            <motion.div
-              key={benefit.text}
-              className="flex items-center gap-2"
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 + index * 0.1 }}
-            >
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-esmeralda/10 backdrop-blur-sm">
-                <benefit.icon className="h-5 w-5 text-esmeralda" />
-              </div>
-              <span className="text-sm font-jost font-medium text-grafite/80">{benefit.text}</span>
-            </motion.div>
+        <AnimatedSection
+          delay={0.12}
+          className="flex flex-wrap items-center justify-center gap-6"
+        >
+          {BENEFITS.map((benefit) => (
+            <div key={benefit.text} className="flex items-center gap-2">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-action-primary/30 bg-surface-subtle text-text-primary">
+                <benefit.icon className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <span className="text-sm font-medium text-text-body">
+                {benefit.text}
+              </span>
+            </div>
           ))}
-        </div>
+        </AnimatedSection>
 
-        <div className="flex flex-col items-center gap-4 w-full sm:w-auto">
-          <motion.a
-            href={createWhatsAppLink('Olá! Gostaria de solicitar um orçamento para banho de ouro. Vou enviar foto da minha peça.')}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-ouro px-8 py-4 text-sm font-jost font-semibold uppercase tracking-[0.26em] text-esmeralda shadow-[0_25px_45px_-20px_rgba(207,154,36,0.45)] transition-all hover:shadow-[0_30px_55px_-25px_rgba(207,154,36,0.6)] sm:w-auto"
-            whileHover={{ scale: 1.03, y: -2 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            <WhatsappIcon className="h-5 w-5" aria-hidden="true" />
-            Solicitar orçamento agora
-          </motion.a>
+        <AnimatedSection
+          delay={0.18}
+          className="flex flex-col items-center gap-4"
+        >
+          <Button asChild variant="gold" size="lg" className="w-full sm:w-auto">
+            <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer">
+              <WhatsappIcon className="h-5 w-5" aria-hidden="true" />
+              Solicitar orçamento agora
+            </a>
+          </Button>
 
-          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-jost text-grafite/60">
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-text-secondary">
             <span className="flex items-center gap-1.5">
-              <span className="h-1 w-1 rounded-full bg-esmeralda/60" />
+              <span
+                className="h-1 w-1 rounded-full bg-action-primary/60"
+                aria-hidden="true"
+              />
               Sem compromisso
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="h-1 w-1 rounded-full bg-esmeralda/60" />
+              <span
+                className="h-1 w-1 rounded-full bg-action-primary/60"
+                aria-hidden="true"
+              />
               Resposta em até 24h
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="h-1 w-1 rounded-full bg-esmeralda/60" />
+              <span
+                className="h-1 w-1 rounded-full bg-action-primary/60"
+                aria-hidden="true"
+              />
               Executado pelo mestre ourives
             </span>
           </div>
-        </div>
-
-        <div className="mt-4 rounded-2xl border border-esmeralda/10 bg-esmeralda/5 p-6 backdrop-blur-sm">
-          <p className="text-sm font-montserrat text-grafite/70">
-            <span className="font-jost font-semibold text-esmeralda">Atenção:</span> Não realizamos banho em relógios. Para outros tipos de peças, a avaliação prévia é sempre necessária.
-          </p>
-        </div>
-      </AnimatedSection>
-    </section>
+        </AnimatedSection>
+      </Container>
+    </Section>
   );
 }
-
-
-
-
-
-
-
-

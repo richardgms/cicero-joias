@@ -20,7 +20,7 @@ const badgeVariants = cva(
         sectionLight:
           'border-action-primary/25 bg-action-primary/5 text-text-primary focus-visible:ring-action-primary',
         gold:
-          'border-border-subtle bg-action-strong/10 text-text-primary hover:bg-action-strong/15',
+          'border-action-strong bg-action-strong/10 text-text-primary hover:bg-action-strong/15',
         dark:
           'border-border-on-dark bg-action-on-dark/10 text-action-on-dark focus-visible:ring-action-on-dark',
         muted:

@@ -80,7 +80,7 @@ function StepCard({ step, align }: { step: Step; align: 'left' | 'right' }) {
     >
       <span
         aria-hidden="true"
-        className={`pointer-events-none absolute top-3 select-none font-numeric text-5xl leading-none text-action-strong opacity-20 ${
+        className={`pointer-events-none absolute top-3 select-none font-numeric text-5xl leading-none text-action-strong ${
           align === 'right' ? 'left-5' : 'right-5'
         }`}
       >

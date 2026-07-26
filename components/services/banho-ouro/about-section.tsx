@@ -1,236 +1,333 @@
 'use client';
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Shield, Star, Crown, Check } from 'lucide-react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Check, Crown, Shield, Star, type LucideIcon } from 'lucide-react';
 import { AnimatedSection } from '@/components/ui/animated-section';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Container } from '@/components/ui/container';
+import { Section } from '@/components/ui/section';
+import { SectionHeading } from '@/components/ui/section-heading';
 
 const WHATSAPP_NUMBER = '5583991180251';
 const createWhatsAppLink = (message: string) =>
   `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 
+type ServiceOption = {
+  name: string;
+  icon: LucideIcon;
+  highlight: string;
+  description: string;
+  features: string[];
+  warranty: string;
+  popular: boolean;
+};
+
+const SERVICE_OPTIONS: ServiceOption[] = [
+  {
+    name: 'Banho Básico',
+    icon: Star,
+    highlight: 'Ideal para uso eventual',
+    description:
+      'Ouro 18k de alta qualidade, perfeito para peças de uso esporádico ou decorativas.',
+    features: [
+      'Ouro 18 quilates',
+      'Processo completo de galvanoplastia',
+      'Brilho intenso',
+      'Melhor custo-benefício',
+    ],
+    warranty: 'Sem garantia',
+    popular: false,
+  },
+  {
+    name: 'Banho Intermediário',
+    icon: Shield,
+    highlight: 'Equilíbrio ideal',
+    description:
+      'Camadas reforçadas de ouro 18k para maior durabilidade no dia a dia.',
+    features: [
+      'Ouro 18 quilates',
+      'Camadas extras de proteção',
+      'Maior resistência ao desgaste',
+      '6 meses de garantia',
+    ],
+    warranty: '6 meses de garantia',
+    popular: true,
+  },
+  {
+    name: 'Banho Avançado',
+    icon: Crown,
+    highlight: 'Máxima durabilidade',
+    description:
+      'Processo premium com múltiplas camadas de ouro 18k e proteção antioxidante.',
+    features: [
+      'Ouro 18 quilates premium',
+      'Múltiplas camadas reforçadas',
+      'Proteção antioxidante superior',
+      '1 ano de garantia completa',
+    ],
+    warranty: '1 ano de garantia',
+    popular: false,
+  },
+];
+
+const APPLICABLE_ITEMS = [
+  'Joias e semijoias',
+  'Bijuterias',
+  'Joias de prata',
+  'Objetos decorativos metálicos',
+  'Peças eletrônicas (para condutividade)',
+  'Revitalização de peças com banho desgastado',
+];
+
+// Debounce helper function for scroll performance
+function debounce<T extends (...args: any[]) => void>(func: T, wait: number): T {
+  let timeout: NodeJS.Timeout | null = null;
+  return ((...args: Parameters<T>) => {
+    if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  }) as T;
+}
+
+function PlanCard({ option }: { option: ServiceOption }) {
+  return (
+    <Card
+      variant="light"
+      className={`relative flex h-full flex-col gap-6 p-6 ${
+        option.popular ? 'border-action-strong' : ''
+      }`}
+    >
+      {option.popular && (
+        <span className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-[calc(100%+0.5rem)]">
+          <Badge variant="gold" className="gap-1 bg-surface-page">
+            <Star className="h-3 w-3 fill-current" aria-hidden="true" />
+            Mais escolhido
+          </Badge>
+        </span>
+      )}
+
+      <div className="flex items-center gap-4">
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-action-primary/30 bg-surface-subtle text-text-primary">
+          <option.icon className="h-6 w-6" aria-hidden="true" />
+        </span>
+        <div>
+          <h3 className="font-heading text-xl font-semibold text-text-primary">
+            {option.name}
+          </h3>
+          <p className="text-xs font-bold uppercase tracking-label text-action-strong">
+            {option.highlight}
+          </p>
+        </div>
+      </div>
+
+      <p className="text-sm leading-relaxed text-text-secondary">
+        {option.description}
+      </p>
+
+      <div className="flex-1 space-y-3">
+        {option.features.map((feature) => (
+          <div key={feature} className="flex items-start gap-2">
+            <Check
+              className="mt-0.5 h-4 w-4 shrink-0 text-action-primary"
+              aria-hidden="true"
+            />
+            <span className="text-sm text-text-body">{feature}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="flex items-center gap-2 rounded-control border border-border-default bg-surface-subtle p-4">
+        <Shield className="h-5 w-5 text-action-strong" aria-hidden="true" />
+        <span className="text-sm font-semibold text-text-primary">
+          {option.warranty}
+        </span>
+      </div>
+
+      <Button
+        asChild
+        variant={option.popular ? 'gold' : 'outline'}
+        size="default"
+        className="w-full"
+      >
+        <a
+          href={createWhatsAppLink(
+            `Olá! Gostaria de solicitar um orçamento para ${option.name}.`
+          )}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Solicitar este
+        </a>
+      </Button>
+    </Card>
+  );
+}
+
 export function BanhoOuroAboutSection() {
-  const serviceOptions = [
-    {
-      name: 'Banho Básico',
-      icon: Star,
-      highlight: 'Ideal para uso eventual',
-      description: 'Ouro 18k de alta qualidade, perfeito para peças de uso esporádico ou decorativas.',
-      features: [
-        'Ouro 18 quilates',
-        'Processo completo de galvanoplastia',
-        'Brilho intenso',
-        'Melhor custo-benefício',
-      ],
-      warranty: 'Sem garantia',
-      theme: 'basic',
-      popular: false,
-    },
-    {
-      name: 'Banho Intermediário',
-      icon: Shield,
-      highlight: 'Equilíbrio ideal',
-      description: 'Camadas reforçadas de ouro 18k para maior durabilidade no dia a dia.',
-      features: [
-        'Ouro 18 quilates',
-        'Camadas extras de proteção',
-        'Maior resistência ao desgaste',
-        '6 meses de garantia',
-      ],
-      warranty: '6 meses de garantia',
-      theme: 'intermediate',
-      popular: true,
-    },
-    {
-      name: 'Banho Avançado',
-      icon: Crown,
-      highlight: 'Máxima durabilidade',
-      description: 'Processo premium com múltiplas camadas de ouro 18k e proteção antioxidante.',
-      features: [
-        'Ouro 18 quilates premium',
-        'Múltiplas camadas reforçadas',
-        'Proteção antioxidante superior',
-        '1 ano de garantia completa',
-      ],
-      warranty: '1 ano de garantia',
-      theme: 'advanced',
-      popular: false,
-    },
-  ] as const;
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
-  const optionThemes = {
-    basic: {
-      iconGradient: 'from-esmeralda-dark to-esmeralda',
-      accentText: 'text-esmeralda',
-      accentMuted: 'text-esmeralda/70',
-      border: 'border-esmeralda/20',
-      buttonHover: 'hover:bg-esmeralda/10 hover:text-esmeralda-dark',
-    },
-    intermediate: {
-      iconGradient: 'from-ouro-dark to-ouro',
-      accentText: 'text-ouro',
-      accentMuted: 'text-ouro/85',
-      border: 'border-ouro/25',
-      buttonHover: 'hover:bg-ouro/15 hover:text-esmeralda-dark',
-    },
-    advanced: {
-      iconGradient: 'from-esmeralda-dark to-ouro',
-      accentText: 'text-ouro',
-      accentMuted: 'text-ouro/85',
-      border: 'border-ouro/25',
-      buttonHover: 'hover:bg-ouro/15 hover:text-esmeralda-dark',
-    },
-  } as const;
+  const scrollToCard = useCallback((index: number) => {
+    const container = scrollRef.current;
+    const cards = container?.querySelectorAll<HTMLElement>('[data-plan-card]');
 
-  const applicableItems = [
-    'Joias e semijoias',
-    'Bijuterias',
-    'Joias de prata',
-    'Objetos decorativos metálicos',
-    'Peças eletrônicas (para condutividade)',
-    'Revitalização de peças com banho desgastado',
-  ];
+    if (!container || !cards?.[index]) return;
+
+    const card = cards[index];
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+
+    container.scrollTo({
+      left: card.offsetLeft - (container.clientWidth - card.clientWidth) / 2,
+      behavior: prefersReducedMotion ? 'auto' : 'smooth',
+    });
+  }, []);
+
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const cards = Array.from(
+        container.querySelectorAll<HTMLElement>('[data-plan-card]')
+      );
+
+      const nearestIndex = cards.reduce(
+        (nearest, card, index) => {
+          const distance = Math.abs(card.offsetLeft - container.scrollLeft);
+          return distance < nearest.distance
+            ? { index, distance }
+            : nearest;
+        },
+        { index: 0, distance: Number.POSITIVE_INFINITY }
+      );
+
+      setActiveIndex(nearestIndex.index);
+    };
+
+    const debouncedHandleScroll = debounce(handleScroll, 100);
+    container.addEventListener('scroll', debouncedHandleScroll);
+
+    return () => {
+      container.removeEventListener('scroll', debouncedHandleScroll);
+    };
+  }, []);
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-marfim to-marfim-light py-10 sm:py-16">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(24,68,52,0.08),transparent_55%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_85%_15%,rgba(199,154,52,0.08),transparent_60%)]" />
+    <Section
+      tone="light"
+      spacing="md"
+      aria-labelledby="banho-ouro-about-heading"
+    >
+      <Container className="space-y-16">
+        <SectionHeading
+          align="center"
+          titleId="banho-ouro-about-heading"
+          eyebrow={<Badge variant="sectionLight">O que oferecemos</Badge>}
+          title={
+            <>
+              Revitalize suas joias com{' '}
+              <span className="italic text-action-strong">ouro 18k</span>
+            </>
+          }
+          description="Transformamos e renovamos suas peças através de um processo profissional de galvanoplastia, com mais de 20 anos de experiência especializada."
+          className="mx-auto"
+        />
 
-      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-16 px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <AnimatedSection className="space-y-6 text-center" delay={0.05}>
-          <span className="inline-flex items-center justify-center rounded-full border border-ouro/20 bg-ouro/5 px-4 py-1 text-xs font-jost font-semibold uppercase tracking-[0.3em] text-ouro">
-            O que oferecemos
-          </span>
-          <h2 className="font-philosopher font-bold text-3xl sm:text-4xl lg:text-5xl text-esmeralda">
-            Revitalize suas joias com <span className="text-ouro">ouro 18k</span>
-          </h2>
-          <p className="mx-auto max-w-3xl text-base sm:text-lg font-montserrat text-grafite/75">
-            Transformamos e renovamos suas peças através de um processo profissional de galvanoplastia, com mais de 20 anos de experiência especializada.
-          </p>
-        </AnimatedSection>
+        <div className="hidden gap-6 sm:grid sm:grid-cols-2 md:grid-cols-3">
+          {SERVICE_OPTIONS.map((option) => (
+            <PlanCard key={option.name} option={option} />
+          ))}
+        </div>
 
-        {/* Service Options Cards */}
-        <AnimatedSection className="grid gap-6 md:grid-cols-3" delay={0.12} stagger>
-          {serviceOptions.map((option, index) => {
-            const theme = optionThemes[option.theme];
-            const cardBorder = option.popular ? 'border-ouro/35' : theme.border;
-            const cardBackground = option.popular
-              ? 'bg-gradient-to-br from-white via-marfim to-ouro/10'
-              : 'bg-gradient-to-br from-white to-marfim/60';
-
-            return (
-              <motion.div
+        <div className="-mx-4 sm:hidden">
+          <div
+            ref={scrollRef}
+            className="flex touch-pan-x snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 pt-3 scrollbar-hide"
+          >
+            {SERVICE_OPTIONS.map((option) => (
+              <div
                 key={option.name}
-                className={`relative flex h-full flex-col gap-6 rounded-3xl border ${cardBorder} ${cardBackground} p-6 shadow-[0_22px_48px_-34px_rgba(24,68,52,0.28)] transition-all duration-300 ${
-                  option.popular ? 'ring-2 ring-ouro/40 ring-offset-2 ring-offset-marfim' : ''
-                }`}
-                whileHover={{ y: -8, boxShadow: '0 32px 70px -38px rgba(24,68,52,0.35)' }}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1, duration: 0.4 }}
+                data-plan-card
+                className="min-w-[85%] snap-center"
               >
-              {option.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <span className="inline-flex items-center gap-1 rounded-full bg-ouro px-4 py-1 text-xs font-jost font-bold uppercase tracking-[0.2em] text-esmeralda shadow-lg">
-                    <Star className="h-3 w-3 fill-esmeralda" />
-                    Mais escolhido
-                  </span>
-                </div>
-              )}
+                <PlanCard option={option} />
+              </div>
+            ))}
+          </div>
 
-              <div className="space-y-4">
-                <div className={`inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${theme.iconGradient} text-white shadow-lg`}>
-                  <option.icon className="h-7 w-7" />
-                </div>
+          <div
+            className="mt-2 flex justify-center gap-1"
+            role="tablist"
+            aria-label="Navegação dos planos de banho de ouro"
+          >
+            {SERVICE_OPTIONS.map((option, index) => (
+              <button
+                key={option.name}
+                type="button"
+                onClick={() => scrollToCard(index)}
+                className="flex h-control w-control cursor-pointer items-center justify-center rounded-full [-webkit-tap-highlight-color:transparent] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-strong"
+                role="tab"
+                aria-label={`Ver ${option.name}`}
+                aria-selected={index === activeIndex}
+              >
+                <span
+                  className={`h-2 w-2 rounded-full transition-colors duration-200 ${
+                    index === activeIndex
+                      ? 'bg-action-strong'
+                      : 'bg-border-default'
+                  }`}
+                  aria-hidden="true"
+                />
+              </button>
+            ))}
+          </div>
+        </div>
 
-                <div className="space-y-2">
-                  <h3 className="font-philosopher font-bold text-2xl text-esmeralda">
-                    {option.name}
-                  </h3>
-                  <p className={`text-xs font-jost font-semibold uppercase tracking-[0.2em] ${theme.accentMuted}`}>
-                    {option.highlight}
-                  </p>
-                  <p className="text-sm font-montserrat leading-relaxed text-grafite/75">
-                    {option.description}
-                  </p>
-                </div>
+        <AnimatedSection delay={0.15}>
+          <Card variant="light" className="p-8 sm:p-10">
+            <div className="space-y-6">
+              <div className="space-y-3 text-center">
+                <h3 className="font-heading text-2xl font-semibold text-text-primary sm:text-3xl">
+                  O que pode receber banho de ouro?
+                </h3>
+                <p className="text-sm text-text-secondary">
+                  Trabalhamos com diversos tipos de peças metálicas
+                </p>
               </div>
 
-              <div className="flex-1 space-y-3">
-                {option.features.map((feature) => (
-                  <div key={feature} className="flex items-start gap-2">
-                    <Check className="h-4 w-4 shrink-0 text-esmeralda mt-0.5" />
-                    <span className="text-sm font-montserrat text-grafite/80">{feature}</span>
+              <div className="grid gap-4 grid-cols-2 lg:grid-cols-3">
+                {APPLICABLE_ITEMS.map((item) => (
+                  <div
+                    key={item}
+                    className="flex items-center gap-3 rounded-control border border-border-default bg-surface-subtle p-4"
+                  >
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-action-primary/30 bg-surface-card text-action-primary">
+                      <Check className="h-5 w-5" aria-hidden="true" />
+                    </span>
+                    <span className="text-sm font-medium text-text-primary">
+                      {item}
+                    </span>
                   </div>
                 ))}
               </div>
 
-              <div className="rounded-xl border border-esmeralda/10 bg-marfim/60 p-4">
-                <div className="flex items-center gap-2">
-                  <Shield className={`h-5 w-5 ${theme.accentText}`} />
-                  <span className={`text-sm font-semibold ${theme.accentText}`}>
-                    {option.warranty}
-                  </span>
-                </div>
+              <div className="rounded-control border border-border-default bg-surface-subtle p-6 text-center">
+                <p className="text-sm text-text-secondary">
+                  <span className="font-semibold text-action-strong">
+                    Importante:
+                  </span>{' '}
+                  Atualmente não realizamos banho em relógios. Para qualquer
+                  outra peça, envie uma foto pelo WhatsApp para avaliação
+                  prévia gratuita.
+                </p>
               </div>
-
-              <motion.a
-                href={createWhatsAppLink(`Olá! Gostaria de solicitar um orçamento para ${option.name}.`)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`inline-flex items-center justify-center gap-2 rounded-full border ${theme.border} bg-white/90 px-5 py-3 text-sm font-semibold uppercase tracking-[0.2em] ${theme.accentText} transition-colors ${theme.buttonHover}`}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                Solicitar este
-              </motion.a>
-              </motion.div>
-            );
-          })}
+            </div>
+          </Card>
         </AnimatedSection>
-
-        {/* Applicable Items */}
-        <AnimatedSection className="rounded-3xl border border-esmeralda/10 bg-white/95 p-8 sm:p-10 shadow-[0_20px_45px_-32px_rgba(24,68,52,0.2)]" delay={0.2}>
-          <div className="space-y-6">
-            <div className="text-center space-y-3">
-              <h3 className="font-philosopher font-bold text-2xl sm:text-3xl text-esmeralda">
-                O que pode receber banho de ouro?
-              </h3>
-              <p className="text-sm font-montserrat text-grafite/70">
-                Trabalhamos com diversos tipos de peças metálicas
-              </p>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {applicableItems.map((item, index) => (
-                <motion.div
-                  key={item}
-                  className="flex items-center gap-3 rounded-2xl border border-esmeralda/10 bg-gradient-to-r from-esmeralda/5 via-marfim/80 to-ouro/10 p-4"
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.05 }}
-                >
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-ouro/10">
-                    <Check className="h-5 w-5 text-ouro" />
-                  </div>
-                  <span className="text-sm font-montserrat font-medium text-esmeralda">{item}</span>
-                </motion.div>
-              ))}
-            </div>
-
-            <div className="rounded-2xl border border-ouro/25 bg-ouro/12 p-6 text-center">
-              <p className="text-sm font-montserrat text-grafite/80">
-                <span className="font-semibold text-ouro">Importante:</span> Atualmente não realizamos banho em relógios. Para qualquer outra peça, envie uma foto pelo WhatsApp para avaliação prévia gratuita.
-              </p>
-            </div>
-          </div>
-        </AnimatedSection>
-      </div>
-    </section>
+      </Container>
+    </Section>
   );
 }
-
-

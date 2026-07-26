@@ -19,11 +19,13 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
   const isPersonalizedRingsRoute =
     normalizedPath === '/servicos/aliancas-personalizadas';
   const isRepairsRoute = normalizedPath === '/servicos/consertos';
+  const isPlatingRoute = normalizedPath === '/servicos/banho-de-ouro';
   const usesPublicDesignSystem =
     isHomeRoute ||
     isServicesIndexRoute ||
     isPersonalizedRingsRoute ||
-    isRepairsRoute;
+    isRepairsRoute ||
+    isPlatingRoute;
   const showEngagementWidgets =
     isHomeRoute ||
     normalizedPath.startsWith('/servicos');
