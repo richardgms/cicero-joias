@@ -3,7 +3,7 @@
 > [!IMPORTANT]
 > Este é o **único** documento de referência para o Design System. Use os tokens e padrões aqui definidos, não valores arbitrários.
 
-> Última atualização: **26/07/2026** — fundações, Home, `/servicos`, `/servicos/aliancas-personalizadas`, `/servicos/consertos` e `/servicos/banho-de-ouro` concluídos; próximas páginas públicas documentadas na seção 10.
+> Última atualização: **06/08/2026** — fundações, Home, `/servicos`, `/servicos/aliancas-personalizadas`, `/servicos/consertos`, `/servicos/banho-de-ouro` e `/servicos/joias-sob-medida` concluídos; próximas páginas públicas documentadas na seção 10.
 
 ---
 
@@ -275,9 +275,10 @@ O footer público usa `bg-brand-emerald-950`, preserva as informações e destin
 | **Contato** | Telefone e e-mail com `min-h-control`; endereço e horário permanecem informativos |
 | **Redes sociais** | Círculos de 44×44px, contorno semântico e rótulo acessível |
 | **Encerramento** | Copyright em `font-numeric` e links legais separados por borda semântica |
-| **Alianças no mobile** | Aparência `service-compact`: conteúdo centralizado, serviços em duas colunas e contato condensado, sem remover dados ou destinos |
+| **Radius de pílula/círculo** | Sempre `rounded-pill` (token `--radius-pill`), nunca `rounded-full` — mesmo resultado visual (9999px), mas vindo do token do design system |
+| **Mobile (todas as páginas do tema público)** | Footer compacto: conteúdo centralizado, serviços em duas colunas e contato condensado, sem remover dados ou destinos |
 
-A variante `home-dark` é selecionada em `/` e `/servicos`. Em `/servicos/aliancas-personalizadas`, `service-compact` mantém o footer padrão no desktop e reduz a altura apenas no mobile. As demais páginas continuam no footer legado até sua própria fase.
+As aparências `home-dark` e `service-compact` renderizam o mesmo footer compacto no mobile e o footer padrão no desktop — a distinção entre os dois nomes é apenas histórica (mantida por compatibilidade), o comportamento visual é idêntico. Ativa em `/`, `/servicos`, `/servicos/aliancas-personalizadas`, `/servicos/consertos`, `/servicos/banho-de-ouro` e `/servicos/joias-sob-medida`. As páginas ainda não migradas continuam no footer legado até sua própria fase.
 
 ---
 
@@ -414,6 +415,7 @@ Antes de finalizar qualquer componente, verifique:
 - Alianças personalizadas `/servicos/aliancas-personalizadas`: composição e conteúdo existentes migrados para os tokens e componentes fundamentais; portfólio dinâmico, WhatsApp e destinos preservados; avaliações em tema escuro com carrossel mobile; autoridade compacta, prazo de resposta em 24h e footer mobile centralizado e reduzido.
 - Consertos especializados `/servicos/consertos`: composição, conteúdo e destinos existentes migrados para os tokens e componentes fundamentais; hero com imagem de fundo e estatísticas no padrão da Home; seções refinadas uma a uma (cards com ícone alinhado ao título, número editorial na linha do tempo, diferenciais em 2×2 com carrossel no mobile); avaliações em tema escuro no padrão da Home/alianças, com carrossel mobile e link do perfil no Google; alternância clara/escura fechada com Cuidados em tema escuro; WhatsApp, link do Maps e destinos preservados. Header e footer do tema público ativados apenas para a rota exata, com footer `home-dark` (não `service-compact`).
 - Banho de ouro profissional `/servicos/banho-de-ouro`: composição, conteúdo e destinos existentes migrados para os tokens e componentes fundamentais; hero full-bleed com imagem de banho de galvanoplastia e estatísticas no padrão da Home/consertos; planos de banho (Básico/Intermediário/Avançado) e diferenciais migrados para carrossel horizontal com dots no mobile e grade no desktop/tablet, reduzindo a altura de rolagem; timeline de processo com número editorial dourado sólido (ver 4.10); FAQ e CTA final em tokens semânticos, com boxes de fechamento redundantes removidos. Header e footer do tema público ativados apenas para a rota exata, com footer `home-dark`.
+- Joias sob medida `/servicos/joias-sob-medida`: página **criada do zero** (antes era um placeholder "Página em construção", sem conteúdo real) com conteúdo de negócio validado com o cliente — fabricam apenas anéis e pingentes sob medida (não brincos/colares), ouro 18k e prata 990, garantia eterna, orçamento sempre sob consulta (sem valor exibido), prazo combinado por peça (sem número fixo). Hero full-bleed com imagem gerada por IA (mestre ourives esboçando um anel); diferenciais em carrossel horizontal com dots no mobile; timeline de processo em 5 etapas sem "prazo médio" fixo; FAQ com 10 perguntas; CTA final. Corrigida também a descrição desse serviço em `/servicos` e na Home (removida menção a brincos/colares, que não são fabricados). Header e footer do tema público ativados apenas para a rota exata, com footer `service-compact`.
 - Conteúdo dinâmico, Clerk, Prisma/Supabase, UploadThing, links, WhatsApp e rotas públicas existentes foram preservados.
 - O ícone oficial do WhatsApp substituiu símbolos genéricos nos pontos auditados.
 - A rota `/home-v2`, seus componentes e seu ativo exclusivo foram removidos definitivamente e não devem ser restaurados.
@@ -427,6 +429,8 @@ Validação de `/servicos/consertos` em 22/07/2026: revisão visual desktop/mobi
 
 Validação de `/servicos/banho-de-ouro` em 26/07/2026: revisão visual desktop/mobile por seção aprovada; ESLint e `tsc --noEmit --incremental false` concluídos; build de produção em dist isolado (`NEXT_DIST_DIR=.next-preview`) concluído com 43 páginas, `/servicos/banho-de-ouro` gerada como estática; `.next` do servidor de desenvolvimento preservado. Refinos de UX mobile aplicados após a aprovação inicial: carrossel horizontal com dots para planos e diferenciais (reduzindo a altura de rolagem), e correção de `touch-action`/tap-highlight nos carrosséis nativos sem arraste por JS — replicada também em `/servicos/consertos` e `/servicos/aliancas-personalizadas`, que usavam o mesmo padrão.
 
+Validação de `/servicos/joias-sob-medida` em 06/08/2026: revisão visual desktop/mobile por seção aprovada; ESLint e `tsc --noEmit --incremental false` concluídos; build de produção em dist isolado concluído com 43 páginas, `/servicos/joias-sob-medida` gerada como estática; `.next` do servidor de desenvolvimento preservado. Refinos aplicados após a aprovação inicial: cards de diferenciais tornados estáticos (sem `interactive`/hover-lift, que cortava o topo do card no carrossel mobile ao ficar "preso" em `:hover` no toque); `hover:underline` legado removido do `AccordionTrigger` compartilhado; borda do FAQ trocada de `hover:` para `[&[data-state=open]]:` (a sintaxe `data-[state=open]:` não é suportada nesta versão do Tailwind, 3.3.3); tap-highlight-color suprimido nos dots de carrossel e no trigger do accordion; footer compacto (antes exclusivo de alianças) unificado para **todas** as páginas do tema público no mobile; `rounded-full` trocado por `rounded-pill` no footer ativo (ver 4.11); rótulos "Restauração de joias" e "Anéis de formatura" corrigidos no footer para "Consertos" e "Joias sob medida".
+
 Commits do checkpoint:
 
 - `495a35d` — fundações do Design System público.
@@ -439,12 +443,11 @@ Commits do checkpoint:
 
 Migrar uma página por vez, nesta ordem:
 
-1. `/servicos/joias-sob-medida`
-2. `/servicos/lentes-de-oculos`
-3. `/portfolio` e `/portfolio/[slug]`
-4. `/sobre`
-5. `/pronta-entrega`
-6. Páginas auxiliares; painel administrativo somente ao final
+1. `/servicos/lentes-de-oculos`
+2. `/portfolio` e `/portfolio/[slug]`
+3. `/sobre`
+4. `/pronta-entrega`
+5. Páginas auxiliares; painel administrativo somente ao final
 
 ### 10.3 Regras para continuar
 

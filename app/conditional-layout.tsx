@@ -20,12 +20,15 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
     normalizedPath === '/servicos/aliancas-personalizadas';
   const isRepairsRoute = normalizedPath === '/servicos/consertos';
   const isPlatingRoute = normalizedPath === '/servicos/banho-de-ouro';
+  const isCustomJewelryRoute =
+    normalizedPath === '/servicos/joias-sob-medida';
   const usesPublicDesignSystem =
     isHomeRoute ||
     isServicesIndexRoute ||
     isPersonalizedRingsRoute ||
     isRepairsRoute ||
-    isPlatingRoute;
+    isPlatingRoute ||
+    isCustomJewelryRoute;
   const showEngagementWidgets =
     isHomeRoute ||
     normalizedPath.startsWith('/servicos');
@@ -62,7 +65,7 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
         >
           <Footer
             appearance={
-              isPersonalizedRingsRoute
+              isPersonalizedRingsRoute || isCustomJewelryRoute
                 ? 'service-compact'
                 : usesPublicDesignSystem
                   ? 'home-dark'

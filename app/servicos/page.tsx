@@ -41,7 +41,7 @@ const services = [
   {
     icon: JoiasSobMedidaIcon,
     title: 'Joias Sob Medida',
-    description: 'Criamos joias personalizadas que contam histórias e eternizam momentos, trabalhando em estreita colaboração com nossos clientes do início ao fim.',
+    description: 'Criamos anéis e pingentes personalizados que contam histórias e eternizam momentos, trabalhando em estreita colaboração com nossos clientes do início ao fim.',
     slug: 'joias-sob-medida',
   },
   {

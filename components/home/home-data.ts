@@ -77,7 +77,7 @@ export const servicesGrid: Array<WithIcon<{
     },
     {
       title: 'Joias Sob Medida',
-      description: 'Transforme suas ideias em joias exclusivas: anéis, brincos, pingentes e colares com design totalmente personalizado.',
+      description: 'Transforme suas ideias em joias exclusivas: anéis e pingentes com design totalmente personalizado.',
       href: '/servicos/joias-sob-medida',
       icon: JoiasSobMedidaIcon,
     },
