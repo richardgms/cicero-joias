@@ -82,7 +82,7 @@ export function ConsertosFAQSection() {
               <AccordionItem
                 key={item.question}
                 value={`item-${index}`}
-                className="rounded-card border border-border-default bg-surface-card px-6 shadow-card transition-colors duration-200 hover:border-action-strong"
+                className="rounded-card border border-border-default bg-surface-card px-6 shadow-card transition-colors duration-200 [&[data-state=open]]:border-action-strong"
               >
                 <AccordionTrigger className="py-5 text-left text-base font-semibold text-text-primary transition-colors duration-200 hover:text-action-primary">
                   {item.question}

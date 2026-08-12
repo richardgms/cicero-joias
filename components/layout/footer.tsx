@@ -18,9 +18,9 @@ const whatsappUrl = 'https://wa.me/5583991180251?text=Olá! Quero falar com a C�
 
 const services = [
   { name: 'Alianças personalizadas', href: '/servicos/aliancas-personalizadas' },
-  { name: 'Restauração de joias', href: '/servicos/consertos' },
+  { name: 'Consertos', href: '/servicos/consertos' },
   { name: 'Banho de ouro', href: '/servicos/banho-de-ouro' },
-  { name: 'Anéis de formatura', href: '/servicos/joias-sob-medida' },
+  { name: 'Joias sob medida', href: '/servicos/joias-sob-medida' },
 ];
 
 const socials = [
@@ -48,7 +48,7 @@ function HomeFooter({ year }: HomeFooterProps) {
                 href="/"
                 className="group inline-flex min-h-control items-center gap-4"
               >
-                <span className="relative h-12 w-12 overflow-hidden rounded-full border border-border-on-dark transition-colors group-hover:border-action-on-dark">
+                <span className="relative h-12 w-12 overflow-hidden rounded-pill border border-border-on-dark transition-colors group-hover:border-action-on-dark">
                   <Image
                     src="/assets/logos/circle-monogram.webp"
                     alt="Cícero Joias"
@@ -158,7 +158,7 @@ function HomeFooter({ year }: HomeFooterProps) {
                   href={item.href}
                   target={item.external ? '_blank' : undefined}
                   rel={item.external ? 'noopener noreferrer' : undefined}
-                  className="flex h-control w-control items-center justify-center rounded-full border border-border-on-dark text-text-on-dark/70 transition-colors hover:border-action-on-dark hover:text-action-on-dark focus-visible:outline-none focus-visible:ring-focus-ring"
+                  className="flex h-control w-control items-center justify-center rounded-pill border border-border-on-dark text-text-on-dark/70 transition-colors hover:border-action-on-dark hover:text-action-on-dark focus-visible:outline-none focus-visible:ring-focus-ring"
                   aria-label={item.label}
                 >
                   <item.icon className="h-4 w-4" aria-hidden="true" />
@@ -200,7 +200,7 @@ function CompactServiceFooter({ year }: HomeFooterProps) {
           href="/"
           className="group inline-flex min-h-control items-center gap-3 focus-visible:outline-none focus-visible:ring-focus-ring"
         >
-          <span className="relative h-10 w-10 overflow-hidden rounded-full border border-border-on-dark transition-colors group-hover:border-action-on-dark">
+          <span className="relative h-10 w-10 overflow-hidden rounded-pill border border-border-on-dark transition-colors group-hover:border-action-on-dark">
             <Image
               src="/assets/logos/circle-monogram.webp"
               alt="Cícero Joias"
@@ -281,7 +281,7 @@ function CompactServiceFooter({ year }: HomeFooterProps) {
           <div className="mt-5 grid gap-2">
             <Link
               href="tel:+5583991180251"
-              className="flex min-h-control items-center justify-center gap-2 rounded-full border border-border-on-dark text-xs text-text-on-dark/75 transition-colors hover:border-action-on-dark hover:text-action-on-dark focus-visible:outline-none focus-visible:ring-focus-ring"
+              className="flex min-h-control items-center justify-center gap-2 rounded-pill border border-border-on-dark text-xs text-text-on-dark/75 transition-colors hover:border-action-on-dark hover:text-action-on-dark focus-visible:outline-none focus-visible:ring-focus-ring"
             >
               <Phone
                 className="h-4 w-4 shrink-0 text-action-on-dark"
@@ -292,7 +292,7 @@ function CompactServiceFooter({ year }: HomeFooterProps) {
             <Link
               href="mailto:contato@cicerojoias.com.br"
               aria-label="Enviar e-mail para contato@cicerojoias.com.br"
-              className="flex min-h-control items-center justify-center gap-2 rounded-full border border-border-on-dark text-xs text-text-on-dark/75 transition-colors hover:border-action-on-dark hover:text-action-on-dark focus-visible:outline-none focus-visible:ring-focus-ring"
+              className="flex min-h-control items-center justify-center gap-2 rounded-pill border border-border-on-dark text-xs text-text-on-dark/75 transition-colors hover:border-action-on-dark hover:text-action-on-dark focus-visible:outline-none focus-visible:ring-focus-ring"
             >
               <Mail
                 className="h-4 w-4 shrink-0 text-action-on-dark"
@@ -309,7 +309,7 @@ function CompactServiceFooter({ year }: HomeFooterProps) {
                 href={item.href}
                 target={item.external ? '_blank' : undefined}
                 rel={item.external ? 'noopener noreferrer' : undefined}
-                className="flex h-control w-control items-center justify-center rounded-full border border-border-on-dark text-text-on-dark/70 transition-colors hover:border-action-on-dark hover:text-action-on-dark focus-visible:outline-none focus-visible:ring-focus-ring"
+                className="flex h-control w-control items-center justify-center rounded-pill border border-border-on-dark text-text-on-dark/70 transition-colors hover:border-action-on-dark hover:text-action-on-dark focus-visible:outline-none focus-visible:ring-focus-ring"
                 aria-label={item.label}
               >
                 <item.icon className="h-4 w-4" aria-hidden="true" />
@@ -345,11 +345,7 @@ function CompactServiceFooter({ year }: HomeFooterProps) {
 export function Footer({ appearance = 'legacy' }: FooterProps) {
   const year = new Date().getFullYear();
 
-  if (appearance === 'home-dark') {
-    return <HomeFooter year={year} />;
-  }
-
-  if (appearance === 'service-compact') {
+  if (appearance === 'home-dark' || appearance === 'service-compact') {
     return (
       <>
         <CompactServiceFooter year={year} />

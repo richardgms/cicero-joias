@@ -100,7 +100,7 @@ export function BanhoOuroFAQSection() {
               <AccordionItem
                 key={item.question}
                 value={`item-${index}`}
-                className="rounded-card border border-border-on-dark bg-surface-dark-elevated px-4 shadow-card-sm transition-colors duration-200 hover:border-action-on-dark sm:px-6"
+                className="rounded-card border border-border-on-dark bg-surface-dark-elevated px-4 shadow-card-sm transition-colors duration-200 [&[data-state=open]]:border-action-on-dark sm:px-6"
               >
                 <AccordionTrigger className="py-4 text-left text-base font-semibold text-text-on-dark transition-colors duration-200 hover:text-action-on-dark sm:py-5">
                   {item.question}

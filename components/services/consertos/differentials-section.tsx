@@ -110,12 +110,11 @@ export function ConsertosDifferentialsSection() {
     <Card
       key={item.title}
       variant="dark"
-      interactive
       role="article"
-      className="group flex h-full flex-col gap-4 p-6 hover:border-action-on-dark"
+      className="flex h-full flex-col gap-4 p-6"
     >
       <div className="flex items-center gap-4">
-        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-border-on-dark bg-surface-dark text-text-on-dark transition-colors duration-200 group-hover:border-action-on-dark group-hover:bg-action-on-dark group-hover:text-text-on-brand">
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-border-on-dark bg-surface-dark text-text-on-dark">
           <item.icon className="h-6 w-6" aria-hidden="true" />
         </span>
         <div>
