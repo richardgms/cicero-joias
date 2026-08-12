@@ -448,13 +448,11 @@ Commits do checkpoint:
 
 Migrar uma página por vez, nesta ordem:
 
-1. `/portfolio` e `/portfolio/[slug]`
-2. `/sobre`
-3. `/pronta-entrega`
-4. Páginas auxiliares; painel administrativo somente ao final
-
-> [!NOTE]
-> `/servicos/limpeza-de-joias` é referenciada na Home e no footer, mas não tem página criada (nem placeholder) — 404 hoje. Decidir se entra nesta fila antes de avançar para portfólio/sobre.
+1. `/servicos/limpeza-de-joias` — criar do zero (rota referenciada na Home/footer/`/servicos`, mas hoje sem nenhuma página; 404 em produção)
+2. `/portfolio` e `/portfolio/[slug]`
+3. `/sobre`
+4. `/pronta-entrega`
+5. Páginas auxiliares; painel administrativo somente ao final
 
 ### 10.3 Regras para continuar
 
