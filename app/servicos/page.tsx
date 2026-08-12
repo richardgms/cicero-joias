@@ -47,7 +47,7 @@ const services = [
   {
     icon: OculosIcon,
     title: 'Lentes de Óculos',
-    description: 'Oferecemos lentes de alta qualidade, com foco em conforto visual, durabilidade e estilo. Trabalhamos com diversos tipos de lentes para atender suas necessidades.',
+    description: 'Trocamos lentes e oferecemos armações variadas, com foco em conforto visual, durabilidade e estilo, a partir da sua receita oftalmológica.',
     slug: 'lentes-de-oculos',
   },
   {

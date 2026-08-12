@@ -3,7 +3,7 @@
 > [!IMPORTANT]
 > Este é o **único** documento de referência para o Design System. Use os tokens e padrões aqui definidos, não valores arbitrários.
 
-> Última atualização: **06/08/2026** — fundações, Home, `/servicos`, `/servicos/aliancas-personalizadas`, `/servicos/consertos`, `/servicos/banho-de-ouro` e `/servicos/joias-sob-medida` concluídos; próximas páginas públicas documentadas na seção 10.
+> Última atualização: **12/08/2026** — fundações, Home, `/servicos`, `/servicos/aliancas-personalizadas`, `/servicos/consertos`, `/servicos/banho-de-ouro`, `/servicos/joias-sob-medida` e `/servicos/lentes-de-oculos` concluídos; próximas páginas públicas documentadas na seção 10.
 
 ---
 
@@ -416,6 +416,7 @@ Antes de finalizar qualquer componente, verifique:
 - Consertos especializados `/servicos/consertos`: composição, conteúdo e destinos existentes migrados para os tokens e componentes fundamentais; hero com imagem de fundo e estatísticas no padrão da Home; seções refinadas uma a uma (cards com ícone alinhado ao título, número editorial na linha do tempo, diferenciais em 2×2 com carrossel no mobile); avaliações em tema escuro no padrão da Home/alianças, com carrossel mobile e link do perfil no Google; alternância clara/escura fechada com Cuidados em tema escuro; WhatsApp, link do Maps e destinos preservados. Header e footer do tema público ativados apenas para a rota exata, com footer `home-dark` (não `service-compact`).
 - Banho de ouro profissional `/servicos/banho-de-ouro`: composição, conteúdo e destinos existentes migrados para os tokens e componentes fundamentais; hero full-bleed com imagem de banho de galvanoplastia e estatísticas no padrão da Home/consertos; planos de banho (Básico/Intermediário/Avançado) e diferenciais migrados para carrossel horizontal com dots no mobile e grade no desktop/tablet, reduzindo a altura de rolagem; timeline de processo com número editorial dourado sólido (ver 4.10); FAQ e CTA final em tokens semânticos, com boxes de fechamento redundantes removidos. Header e footer do tema público ativados apenas para a rota exata, com footer `home-dark`.
 - Joias sob medida `/servicos/joias-sob-medida`: página **criada do zero** (antes era um placeholder "Página em construção", sem conteúdo real) com conteúdo de negócio validado com o cliente — fabricam apenas anéis e pingentes sob medida (não brincos/colares), ouro 18k e prata 990, garantia eterna, orçamento sempre sob consulta (sem valor exibido), prazo combinado por peça (sem número fixo). Hero full-bleed com imagem gerada por IA (mestre ourives esboçando um anel); diferenciais em carrossel horizontal com dots no mobile; timeline de processo em 5 etapas sem "prazo médio" fixo; FAQ com 10 perguntas; CTA final. Corrigida também a descrição desse serviço em `/servicos` e na Home (removida menção a brincos/colares, que não são fabricados). Header e footer do tema público ativados apenas para a rota exata, com footer `service-compact`.
+- Lentes de óculos `/servicos/lentes-de-oculos`: página **criada do zero** (antes era um placeholder "Página em construção"). Trocam lentes e também vendem/trocam armações (loja própria, marcas variadas). Sem menção a garantia na página, por decisão do cliente. Trabalham 5 tipos de lente (monofocal, multifocal/progressiva, antirreflexo, fotossensível, blue light), receita oftalmológica obrigatória, lentes fabricadas por laboratório parceiro (não produção interna), prazo combinado por caso. Hero full-bleed com imagem gerada por IA; diferenciais institucionais (sem narrativa de "mestre ourives", já que esse serviço não é feito por Cícero pessoalmente); timeline de processo em 4 etapas sem prazo fixo; FAQ com 8 perguntas. Corrigida também a descrição desse serviço em `/servicos` e na Home (agora menciona armações, não só lentes). Header e footer do tema público ativados apenas para a rota exata.
 - Conteúdo dinâmico, Clerk, Prisma/Supabase, UploadThing, links, WhatsApp e rotas públicas existentes foram preservados.
 - O ícone oficial do WhatsApp substituiu símbolos genéricos nos pontos auditados.
 - A rota `/home-v2`, seus componentes e seu ativo exclusivo foram removidos definitivamente e não devem ser restaurados.
@@ -431,6 +432,10 @@ Validação de `/servicos/banho-de-ouro` em 26/07/2026: revisão visual desktop/
 
 Validação de `/servicos/joias-sob-medida` em 06/08/2026: revisão visual desktop/mobile por seção aprovada; ESLint e `tsc --noEmit --incremental false` concluídos; build de produção em dist isolado concluído com 43 páginas, `/servicos/joias-sob-medida` gerada como estática; `.next` do servidor de desenvolvimento preservado. Refinos aplicados após a aprovação inicial: cards de diferenciais tornados estáticos (sem `interactive`/hover-lift, que cortava o topo do card no carrossel mobile ao ficar "preso" em `:hover` no toque); `hover:underline` legado removido do `AccordionTrigger` compartilhado; borda do FAQ trocada de `hover:` para `[&[data-state=open]]:` (a sintaxe `data-[state=open]:` não é suportada nesta versão do Tailwind, 3.3.3); tap-highlight-color suprimido nos dots de carrossel e no trigger do accordion; footer compacto (antes exclusivo de alianças) unificado para **todas** as páginas do tema público no mobile; `rounded-full` trocado por `rounded-pill` no footer ativo (ver 4.11); rótulos "Restauração de joias" e "Anéis de formatura" corrigidos no footer para "Consertos" e "Joias sob medida".
 
+Validação de `/servicos/lentes-de-oculos` em 12/08/2026: revisão visual desktop/mobile por seção aprovada; ESLint e `tsc --noEmit --incremental false` concluídos; build de produção em dist isolado concluído com 43 páginas, `/servicos/lentes-de-oculos` gerada como estática; `.next` do servidor de desenvolvimento preservado. Componentes já nasceram sem os bugs de carrossel/accordion corrigidos no checkpoint anterior (touch-action, tap-highlight, cards estáticos, borda por `data-state`). Ajuste pós-aprovação no hero: card de estatística "Atendimento Personalizado" tinha o destaque e a legenda invertidos (corrigido); card "5 tipos de lente" passou a mostrar a descrição também no mobile (os outros dois stats seguem sem descrição no mobile, para não inflar a altura do hero).
+
+**Pendência registrada, fora do escopo desta página:** a lista de serviços (Home e footer) referencia `/servicos/limpeza-de-joias`, rota sem nenhuma página criada (nem placeholder) — link quebrado (404) hoje. Ainda não tratado.
+
 Commits do checkpoint:
 
 - `495a35d` — fundações do Design System público.
@@ -443,11 +448,13 @@ Commits do checkpoint:
 
 Migrar uma página por vez, nesta ordem:
 
-1. `/servicos/lentes-de-oculos`
-2. `/portfolio` e `/portfolio/[slug]`
-3. `/sobre`
-4. `/pronta-entrega`
-5. Páginas auxiliares; painel administrativo somente ao final
+1. `/portfolio` e `/portfolio/[slug]`
+2. `/sobre`
+3. `/pronta-entrega`
+4. Páginas auxiliares; painel administrativo somente ao final
+
+> [!NOTE]
+> `/servicos/limpeza-de-joias` é referenciada na Home e no footer, mas não tem página criada (nem placeholder) — 404 hoje. Decidir se entra nesta fila antes de avançar para portfólio/sobre.
 
 ### 10.3 Regras para continuar
 

@@ -22,13 +22,15 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
   const isPlatingRoute = normalizedPath === '/servicos/banho-de-ouro';
   const isCustomJewelryRoute =
     normalizedPath === '/servicos/joias-sob-medida';
+  const isEyewearRoute = normalizedPath === '/servicos/lentes-de-oculos';
   const usesPublicDesignSystem =
     isHomeRoute ||
     isServicesIndexRoute ||
     isPersonalizedRingsRoute ||
     isRepairsRoute ||
     isPlatingRoute ||
-    isCustomJewelryRoute;
+    isCustomJewelryRoute ||
+    isEyewearRoute;
   const showEngagementWidgets =
     isHomeRoute ||
     normalizedPath.startsWith('/servicos');

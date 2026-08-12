@@ -83,7 +83,7 @@ export const servicesGrid: Array<WithIcon<{
     },
     {
       title: 'Lentes de Óculos',
-      description: 'Troca de lentes para óculos com atendimento especializado. Qualidade, precisão e conforto para sua visão no dia a dia.',
+      description: 'Troca de lentes e armações variadas, com atendimento especializado. Qualidade, precisão e conforto para sua visão no dia a dia.',
       href: '/servicos/lentes-de-oculos',
       icon: OculosIcon,
     },
