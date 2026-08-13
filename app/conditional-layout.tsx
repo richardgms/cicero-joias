@@ -23,6 +23,7 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
   const isCustomJewelryRoute =
     normalizedPath === '/servicos/joias-sob-medida';
   const isEyewearRoute = normalizedPath === '/servicos/lentes-de-oculos';
+  const isCleaningRoute = normalizedPath === '/servicos/limpeza-de-joias';
   const usesPublicDesignSystem =
     isHomeRoute ||
     isServicesIndexRoute ||
@@ -30,7 +31,8 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
     isRepairsRoute ||
     isPlatingRoute ||
     isCustomJewelryRoute ||
-    isEyewearRoute;
+    isEyewearRoute ||
+    isCleaningRoute;
   const showEngagementWidgets =
     isHomeRoute ||
     normalizedPath.startsWith('/servicos');

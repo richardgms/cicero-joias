@@ -3,7 +3,7 @@
 > [!IMPORTANT]
 > Este é o **único** documento de referência para o Design System. Use os tokens e padrões aqui definidos, não valores arbitrários.
 
-> Última atualização: **12/08/2026** — fundações, Home, `/servicos`, `/servicos/aliancas-personalizadas`, `/servicos/consertos`, `/servicos/banho-de-ouro`, `/servicos/joias-sob-medida` e `/servicos/lentes-de-oculos` concluídos; próximas páginas públicas documentadas na seção 10.
+> Última atualização: **13/08/2026** — fundações, Home, `/servicos`, `/servicos/aliancas-personalizadas`, `/servicos/consertos`, `/servicos/banho-de-ouro`, `/servicos/joias-sob-medida`, `/servicos/lentes-de-oculos` e `/servicos/limpeza-de-joias` concluídos; próximas páginas públicas documentadas na seção 10.
 
 ---
 
@@ -278,7 +278,21 @@ O footer público usa `bg-brand-emerald-950`, preserva as informações e destin
 | **Radius de pílula/círculo** | Sempre `rounded-pill` (token `--radius-pill`), nunca `rounded-full` — mesmo resultado visual (9999px), mas vindo do token do design system |
 | **Mobile (todas as páginas do tema público)** | Footer compacto: conteúdo centralizado, serviços em duas colunas e contato condensado, sem remover dados ou destinos |
 
-As aparências `home-dark` e `service-compact` renderizam o mesmo footer compacto no mobile e o footer padrão no desktop — a distinção entre os dois nomes é apenas histórica (mantida por compatibilidade), o comportamento visual é idêntico. Ativa em `/`, `/servicos`, `/servicos/aliancas-personalizadas`, `/servicos/consertos`, `/servicos/banho-de-ouro` e `/servicos/joias-sob-medida`. As páginas ainda não migradas continuam no footer legado até sua própria fase.
+As aparências `home-dark` e `service-compact` renderizam o mesmo footer compacto no mobile e o footer padrão no desktop — a distinção entre os dois nomes é apenas histórica (mantida por compatibilidade), o comportamento visual é idêntico. Ativa em `/`, `/servicos`, `/servicos/aliancas-personalizadas`, `/servicos/consertos`, `/servicos/banho-de-ouro`, `/servicos/joias-sob-medida`, `/servicos/lentes-de-oculos` e `/servicos/limpeza-de-joias`. As páginas ainda não migradas continuam no footer legado até sua própria fase.
+
+### 4.12 Carrossel de Cards no Mobile (Diferenciais, Planos)
+
+Usado sempre que uma grade de cards (diferenciais, planos, etc.) vira carrossel horizontal abaixo do breakpoint `sm`.
+
+| Elemento | Padrão |
+| :--- | :--- |
+| **Largura do card** | `min-w-[85%]` (nunca `min-w-full`) — deixa ~15% do próximo card visível, sinalizando que há mais itens |
+| **Scroll** | `overflow-x-auto snap-x snap-mandatory touch-pan-x` — nunca `touch-pan-y` num carrossel horizontal sem JS de arraste próprio (bloqueia o gesto nativo de swipe) |
+| **Dots** | Botões com `[-webkit-tap-highlight-color:transparent]` (evita o realce azul padrão do navegador ao tocar) |
+| **Cards informativos sem link** | Estáticos — sem `interactive`/hover que promete clique (ver 4.4) |
+
+> [!IMPORTANT]
+> `min-w-full` em carrosséis mobile é considerado um bug de UX (esconde que há mais cards). Sempre usar `min-w-[85%]`.
 
 ---
 
@@ -417,6 +431,7 @@ Antes de finalizar qualquer componente, verifique:
 - Banho de ouro profissional `/servicos/banho-de-ouro`: composição, conteúdo e destinos existentes migrados para os tokens e componentes fundamentais; hero full-bleed com imagem de banho de galvanoplastia e estatísticas no padrão da Home/consertos; planos de banho (Básico/Intermediário/Avançado) e diferenciais migrados para carrossel horizontal com dots no mobile e grade no desktop/tablet, reduzindo a altura de rolagem; timeline de processo com número editorial dourado sólido (ver 4.10); FAQ e CTA final em tokens semânticos, com boxes de fechamento redundantes removidos. Header e footer do tema público ativados apenas para a rota exata, com footer `home-dark`.
 - Joias sob medida `/servicos/joias-sob-medida`: página **criada do zero** (antes era um placeholder "Página em construção", sem conteúdo real) com conteúdo de negócio validado com o cliente — fabricam apenas anéis e pingentes sob medida (não brincos/colares), ouro 18k e prata 990, garantia eterna, orçamento sempre sob consulta (sem valor exibido), prazo combinado por peça (sem número fixo). Hero full-bleed com imagem gerada por IA (mestre ourives esboçando um anel); diferenciais em carrossel horizontal com dots no mobile; timeline de processo em 5 etapas sem "prazo médio" fixo; FAQ com 10 perguntas; CTA final. Corrigida também a descrição desse serviço em `/servicos` e na Home (removida menção a brincos/colares, que não são fabricados). Header e footer do tema público ativados apenas para a rota exata, com footer `service-compact`.
 - Lentes de óculos `/servicos/lentes-de-oculos`: página **criada do zero** (antes era um placeholder "Página em construção"). Trocam lentes e também vendem/trocam armações (loja própria, marcas variadas). Sem menção a garantia na página, por decisão do cliente. Trabalham 5 tipos de lente (monofocal, multifocal/progressiva, antirreflexo, fotossensível, blue light), receita oftalmológica obrigatória, lentes fabricadas por laboratório parceiro (não produção interna), prazo combinado por caso. Hero full-bleed com imagem gerada por IA; diferenciais institucionais (sem narrativa de "mestre ourives", já que esse serviço não é feito por Cícero pessoalmente); timeline de processo em 4 etapas sem prazo fixo; FAQ com 8 perguntas. Corrigida também a descrição desse serviço em `/servicos` e na Home (agora menciona armações, não só lentes). Header e footer do tema público ativados apenas para a rota exata.
+- Limpeza de joias `/servicos/limpeza-de-joias`: página **criada do zero** (rota antes referenciada na Home/footer/`/servicos` sem nenhuma página, 404 em produção). Mesmo processo já usado no acabamento de consertos ("limpeza de cortesia"), agora vendido separadamente. Limpeza **manual** (procedimentos adequados e profissionais, feitos pelos ourives — nunca descrever como "ultrassônica"); polimento **não é automático**, é avaliado e só confirmado após ver a peça ("quando indicado", nunca "é realizado"/incluso); pode haver pontos de difícil acesso que não ficam 100% limpos em peças com desenho elaborado. Diferencial real: processo rápido, muitas vezes pronto no mesmo dia. Hero full-bleed com imagem gerada por IA (flanela polindo anel com pedra — evitar imagens com cuba/vapor/escova de aço, que sugerem técnica que a loja não usa); processo em 3 etapas (mais curto que as outras páginas, condizente com um serviço rápido); FAQ com 7 perguntas, incluindo "Toda peça recebe polimento?". Header e footer do tema público ativados apenas para a rota exata.
 - Conteúdo dinâmico, Clerk, Prisma/Supabase, UploadThing, links, WhatsApp e rotas públicas existentes foram preservados.
 - O ícone oficial do WhatsApp substituiu símbolos genéricos nos pontos auditados.
 - A rota `/home-v2`, seus componentes e seu ativo exclusivo foram removidos definitivamente e não devem ser restaurados.
@@ -434,7 +449,7 @@ Validação de `/servicos/joias-sob-medida` em 06/08/2026: revisão visual deskt
 
 Validação de `/servicos/lentes-de-oculos` em 12/08/2026: revisão visual desktop/mobile por seção aprovada; ESLint e `tsc --noEmit --incremental false` concluídos; build de produção em dist isolado concluído com 43 páginas, `/servicos/lentes-de-oculos` gerada como estática; `.next` do servidor de desenvolvimento preservado. Componentes já nasceram sem os bugs de carrossel/accordion corrigidos no checkpoint anterior (touch-action, tap-highlight, cards estáticos, borda por `data-state`). Ajuste pós-aprovação no hero: card de estatística "Atendimento Personalizado" tinha o destaque e a legenda invertidos (corrigido); card "5 tipos de lente" passou a mostrar a descrição também no mobile (os outros dois stats seguem sem descrição no mobile, para não inflar a altura do hero).
 
-**Pendência registrada, fora do escopo desta página:** a lista de serviços (Home e footer) referencia `/servicos/limpeza-de-joias`, rota sem nenhuma página criada (nem placeholder) — link quebrado (404) hoje. Ainda não tratado.
+Validação de `/servicos/limpeza-de-joias` em 13/08/2026: revisão visual desktop/mobile por seção aprovada; ESLint e `tsc --noEmit --incremental false` concluídos; build de produção em dist isolado concluído com 43 páginas, `/servicos/limpeza-de-joias` gerada como estática; `.next` do servidor de desenvolvimento preservado. Duas rodadas de correção de conteúdo após a primeira aprovação: (1) o texto e a imagem do hero descreviam limpeza "ultrassônica" — o processo real é manual, feito pelos ourives; imagem regenerada até chegar numa cena sem cuba/vapor/escova de aço nem poeira visível (flanela polindo um anel com pedra); (2) o polimento estava descrito como parte automática do processo — corrigido para deixar claro que é avaliado e só confirmado após ver a peça, com FAQ dedicada ("Toda peça recebe polimento?") e o cuidado de usar "pode ser realizado" em vez de "é realizado". Padronização cross-page nesta rodada: carrossel horizontal com `min-w-full` (sem indicar que há mais cards) trocado por `min-w-[85%]` em **todas** as páginas que usam esse padrão de carrossel — limpeza-de-joias, lentes-de-oculos, joias-sob-medida, consertos e alianças (banho-ouro já estava correto); documentado como regra do design system (ver 4.12).
 
 Commits do checkpoint:
 
@@ -448,11 +463,10 @@ Commits do checkpoint:
 
 Migrar uma página por vez, nesta ordem:
 
-1. `/servicos/limpeza-de-joias` — criar do zero (rota referenciada na Home/footer/`/servicos`, mas hoje sem nenhuma página; 404 em produção)
-2. `/portfolio` e `/portfolio/[slug]`
-3. `/sobre`
-4. `/pronta-entrega`
-5. Páginas auxiliares; painel administrativo somente ao final
+1. `/portfolio` e `/portfolio/[slug]`
+2. `/sobre`
+3. `/pronta-entrega`
+4. Páginas auxiliares; painel administrativo somente ao final
 
 ### 10.3 Regras para continuar
 
