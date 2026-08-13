@@ -175,7 +175,7 @@ export function JoiasSobMedidaDifferentialsSection() {
               <div
                 key={item.title}
                 data-differential-card
-                className="min-w-full snap-center"
+                className="min-w-[85%] snap-center"
               >
                 <DifferentialCard item={item} />
               </div>
