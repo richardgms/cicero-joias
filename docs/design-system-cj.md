@@ -3,7 +3,7 @@
 > [!IMPORTANT]
 > Este é o **único** documento de referência para o Design System. Use os tokens e padrões aqui definidos, não valores arbitrários.
 
-> Última atualização: **14/08/2026** — fundações, Home, `/servicos`, `/servicos/aliancas-personalizadas`, `/servicos/consertos`, `/servicos/banho-de-ouro`, `/servicos/joias-sob-medida`, `/servicos/lentes-de-oculos`, `/servicos/limpeza-de-joias`, `/portfolio` e `/portfolio/[slug]` concluídos; próximas páginas públicas documentadas na seção 10.
+> Última atualização: **14/08/2026** — fundações, Home, `/servicos`, `/servicos/aliancas-personalizadas`, `/servicos/consertos`, `/servicos/banho-de-ouro`, `/servicos/joias-sob-medida`, `/servicos/lentes-de-oculos`, `/servicos/limpeza-de-joias`, `/portfolio`, `/portfolio/[slug]` e `/sobre` concluídos; próximas páginas públicas documentadas na seção 10.
 
 ---
 
@@ -433,6 +433,7 @@ Antes de finalizar qualquer componente, verifique:
 - Lentes de óculos `/servicos/lentes-de-oculos`: página **criada do zero** (antes era um placeholder "Página em construção"). Trocam lentes e também vendem/trocam armações (loja própria, marcas variadas). Sem menção a garantia na página, por decisão do cliente. Trabalham 5 tipos de lente (monofocal, multifocal/progressiva, antirreflexo, fotossensível, blue light), receita oftalmológica obrigatória, lentes fabricadas por laboratório parceiro (não produção interna), prazo combinado por caso. Hero full-bleed com imagem gerada por IA; diferenciais institucionais (sem narrativa de "mestre ourives", já que esse serviço não é feito por Cícero pessoalmente); timeline de processo em 4 etapas sem prazo fixo; FAQ com 8 perguntas. Corrigida também a descrição desse serviço em `/servicos` e na Home (agora menciona armações, não só lentes). Header e footer do tema público ativados apenas para a rota exata.
 - Limpeza de joias `/servicos/limpeza-de-joias`: página **criada do zero** (rota antes referenciada na Home/footer/`/servicos` sem nenhuma página, 404 em produção). Mesmo processo já usado no acabamento de consertos ("limpeza de cortesia"), agora vendido separadamente. Limpeza **manual** (procedimentos adequados e profissionais, feitos pelos ourives — nunca descrever como "ultrassônica"); polimento **não é automático**, é avaliado e só confirmado após ver a peça ("quando indicado", nunca "é realizado"/incluso); pode haver pontos de difícil acesso que não ficam 100% limpos em peças com desenho elaborado. Diferencial real: processo rápido, muitas vezes pronto no mesmo dia. Hero full-bleed com imagem gerada por IA (flanela polindo anel com pedra — evitar imagens com cuba/vapor/escova de aço, que sugerem técnica que a loja não usa); processo em 3 etapas (mais curto que as outras páginas, condizente com um serviço rápido); FAQ com 7 perguntas, incluindo "Toda peça recebe polimento?". Header e footer do tema público ativados apenas para a rota exata.
 - Portfólio `/portfolio` e `/portfolio/[slug]`: migração pura (composição, filtros, busca, paginação client-side e conteúdo dinâmico via Prisma preservados) para os tokens e componentes fundamentais, feita bloco a bloco com aprovação visual a cada etapa. Listagem: hero com `Section`/`Container`/`SectionHeading` reaproveitando o asset `portfolio-hero.webp` (já existia no projeto, nunca estava conectado); filtros (busca, badges de categoria, grid/list, ordenar) migrados para `Badge`/`Button` com tokens; grid/lista de cards em `Card variant="light" interactive`. Detalhe: hero usa a própria imagem principal do projeto como fundo desfocado; especificações em `Card`; CTAs no padrão 4.1/4.2; projetos relacionados reaproveitando o padrão já aprovado do `PortfolioPreviewSection`. Removida referência morta a `/assets/noise.webp` (nunca existiu no projeto, 404 herdado do código original) nos dois heróis. Botões de ação sobre a imagem principal (compartilhar, tela cheia) trocados de `Button variant="secondary"` — que dentro de `.public-theme` sempre resolve para o dourado sólido, ignorando classes customizadas — para botões nativos em vidro escuro semitransparente, consistentes entre si. `Header`/`Footer` do tema público ativados para as rotas de portfólio (antes ficavam no legado, apesar do conteúdo migrado) e `FinalCTASection` corrigido para `appearance="home-dark"` nas duas páginas (antes caía no branch `legacy` sem prop). Scroll progress e botão flutuante do WhatsApp, antes restritos à Home e `/servicos`, agora acompanham todas as páginas migradas do tema público.
+- Sobre nós `/sobre`: página estática (sem dados dinâmicos) migrada bloco a bloco para os tokens e componentes fundamentais, preservando integralmente composição e textos. Hero reaproveita o asset já existente `sobre-nos-hero.webp`; grid de números e os 4 cards da história (1985/Crescimento/2000/Hoje, o último com destaque dourado) em `Card variant="light" interactive`; bloco de citação em destaque em `Card variant="dark"`; timeline de 3 colunas própria da página (estrutura diferente da timeline vertical documentada em 4.10) mantida, só com tokens migrados; CTA final com composição própria (citação + dois botões) preservada, usando `Button variant="goldOnDark"`/`"outlineDark"`. `Header`/`Footer` do tema público ativados para a rota (antes ficava no legado).
 - Conteúdo dinâmico, Clerk, Prisma/Supabase, UploadThing, links, WhatsApp e rotas públicas existentes foram preservados.
 - O ícone oficial do WhatsApp substituiu símbolos genéricos nos pontos auditados.
 - A rota `/home-v2`, seus componentes e seu ativo exclusivo foram removidos definitivamente e não devem ser restaurados.
@@ -454,6 +455,8 @@ Validação de `/servicos/limpeza-de-joias` em 13/08/2026: revisão visual deskt
 
 Validação de `/portfolio` e `/portfolio/[slug]` em 14/08/2026: revisão visual desktop/mobile aprovada; ESLint e `tsc --noEmit --incremental false` concluídos; build de produção em dist isolado concluído com 44 páginas (`/portfolio` estática, `/portfolio/[slug]` dinâmica); `.next` do servidor de desenvolvimento preservado.
 
+Validação de `/sobre` em 14/08/2026: revisão visual desktop/mobile aprovada; ESLint e `tsc --noEmit --incremental false` concluídos; build de produção em dist isolado concluído com 44 páginas, `/sobre` gerada como estática; `.next` do servidor de desenvolvimento preservado.
+
 Commits do checkpoint:
 
 - `495a35d` — fundações do Design System público.
@@ -466,9 +469,8 @@ Commits do checkpoint:
 
 Migrar uma página por vez, nesta ordem:
 
-1. `/sobre`
-2. `/pronta-entrega`
-3. Páginas auxiliares; painel administrativo somente ao final
+1. `/pronta-entrega`
+2. Páginas auxiliares; painel administrativo somente ao final
 
 ### 10.3 Regras para continuar
 

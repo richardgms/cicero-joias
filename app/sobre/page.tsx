@@ -16,6 +16,11 @@ import {
   Quote,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/card';
+import { Section } from '@/components/ui/section';
+import { Container } from '@/components/ui/container';
+import { SectionHeading } from '@/components/ui/section-heading';
 import { PageVisibilityGuard } from '@/components/page-visibility-guard';
 
 const legacyStats = [
@@ -78,138 +83,158 @@ export default function SobrePage() {
   return (
     <PageVisibilityGuard pageSlug="sobre">
       <div className="min-h-screen bg-surface-page">
-        {/* Sister Page Hero Pattern */}
-        <section id="hero" className="relative overflow-hidden bg-gradient-to-br from-esmeralda via-esmeralda-dark to-esmeralda-deep pt-10 pb-24 text-text-on-dark">
-          <div className="absolute inset-0">
+        {/* Hero */}
+        <Section
+          id="hero"
+          tone="dark"
+          spacing="none"
+          className="overflow-hidden pb-24 pt-10"
+          aria-labelledby="sobre-hero-title"
+        >
+          <div className="absolute inset-0 z-0" aria-hidden="true">
             <Image
               src="/assets/images/sobre-nos-hero.webp"
-              alt="Nossa história"
+              alt=""
               fill
               className="object-cover opacity-30"
               priority
               sizes="100vw"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-esmeralda-deep/70 via-esmeralda-deep/60 to-esmeralda-deep/90" />
-            <div className="absolute -top-32 right-0 h-64 w-64 rounded-full bg-action-strong/20 blur-[120px]" />
-            <div className="absolute -bottom-20 left-10 h-72 w-72 rounded-full bg-esmeralda-light/10 blur-[140px]" />
+            <div className="absolute inset-0 bg-gradient-to-b from-surface-dark/70 via-surface-dark/60 to-surface-dark/90" />
+            <div className="absolute -top-32 right-0 h-64 w-64 rounded-full bg-action-strong/20 blur-3xl" />
+            <div className="absolute -bottom-20 left-10 h-72 w-72 rounded-full bg-action-on-dark/10 blur-3xl" />
           </div>
 
-          <div className="relative mx-auto flex max-w-6xl flex-col gap-6 px-4 text-center sm:px-6 lg:px-8">
-            <span className="mx-auto inline-flex items-center gap-2 rounded-full border border-text-on-dark/30 bg-white/10 px-4 py-1 font-jost text-xs font-semibold uppercase tracking-[0.3em] text-text-on-dark/80">
-              Tradição desde 1985
-            </span>
-            <h1 className="font-philosopher font-bold leading-none">
-              <span className="block text-[clamp(40px,5vw+16px,64px)]">Nossa</span>
-              <span className="block text-[clamp(32px,4vw+12px,56px)] text-action-strong">História</span>
-            </h1>
-            <p className="mx-auto max-w-3xl font-montserrat text-lg text-text-on-dark/90 leading-relaxed">
-              Mais de quatro décadas dedicadas à arte da joalheria, criando memórias preciosas e momentos inesquecíveis para famílias inteiras.
-            </p>
-          </div>
-        </section>
+          <Container size="md" className="relative z-10">
+            <SectionHeading
+              as="h1"
+              align="center"
+              tone="dark"
+              titleId="sobre-hero-title"
+              eyebrow={
+                <Badge variant="dark">Tradição desde 1985</Badge>
+              }
+              title={
+                <>
+                  Nossa{' '}
+                  <span className="block text-action-on-dark">História</span>
+                </>
+              }
+              description="Mais de quatro décadas dedicadas à arte da joalheria, criando memórias preciosas e momentos inesquecíveis para famílias inteiras."
+            />
+          </Container>
+        </Section>
 
         {/* Content Overlap Wrapper */}
-        <section id="nossa-historia" className="relative -mt-16 rounded-t-[48px] bg-surface-page pb-24 pt-20">
-          <div className="mx-auto flex max-w-6xl flex-col gap-16 px-4 sm:px-6 lg:px-8">
+        <Section id="nossa-historia" tone="light" spacing="none" className="relative z-10 -mt-16 rounded-t-3xl pb-24 pt-20">
+          <Container className="flex flex-col gap-16">
 
             {/* Stats Grid - Glass Cards */}
-            <div id="numeros" className="grid gap-6 sm:grid-cols-3 -mt-8 relative z-10">
+            <div id="numeros" className="relative z-10 -mt-8 grid gap-6 sm:grid-cols-3">
               {legacyStats.map((item) => (
-                <div
+                <Card
                   key={item.label}
-                  className="rounded-3xl border border-white/60 bg-surface-card p-6 text-left shadow-card backdrop-blur-md transition-all duration-300 hover:-translate-y-2 hover:shadow-card-hover hover:border-action-primary/20 hover:bg-white"
+                  variant="light"
+                  interactive
+                  className="p-6 text-left backdrop-blur-md hover:border-action-strong"
                 >
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-action-primary/5 text-action-strong">
+                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-surface-subtle text-action-strong">
                     <item.icon className="h-6 w-6" />
                   </div>
-                  <p className="font-philosopher text-2xl font-bold text-text-primary mb-1">{item.value}</p>
-                  <p className="font-jost text-xs font-semibold uppercase tracking-wide text-action-primary/70 mb-3">{item.label}</p>
-                  <p className="font-montserrat text-sm text-text-secondary/80 leading-relaxed">{item.description}</p>
-                </div>
+                  <p className="font-heading text-2xl font-bold text-text-primary mb-1">{item.value}</p>
+                  <p className="font-sans text-xs font-semibold uppercase tracking-wide text-action-primary/70 mb-3">{item.label}</p>
+                  <p className="font-sans text-sm text-text-secondary/80 leading-relaxed">{item.description}</p>
+                </Card>
               ))}
             </div>
 
             {/* Section Title */}
-            <div className="text-center w-full max-w-3xl mx-auto">
-              <h2 className="font-philosopher font-bold text-4xl text-text-primary mb-4">
-                40 Anos de <span className="text-action-strong">Tradição</span>
-              </h2>
-              <p className="font-montserrat text-sm text-text-secondary/60">
-                Uma jornada de paixão, dedicação e compromisso com a arte da joalheria
-              </p>
-            </div>
+            <SectionHeading
+              align="center"
+              className="mx-auto w-full max-w-3xl"
+              title={
+                <>
+                  40 Anos de <span className="text-action-strong">Tradição</span>
+                </>
+              }
+              description="Uma jornada de paixão, dedicação e compromisso com a arte da joalheria"
+            />
 
             {/* Featured Quote Block */}
-            <div className="relative rounded-3xl bg-gradient-to-br from-esmeralda-deep via-esmeralda-dark to-esmeralda p-8 md:p-12 text-center overflow-hidden">
+            <Card variant="dark" className="relative overflow-hidden p-8 text-center md:p-12">
               {/* Decorative Elements */}
-              <div className="absolute -top-20 -right-20 h-40 w-40 rounded-full bg-action-strong/20 blur-[80px]" />
-              <div className="absolute -bottom-20 -left-20 h-40 w-40 rounded-full bg-esmeralda-light/20 blur-[80px]" />
+              <div className="absolute -top-20 -right-20 h-40 w-40 rounded-full bg-action-strong/20 blur-3xl" aria-hidden="true" />
+              <div className="absolute -bottom-20 -left-20 h-40 w-40 rounded-full bg-action-on-dark/10 blur-3xl" aria-hidden="true" />
 
               <div className="relative">
-                <Quote className="mx-auto h-8 w-8 text-action-strong/80 mb-6" />
-                <blockquote className="font-philosopher text-xl md:text-2xl font-bold text-text-on-dark leading-relaxed mb-6">
+                <Quote className="mx-auto h-8 w-8 text-action-strong/80 mb-6" aria-hidden="true" />
+                <blockquote className="font-heading text-xl md:text-2xl font-bold text-text-on-dark leading-relaxed mb-6">
                   &ldquo;Movido pela paixão pela arte da joalheria e pelo desejo de criar peças que{' '}
                   <span className="text-action-strong">eternizassem momentos especiais</span>&rdquo;
                 </blockquote>
-                <cite className="font-jost text-xs text-text-on-dark/70 not-italic uppercase tracking-widest">
+                <cite className="font-sans text-xs text-text-on-dark/70 not-italic uppercase tracking-widest">
                   — Mestre Joalheiro Cícero, Fundador
                 </cite>
               </div>
-            </div>
+            </Card>
 
             {/* Story Cards Grid */}
             <div className="grid gap-6 md:grid-cols-2">
               {/* Card: O Início - 1985 */}
-              <div className="group rounded-3xl border border-white/60 bg-surface-card p-6 shadow-card backdrop-blur-sm transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1 hover:bg-white hover:border-action-primary/20">
+              <Card variant="light" interactive className="p-6 hover:border-action-strong">
                 <div className="flex items-center gap-3 mb-4">
                   <span className="h-1 w-8 rounded-full bg-action-strong" />
-                  <span className="font-jost text-xs font-bold uppercase tracking-widest text-action-strong">
+                  <span className="font-sans text-xs font-bold uppercase tracking-widest text-action-strong">
                     1985 — O Início
                   </span>
                 </div>
-                <p className="font-montserrat text-base text-text-secondary/80 leading-relaxed">
+                <p className="font-sans text-base text-text-secondary/80 leading-relaxed">
                   {storyParagraphs[0]}
                 </p>
-              </div>
+              </Card>
 
               {/* Card: Crescimento */}
-              <div className="group rounded-3xl border border-white/60 bg-surface-card p-6 shadow-card backdrop-blur-sm transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1 hover:bg-white hover:border-action-primary/20">
+              <Card variant="light" interactive className="p-6 hover:border-action-primary">
                 <div className="flex items-center gap-3 mb-4">
                   <span className="h-1 w-8 rounded-full bg-action-primary" />
-                  <span className="font-jost text-xs font-bold uppercase tracking-widest text-action-primary">
+                  <span className="font-sans text-xs font-bold uppercase tracking-widest text-action-primary">
                     Crescimento
                   </span>
                 </div>
-                <p className="font-montserrat text-base text-text-secondary/80 leading-relaxed">
+                <p className="font-sans text-base text-text-secondary/80 leading-relaxed">
                   {storyParagraphs[1]}
                 </p>
-              </div>
+              </Card>
 
               {/* Card: Expansão - 2000 */}
-              <div className="group rounded-3xl border border-white/60 bg-surface-card p-6 shadow-card backdrop-blur-sm transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1 hover:bg-white hover:border-action-primary/20">
+              <Card variant="light" interactive className="p-6 hover:border-action-strong">
                 <div className="flex items-center gap-3 mb-4">
                   <span className="h-1 w-8 rounded-full bg-action-strong" />
-                  <span className="font-jost text-xs font-bold uppercase tracking-widest text-action-strong">
+                  <span className="font-sans text-xs font-bold uppercase tracking-widest text-action-strong">
                     2000 — Expansão
                   </span>
                 </div>
-                <p className="font-montserrat text-base text-text-secondary/80 leading-relaxed">
+                <p className="font-sans text-base text-text-secondary/80 leading-relaxed">
                   {storyParagraphs[2]}
                 </p>
-              </div>
+              </Card>
 
               {/* Card: Hoje - Destacado */}
-              <div className="group rounded-3xl border border-action-strong/30 bg-gradient-to-br from-action-strong/10 to-transparent p-6 shadow-card backdrop-blur-sm transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1">
+              <Card
+                variant="light"
+                interactive
+                className="border-action-strong/30 bg-gradient-to-br from-action-strong/10 to-transparent p-6 hover:border-action-strong"
+              >
                 <div className="flex items-center gap-3 mb-4">
                   <span className="h-1 w-8 rounded-full bg-action-strong" />
-                  <span className="font-jost text-xs font-bold uppercase tracking-widest text-action-strong">
+                  <span className="font-sans text-xs font-bold uppercase tracking-widest text-action-strong">
                     Hoje — Legado Vivo
                   </span>
                 </div>
-                <p className="font-montserrat text-base text-text-secondary/80 leading-relaxed">
+                <p className="font-sans text-base text-text-secondary/80 leading-relaxed">
                   {storyParagraphs[3]}
                 </p>
-              </div>
+              </Card>
             </div>
 
             {/* Decorative Divider */}
@@ -220,64 +245,57 @@ export default function SobrePage() {
             </div>
 
             {/* Timeline - Glass Card Container */}
-            <div className="rounded-3xl border border-white/60 bg-surface-card p-8 shadow-card backdrop-blur-sm">
+            <Card variant="light" className="p-8 backdrop-blur-sm">
               <div className="grid gap-12 md:grid-cols-3">
                 {timeline.map((item, index) => (
                   <div key={item.year} className="relative flex flex-col gap-4 text-left group">
                     {index < timeline.length - 1 && (
                       <span className="absolute right-[-24px] top-6 hidden h-px w-12 bg-gradient-to-r from-action-primary/20 to-transparent md:block" />
                     )}
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-action-primary/5 text-action-primary transition-all duration-300 group-hover:scale-110 group-hover:bg-action-strong/10 group-hover:text-action-strong">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-surface-subtle text-action-primary transition-all duration-300 group-hover:scale-110 group-hover:bg-action-strong/10 group-hover:text-action-strong">
                       <item.icon className="h-6 w-6" />
                     </div>
-                    <span className="font-jost text-sm font-bold uppercase tracking-widest text-action-strong">{item.year}</span>
-                    <h3 className="font-philosopher text-xl font-bold text-text-primary">{item.title}</h3>
-                    <p className="font-montserrat text-sm text-text-secondary/80 leading-relaxed">{item.description}</p>
+                    <span className="font-sans text-sm font-bold uppercase tracking-widest text-action-strong">{item.year}</span>
+                    <h3 className="font-heading text-xl font-bold text-text-primary">{item.title}</h3>
+                    <p className="font-sans text-sm text-text-secondary/80 leading-relaxed">{item.description}</p>
                   </div>
                 ))}
               </div>
-            </div>
-          </div>
-        </section>
+            </Card>
+          </Container>
+        </Section>
 
         {/* CTA Section */}
-        <section id="contato" className="relative overflow-hidden bg-esmeralda-deep py-24 text-text-on-dark">
-          <div className="absolute inset-0 opacity-30">
-            <div className="absolute -right-12 top-0 h-48 w-48 rounded-full bg-action-strong/20 blur-[120px]" />
-            <div className="absolute -left-16 bottom-0 h-56 w-56 rounded-full bg-esmeralda-light/20 blur-[140px]" />
+        <Section id="contato" tone="dark" spacing="lg" className="overflow-hidden" aria-labelledby="sobre-cta-title">
+          <div className="absolute inset-0 opacity-30" aria-hidden="true">
+            <div className="absolute -right-12 top-0 h-48 w-48 rounded-full bg-action-strong/20 blur-3xl" />
+            <div className="absolute -left-16 bottom-0 h-56 w-56 rounded-full bg-action-on-dark/10 blur-3xl" />
           </div>
-          {/* Blend Gradient */}
-          <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-surface-page/5 to-transparent opacity-10" />
 
-          <div className="relative mx-auto flex max-w-4xl flex-col items-center gap-8 px-4 text-center sm:px-6">
-            <span className="inline-flex items-center gap-2 rounded-full border border-text-on-dark/20 bg-white/5 px-4 py-1 font-jost text-xs font-semibold uppercase tracking-[0.3em] text-text-on-dark/70">
-              Conecte-se conosco
-            </span>
-            <Quote className="h-8 w-8 text-action-strong/80" />
-            <h2 className="font-philosopher font-bold text-[clamp(28px,4vw+10px,42px)]">
+          <Container size="md" className="relative flex flex-col items-center gap-8 text-center">
+            <Badge variant="dark">Conecte-se conosco</Badge>
+            <Quote className="h-8 w-8 text-action-strong/80" aria-hidden="true" />
+            <h2
+              id="sobre-cta-title"
+              className="font-heading font-bold text-[clamp(28px,4vw+10px,42px)] text-text-on-dark"
+            >
               Cícero Joias: tradição que se renova a cada momento especial
             </h2>
-            <p className="max-w-2xl font-montserrat text-sm text-text-on-dark/75 leading-relaxed">
+            <p className="max-w-2xl font-sans text-sm text-text-on-dark/75 leading-relaxed">
               Convidamos você a fazer parte da história da Cícero Joias. Visite nossas lojas, conheça nosso trabalho e descubra como podemos transformar seus momentos especiais em memórias eternas.
             </p>
             <div className="flex flex-col gap-4 sm:flex-row">
-              <Link
-                href="/servicos"
-                className="inline-flex items-center justify-center rounded-full bg-action-strong px-8 py-3 font-jost text-sm font-bold uppercase tracking-[0.2em] text-text-on-brand shadow-button-primary transition-all duration-300 hover:bg-action-strong-hover hover:scale-105 hover:-translate-y-1"
-              >
-                Nossos Serviços
-              </Link>
-              <Link
-                href="https://wa.me/5583991180251"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-full border border-text-on-dark/30 hover:border-text-on-dark/60 px-8 py-3 font-jost text-sm font-bold uppercase tracking-[0.2em] text-text-on-dark transition-all duration-300 hover:bg-white/5"
-              >
-                Falar no WhatsApp
-              </Link>
+              <Button asChild variant="goldOnDark" size="lg">
+                <Link href="/servicos">Nossos Serviços</Link>
+              </Button>
+              <Button asChild variant="outlineDark" size="lg">
+                <Link href="https://wa.me/5583991180251" target="_blank" rel="noopener noreferrer">
+                  Falar no WhatsApp
+                </Link>
+              </Button>
             </div>
-          </div>
-        </section>
+          </Container>
+        </Section>
       </div>
     </PageVisibilityGuard>
   );

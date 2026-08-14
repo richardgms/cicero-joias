@@ -26,6 +26,7 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
   const isCleaningRoute = normalizedPath === '/servicos/limpeza-de-joias';
   const isPortfolioRoute =
     normalizedPath === '/portfolio' || normalizedPath.startsWith('/portfolio/');
+  const isAboutRoute = normalizedPath === '/sobre';
   const usesPublicDesignSystem =
     isHomeRoute ||
     isServicesIndexRoute ||
@@ -35,7 +36,8 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
     isCustomJewelryRoute ||
     isEyewearRoute ||
     isCleaningRoute ||
-    isPortfolioRoute;
+    isPortfolioRoute ||
+    isAboutRoute;
   const showEngagementWidgets = usesPublicDesignSystem;
 
   if (isAdminRoute) {
