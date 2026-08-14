@@ -69,7 +69,7 @@ export default async function PortfolioPage() {
         categories={categories}
         totalCount={totalCount}
       />
-      <FinalCTASection />
+      <FinalCTASection appearance="home-dark" />
     </>
   );
 }

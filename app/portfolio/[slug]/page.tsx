@@ -135,7 +135,7 @@ export default async function PortfolioItemPage({ params }: PageProps) {
           description: p.description,
         }))}
       />
-      <FinalCTASection />
+      <FinalCTASection appearance="home-dark" />
     </>
   );
 }

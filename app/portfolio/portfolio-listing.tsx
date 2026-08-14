@@ -16,7 +16,11 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Section } from '@/components/ui/section';
+import { Container } from '@/components/ui/container';
+import { SectionHeading } from '@/components/ui/section-heading';
 import { generatePortfolioSlug } from '@/lib/slug-utils';
 
 const categoryLabels: Record<string, string> = {
@@ -123,56 +127,64 @@ export function PortfolioListing({ initialItems, categories, totalCount }: Portf
     return (
         <div className="min-h-screen bg-surface-page">
             {/* Hero Section */}
-            <section className="relative overflow-hidden bg-gradient-to-br from-esmeralda info-esmeralda-dark via-esmeralda to-esmeralda-deep pt-16 pb-32 text-text-on-dark">
-                <div className="absolute inset-0 z-0">
-                    <div className="absolute inset-0 bg-gradient-to-b from-esmeralda-deep/80 via-esmeralda-deep/70 to-esmeralda-deep/90" />
-                    <div className="absolute inset-0 bg-[url('/assets/noise.webp')] opacity-[0.03] mix-blend-overlay" />
-                    <div className="absolute -top-32 right-0 h-96 w-96 rounded-full bg-action-strong/10 blur-[120px]" />
-                    <div className="absolute -bottom-20 left-10 h-80 w-80 rounded-full bg-esmeralda-light/10 blur-[140px]" />
+            <Section
+                id="portfolio-hero"
+                tone="dark"
+                spacing="none"
+                className="overflow-hidden pb-32 pt-16"
+                aria-labelledby="portfolio-hero-title"
+            >
+                <div className="absolute inset-0 z-0" aria-hidden="true">
+                    <Image
+                        src="/assets/images/portfolio-hero.webp"
+                        alt=""
+                        fill
+                        className="object-cover opacity-20"
+                        priority
+                        sizes="100vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-surface-dark/80 via-surface-dark/70 to-surface-dark/90" />
+                    <div className="absolute -right-8 -top-16 h-80 w-80 rounded-full bg-action-on-dark/10 blur-3xl" />
+                    <div className="absolute -bottom-16 -left-8 h-72 w-72 rounded-full bg-action-primary/20 blur-3xl" />
                 </div>
 
-                <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="visible"
-                    className="relative z-10 mx-auto flex max-w-6xl flex-col gap-8 px-4 text-center sm:px-6 lg:px-8"
-                >
-                    <motion.div variants={itemVariants} className="mx-auto inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 backdrop-blur-md shadow-lg">
-                        <Star className="w-3 h-3 text-ouro fill-ouro" />
-                        <span className="font-jost text-[10px] md:text-xs font-semibold uppercase tracking-[0.2em] text-ouro/90">
-                            Nosso trabalho em foco
-                        </span>
-                    </motion.div>
-
-                    <h1 className="font-philosopher font-bold leading-tight">
-                        <motion.span variants={itemVariants} className="block text-[clamp(40px,5vw+16px,64px)] text-transparent bg-clip-text bg-gradient-to-b from-white to-white/80 filter drop-shadow-2xl">
-                            Portfólio de
-                        </motion.span>
-                        <motion.span variants={itemVariants} className="block text-[clamp(32px,4vw+12px,56px)] text-ouro/90 filter drop-shadow-lg">
-                            Joias e Restaurações
-                        </motion.span>
-                    </h1>
-
-                    <motion.p variants={itemVariants} className="mx-auto max-w-2xl font-montserrat text-base md:text-lg text-white/75 leading-relaxed">
-                        Conheça projetos recentes: alianças personalizadas, restaurações com memória afetiva e renovações de peças queridas.
-                    </motion.p>
-                </motion.div>
-            </section>
+                <Container size="md" className="relative z-10">
+                    <SectionHeading
+                        as="h1"
+                        align="center"
+                        tone="dark"
+                        titleId="portfolio-hero-title"
+                        eyebrow={
+                            <Badge variant="dark" className="gap-2">
+                                <Star className="h-3 w-3 fill-current" aria-hidden="true" />
+                                Nosso trabalho em foco
+                            </Badge>
+                        }
+                        title={
+                            <>
+                                Portfólio de{' '}
+                                <span className="block text-action-on-dark">Joias e Restaurações</span>
+                            </>
+                        }
+                        description="Conheça projetos recentes: alianças personalizadas, restaurações com memória afetiva e renovações de peças queridas."
+                    />
+                </Container>
+            </Section>
 
             {/* Content Section */}
-            <section className="relative -mt-16 rounded-t-[48px] bg-surface-page pb-24 pt-20 shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
-                <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <Section tone="light" spacing="none" className="relative z-10 -mt-16 rounded-t-3xl pb-24 pt-20">
+                <Container>
 
                     {/* Filters Container */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="mb-12 flex flex-col gap-6 rounded-3xl border border-ouro/10 bg-surface-card p-6 shadow-card backdrop-blur-sm"
+                        className="mb-12 flex flex-col gap-6 rounded-3xl border border-border-default bg-surface-card p-6 shadow-card backdrop-blur-sm"
                     >
                         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                            <div className="flex flex-1 items-center gap-3 rounded-full border border-ouro/20 bg-white/50 px-4 py-2 transition-colors focus-within:border-ouro/50">
-                                <Search className="h-4 w-4 text-ouro" />
+                            <div className="flex flex-1 items-center gap-3 rounded-full border border-action-strong/20 bg-white/50 px-4 py-2 transition-colors focus-within:border-action-strong/50">
+                                <Search className="h-4 w-4 text-action-strong" />
                                 <Input
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -184,7 +196,7 @@ export function PortfolioListing({ initialItems, categories, totalCount }: Portf
                                 <Button
                                     variant={viewMode === 'grid' ? 'default' : 'outline'}
                                     size="sm"
-                                    className={viewMode === 'grid' ? 'bg-action-primary text-text-on-dark shadow-sm' : 'border-ouro/20 text-text-secondary hover:bg-ouro/10'}
+                                    className={viewMode === 'grid' ? 'bg-action-primary text-text-on-dark shadow-sm' : 'border-border-default text-text-secondary hover:bg-surface-subtle'}
                                     onClick={() => setViewMode('grid')}
                                 >
                                     <Grid3X3 className="h-4 w-4" />
@@ -192,7 +204,7 @@ export function PortfolioListing({ initialItems, categories, totalCount }: Portf
                                 <Button
                                     variant={viewMode === 'list' ? 'default' : 'outline'}
                                     size="sm"
-                                    className={viewMode === 'list' ? 'bg-action-primary text-text-on-dark shadow-sm' : 'border-ouro/20 text-text-secondary hover:bg-ouro/10'}
+                                    className={viewMode === 'list' ? 'bg-action-primary text-text-on-dark shadow-sm' : 'border-border-default text-text-secondary hover:bg-surface-subtle'}
                                     onClick={() => setViewMode('list')}
                                 >
                                     <List className="h-4 w-4" />
@@ -200,9 +212,9 @@ export function PortfolioListing({ initialItems, categories, totalCount }: Portf
                                 <Button
                                     variant="outline"
                                     size="sm"
-                                    className="border-ouro/20 text-text-secondary hover:bg-ouro/10 group"
+                                    className="border-border-default text-text-secondary hover:bg-surface-subtle group"
                                 >
-                                    <SlidersHorizontal className="h-4 w-4 mr-2 text-ouro" />
+                                    <SlidersHorizontal className="h-4 w-4 mr-2 text-action-strong" />
                                     Filtros
                                 </Button>
                             </div>
@@ -212,9 +224,8 @@ export function PortfolioListing({ initialItems, categories, totalCount }: Portf
                             <div className="flex flex-wrap gap-2 md:col-span-2">
                                 <Badge
                                     onClick={() => handleCategoryChange('all')}
-                                    className={`cursor-pointer border transition-all duration-300 ${selectedCategory === 'all'
-                                        ? 'bg-action-primary text-text-on-dark border-transparent shadow-sm'
-                                        : 'bg-white/50 text-text-secondary border-ouro/20 hover:bg-ouro/10 hover:border-ouro/40'}`}
+                                    variant={selectedCategory === 'all' ? 'default' : 'outline'}
+                                    className="cursor-pointer"
                                 >
                                     Todos
                                 </Badge>
@@ -222,9 +233,8 @@ export function PortfolioListing({ initialItems, categories, totalCount }: Portf
                                     <Badge
                                         key={category}
                                         onClick={() => handleCategoryChange(category)}
-                                        className={`cursor-pointer border transition-all duration-300 ${selectedCategory === category
-                                            ? 'bg-action-primary text-text-on-dark border-transparent shadow-sm'
-                                            : 'bg-white/50 text-text-secondary border-ouro/20 hover:bg-ouro/10 hover:border-ouro/40'}`}
+                                        variant={selectedCategory === category ? 'default' : 'outline'}
+                                        className="cursor-pointer"
                                     >
                                         {categoryLabels[category] || category}
                                     </Badge>
@@ -232,9 +242,9 @@ export function PortfolioListing({ initialItems, categories, totalCount }: Portf
                             </div>
 
                             <div className="flex items-center justify-end gap-2">
-                                <span className="font-jost text-xs font-semibold uppercase tracking-wide text-text-secondary/70">Organizar por</span>
+                                <span className="font-sans text-xs font-semibold uppercase tracking-wide text-text-secondary/70">Organizar por</span>
                                 <Select value={dateFilter} onValueChange={setDateFilter}>
-                                    <SelectTrigger className="w-[160px] border-ouro/20 text-text-primary bg-white/50 focus:ring-ouro/30">
+                                    <SelectTrigger className="w-[160px] border-action-strong/20 text-text-primary bg-white/50 focus:ring-action-strong/30">
                                         <SelectValue placeholder="Mais recentes" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -245,7 +255,7 @@ export function PortfolioListing({ initialItems, categories, totalCount }: Portf
                             </div>
                         </div>
 
-                        <div className="flex items-center justify-end font-montserrat text-xs text-text-secondary/60">
+                        <div className="flex items-center justify-end font-sans text-xs text-text-secondary/60">
                             {filteredAndSortedItems.length > 0 && (
                                 <p>Exibindo {paginatedItems.length} de {filteredAndSortedItems.length} projetos</p>
                             )}
@@ -256,10 +266,10 @@ export function PortfolioListing({ initialItems, categories, totalCount }: Portf
                     <AnimatePresence initial={false}>
                         {paginatedItems.length === 0 ? (
                             <div className="flex h-48 flex-col items-center justify-center gap-3 text-center">
-                                <p className="font-montserrat text-sm text-text-secondary/70">
+                                <p className="font-sans text-sm text-text-secondary/70">
                                     Nenhum projeto encontrado com os filtros atuais.
                                 </p>
-                                <Button onClick={() => handleCategoryChange('all')} variant="outline" className="font-montserrat border-ouro/30 text-ouro">
+                                <Button onClick={() => handleCategoryChange('all')} variant="outline" className="border-action-strong/30 text-action-strong">
                                     Limpar filtros
                                 </Button>
                             </div>
@@ -274,13 +284,18 @@ export function PortfolioListing({ initialItems, categories, totalCount }: Portf
                             >
                                 {paginatedItems.map((item) => (
                                     <motion.div key={item.id} variants={itemVariants} layout>
-                                        <Link href={`/portfolio/${generatePortfolioSlug({
-                                            title: item.title,
-                                            category: item.category,
-                                            id: item.id
-                                        })}`}>
-                                            <div
-                                                className={`group h-full rounded-3xl border border-ouro/15 bg-surface-card p-4 shadow-card transition-all duration-500 hover:border-ouro/50 hover:shadow-card-hover hover:-translate-y-1 hover:bg-white ${viewMode === 'list' ? 'flex flex-col md:flex-row gap-6 p-6' : ''}`}
+                                        <Link
+                                            href={`/portfolio/${generatePortfolioSlug({
+                                                title: item.title,
+                                                category: item.category,
+                                                id: item.id
+                                            })}`}
+                                            className="block h-full"
+                                        >
+                                            <Card
+                                                variant="light"
+                                                interactive
+                                                className={`group h-full p-4 hover:border-action-strong ${viewMode === 'list' ? 'flex flex-col gap-6 p-6 md:flex-row' : ''}`}
                                             >
                                                 <div className={viewMode === 'list' ? 'relative h-56 w-full md:w-64 overflow-hidden rounded-2xl md:rounded-l-2xl md:rounded-r-lg' : 'relative aspect-[4/3] w-full overflow-hidden rounded-2xl'}>
                                                     <Image
@@ -293,9 +308,9 @@ export function PortfolioListing({ initialItems, categories, totalCount }: Portf
                                                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
                                                     <div className="absolute bottom-3 left-3 flex items-center gap-2 transform translate-y-4 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-                                                        <div className="flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 font-jost text-xs font-semibold uppercase tracking-wide text-white backdrop-blur-md">
+                                                        <div className="flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 font-sans text-xs font-semibold uppercase tracking-wide text-white backdrop-blur-md">
                                                             <Clock className="h-3 w-3" />
-                                                            {new Date(item.createdAt).toLocaleDateString('pt-BR')}
+                                                            <span className="font-numeric">{new Date(item.createdAt).toLocaleDateString('pt-BR')}</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -303,24 +318,24 @@ export function PortfolioListing({ initialItems, categories, totalCount }: Portf
                                                 <div className={viewMode === 'list' ? 'flex flex-1 flex-col justify-between' : 'flex flex-col justify-between pt-6'}>
                                                     <div className="space-y-3">
                                                         <div className="flex items-center gap-2">
-                                                            <Badge className="bg-ouro/10 text-ouro border-transparent group-hover:bg-ouro/20 transition-colors">
+                                                            <Badge variant="gold">
                                                                 {categoryLabels[item.category] || item.category}
                                                             </Badge>
                                                         </div>
-                                                        <h3 className="font-philosopher text-xl font-bold text-text-primary group-hover:text-ouro transition-colors line-clamp-2">
+                                                        <h3 className="font-heading text-xl font-bold text-text-primary transition-colors group-hover:text-action-strong line-clamp-2">
                                                             {item.title}
                                                         </h3>
                                                         {(item.description && viewMode === 'list') && (
-                                                            <p className="font-montserrat text-sm text-text-secondary/70 line-clamp-2">{item.description}</p>
+                                                            <p className="font-sans text-sm text-text-secondary/70 line-clamp-2">{item.description}</p>
                                                         )}
                                                     </div>
 
-                                                    <div className="mt-4 flex items-center justify-between font-jost text-xs font-bold uppercase tracking-widest text-ouro border-t border-transparent pt-4 group-hover:border-ouro/10 transition-colors">
+                                                    <div className="mt-4 flex items-center justify-between border-t border-transparent pt-4 font-sans text-xs font-bold uppercase tracking-widest text-action-strong transition-colors group-hover:border-action-strong/10">
                                                         <span>Ver detalhes</span>
                                                         <ArrowRight className="h-4 w-4 transform transition-transform duration-300 group-hover:translate-x-1" />
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </Card>
                                         </Link>
                                     </motion.div>
                                 ))}
@@ -335,7 +350,7 @@ export function PortfolioListing({ initialItems, categories, totalCount }: Portf
                                 variant="outline"
                                 onClick={() => handlePageChange(currentPage - 1)}
                                 disabled={currentPage <= 1}
-                                className="font-montserrat border-ouro/20 text-text-secondary hover:border-ouro hover:text-ouro disabled:opacity-50"
+                                className="border-border-default text-text-secondary hover:border-action-strong hover:text-action-strong disabled:opacity-50"
                                 size="sm"
                             >
                                 Anterior
@@ -346,9 +361,9 @@ export function PortfolioListing({ initialItems, categories, totalCount }: Portf
                                         key={page}
                                         variant={page === currentPage ? 'default' : 'outline'}
                                         onClick={() => handlePageChange(page)}
-                                        className={page === currentPage
-                                            ? 'font-montserrat bg-action-primary text-text-on-dark hover:bg-action-primary-hover shadow-button-primary'
-                                            : 'font-montserrat border-ouro/20 text-text-secondary hover:border-ouro hover:text-ouro'}
+                                        className={`font-numeric ${page === currentPage
+                                            ? 'bg-action-primary text-text-on-dark hover:bg-action-primary-hover shadow-button-primary'
+                                            : 'border-border-default text-text-secondary hover:border-action-strong hover:text-action-strong'}`}
                                         size="sm"
                                     >
                                         {page}
@@ -359,15 +374,15 @@ export function PortfolioListing({ initialItems, categories, totalCount }: Portf
                                 variant="outline"
                                 onClick={() => handlePageChange(currentPage + 1)}
                                 disabled={currentPage >= totalPages}
-                                className="font-montserrat border-ouro/20 text-text-secondary hover:border-ouro hover:text-ouro disabled:opacity-50"
+                                className="border-border-default text-text-secondary hover:border-action-strong hover:text-action-strong disabled:opacity-50"
                                 size="sm"
                             >
                                 Próxima
                             </Button>
                         </div>
                     )}
-                </div>
-            </section>
+                </Container>
+            </Section>
         </div>
     );
 }

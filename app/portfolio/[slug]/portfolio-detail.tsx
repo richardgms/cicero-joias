@@ -8,6 +8,9 @@ import { Button } from '@/components/ui/button';
 import { generatePortfolioSlug } from '@/lib/slug-utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/card';
+import { Section } from '@/components/ui/section';
+import { Container } from '@/components/ui/container';
 import { toast } from 'sonner';
 
 const categoryLabels: Record<string, string> = {
@@ -81,18 +84,27 @@ export function PortfolioDetail({ portfolioItem, relatedProjects }: PortfolioDet
     return (
         <div className="min-h-screen bg-surface-page">
             {/* Hero Header */}
-            <div className="relative overflow-hidden bg-esmeralda-deep pt-16 pb-16 lg:pt-24 lg:pb-24">
-                <div className="absolute inset-0 z-0">
-                    <div className="absolute inset-0 bg-gradient-to-b from-esmeralda-deep/90 via-esmeralda-deep/80 to-esmeralda-deep/95" />
-                    <div className="absolute inset-0 bg-[url('/assets/noise.webp')] opacity-[0.03] mix-blend-overlay" />
-                    <div className="absolute -top-32 right-0 h-96 w-96 rounded-full bg-action-strong/5 blur-[120px]" />
+            <Section tone="dark" spacing="none" className="overflow-hidden pb-16 pt-16 lg:pb-24 lg:pt-24">
+                <div className="absolute inset-0 z-0" aria-hidden="true">
+                    {portfolioItem.mainImage && (
+                        <Image
+                            src={portfolioItem.mainImage}
+                            alt=""
+                            fill
+                            className="object-cover opacity-25 blur-sm scale-105"
+                            priority
+                            sizes="100vw"
+                        />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-b from-surface-dark/90 via-surface-dark/80 to-surface-dark/95" />
+                    <div className="absolute -right-8 -top-16 h-80 w-80 rounded-full bg-action-on-dark/10 blur-3xl" />
                 </div>
 
-                <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <Container size="lg" className="relative z-10">
                     <div className="mb-8">
                         <Link
                             href="/portfolio"
-                            className="group inline-flex items-center gap-2 font-jost text-xs font-bold uppercase tracking-widest text-white/60 transition-colors hover:text-ouro"
+                            className="group inline-flex items-center gap-2 font-sans text-xs font-bold uppercase tracking-widest text-text-on-dark/60 transition-colors hover:text-action-on-dark"
                         >
                             <ChevronLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
                             Voltar para o Portfólio
@@ -105,24 +117,22 @@ export function PortfolioDetail({ portfolioItem, relatedProjects }: PortfolioDet
                         transition={{ duration: 0.6 }}
                     >
                         <div className="flex flex-wrap items-center gap-3 mb-6">
-                            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 backdrop-blur-md">
-                                <Star className="w-3 h-3 text-ouro fill-ouro" />
-                                <span className="font-jost text-[10px] md:text-xs font-semibold uppercase tracking-[0.2em] text-ouro/90">
-                                    {categoryLabels[portfolioItem.category] || portfolioItem.category}
-                                </span>
-                            </div>
-                            <div className="flex items-center gap-2 text-xs font-medium text-white/50">
+                            <Badge variant="dark" className="gap-2">
+                                <Star className="h-3 w-3 fill-current" aria-hidden="true" />
+                                {categoryLabels[portfolioItem.category] || portfolioItem.category}
+                            </Badge>
+                            <div className="flex items-center gap-2 text-xs font-medium text-text-on-dark/50">
                                 <Clock className="h-3 w-3" />
-                                <span>{new Date(portfolioItem.createdAt).toLocaleDateString('pt-BR')}</span>
+                                <span className="font-numeric">{new Date(portfolioItem.createdAt).toLocaleDateString('pt-BR')}</span>
                             </div>
                         </div>
 
-                        <h1 className="font-philosopher text-4xl font-bold text-white sm:text-5xl md:text-6xl leading-tight max-w-4xl">
+                        <h1 className="font-heading text-4xl font-bold leading-tight text-text-on-dark sm:text-5xl md:text-6xl max-w-4xl">
                             {portfolioItem.title}
                         </h1>
                     </motion.div>
-                </div>
-            </div>
+                </Container>
+            </Section>
 
             <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-10 pb-24 lg:pt-14">
                 <div className="grid gap-10 lg:grid-cols-[1.3fr,1fr] lg:gap-14 xl:gap-20">
@@ -148,21 +158,20 @@ export function PortfolioDetail({ portfolioItem, relatedProjects }: PortfolioDet
 
                             {/* Actions */}
                             <div className="absolute right-4 top-4 flex gap-2">
-                                <Button
-                                    size="icon"
-                                    variant="secondary"
-                                    className="h-10 w-10 rounded-full bg-white/90 text-text-primary shadow-sm hover:bg-white hover:text-action-primary backdrop-blur-sm transition-all hover:scale-105"
+                                <button
                                     onClick={handleShare}
+                                    className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white/90 backdrop-blur-md transition-all duration-300 hover:bg-black/60 hover:scale-105"
                                     title="Compartilhar"
+                                    aria-label="Compartilhar"
                                 >
                                     <Share2 className="h-4 w-4" />
-                                </Button>
+                                </button>
                             </div>
 
                             {/* Fullscreen expand button */}
                             <button
                                 onClick={() => setIsFullscreen(true)}
-                                className="absolute right-4 bottom-4 flex h-10 w-10 items-center justify-center rounded-full bg-black/50 text-white/90 backdrop-blur-sm transition-all hover:bg-black/70 hover:scale-105"
+                                className="absolute right-4 bottom-4 flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white/90 backdrop-blur-md transition-all duration-300 hover:bg-black/60 hover:scale-105"
                                 title="Ver em tela cheia"
                             >
                                 <Expand className="h-4 w-4" />
@@ -176,7 +185,7 @@ export function PortfolioDetail({ portfolioItem, relatedProjects }: PortfolioDet
                                     <button
                                         key={idx}
                                         onClick={() => setSelectedImageIndex(idx)}
-                                        className={`relative h-[72px] w-[72px] flex-shrink-0 overflow-hidden rounded-xl border-2 transition-all duration-300 ${selectedImageIndex === idx ? 'border-ouro ring-2 ring-ouro/30 shadow-md' : 'border-border-default/60 opacity-60 hover:opacity-100 hover:border-ouro/40'}`}
+                                        className={`relative h-[72px] w-[72px] flex-shrink-0 overflow-hidden rounded-xl border-2 transition-all duration-300 ${selectedImageIndex === idx ? 'border-action-strong ring-2 ring-action-strong/30 shadow-md' : 'border-border-default/60 opacity-60 hover:opacity-100 hover:border-action-strong/40'}`}
                                     >
                                         <Image
                                             src={img}
@@ -199,12 +208,12 @@ export function PortfolioDetail({ portfolioItem, relatedProjects }: PortfolioDet
                         transition={{ delay: 0.4, duration: 0.6 }}
                     >
                         <div className="space-y-5">
-                            <p className="font-montserrat text-[15px] leading-[1.8] text-text-secondary/80 sm:text-base whitespace-pre-wrap first-letter:text-4xl first-letter:font-philosopher first-letter:font-bold first-letter:text-ouro first-letter:mr-1 first-letter:float-left first-letter:leading-[0.85] first-letter:mt-1">
+                            <p className="font-sans text-[15px] leading-[1.8] text-text-secondary/80 sm:text-base whitespace-pre-wrap first-letter:text-4xl first-letter:font-heading first-letter:font-bold first-letter:text-action-strong first-letter:mr-1 first-letter:float-left first-letter:leading-[0.85] first-letter:mt-1">
                                 {portfolioItem.description}
                             </p>
 
                             {portfolioItem.detailedDescription && (
-                                <div className="text-[15px] leading-[1.8] text-text-secondary/70 font-montserrat pt-5 border-t border-border-default/60 whitespace-pre-wrap">
+                                <div className="text-[15px] leading-[1.8] text-text-secondary/70 font-sans pt-5 border-t border-border-default/60 whitespace-pre-wrap">
                                     {portfolioItem.detailedDescription}
                                 </div>
                             )}
@@ -212,42 +221,48 @@ export function PortfolioDetail({ portfolioItem, relatedProjects }: PortfolioDet
 
                         {/* Specifications */}
                         {portfolioItem.specifications && Object.keys(portfolioItem.specifications).length > 0 && (
-                            <div className="rounded-2xl border border-ouro/15 bg-white/80 p-6 sm:p-8 shadow-card-sm backdrop-blur-sm">
-                                <h3 className="font-philosopher text-lg font-bold text-text-primary mb-5 flex items-center gap-2.5">
-                                    <CheckCircle2 className="h-[18px] w-[18px] text-ouro" />
+                            <Card variant="light" className="p-6 shadow-card-sm backdrop-blur-sm sm:p-8">
+                                <h3 className="font-heading text-lg font-bold text-text-primary mb-5 flex items-center gap-2.5">
+                                    <CheckCircle2 className="h-[18px] w-[18px] text-action-strong" />
                                     Especificações
                                 </h3>
                                 <dl className="grid gap-x-8 gap-y-5 sm:grid-cols-2">
                                     {Object.entries(portfolioItem.specifications).map(([key, value]) => (
-                                        <div key={key} className="flex flex-col gap-1.5 border-l-2 border-ouro/25 pl-4">
+                                        <div key={key} className="flex flex-col gap-1.5 border-l-2 border-action-strong/25 pl-4">
                                             <dt className="text-[10px] font-bold uppercase tracking-[0.15em] text-text-secondary/60">{key}</dt>
-                                            <dd className="font-montserrat text-sm font-semibold text-text-primary">{value}</dd>
+                                            <dd className="font-sans text-sm font-semibold text-text-primary">{value}</dd>
                                         </div>
                                     ))}
                                 </dl>
-                            </div>
+                            </Card>
                         )}
 
                         {/* CTAs */}
                         <div className="flex flex-col gap-3 pt-6 sm:flex-row">
-                            <Button
-                                className="flex-1 group rounded-full bg-esmeralda text-white shadow-[0_8px_24px_-6px_rgba(24,68,52,0.4)] transition-all duration-500 hover:bg-esmeralda-dark hover:shadow-[0_12px_32px_-6px_rgba(24,68,52,0.5)] hover:-translate-y-0.5 py-6 font-jost uppercase tracking-[0.15em] text-[13px] font-bold"
-                                onClick={() => window.open(`https://wa.me/5583991180251?text=Olá! Gostaria de saber mais sobre o projeto: ${portfolioItem.title}`, '_blank')}
+                            <motion.div
+                                className="flex-1"
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
                             >
-                                <span className="flex items-center gap-2.5">
-                                    Solicitar Orçamento
-                                    <ArrowRight className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" />
-                                </span>
-                            </Button>
+                                <Button
+                                    className="group w-full rounded-full bg-action-strong py-6 font-sans text-[13px] font-bold uppercase tracking-[0.15em] text-text-on-brand shadow-button-primary transition-all duration-500 hover:-translate-y-0.5 hover:bg-action-strong/90 hover:shadow-button-gold-strong"
+                                    onClick={() => window.open(`https://wa.me/5583991180251?text=Olá! Gostaria de saber mais sobre o projeto: ${portfolioItem.title}`, '_blank')}
+                                >
+                                    <span className="flex items-center gap-2.5">
+                                        Solicitar Orçamento
+                                        <ArrowRight className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" />
+                                    </span>
+                                </Button>
+                            </motion.div>
 
                             {portfolioItem.product && (
                                 <Button
                                     variant="outline"
-                                    className="flex-1 group rounded-full border-ouro/30 bg-transparent text-text-primary transition-all duration-500 hover:border-ouro hover:text-ouro py-6 font-jost uppercase tracking-[0.15em] text-[13px] font-bold"
+                                    className="flex-1 group rounded-full border-action-strong/30 bg-transparent py-6 font-sans text-[13px] font-bold uppercase tracking-[0.15em] text-text-primary transition-all duration-500 hover:border-action-strong hover:text-action-strong"
                                     onClick={() => window.location.href = `/produtos/${portfolioItem.product!.id}`}
                                 >
                                     Ver Produto Relacionado
-                                    <ArrowRight className="ml-2 h-4 w-4 opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0" />
+                                    <ArrowRight className="ml-2 h-4 w-4 -translate-x-2 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100" />
                                 </Button>
                             )}
                         </div>
@@ -260,13 +275,13 @@ export function PortfolioDetail({ portfolioItem, relatedProjects }: PortfolioDet
                         <div className="mb-10 flex items-end justify-between">
                             <div>
                                 <div className="inline-flex items-center gap-2 mb-3">
-                                    <Star className="w-3.5 h-3.5 text-ouro" />
-                                    <span className="font-jost text-[10px] font-bold uppercase tracking-[0.2em] text-ouro/80">Descubra Mais</span>
+                                    <Star className="w-3.5 h-3.5 text-action-strong" />
+                                    <span className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-action-strong/80">Descubra Mais</span>
                                 </div>
-                                <h2 className="font-philosopher text-3xl font-bold text-text-primary sm:text-4xl">Projetos Relacionados</h2>
+                                <h2 className="font-heading text-3xl font-bold text-text-primary sm:text-4xl">Projetos Relacionados</h2>
                             </div>
                             <Link href="/portfolio">
-                                <Button variant="ghost" className="hidden text-ouro hover:text-ouro/80 hover:bg-ouro/5 sm:flex font-jost uppercase tracking-[0.15em] text-[11px] font-bold">
+                                <Button variant="ghost" className="hidden text-action-strong hover:bg-action-strong/5 hover:text-action-strong/80 sm:flex font-sans uppercase tracking-[0.15em] text-[11px] font-bold">
                                     Ver todos
                                     <ArrowRight className="ml-2 h-3.5 w-3.5" />
                                 </Button>
@@ -275,8 +290,12 @@ export function PortfolioDetail({ portfolioItem, relatedProjects }: PortfolioDet
 
                         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
                             {relatedProjects.map((project) => (
-                                <Link key={project.id} href={`/portfolio/${generatePortfolioSlug({ title: project.title, category: project.category, id: project.id })}`}>
-                                    <div className="group h-full overflow-hidden rounded-2xl border border-black/[0.06] bg-white shadow-[0_2px_12px_-4px_rgba(0,0,0,0.06)] transition-all duration-500 hover:shadow-[0_16px_40px_-12px_rgba(24,68,52,0.12)] hover:-translate-y-1.5 hover:border-ouro/30">
+                                <Link
+                                    key={project.id}
+                                    href={`/portfolio/${generatePortfolioSlug({ title: project.title, category: project.category, id: project.id })}`}
+                                    className="block h-full"
+                                >
+                                    <Card variant="light" interactive className="group h-full overflow-hidden hover:border-action-strong">
                                         <div className="relative aspect-[4/3] overflow-hidden">
                                             <Image
                                                 src={project.mainImage || '/assets/images/placeholder-jewelry.svg'}
@@ -288,16 +307,16 @@ export function PortfolioDetail({ portfolioItem, relatedProjects }: PortfolioDet
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
                                             <div className="absolute bottom-4 left-4">
-                                                <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 font-jost text-[10px] font-bold uppercase tracking-[0.15em] text-white backdrop-blur-md opacity-0 translate-y-2 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0">
+                                                <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 font-sans text-[10px] font-bold uppercase tracking-[0.15em] text-white backdrop-blur-md opacity-0 translate-y-2 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0">
                                                     Ver Detalhes <ArrowRight className="w-3 h-3" />
                                                 </span>
                                             </div>
                                         </div>
                                         <div className="p-5">
-                                            <Badge className="mb-2.5 bg-ouro/10 text-ouro border-transparent text-[10px] font-bold">{categoryLabels[project.category] || project.category}</Badge>
-                                            <h3 className="font-philosopher text-[17px] font-bold text-text-primary group-hover:text-ouro transition-colors leading-snug">{project.title}</h3>
+                                            <Badge variant="gold" className="mb-2.5 text-[10px]">{categoryLabels[project.category] || project.category}</Badge>
+                                            <h3 className="font-heading text-[17px] font-bold text-text-primary group-hover:text-action-strong transition-colors leading-snug">{project.title}</h3>
                                         </div>
-                                    </div>
+                                    </Card>
                                 </Link>
                             ))}
                         </div>

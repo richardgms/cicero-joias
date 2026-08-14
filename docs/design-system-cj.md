@@ -3,7 +3,7 @@
 > [!IMPORTANT]
 > Este é o **único** documento de referência para o Design System. Use os tokens e padrões aqui definidos, não valores arbitrários.
 
-> Última atualização: **13/08/2026** — fundações, Home, `/servicos`, `/servicos/aliancas-personalizadas`, `/servicos/consertos`, `/servicos/banho-de-ouro`, `/servicos/joias-sob-medida`, `/servicos/lentes-de-oculos` e `/servicos/limpeza-de-joias` concluídos; próximas páginas públicas documentadas na seção 10.
+> Última atualização: **14/08/2026** — fundações, Home, `/servicos`, `/servicos/aliancas-personalizadas`, `/servicos/consertos`, `/servicos/banho-de-ouro`, `/servicos/joias-sob-medida`, `/servicos/lentes-de-oculos`, `/servicos/limpeza-de-joias`, `/portfolio` e `/portfolio/[slug]` concluídos; próximas páginas públicas documentadas na seção 10.
 
 ---
 
@@ -432,6 +432,7 @@ Antes de finalizar qualquer componente, verifique:
 - Joias sob medida `/servicos/joias-sob-medida`: página **criada do zero** (antes era um placeholder "Página em construção", sem conteúdo real) com conteúdo de negócio validado com o cliente — fabricam apenas anéis e pingentes sob medida (não brincos/colares), ouro 18k e prata 990, garantia eterna, orçamento sempre sob consulta (sem valor exibido), prazo combinado por peça (sem número fixo). Hero full-bleed com imagem gerada por IA (mestre ourives esboçando um anel); diferenciais em carrossel horizontal com dots no mobile; timeline de processo em 5 etapas sem "prazo médio" fixo; FAQ com 10 perguntas; CTA final. Corrigida também a descrição desse serviço em `/servicos` e na Home (removida menção a brincos/colares, que não são fabricados). Header e footer do tema público ativados apenas para a rota exata, com footer `service-compact`.
 - Lentes de óculos `/servicos/lentes-de-oculos`: página **criada do zero** (antes era um placeholder "Página em construção"). Trocam lentes e também vendem/trocam armações (loja própria, marcas variadas). Sem menção a garantia na página, por decisão do cliente. Trabalham 5 tipos de lente (monofocal, multifocal/progressiva, antirreflexo, fotossensível, blue light), receita oftalmológica obrigatória, lentes fabricadas por laboratório parceiro (não produção interna), prazo combinado por caso. Hero full-bleed com imagem gerada por IA; diferenciais institucionais (sem narrativa de "mestre ourives", já que esse serviço não é feito por Cícero pessoalmente); timeline de processo em 4 etapas sem prazo fixo; FAQ com 8 perguntas. Corrigida também a descrição desse serviço em `/servicos` e na Home (agora menciona armações, não só lentes). Header e footer do tema público ativados apenas para a rota exata.
 - Limpeza de joias `/servicos/limpeza-de-joias`: página **criada do zero** (rota antes referenciada na Home/footer/`/servicos` sem nenhuma página, 404 em produção). Mesmo processo já usado no acabamento de consertos ("limpeza de cortesia"), agora vendido separadamente. Limpeza **manual** (procedimentos adequados e profissionais, feitos pelos ourives — nunca descrever como "ultrassônica"); polimento **não é automático**, é avaliado e só confirmado após ver a peça ("quando indicado", nunca "é realizado"/incluso); pode haver pontos de difícil acesso que não ficam 100% limpos em peças com desenho elaborado. Diferencial real: processo rápido, muitas vezes pronto no mesmo dia. Hero full-bleed com imagem gerada por IA (flanela polindo anel com pedra — evitar imagens com cuba/vapor/escova de aço, que sugerem técnica que a loja não usa); processo em 3 etapas (mais curto que as outras páginas, condizente com um serviço rápido); FAQ com 7 perguntas, incluindo "Toda peça recebe polimento?". Header e footer do tema público ativados apenas para a rota exata.
+- Portfólio `/portfolio` e `/portfolio/[slug]`: migração pura (composição, filtros, busca, paginação client-side e conteúdo dinâmico via Prisma preservados) para os tokens e componentes fundamentais, feita bloco a bloco com aprovação visual a cada etapa. Listagem: hero com `Section`/`Container`/`SectionHeading` reaproveitando o asset `portfolio-hero.webp` (já existia no projeto, nunca estava conectado); filtros (busca, badges de categoria, grid/list, ordenar) migrados para `Badge`/`Button` com tokens; grid/lista de cards em `Card variant="light" interactive`. Detalhe: hero usa a própria imagem principal do projeto como fundo desfocado; especificações em `Card`; CTAs no padrão 4.1/4.2; projetos relacionados reaproveitando o padrão já aprovado do `PortfolioPreviewSection`. Removida referência morta a `/assets/noise.webp` (nunca existiu no projeto, 404 herdado do código original) nos dois heróis. Botões de ação sobre a imagem principal (compartilhar, tela cheia) trocados de `Button variant="secondary"` — que dentro de `.public-theme` sempre resolve para o dourado sólido, ignorando classes customizadas — para botões nativos em vidro escuro semitransparente, consistentes entre si. `Header`/`Footer` do tema público ativados para as rotas de portfólio (antes ficavam no legado, apesar do conteúdo migrado) e `FinalCTASection` corrigido para `appearance="home-dark"` nas duas páginas (antes caía no branch `legacy` sem prop). Scroll progress e botão flutuante do WhatsApp, antes restritos à Home e `/servicos`, agora acompanham todas as páginas migradas do tema público.
 - Conteúdo dinâmico, Clerk, Prisma/Supabase, UploadThing, links, WhatsApp e rotas públicas existentes foram preservados.
 - O ícone oficial do WhatsApp substituiu símbolos genéricos nos pontos auditados.
 - A rota `/home-v2`, seus componentes e seu ativo exclusivo foram removidos definitivamente e não devem ser restaurados.
@@ -451,6 +452,8 @@ Validação de `/servicos/lentes-de-oculos` em 12/08/2026: revisão visual deskt
 
 Validação de `/servicos/limpeza-de-joias` em 13/08/2026: revisão visual desktop/mobile por seção aprovada; ESLint e `tsc --noEmit --incremental false` concluídos; build de produção em dist isolado concluído com 43 páginas, `/servicos/limpeza-de-joias` gerada como estática; `.next` do servidor de desenvolvimento preservado. Duas rodadas de correção de conteúdo após a primeira aprovação: (1) o texto e a imagem do hero descreviam limpeza "ultrassônica" — o processo real é manual, feito pelos ourives; imagem regenerada até chegar numa cena sem cuba/vapor/escova de aço nem poeira visível (flanela polindo um anel com pedra); (2) o polimento estava descrito como parte automática do processo — corrigido para deixar claro que é avaliado e só confirmado após ver a peça, com FAQ dedicada ("Toda peça recebe polimento?") e o cuidado de usar "pode ser realizado" em vez de "é realizado". Padronização cross-page nesta rodada: carrossel horizontal com `min-w-full` (sem indicar que há mais cards) trocado por `min-w-[85%]` em **todas** as páginas que usam esse padrão de carrossel — limpeza-de-joias, lentes-de-oculos, joias-sob-medida, consertos e alianças (banho-ouro já estava correto); documentado como regra do design system (ver 4.12).
 
+Validação de `/portfolio` e `/portfolio/[slug]` em 14/08/2026: revisão visual desktop/mobile aprovada; ESLint e `tsc --noEmit --incremental false` concluídos; build de produção em dist isolado concluído com 44 páginas (`/portfolio` estática, `/portfolio/[slug]` dinâmica); `.next` do servidor de desenvolvimento preservado.
+
 Commits do checkpoint:
 
 - `495a35d` — fundações do Design System público.
@@ -463,10 +466,9 @@ Commits do checkpoint:
 
 Migrar uma página por vez, nesta ordem:
 
-1. `/portfolio` e `/portfolio/[slug]`
-2. `/sobre`
-3. `/pronta-entrega`
-4. Páginas auxiliares; painel administrativo somente ao final
+1. `/sobre`
+2. `/pronta-entrega`
+3. Páginas auxiliares; painel administrativo somente ao final
 
 ### 10.3 Regras para continuar
 

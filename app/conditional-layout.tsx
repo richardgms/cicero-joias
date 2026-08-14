@@ -24,6 +24,8 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
     normalizedPath === '/servicos/joias-sob-medida';
   const isEyewearRoute = normalizedPath === '/servicos/lentes-de-oculos';
   const isCleaningRoute = normalizedPath === '/servicos/limpeza-de-joias';
+  const isPortfolioRoute =
+    normalizedPath === '/portfolio' || normalizedPath.startsWith('/portfolio/');
   const usesPublicDesignSystem =
     isHomeRoute ||
     isServicesIndexRoute ||
@@ -32,10 +34,9 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
     isPlatingRoute ||
     isCustomJewelryRoute ||
     isEyewearRoute ||
-    isCleaningRoute;
-  const showEngagementWidgets =
-    isHomeRoute ||
-    normalizedPath.startsWith('/servicos');
+    isCleaningRoute ||
+    isPortfolioRoute;
+  const showEngagementWidgets = usesPublicDesignSystem;
 
   if (isAdminRoute) {
     return <main className="min-h-screen">{children}</main>;
