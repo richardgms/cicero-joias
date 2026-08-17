@@ -3,7 +3,7 @@
 > [!IMPORTANT]
 > Este é o **único** documento de referência para o Design System. Use os tokens e padrões aqui definidos, não valores arbitrários.
 
-> Última atualização: **14/08/2026** — fundações, Home, `/servicos`, `/servicos/aliancas-personalizadas`, `/servicos/consertos`, `/servicos/banho-de-ouro`, `/servicos/joias-sob-medida`, `/servicos/lentes-de-oculos`, `/servicos/limpeza-de-joias`, `/portfolio`, `/portfolio/[slug]` e `/sobre` concluídos; próximas páginas públicas documentadas na seção 10.
+> Última atualização: **16/08/2026** — fundações, Home, `/servicos`, `/servicos/aliancas-personalizadas`, `/servicos/consertos`, `/servicos/banho-de-ouro`, `/servicos/joias-sob-medida`, `/servicos/lentes-de-oculos`, `/servicos/limpeza-de-joias`, `/portfolio`, `/portfolio/[slug]`, `/sobre`, `/pronta-entrega` e `/pronta-entrega/[id]` concluídos; próximas páginas públicas documentadas na seção 10.
 
 ---
 
@@ -294,6 +294,23 @@ Usado sempre que uma grade de cards (diferenciais, planos, etc.) vira carrossel 
 > [!IMPORTANT]
 > `min-w-full` em carrosséis mobile é considerado um bug de UX (esconde que há mais cards). Sempre usar `min-w-[85%]`.
 
+### 4.13 Card de Produto (listagem de e-commerce)
+
+Padrão consolidado em `/pronta-entrega` para cards de produto com foto, preço e estoque. A regra central: **a foto do produto fica limpa** — nenhuma badge posicionada por cima da imagem, porque badges em cantos opostos de uma imagem estreita inevitavelmente colidem com textos longos, e a joia é o herói visual do card.
+
+| Elemento | Padrão |
+| :--- | :--- |
+| **Imagem** | Sem overlays informativos. Única exceção: estado "Sem estoque" (scrim `bg-black/50` + `Badge variant="dark"` centralizada, comunicando indisponibilidade da peça inteira) |
+| **Categoria** | `Badge variant="gold"` **acima do título**, como eyebrow editorial (`mb-3 self-start` no grid) — nunca sobre a foto |
+| **Hierarquia do conteúdo** | categoria → título (`font-heading`, hover dourado) → descrição (`line-clamp-2`) → divisor → preço + meta → CTA |
+| **Preço** | Ponto focal da área de comércio: `font-numeric text-2xl font-bold text-text-primary`, separado da narrativa por `border-t border-border-default/60 pt-4` |
+| **Meta (código/estoque)** | De-enfatizada: `text-xs text-text-secondary/70`, alinhada à direita, rótulos curtos ("Cód." em vez de "Código:") |
+| **Urgência de estoque** | Texto discreto `text-xs font-semibold text-error` ("Últimas unidades") junto da linha de estoque — **não** uma badge sobre a imagem nem badge destrutiva no meta |
+| **Altura uniforme** | `flex h-full flex-col` no Card + `mt-auto` antes do bloco de preço — CTAs alinham na base mesmo com descrições de tamanhos diferentes |
+
+> [!IMPORTANT]
+> Não posicionar badges de status/urgência sobre fotos de produto. Informação de estoque pertence à área de dados do card (junto de "Estoque: X"), não à imagem.
+
 ---
 
 ## 5. Animações Padronizadas
@@ -434,6 +451,7 @@ Antes de finalizar qualquer componente, verifique:
 - Limpeza de joias `/servicos/limpeza-de-joias`: página **criada do zero** (rota antes referenciada na Home/footer/`/servicos` sem nenhuma página, 404 em produção). Mesmo processo já usado no acabamento de consertos ("limpeza de cortesia"), agora vendido separadamente. Limpeza **manual** (procedimentos adequados e profissionais, feitos pelos ourives — nunca descrever como "ultrassônica"); polimento **não é automático**, é avaliado e só confirmado após ver a peça ("quando indicado", nunca "é realizado"/incluso); pode haver pontos de difícil acesso que não ficam 100% limpos em peças com desenho elaborado. Diferencial real: processo rápido, muitas vezes pronto no mesmo dia. Hero full-bleed com imagem gerada por IA (flanela polindo anel com pedra — evitar imagens com cuba/vapor/escova de aço, que sugerem técnica que a loja não usa); processo em 3 etapas (mais curto que as outras páginas, condizente com um serviço rápido); FAQ com 7 perguntas, incluindo "Toda peça recebe polimento?". Header e footer do tema público ativados apenas para a rota exata.
 - Portfólio `/portfolio` e `/portfolio/[slug]`: migração pura (composição, filtros, busca, paginação client-side e conteúdo dinâmico via Prisma preservados) para os tokens e componentes fundamentais, feita bloco a bloco com aprovação visual a cada etapa. Listagem: hero com `Section`/`Container`/`SectionHeading` reaproveitando o asset `portfolio-hero.webp` (já existia no projeto, nunca estava conectado); filtros (busca, badges de categoria, grid/list, ordenar) migrados para `Badge`/`Button` com tokens; grid/lista de cards em `Card variant="light" interactive`. Detalhe: hero usa a própria imagem principal do projeto como fundo desfocado; especificações em `Card`; CTAs no padrão 4.1/4.2; projetos relacionados reaproveitando o padrão já aprovado do `PortfolioPreviewSection`. Removida referência morta a `/assets/noise.webp` (nunca existiu no projeto, 404 herdado do código original) nos dois heróis. Botões de ação sobre a imagem principal (compartilhar, tela cheia) trocados de `Button variant="secondary"` — que dentro de `.public-theme` sempre resolve para o dourado sólido, ignorando classes customizadas — para botões nativos em vidro escuro semitransparente, consistentes entre si. `Header`/`Footer` do tema público ativados para as rotas de portfólio (antes ficavam no legado, apesar do conteúdo migrado) e `FinalCTASection` corrigido para `appearance="home-dark"` nas duas páginas (antes caía no branch `legacy` sem prop). Scroll progress e botão flutuante do WhatsApp, antes restritos à Home e `/servicos`, agora acompanham todas as páginas migradas do tema público.
 - Sobre nós `/sobre`: página estática (sem dados dinâmicos) migrada bloco a bloco para os tokens e componentes fundamentais, preservando integralmente composição e textos. Hero reaproveita o asset já existente `sobre-nos-hero.webp`; grid de números e os 4 cards da história (1985/Crescimento/2000/Hoje, o último com destaque dourado) em `Card variant="light" interactive`; bloco de citação em destaque em `Card variant="dark"`; timeline de 3 colunas própria da página (estrutura diferente da timeline vertical documentada em 4.10) mantida, só com tokens migrados; CTA final com composição própria (citação + dois botões) preservada, usando `Button variant="goldOnDark"`/`"outlineDark"`. `Header`/`Footer` do tema público ativados para a rota (antes ficava no legado).
+- Pronta entrega `/pronta-entrega`: migração para os tokens e componentes fundamentais (hero, busca/ordenar/grid-list, sidebar de filtros, grid/lista de produtos, paginação), preservando filtros dinâmicos via Prisma (categoria, material, faixa de preço, disponibilidade), busca local e paginação server-side. Corrigido hex literal (`style={{backgroundColor: '#133629'}}`) no hero. Dois componentes compartilhados nunca tinham variante `public:` (mesmo bug de especificidade do `Button variant="secondary"` encontrado no portfólio) e foram corrigidos na fonte: `Slider` (herdava cinza do admin) e `SelectTrigger` (ficava preso em `h-10` fixo, desalinhado de `Input`/`Button`). Categoria `WEDDING_RINGS`/`JEWELRY` do enum `ProductCategory` estavam faltando no mapa de labels da página (mostravam o valor cru do enum em inglês) — corrigido. Card de produto redesenhado (ver 4.13): badge de categoria saiu de cima da imagem (colidia com a badge de estoque baixo em cards estreitos) para virar eyebrow acima do título; aviso de "últimas unidades" virou texto discreto junto da linha de estoque. Criada também a página de detalhe `/pronta-entrega/[id]` (rota que nunca existiu — os cards linkavam para um 404 desde antes da migração), no mesmo padrão visual do detalhe do portfólio: galeria com miniaturas e modal fullscreen, preço com suporte a preço promocional riscado, especificações (material/tamanho/peso/código/prazo), CTA de WhatsApp com nome e código da peça na mensagem, peças relacionadas. Header e footer do tema público ativados para as duas rotas.
 - Conteúdo dinâmico, Clerk, Prisma/Supabase, UploadThing, links, WhatsApp e rotas públicas existentes foram preservados.
 - O ícone oficial do WhatsApp substituiu símbolos genéricos nos pontos auditados.
 - A rota `/home-v2`, seus componentes e seu ativo exclusivo foram removidos definitivamente e não devem ser restaurados.
@@ -457,6 +475,8 @@ Validação de `/portfolio` e `/portfolio/[slug]` em 14/08/2026: revisão visual
 
 Validação de `/sobre` em 14/08/2026: revisão visual desktop/mobile aprovada; ESLint e `tsc --noEmit --incremental false` concluídos; build de produção em dist isolado concluído com 44 páginas, `/sobre` gerada como estática; `.next` do servidor de desenvolvimento preservado.
 
+Validação de `/pronta-entrega` e `/pronta-entrega/[id]` em 16/08/2026: revisão visual aprovada (como admin, já que a página está com visibilidade desativada no banco — configuração existente, não alterada); ESLint e `tsc --noEmit --incremental false` concluídos; build de produção em dist isolado concluído com 45 páginas, `/pronta-entrega` estática e `/pronta-entrega/[id]` dinâmica; `.next` do servidor de desenvolvimento preservado.
+
 Commits do checkpoint:
 
 - `495a35d` — fundações do Design System público.
@@ -469,8 +489,8 @@ Commits do checkpoint:
 
 Migrar uma página por vez, nesta ordem:
 
-1. `/pronta-entrega`
-2. Páginas auxiliares; painel administrativo somente ao final
+1. Páginas auxiliares (`/termos-uso`, `/politica-privacidade`, `/acesso-negado`; verificar se `/sign-in`/`/sign-up` do Clerk entram no escopo)
+2. Painel administrativo somente ao final
 
 ### 10.3 Regras para continuar
 

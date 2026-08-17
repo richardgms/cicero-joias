@@ -27,6 +27,8 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
   const isPortfolioRoute =
     normalizedPath === '/portfolio' || normalizedPath.startsWith('/portfolio/');
   const isAboutRoute = normalizedPath === '/sobre';
+  const isReadyDeliveryRoute =
+    normalizedPath === '/pronta-entrega' || normalizedPath.startsWith('/pronta-entrega/');
   const usesPublicDesignSystem =
     isHomeRoute ||
     isServicesIndexRoute ||
@@ -37,7 +39,8 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
     isEyewearRoute ||
     isCleaningRoute ||
     isPortfolioRoute ||
-    isAboutRoute;
+    isAboutRoute ||
+    isReadyDeliveryRoute;
   const showEngagementWidgets = usesPublicDesignSystem;
 
   if (isAdminRoute) {

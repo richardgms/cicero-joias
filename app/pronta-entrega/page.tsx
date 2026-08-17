@@ -7,6 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Section } from '@/components/ui/section';
+import { Container } from '@/components/ui/container';
+import { SectionHeading } from '@/components/ui/section-heading';
 import {
   Search, Filter, Star, Clock, Package,
   SlidersHorizontal, Grid3X3, List, HelpCircle
@@ -24,11 +27,13 @@ import { PageVisibilityGuard } from '@/components/page-visibility-guard';
 
 // Mapeamento de categorias para exibição
 const categoryLabels = {
+  JEWELRY: 'Joias',
   RINGS: 'Anéis',
   NECKLACES: 'Colares',
   BRACELETS: 'Pulseiras',
   EARRINGS: 'Brincos',
   WATCHES: 'Relógios',
+  WEDDING_RINGS: 'Alianças de Casamento',
   ACCESSORIES: 'Acessórios',
 };
 
@@ -252,58 +257,63 @@ function ProntaEntregaContent() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="py-24 relative overflow-hidden" style={{ backgroundColor: '#133629' }}>
-        <div className="absolute inset-0 opacity-20">
-          <div
-            className="w-full h-full bg-cover bg-center"
-            style={{
-              backgroundImage: `url('/assets/images/pronta-entrega-hero.webp')`
-            }}
+      <Section tone="dark" spacing="none" className="overflow-hidden py-24" aria-labelledby="pronta-entrega-hero-title">
+        <div className="absolute inset-0 z-0" aria-hidden="true">
+          <Image
+            src="/assets/images/pronta-entrega-hero.webp"
+            alt=""
+            fill
+            className="object-cover opacity-20"
+            priority
+            sizes="100vw"
           />
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-4xl mx-auto">
-            <h1 className="font-philosopher font-bold leading-none mb-6 text-marfim">
-              <span className="block text-[clamp(40px,5vw+16px,64px)] text-ouro">Pronta</span>
-              <span className="block text-[clamp(32px,4vw+12px,56px)]">Entrega</span>
-            </h1>
-            <p className="font-montserrat text-xl text-marfim-dark leading-relaxed">
-              Peças exclusivas prontas para entrega imediata. Joias de alta qualidade
-              que você pode levar hoje mesmo.
-            </p>
-            <div className="mt-8 flex items-center justify-center space-x-6 font-montserrat text-marfim-dark">
-              <div className="flex items-center">
-                <Clock className="h-5 w-5 mr-2 text-ouro" />
-                <span>Entrega Rápida</span>
-              </div>
-              <div className="flex items-center">
-                <Package className="h-5 w-5 mr-2 text-ouro" />
-                <span>Estoque Disponível</span>
-              </div>
-              <div className="flex items-center">
-                <Star className="h-5 w-5 mr-2 text-ouro" />
-                <span>Alta Qualidade</span>
-              </div>
+        <Container size="md" className="relative z-10">
+          <SectionHeading
+            as="h1"
+            align="center"
+            tone="dark"
+            titleId="pronta-entrega-hero-title"
+            title={
+              <>
+                <span className="block text-action-on-dark">Pronta</span>
+                <span className="block">Entrega</span>
+              </>
+            }
+            description="Peças exclusivas prontas para entrega imediata. Joias de alta qualidade que você pode levar hoje mesmo."
+          />
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-6 font-sans text-text-on-dark/85">
+            <div className="flex items-center">
+              <Clock className="h-5 w-5 mr-2 text-action-on-dark" aria-hidden="true" />
+              <span>Entrega Rápida</span>
+            </div>
+            <div className="flex items-center">
+              <Package className="h-5 w-5 mr-2 text-action-on-dark" aria-hidden="true" />
+              <span>Estoque Disponível</span>
+            </div>
+            <div className="flex items-center">
+              <Star className="h-5 w-5 mr-2 text-action-on-dark" aria-hidden="true" />
+              <span>Alta Qualidade</span>
             </div>
           </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
 
       {/* Filtros e Produtos */}
-      <section className="py-12 bg-marfim">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <Section tone="light" spacing="none" className="py-12">
+        <Container>
           {/* Barra de Busca e Controles */}
           <div className="mb-8">
             <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
               <div className="flex flex-col md:flex-row gap-4 flex-1">
-                <div className="relative flex-1 max-w-md">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <div className="flex min-h-control flex-1 max-w-md items-center gap-3 rounded-full border border-action-strong/20 bg-white/50 px-4 transition-colors focus-within:border-action-strong/50">
+                  <Search className="h-4 w-4 shrink-0 text-action-strong" aria-hidden="true" />
                   <Input
                     placeholder="Buscar produtos..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
+                    className="!min-h-0 !p-0 border-none bg-transparent text-sm text-text-primary placeholder:text-text-secondary/50 focus-visible:ring-0"
                   />
                 </div>
 
@@ -338,13 +348,13 @@ function ProntaEntregaContent() {
               </div>
             </div>
 
-            <div className="mt-4 font-montserrat text-sm text-gray-600 flex items-center justify-between">
+            <div className="mt-4 font-sans text-sm text-text-secondary flex items-center justify-between">
               <span>
                 {loading ? 'Carregando...' : `${pagination.total} produto${pagination.total !== 1 ? 's' : ''} encontrado${pagination.total !== 1 ? 's' : ''}`}
               </span>
               {(categoryFilter !== 'all' || materialFilter !== 'all' || stockFilter !== 'all' || searchTerm ||
                 priceRange[0] !== priceStats.min || priceRange[1] !== priceStats.max) && (
-                  <Button variant="ghost" size="sm" onClick={resetFilters} className="font-montserrat">
+                  <Button variant="ghost" size="sm" onClick={resetFilters} className="font-sans">
                     Limpar Filtros
                   </Button>
                 )}
@@ -354,9 +364,9 @@ function ProntaEntregaContent() {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* Sidebar com Filtros */}
             <div className="lg:col-span-1">
-              <Card>
+              <Card variant="light">
                 <CardHeader>
-                  <CardTitle className="flex items-center font-jost font-semibold">
+                  <CardTitle className="flex items-center font-sans font-semibold text-text-primary">
                     <SlidersHorizontal className="h-4 w-4 mr-2" />
                     Filtros
                   </CardTitle>
@@ -364,7 +374,7 @@ function ProntaEntregaContent() {
                 <CardContent className="space-y-6">
                   {/* Categoria */}
                   <div>
-                    <label className="font-jost text-sm font-semibold text-gray-700 mb-2 block">
+                    <label className="font-sans text-sm font-semibold text-text-secondary mb-2 block">
                       Categoria
                     </label>
                     <Select value={categoryFilter} onValueChange={setCategoryFilter}>
@@ -384,7 +394,7 @@ function ProntaEntregaContent() {
 
                   {/* Material */}
                   <div>
-                    <label className="font-jost text-sm font-semibold text-gray-700 mb-2 block">
+                    <label className="font-sans text-sm font-semibold text-text-secondary mb-2 block">
                       Material
                     </label>
                     <Select value={materialFilter} onValueChange={setMaterialFilter}>
@@ -405,14 +415,14 @@ function ProntaEntregaContent() {
                   {/* Faixa de Preço */}
                   <div>
                     <div className="flex items-center mb-3">
-                      <label className="font-jost text-sm font-semibold text-gray-700">
+                      <label className="font-sans text-sm font-semibold text-text-secondary">
                         Faixa de Preço
                       </label>
                       <div className="relative ml-2 group">
-                        <HelpCircle className="h-4 w-4 text-gray-400 cursor-help" />
-                        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                        <HelpCircle className="h-4 w-4 text-text-secondary/60 cursor-help" />
+                        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-surface-dark text-text-on-dark text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
                           Arraste as extremidades para definir preço mínimo e máximo
-                          <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
+                          <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-surface-dark"></div>
                         </div>
                       </div>
                     </div>
@@ -427,16 +437,16 @@ function ProntaEntregaContent() {
                         className="mb-4"
                       />
 
-                      <div className="flex justify-between text-sm font-medium text-gray-700">
-                        <span>R$ {Math.round(displayPriceRange[0]).toLocaleString()}</span>
-                        <span>R$ {Math.round(displayPriceRange[1]).toLocaleString()}</span>
+                      <div className="flex justify-between text-sm font-medium text-text-secondary">
+                        <span className="font-numeric">R$ {Math.round(displayPriceRange[0]).toLocaleString()}</span>
+                        <span className="font-numeric">R$ {Math.round(displayPriceRange[1]).toLocaleString()}</span>
                       </div>
 
-                      <div className="text-center mt-3 font-montserrat">
+                      <div className="text-center mt-3 font-sans">
                         {(displayPriceRange[0] !== priceRange[0] || displayPriceRange[1] !== priceRange[1]) ? (
-                          <span className="text-xs text-blue-600">Filtrando...</span>
+                          <span className="text-xs text-action-primary">Filtrando...</span>
                         ) : (
-                          <span className="text-xs text-green-600">
+                          <span className="text-xs text-action-strong">
                             {filteredProducts.length} produto{filteredProducts.length !== 1 ? 's' : ''} nesta faixa
                           </span>
                         )}
@@ -446,7 +456,7 @@ function ProntaEntregaContent() {
 
                   {/* Disponibilidade */}
                   <div>
-                    <label className="font-jost text-sm font-semibold text-gray-700 mb-2 block">
+                    <label className="font-sans text-sm font-semibold text-text-secondary mb-2 block">
                       Disponibilidade
                     </label>
                     <Select value={stockFilter} onValueChange={setStockFilter}>
@@ -471,17 +481,17 @@ function ProntaEntregaContent() {
                 </div>
               ) : filteredProducts.length === 0 ? (
                 <div className="text-center py-12">
-                  <Filter className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="font-philosopher text-lg font-bold text-gray-900 mb-2">
+                  <Filter className="h-12 w-12 text-text-secondary/40 mx-auto mb-4" />
+                  <h3 className="font-heading text-lg font-bold text-text-primary mb-2">
                     Nenhum produto encontrado
                   </h3>
-                  <p className="font-montserrat text-gray-600 mb-4">
+                  <p className="font-sans text-text-secondary mb-4">
                     {searchTerm
                       ? `Não encontramos produtos que correspondam a "${searchTerm}"`
                       : 'Ainda não há produtos disponíveis para pronta entrega'
                     }
                   </p>
-                  <Button onClick={resetFilters} variant="outline" className="font-montserrat">
+                  <Button onClick={resetFilters} variant="outline" className="font-sans">
                     Limpar Filtros
                   </Button>
                 </div>
@@ -494,65 +504,62 @@ function ProntaEntregaContent() {
                     {filteredProducts.map((product) => (
                       <Link href={`/pronta-entrega/${product.id}`} key={product.id} className="group">
                         {viewMode === 'grid' ? (
-                          <Card className="overflow-hidden hover:shadow-xl transition-all duration-300">
-                            <div className="relative h-64 overflow-hidden">
+                          <Card variant="light" interactive className="flex h-full flex-col overflow-hidden hover:border-action-strong">
+                            <div className="relative h-64 overflow-hidden bg-surface-subtle">
                               <Image
                                 src={product.mainImage || '/assets/images/home-hero.webp'}
                                 alt={product.name}
                                 fill
-                                className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                className="object-cover group-hover:scale-105 transition-transform duration-500 motion-reduce:transform-none"
                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                 onError={(e) => {
                                   const target = e.target as HTMLImageElement;
                                   target.src = '/assets/images/home-hero.webp';
                                 }}
                               />
-                              <div className="absolute top-4 left-4">
-                                <Badge variant="secondary" className="bg-ouro text-esmeralda">
-                                  {categoryLabels[product.category as keyof typeof categoryLabels] || product.category}
-                                </Badge>
-                              </div>
-                              {product.stock <= 5 && product.stock > 0 && (
-                                <div className="absolute top-4 right-4">
-                                  <Badge variant="destructive">
-                                    Últimas unidades
-                                  </Badge>
-                                </div>
-                              )}
                               {product.stock === 0 && (
-                                <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                                  <Badge variant="secondary">Sem estoque</Badge>
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+                                  <Badge variant="dark">Sem estoque</Badge>
                                 </div>
                               )}
                             </div>
 
-                            <CardContent className="p-6">
-                              <h3 className="font-philosopher text-lg font-bold text-esmeralda mb-2 group-hover:text-ouro transition-colors">
+                            <CardContent className="flex flex-1 flex-col p-6">
+                              <Badge variant="gold" className="mb-3 self-start">
+                                {categoryLabels[product.category as keyof typeof categoryLabels] || product.category}
+                              </Badge>
+                              <h3 className="font-heading text-lg font-bold text-text-primary mb-2 transition-colors group-hover:text-action-strong">
                                 {product.name}
                               </h3>
-                              <p className="font-montserrat text-sm text-gray-600 mb-3 line-clamp-2">
+                              <p className="font-sans text-sm text-text-secondary mb-4 line-clamp-2">
                                 {product.description || 'Produto de alta qualidade disponível para pronta entrega.'}
                               </p>
 
-                              <div className="flex items-center justify-between">
+                              <div className="mt-auto flex items-end justify-between border-t border-border-default/60 pt-4">
                                 <div>
-                                  <p className="font-philosopher text-2xl font-bold text-esmeralda">
+                                  <p className="font-numeric text-2xl font-bold text-text-primary">
                                     R$ {(product.price || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                                   </p>
                                   {product.material && (
-                                    <p className="font-montserrat text-xs text-gray-500">{product.material}</p>
+                                    <p className="font-sans text-xs text-text-secondary/70">{product.material}</p>
                                   )}
                                 </div>
-                                <div className="text-right font-montserrat">
-                                  <p className="text-xs text-gray-500">Código: {product.code}</p>
-                                  <p className="text-xs text-gray-500">
-                                    Estoque: {product.stock} {product.stock === 1 ? 'unidade' : 'unidades'}
+                                <div className="text-right font-sans">
+                                  <p className="text-xs text-text-secondary/70">Cód. {product.code}</p>
+                                  <p className="text-xs text-text-secondary/70">
+                                    {product.stock} {product.stock === 1 ? 'unidade' : 'unidades'}
                                   </p>
+                                  {product.stock <= 5 && product.stock > 0 && (
+                                    <p className="mt-0.5 text-xs font-semibold text-error">
+                                      Últimas unidades
+                                    </p>
+                                  )}
                                 </div>
                               </div>
 
                               <Button
-                                className="w-full mt-4 font-montserrat bg-ouro text-esmeralda hover:bg-ouro-light"
+                                variant="secondary"
+                                className="w-full mt-4 font-sans"
                                 disabled={product.stock === 0}
                               >
                                 {product.stock === 0 ? 'Sem Estoque' : 'Ver Detalhes'}
@@ -561,7 +568,7 @@ function ProntaEntregaContent() {
                           </Card>
                         ) : (
                           // List View
-                          <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                          <Card variant="light" interactive className="overflow-hidden hover:border-action-strong">
                             <div className="flex">
                               <div className="relative w-32 h-32 flex-shrink-0">
                                 <Image
@@ -579,30 +586,32 @@ function ProntaEntregaContent() {
                               <CardContent className="flex-1 p-6">
                                 <div className="flex justify-between items-start">
                                   <div className="flex-1">
-                                    <div className="flex items-center space-x-2 mb-2">
-                                      <h3 className="font-philosopher text-lg font-bold text-esmeralda group-hover:text-ouro transition-colors">
-                                        {product.name}
-                                      </h3>
-                                      <Badge variant="secondary" className="bg-ouro text-esmeralda text-xs">
-                                        {categoryLabels[product.category as keyof typeof categoryLabels] || product.category}
-                                      </Badge>
-                                    </div>
-                                    <p className="font-montserrat text-sm text-gray-600 mb-2">
+                                    <Badge variant="gold" className="mb-2 text-xs">
+                                      {categoryLabels[product.category as keyof typeof categoryLabels] || product.category}
+                                    </Badge>
+                                    <h3 className="font-heading text-lg font-bold text-text-primary mb-2 transition-colors group-hover:text-action-strong">
+                                      {product.name}
+                                    </h3>
+                                    <p className="font-sans text-sm text-text-secondary mb-2">
                                       {product.description || 'Produto de alta qualidade disponível para pronta entrega.'}
                                     </p>
-                                    <div className="flex items-center space-x-4 font-montserrat text-xs text-gray-500">
-                                      <span>Código: {product.code}</span>
-                                      {product.material && <span>Material: {product.material}</span>}
-                                      <span>Estoque: {product.stock}</span>
+                                    <div className="flex items-center space-x-4 font-sans text-xs text-text-secondary/70">
+                                      <span>Cód. {product.code}</span>
+                                      {product.material && <span>{product.material}</span>}
+                                      <span>{product.stock} {product.stock === 1 ? 'unidade' : 'unidades'}</span>
+                                      {product.stock <= 5 && product.stock > 0 && (
+                                        <span className="font-semibold text-error">Últimas unidades</span>
+                                      )}
                                     </div>
                                   </div>
                                   <div className="text-right ml-4">
-                                    <p className="font-philosopher text-2xl font-bold text-esmeralda">
+                                    <p className="font-numeric text-2xl font-bold text-text-primary">
                                       R$ {(product.price || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                                     </p>
                                     <Button
+                                      variant="secondary"
                                       size="sm"
-                                      className="mt-2 font-montserrat bg-ouro text-esmeralda hover:bg-ouro-light"
+                                      className="mt-2 font-sans"
                                       disabled={product.stock === 0}
                                     >
                                       {product.stock === 0 ? 'Sem Estoque' : 'Ver Detalhes'}
@@ -624,7 +633,7 @@ function ProntaEntregaContent() {
                         variant="outline"
                         onClick={() => handlePageChange(currentPage - 1)}
                         disabled={!pagination.hasPrevPage}
-                        className="font-montserrat border-esmeralda text-esmeralda hover:bg-esmeralda hover:text-marfim"
+                        className="font-sans border-border-default text-text-secondary hover:border-action-strong hover:text-action-strong"
                       >
                         Anterior
                       </Button>
@@ -635,10 +644,10 @@ function ProntaEntregaContent() {
                             key={page}
                             variant={page === currentPage ? "default" : "outline"}
                             onClick={() => handlePageChange(page)}
-                            className={page === currentPage
-                              ? "font-montserrat bg-esmeralda text-marfim"
-                              : "font-montserrat border-esmeralda text-esmeralda hover:bg-esmeralda hover:text-marfim"
-                            }
+                            className={`font-numeric ${page === currentPage
+                              ? "bg-action-primary text-text-on-dark"
+                              : "border-border-default text-text-secondary hover:border-action-strong hover:text-action-strong"
+                            }`}
                             size="sm"
                           >
                             {page}
@@ -650,7 +659,7 @@ function ProntaEntregaContent() {
                         variant="outline"
                         onClick={() => handlePageChange(currentPage + 1)}
                         disabled={!pagination.hasNextPage}
-                        className="font-montserrat border-esmeralda text-esmeralda hover:bg-esmeralda hover:text-marfim"
+                        className="font-sans border-border-default text-text-secondary hover:border-action-strong hover:text-action-strong"
                       >
                         Próxima
                       </Button>
@@ -660,8 +669,8 @@ function ProntaEntregaContent() {
               )}
             </div>
           </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
     </div>
   );
 }
