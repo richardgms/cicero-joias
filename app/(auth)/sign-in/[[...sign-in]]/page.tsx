@@ -6,7 +6,7 @@ export default function SignInPage() {
       <SignIn
         appearance={{
           elements: {
-            formButtonPrimary: 'bg-amber-600 hover:bg-amber-700',
+            formButtonPrimary: 'bg-action-strong hover:bg-action-strong/90',
           }
         }}
         fallbackRedirectUrl="/"

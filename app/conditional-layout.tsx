@@ -14,33 +14,16 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
   const pathname = usePathname();
   const isAdminRoute = pathname?.startsWith('/admin');
   const normalizedPath = pathname ?? '/';
-  const isHomeRoute = normalizedPath === '/';
-  const isServicesIndexRoute = normalizedPath === '/servicos';
   const isPersonalizedRingsRoute =
     normalizedPath === '/servicos/aliancas-personalizadas';
-  const isRepairsRoute = normalizedPath === '/servicos/consertos';
-  const isPlatingRoute = normalizedPath === '/servicos/banho-de-ouro';
   const isCustomJewelryRoute =
     normalizedPath === '/servicos/joias-sob-medida';
-  const isEyewearRoute = normalizedPath === '/servicos/lentes-de-oculos';
-  const isCleaningRoute = normalizedPath === '/servicos/limpeza-de-joias';
-  const isPortfolioRoute =
-    normalizedPath === '/portfolio' || normalizedPath.startsWith('/portfolio/');
-  const isAboutRoute = normalizedPath === '/sobre';
-  const isReadyDeliveryRoute =
-    normalizedPath === '/pronta-entrega' || normalizedPath.startsWith('/pronta-entrega/');
-  const usesPublicDesignSystem =
-    isHomeRoute ||
-    isServicesIndexRoute ||
-    isPersonalizedRingsRoute ||
-    isRepairsRoute ||
-    isPlatingRoute ||
-    isCustomJewelryRoute ||
-    isEyewearRoute ||
-    isCleaningRoute ||
-    isPortfolioRoute ||
-    isAboutRoute ||
-    isReadyDeliveryRoute;
+  // Every cataloged public route (services, portfolio, sobre, pronta-entrega,
+  // legal pages, auth) has been migrated to the public design system, so it's
+  // now the default for anything that isn't /admin — including 404s and
+  // unmatched paths, which should still show the current brand, not the
+  // legacy one.
+  const usesPublicDesignSystem = !isAdminRoute;
   const showEngagementWidgets = usesPublicDesignSystem;
 
   if (isAdminRoute) {

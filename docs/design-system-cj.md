@@ -3,7 +3,7 @@
 > [!IMPORTANT]
 > Este é o **único** documento de referência para o Design System. Use os tokens e padrões aqui definidos, não valores arbitrários.
 
-> Última atualização: **16/08/2026** — fundações, Home, `/servicos`, `/servicos/aliancas-personalizadas`, `/servicos/consertos`, `/servicos/banho-de-ouro`, `/servicos/joias-sob-medida`, `/servicos/lentes-de-oculos`, `/servicos/limpeza-de-joias`, `/portfolio`, `/portfolio/[slug]`, `/sobre`, `/pronta-entrega` e `/pronta-entrega/[id]` concluídos; próximas páginas públicas documentadas na seção 10.
+> Última atualização: **17/08/2026** — fundações, Home, `/servicos`, `/servicos/aliancas-personalizadas`, `/servicos/consertos`, `/servicos/banho-de-ouro`, `/servicos/joias-sob-medida`, `/servicos/lentes-de-oculos`, `/servicos/limpeza-de-joias`, `/portfolio`, `/portfolio/[slug]`, `/sobre`, `/pronta-entrega`, `/pronta-entrega/[id]` e as páginas auxiliares (`/termos-uso`, `/politica-privacidade`, `/acesso-negado`, `/sign-in`, `/sign-up`, `not-found`, `error`) concluídos. Migração das páginas públicas cadastradas está completa; só falta o painel administrativo (fora de escopo por enquanto).
 
 ---
 
@@ -455,6 +455,11 @@ Antes de finalizar qualquer componente, verifique:
 - Conteúdo dinâmico, Clerk, Prisma/Supabase, UploadThing, links, WhatsApp e rotas públicas existentes foram preservados.
 - O ícone oficial do WhatsApp substituiu símbolos genéricos nos pontos auditados.
 - A rota `/home-v2`, seus componentes e seu ativo exclusivo foram removidos definitivamente e não devem ser restaurados.
+- Páginas auxiliares `/termos-uso` e `/politica-privacidade`: corrigido um bug real de **header/footer duplicado** — as páginas importavam `<Header/>`/`<Footer/>` diretamente, além do `ConditionalLayout` já envolver toda página não-admin com header/footer por fora; removido o import próprio de cada página. Migradas para `Section`/`Container` e tokens semânticos; limpas classes mortas (`bg-antique-white`, não definida no Tailwind config; `prose prose-stone`, plugin `@tailwindcss/typography` nunca instalado).
+- Página auxiliar `/acesso-negado`: migrada de cores cruas (`bg-white`, `text-gray-900`, `bg-amber-*`, `bg-esmeralda` via className solto) para `Card`/`Button` com tokens e variants; corrigida frase redundante "A página esta página está..." quando a URL não tem `?page=` (agora usa "Esta página está...").
+- `/sign-in` e `/sign-up`: botão primário do widget do Clerk trocado de `bg-amber-600` (cor genérica) para `bg-action-strong` (dourado da marca); página em si é gerenciada pelo Clerk, fora de escopo de redesign.
+- `not-found.tsx` e `error.tsx` (404 e boundary de erro globais) migrados para `Section`/`Container`/`Card`/`Button` com tokens semânticos — antes eram os únicos lugares que ainda usavam estilos não migrados (`bg-primary`, `text-muted-foreground` etc).
+- `conditional-layout.tsx` simplificado: como toda rota pública cadastrada já usa o tema novo, a lista de ~15 flags de rota foi substituída por `usesPublicDesignSystem = !isAdminRoute` — o tema novo é o padrão para qualquer coisa que não seja `/admin`, incluindo 404s e caminhos não mapeados (que antes caíam no header/footer legado).
 - O painel administrativo continua fora do novo tema visual.
 
 Validação do checkpoint de 18/07/2026: ESLint, `tsc --noEmit` e build de produção concluídos; 43 páginas foram geradas com sucesso.
@@ -477,6 +482,8 @@ Validação de `/sobre` em 14/08/2026: revisão visual desktop/mobile aprovada; 
 
 Validação de `/pronta-entrega` e `/pronta-entrega/[id]` em 16/08/2026: revisão visual aprovada (como admin, já que a página está com visibilidade desativada no banco — configuração existente, não alterada); ESLint e `tsc --noEmit --incremental false` concluídos; build de produção em dist isolado concluído com 45 páginas, `/pronta-entrega` estática e `/pronta-entrega/[id]` dinâmica; `.next` do servidor de desenvolvimento preservado.
 
+Validação das páginas auxiliares em 17/08/2026 (`/termos-uso`, `/politica-privacidade`, `/acesso-negado`, `/sign-in`, `/sign-up`, `not-found`, `error`): revisão visual aprovada; ESLint e `tsc --noEmit --incremental false` concluídos; build de produção em dist isolado concluído com 44 páginas — `/termos-uso` e `/politica-privacidade` reduziram de 2.44 kB para 205 B de JS próprio ao pararem de duplicar o bundle do Header/Footer; `.next` do servidor de desenvolvimento preservado. Com essa rodada, a migração das páginas públicas cadastradas está completa.
+
 Commits do checkpoint:
 
 - `495a35d` — fundações do Design System público.
@@ -485,12 +492,12 @@ Commits do checkpoint:
 - `e648121` — template do pooler Supabase.
 - `b7c7a89` — remoção da `/home-v2`.
 
-### 10.2 Próxima fase: páginas públicas restantes
+### 10.2 Próxima fase
 
-Migrar uma página por vez, nesta ordem:
+Todas as páginas públicas cadastradas estão migradas. O que resta:
 
-1. Páginas auxiliares (`/termos-uso`, `/politica-privacidade`, `/acesso-negado`; verificar se `/sign-in`/`/sign-up` do Clerk entram no escopo)
-2. Painel administrativo somente ao final
+1. Painel administrativo (`/admin/**`) — fora do tema público por decisão deliberada até aqui; migrar só quando houver decisão explícita de estender o Design System ao admin.
+2. Novas páginas públicas que venham a ser criadas devem nascer já usando os tokens e componentes fundamentais desta doc, não o padrão legado.
 
 ### 10.3 Regras para continuar
 

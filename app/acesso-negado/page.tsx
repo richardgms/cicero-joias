@@ -1,6 +1,9 @@
 import Link from 'next/link';
-import { Shield, ArrowLeft, Home, Eye, Clock } from 'lucide-react';
+import { ArrowLeft, Home, Eye, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Section } from '@/components/ui/section';
+import { Container } from '@/components/ui/container';
 
 // Mapeamento de páginas para títulos amigáveis
 const pageNames: Record<string, string> = {
@@ -17,65 +20,66 @@ export default async function AcessoNegadoPage({
 }) {
   const params = await searchParams;
   const pageSlug = params.page;
-  const pageName = pageSlug ? pageNames[pageSlug] || pageSlug : 'esta página';
+  const pageName = pageSlug ? pageNames[pageSlug] || pageSlug : null;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-marfim via-gray-50 to-esmeralda/5">
-      <div className="max-w-lg w-full bg-white rounded-xl shadow-xl p-8 text-center border border-gray-100">
-        {/* Ícone de acesso negado */}
-        <div className="mx-auto w-20 h-20 bg-gradient-to-br from-amber-100 to-yellow-100 rounded-full flex items-center justify-center mb-6 shadow-inner">
-          <Eye className="w-10 h-10 text-amber-600" />
-        </div>
-
-        {/* Título */}
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">
-          Página Temporariamente Indisponível
-        </h1>
-
-        {/* Descrição personalizada */}
-        <div className="text-gray-600 mb-6 space-y-3">
-          <p>
-            A página <strong className="text-esmeralda">{pageName}</strong> está temporariamente
-            indisponível enquanto fazemos melhorias.
-          </p>
-          <div className="flex items-center justify-center text-sm text-amber-700 bg-amber-50 p-3 rounded-lg">
-            <Clock className="w-4 h-4 mr-2" />
-            Em breve esta seção estará disponível com novidades incríveis!
+    <Section tone="light" spacing="none" className="flex min-h-screen items-center justify-center">
+      <Container size="sm">
+        <Card variant="light" className="mx-auto w-full max-w-lg p-8 text-center shadow-card-hover">
+          <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-action-strong/10">
+            <Eye className="h-10 w-10 text-action-strong" aria-hidden="true" />
           </div>
-        </div>
 
-        {/* Botões de ação */}
-        <div className="space-y-3">
-          <Button asChild className="w-full bg-esmeralda hover:bg-esmeralda-dark">
-            <Link href="/">
-              <Home className="w-4 h-4 mr-2" />
-              Voltar ao Início
-            </Link>
-          </Button>
+          <h1 className="font-heading text-3xl font-bold text-text-primary mb-4">
+            Página Temporariamente Indisponível
+          </h1>
 
-          <Button variant="outline" asChild className="w-full border-esmeralda text-esmeralda hover:bg-esmeralda hover:text-white">
-            <Link href="/portfolio">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Ver Nosso Portfólio
-            </Link>
-          </Button>
-        </div>
+          <div className="font-sans text-text-secondary mb-6 space-y-3">
+            <p>
+              {pageName ? (
+                <>A página <strong className="text-action-strong">{pageName}</strong> está</>
+              ) : (
+                'Esta página está'
+              )}{' '}
+              temporariamente indisponível enquanto fazemos melhorias.
+            </p>
+            <div className="flex items-center justify-center gap-2 rounded-lg bg-action-strong/10 p-3 text-sm text-action-strong">
+              <Clock className="h-4 w-4" aria-hidden="true" />
+              Em breve esta seção estará disponível com novidades incríveis!
+            </div>
+          </div>
 
-        {/* Informações de contato */}
-        <div className="mt-8 pt-6 border-t border-gray-200">
-          <p className="text-sm text-gray-500">
-            Quer saber quando estará disponível?{' '}
-            <a
-              href="https://wa.me/5583991180251?text=Olá! Gostaria de saber quando a página estará disponível."
-              className="text-esmeralda hover:underline font-medium"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Entre em contato
-            </a>
-          </p>
-        </div>
-      </div>
-    </div>
+          <div className="space-y-3">
+            <Button asChild variant="secondary" className="w-full">
+              <Link href="/">
+                <Home className="h-4 w-4 mr-2" aria-hidden="true" />
+                Voltar ao Início
+              </Link>
+            </Button>
+
+            <Button asChild variant="outline" className="w-full">
+              <Link href="/portfolio">
+                <ArrowLeft className="h-4 w-4 mr-2" aria-hidden="true" />
+                Ver Nosso Portfólio
+              </Link>
+            </Button>
+          </div>
+
+          <div className="mt-8 border-t border-border-default pt-6">
+            <p className="font-sans text-sm text-text-secondary/70">
+              Quer saber quando estará disponível?{' '}
+              <a
+                href="https://wa.me/5583991180251?text=Olá! Gostaria de saber quando a página estará disponível."
+                className="font-medium text-action-strong hover:underline"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Entre em contato
+              </a>
+            </p>
+          </div>
+        </Card>
+      </Container>
+    </Section>
   );
-} 
+}
