@@ -41,7 +41,7 @@ export function LimpezaDeJoiasFinalCTASection() {
                 sua joia?
               </>
             }
-            description="Traga sua peça para limpeza profissional. Avaliamos e indicamos o polimento quando necessário. Muitas vezes pronta na hora. Mais de 40 anos de tradição em João Pessoa."
+            description="Traga sua peça para limpeza profissional. Avaliamos e indicamos o polimento quando necessário. Muitas vezes pronta na hora. Mais de 40 anos de tradição na Paraíba."
           />
         </AnimatedSection>
 

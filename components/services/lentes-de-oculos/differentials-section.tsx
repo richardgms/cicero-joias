@@ -46,7 +46,7 @@ const DIFFERENTIALS: Differential[] = [
   {
     icon: Award,
     helper: 'Tradição consolidada',
-    title: '+40 Anos em João Pessoa',
+    title: '+40 Anos na Paraíba',
     description:
       'Joalheria consolidada desde 1985, com a confiança de gerações de clientes.',
   },

@@ -30,14 +30,14 @@ export const createWhatsAppLink = (message: string) =>
     `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 
 export const CONTACT_INFO = {
-    address: 'Galeria Jardim · Rua Duque de Caxias, 516 — Centro, João Pessoa – PB',
+    address: 'Praça Antenor Navarro, 37 — Centro, Santa Rita – PB',
     phone: '(83) 99118-0251',
     phoneHref: `tel:+${WHATSAPP_NUMBER}`,
     email: 'contato@cicerojoias.com.br',
     mapsUrl: 'https://g.page/cicerojoias',
     hours: [
-        { days: 'Segunda a sexta', time: '09h às 18h' },
-        { days: 'Sábado', time: '09h às 13h' },
+        { days: 'Segunda a sexta', time: '09h às 17h' },
+        { days: 'Sábado', time: '09h às 16h' },
     ],
 };
 

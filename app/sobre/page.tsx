@@ -63,6 +63,13 @@ const timeline = [
     icon: Gem,
   },
   {
+    year: '2026',
+    title: 'Consolidação em Santa Rita',
+    description:
+      'Reunimos toda a operação na oficina de Santa Rita, mantendo o mesmo padrão de cuidado e atendimento próximo de sempre.',
+    icon: Heart,
+  },
+  {
     year: 'Hoje',
     title: 'Tradição que se renova',
     description:
@@ -75,7 +82,7 @@ const storyParagraphs = [
   'A história da Cícero Joias começou em 1985, quando o mestre joalheiro Cícero fundou sua primeira oficina em Santa Rita, Paraíba. Movido pela paixão pela arte da joalheria e pelo desejo de criar peças que eternizassem momentos especiais, Cícero iniciou um legado que hoje completa 40 anos de tradição e excelência.',
   'O que começou como uma pequena oficina especializada em consertos de joias e relógios, rapidamente ganhou reconhecimento pela qualidade excepcional do trabalho e pelo atendimento personalizado. A confiança dos clientes permitiu que o negócio crescesse organicamente, sempre mantendo os valores de honestidade, qualidade e dedicação que caracterizam a Cícero Joias até hoje.',
   'Em meados de 2000, expandimos nossa presença com a abertura da segunda loja em João Pessoa, ampliando nosso alcance e permitindo atender um número maior de clientes na região. Ao longo das décadas, enfrentamos desafios e celebramos conquistas, sempre confiantes de que nosso trabalho fala por si mesmo.',
-  'Hoje, com o nosso fundador ainda presente na oficina e o suporte da segunda geração da família, continuamos a desenvolver peças sob medida, restaurações com memória afetiva e serviços de manutenção que acompanham as famílias ao longo de toda a vida.',
+  'Em 2026, escolhemos concentrar toda a nossa operação na sede de Santa Rita, reunindo equipe e atendimento em um só endereço. Hoje, com o nosso fundador ainda presente na oficina e o suporte da segunda geração da família, continuamos a desenvolver peças sob medida, restaurações com memória afetiva e serviços de manutenção que acompanham as famílias ao longo de toda a vida.',
 ];
 
 
@@ -246,11 +253,11 @@ export default function SobrePage() {
 
             {/* Timeline - Glass Card Container */}
             <Card variant="light" className="p-8 backdrop-blur-sm">
-              <div className="grid gap-12 md:grid-cols-3">
+              <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
                 {timeline.map((item, index) => (
                   <div key={item.year} className="relative flex flex-col gap-4 text-left group">
                     {index < timeline.length - 1 && (
-                      <span className="absolute right-[-24px] top-6 hidden h-px w-12 bg-gradient-to-r from-action-primary/20 to-transparent md:block" />
+                      <span className="absolute right-[-24px] top-6 hidden h-px w-12 bg-gradient-to-r from-action-primary/20 to-transparent lg:block" />
                     )}
                     <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-surface-subtle text-action-primary transition-all duration-300 group-hover:scale-110 group-hover:bg-action-strong/10 group-hover:text-action-strong">
                       <item.icon className="h-6 w-6" />
@@ -282,7 +289,7 @@ export default function SobrePage() {
               Cícero Joias: tradição que se renova a cada momento especial
             </h2>
             <p className="max-w-2xl font-sans text-sm text-text-on-dark/75 leading-relaxed">
-              Convidamos você a fazer parte da história da Cícero Joias. Visite nossas lojas, conheça nosso trabalho e descubra como podemos transformar seus momentos especiais em memórias eternas.
+              Convidamos você a fazer parte da história da Cícero Joias. Visite nossa loja, conheça nosso trabalho e descubra como podemos transformar seus momentos especiais em memórias eternas.
             </p>
             <div className="flex flex-col gap-4 sm:flex-row">
               <Button asChild variant="goldOnDark" size="lg">

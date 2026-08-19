@@ -70,7 +70,7 @@ function HomeFooter({ year }: HomeFooterProps) {
               <p className="max-w-lg text-sm leading-relaxed text-text-on-dark/70">
                 Mais de quatro décadas criando joias sob medida, com atendimento
                 direto do ourives e acompanhamento após a entrega. Nosso atelier
-                em João Pessoa mantém o padrão artesanal que nos trouxe até aqui.
+                em Santa Rita mantém o padrão artesanal que nos trouxe até aqui.
               </p>
             </div>
 
@@ -108,11 +108,11 @@ function HomeFooter({ year }: HomeFooterProps) {
                   aria-hidden="true"
                 />
                 <p className="leading-relaxed">
-                  Galeria Jardim · Rua Duque de Caxias, 516
+                  Praça Antenor Navarro, 37
                   <br />
-                  Centro · João Pessoa – PB
+                  Centro · Santa Rita – PB
                   <br />
-                  CEP 58010-821
+                  CEP 58300-010
                 </p>
               </div>
 
@@ -144,9 +144,9 @@ function HomeFooter({ year }: HomeFooterProps) {
                   aria-hidden="true"
                 />
                 <p className="leading-relaxed">
-                  Seg a Sex · 10h às 17h
+                  Seg a Sex · 9h às 17h
                   <br />
-                  Sábado · 10h às 14h
+                  Sábado · 9h às 16h
                 </p>
               </div>
             </address>
@@ -255,13 +255,11 @@ function CompactServiceFooter({ year }: HomeFooterProps) {
                 aria-hidden="true"
               />
               <p className="leading-relaxed">
-                Galeria Jardim
+                Praça Antenor Navarro, 37
                 <br />
-                Rua Duque de Caxias, 516
+                Centro · Santa Rita – PB
                 <br />
-                Centro · João Pessoa – PB
-                <br />
-                CEP 58010-821
+                CEP 58300-010
               </p>
             </div>
 
@@ -271,9 +269,9 @@ function CompactServiceFooter({ year }: HomeFooterProps) {
                 aria-hidden="true"
               />
               <p className="leading-relaxed">
-                Seg a Sex · 10h às 17h
+                Seg a Sex · 9h às 17h
                 <br />
-                Sábado · 10h às 14h
+                Sábado · 9h às 16h
               </p>
             </div>
           </address>
@@ -381,7 +379,7 @@ export function Footer({ appearance = 'legacy' }: FooterProps) {
               </Link>
 
               <p className="font-montserrat text-sm leading-relaxed text-text-on-dark/70 max-w-md">
-                Mais de quatro décadas criando joias sob medida, com atendimento direto do ourives e acompanhamento após a entrega. Nosso atelier em João Pessoa mantém o padrão artesanal que nos trouxe até aqui.
+                Mais de quatro décadas criando joias sob medida, com atendimento direto do ourives e acompanhamento após a entrega. Nosso atelier em Santa Rita mantém o padrão artesanal que nos trouxe até aqui.
               </p>
             </div>
 
@@ -412,9 +410,9 @@ export function Footer({ appearance = 'legacy' }: FooterProps) {
                 <div className="flex items-start gap-4">
                   <MapPin className="mt-1 h-4 w-4 flex-shrink-0 text-action-strong/70" />
                   <p className="leading-relaxed">
-                    Galeria Jardim · Rua Duque de Caxias, 516<br />
-                    Centro · João Pessoa – PB<br />
-                    CEP 58010-821
+                    Praça Antenor Navarro, 37<br />
+                    Centro · Santa Rita – PB<br />
+                    CEP 58300-010
                   </p>
                 </div>
 
@@ -435,8 +433,8 @@ export function Footer({ appearance = 'legacy' }: FooterProps) {
                 <div className="flex items-start gap-4">
                   <Clock className="mt-1 h-4 w-4 flex-shrink-0 text-action-strong/70" />
                   <p className="leading-relaxed">
-                    Seg a Sex · 10h às 17h<br />
-                    Sábado · 10h às 14h
+                    Seg a Sex · 9h às 17h<br />
+                    Sábado · 9h às 16h
                   </p>
                 </div>
               </div>

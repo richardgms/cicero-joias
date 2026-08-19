@@ -108,7 +108,7 @@ export function LimpezaDeJoiasHeroSection() {
             </dt>
             <div className="mx-auto my-2 hidden h-px w-16 bg-border-on-dark sm:block" aria-hidden="true" />
             <p className="hidden text-sm leading-relaxed text-text-on-dark/70 sm:block">
-              Joalheria consolidada em João Pessoa desde 1985.
+              Joalheria consolidada na Paraíba desde 1985.
             </p>
           </Card>
 

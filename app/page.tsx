@@ -27,7 +27,7 @@ const FinalCTASection = dynamic(
 
 export const metadata: Metadata = {
   title: 'Cicero Joias - Joalheria Completa com 40 Anos de Tradição | João Pessoa',
-  description: 'Joalheria completa em João Pessoa: alianças personalizadas, banho de ouro profissional, consertos especializados e joias sob medida. 40 anos de experiência e expertise artesanal.',
+  description: 'Joalheria completa atendendo João Pessoa e região: alianças personalizadas, banho de ouro profissional, consertos especializados e joias sob medida. 40 anos de experiência e expertise artesanal.',
   keywords: ['joalheria joão pessoa', 'alianças personalizadas', 'banho de ouro', 'consertos de joias', 'joias sob medida', 'ourives especializado'],
   openGraph: {
     title: 'Cicero Joias - Joalheria Completa com 40 Anos de Tradição',
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Cicero Joias - Joalheria Completa',
-    description: 'Alianças personalizadas, banho de ouro e consertos especializados. 40 anos de tradição em João Pessoa.',
+    description: 'Alianças personalizadas, banho de ouro e consertos especializados. 40 anos de tradição, atendendo João Pessoa e região.',
   },
 };
 

@@ -322,7 +322,7 @@ export const heroStats = [
     number: 40,
     suffix: ' anos',
     label: 'de tradição',
-    description: 'Quatro décadas de excelência em João Pessoa',
+    description: 'Quatro décadas de excelência na Paraíba',
   },
   {
     number: 50,
