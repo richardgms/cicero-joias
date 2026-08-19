@@ -5,7 +5,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import {
   Instagram,
-  Facebook,
   MapPin,
   Phone,
   Mail,
@@ -24,8 +23,7 @@ const services = [
 ];
 
 const socials = [
-  { icon: Instagram, label: 'Instagram', href: 'https://instagram.com', external: true },
-  { icon: Facebook, label: 'Facebook', href: 'https://facebook.com', external: true },
+  { icon: Instagram, label: 'Instagram', href: 'https://instagram.com/cicerojoias', external: true },
   { icon: WhatsappIcon, label: 'WhatsApp', href: whatsappUrl, external: true },
 ];
 
