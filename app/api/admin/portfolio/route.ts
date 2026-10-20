@@ -5,6 +5,11 @@ import { z } from 'zod';
 import { checkAdminAuth } from "@/lib/check-admin";
 import { logger } from '@/lib/logger';
 
+// Fotos vão para o UploadThing: o banco só guarda URL (base64 deixava o site pesado)
+const imageField = z.string().refine((v) => !v.startsWith('data:'), {
+  message: 'Envie a imagem pelo botão de upload (imagem embutida não é aceita)',
+});
+
 
 
 
@@ -17,11 +22,8 @@ const createPortfolioSchema = z.object({
     errorMap: () => ({ message: 'Categoria inválida' })
   }),
   customCategory: z.string().optional().nullable(),
-  mainImage: z.string().min(1, 'Imagem principal é obrigatória').refine((val) => {
-    // Accept both URLs and base64 images
-    return val.startsWith('http') || val.startsWith('data:image') || val.length > 0;
-  }, 'Formato de imagem inválido'),
-  images: z.union([z.array(z.string()), z.string()]).transform((val) => {
+  mainImage: imageField.refine((v) => v.length > 0, 'Imagem principal é obrigatória'),
+  images: z.union([z.array(imageField), z.string()]).transform((val) => {
     if (typeof val === 'string') {
       try {
         return JSON.parse(val);
@@ -118,12 +120,11 @@ export async function GET() {
       return NextResponse.json(
         {
           error: authResult.error,
-          debug: debugInfo,
           details: authResult.details
         },
         {
           status: authResult.status,
-          headers: { 'X-Debug-Info': JSON.stringify(debugInfo), 'X-Request-ID': requestId }
+          headers: { 'X-Request-ID': requestId }
         }
       );
     }
@@ -182,7 +183,7 @@ export async function GET() {
     logger.debug(`[${requestId}] Request completed in ${totalDuration}ms`);
 
     return NextResponse.json(
-      { portfolioItems, debug: debugInfo },
+      { portfolioItems },
       {
         headers: {
 
@@ -238,7 +239,6 @@ export async function GET() {
     return NextResponse.json(
       {
         error: userMessage,
-        debug: debugInfo,
         errorDetails: process.env.NODE_ENV === 'development' ? errorInfo : undefined,
         requestId
       },
@@ -271,11 +271,8 @@ export async function POST(request: Request) {
     } catch (bodyError) {
       debugInfo.push(`Request body parse failed: ${bodyError instanceof Error ? bodyError.message : String(bodyError)}`);
       return NextResponse.json(
-        { error: 'Dados inválidos no corpo da requisição', debug: debugInfo },
-        {
-          status: 400,
-          headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
-        }
+        { error: 'Dados inválidos no corpo da requisição' },
+        { status: 400 }
       );
     }
 
@@ -286,12 +283,10 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           error: authResult.error,
-          debug: debugInfo,
           details: authResult.details
         },
         {
-          status: authResult.status,
-          headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
+          status: authResult.status
         }
       );
     }
@@ -318,7 +313,6 @@ export async function POST(request: Request) {
           {
             error: 'Dados inválidos para criação',
             details: validationDetails,
-            debug: debugInfo,
             receivedData: Object.keys(body).reduce((acc, key) => {
               acc[key] = typeof body[key] === 'string' && body[key].length > 100
                 ? `${body[key].substring(0, 100)}... (${body[key].length} chars)`
@@ -326,19 +320,13 @@ export async function POST(request: Request) {
               return acc;
             }, {} as any)
           },
-          {
-            status: 400,
-            headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
-          }
+          { status: 400 }
         );
       }
       debugInfo.push(`Unexpected validation error: ${validationError instanceof Error ? validationError.message : String(validationError)}`);
       return NextResponse.json(
-        { error: 'Erro de validação', debug: debugInfo },
-        {
-          status: 400,
-          headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
-        }
+        { error: 'Erro de validação' },
+        { status: 400 }
       );
     }
 
@@ -356,11 +344,8 @@ export async function POST(request: Request) {
     } catch (prepError) {
       debugInfo.push(`Data preparation failed: ${prepError instanceof Error ? prepError.message : String(prepError)}`);
       return NextResponse.json(
-        { error: 'Erro na preparação dos dados', debug: debugInfo },
-        {
-          status: 500,
-          headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
-        }
+        { error: 'Erro na preparação dos dados' },
+        { status: 500 }
       );
     }
 
@@ -371,11 +356,8 @@ export async function POST(request: Request) {
     } catch (dbConnectError) {
       debugInfo.push(`Database connection failed: ${dbConnectError instanceof Error ? dbConnectError.message : String(dbConnectError)}`);
       return NextResponse.json(
-        { error: 'Erro de conexão com banco de dados', debug: debugInfo },
-        {
-          status: 500,
-          headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
-        }
+        { error: 'Erro de conexão com banco de dados' },
+        { status: 500 }
       );
     }
 
@@ -388,11 +370,8 @@ export async function POST(request: Request) {
         if (featuredCount >= 3) {
           debugInfo.push(`Featured limit reached: ${featuredCount}/3`);
           return NextResponse.json(
-            { error: 'Limite de 3 destaques atingido. Desmarque um item para adicionar outro.', debug: debugInfo },
-            {
-              status: 400,
-              headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
-            }
+            { error: 'Limite de 3 destaques atingido. Desmarque um item para adicionar outro.' },
+            { status: 400 }
           );
         }
         debugInfo.push(`Featured count check passed: ${featuredCount}/3`);
@@ -425,40 +404,28 @@ export async function POST(request: Request) {
       // Verificar tipos específicos de erro
       if (errorMessage.includes('Unique constraint')) {
         return NextResponse.json(
-          { error: 'Já existe um item com essas informações', debug: debugInfo },
-          {
-            status: 409,
-            headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
-          }
+          { error: 'Já existe um item com essas informações' },
+          { status: 409 }
         );
       }
 
       if (errorMessage.includes('Foreign key constraint')) {
         return NextResponse.json(
-          { error: 'Produto relacionado não encontrado', debug: debugInfo },
-          {
-            status: 400,
-            headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
-          }
+          { error: 'Produto relacionado não encontrado' },
+          { status: 400 }
         );
       }
 
       if (errorMessage.includes('prepared statement') && errorMessage.includes('already exists')) {
         return NextResponse.json(
-          { error: 'Erro temporário do servidor. Tente novamente em alguns segundos.', debug: debugInfo },
-          {
-            status: 503,
-            headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
-          }
+          { error: 'Erro temporário do servidor. Tente novamente em alguns segundos.' },
+          { status: 503 }
         );
       }
 
       return NextResponse.json(
-        { error: 'Erro ao criar item do portfólio', debug: debugInfo },
-        {
-          status: 500,
-          headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
-        }
+        { error: 'Erro ao criar item do portfólio' },
+        { status: 500 }
       );
     }
 
@@ -485,7 +452,7 @@ export async function POST(request: Request) {
     debugInfo.push(`Creation completed successfully in ${endTime - startTime}ms`);
 
     return NextResponse.json(
-      { portfolioItem, debug: debugInfo },
+      { portfolioItem },
       {
         status: 201,
         headers: {
@@ -500,15 +467,11 @@ export async function POST(request: Request) {
 
     debugInfo.push(`Unexpected error after ${endTime - startTime}ms: ${error instanceof Error ? error.message : String(error)}`);
 
+    // Detalhe técnico só no log do servidor, não na resposta
+    logger.error('Erro inesperado na API do portfólio (admin):', error, debugInfo);
+
     return NextResponse.json(
-      {
-        error: 'Erro interno do servidor',
-        debug: debugInfo,
-        details: error instanceof Error ? {
-          message: error.message,
-          name: error.name
-        } : String(error)
-      },
+      { error: 'Erro interno do servidor' },
       {
         status: 500,
         headers: {
@@ -519,11 +482,3 @@ export async function POST(request: Request) {
     );
   }
 }
-
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '50mb', // Increased for large base64 images
-    },
-  },
-}; 

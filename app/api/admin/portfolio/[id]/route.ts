@@ -4,6 +4,12 @@ import prisma, { executeWithRetry } from '@/lib/prisma';
 import { z } from 'zod';
 import { checkAdminAuth } from '@/lib/check-admin';
 import { deleteUnusedImages, removedImages } from '@/lib/uploadthing-server';
+import { logger } from '@/lib/logger';
+
+// Fotos vão para o UploadThing: o banco só guarda URL (base64 deixava o site pesado)
+const imageField = z.string().refine((v) => !v.startsWith('data:'), {
+  message: 'Envie a imagem pelo botão de upload (imagem embutida não é aceita)',
+});
 
 // Schema de validação para atualização de item do portfólio
 const updatePortfolioSchema = z.object({
@@ -14,8 +20,8 @@ const updatePortfolioSchema = z.object({
     errorMap: () => ({ message: 'Categoria inválida' })
   }).optional(),
   customCategory: z.string().optional().nullable(),
-  mainImage: z.string().optional(),
-  images: z.array(z.string()).optional(),
+  mainImage: imageField.optional(),
+  images: z.array(imageField).optional(),
   isActive: z.boolean().optional(),
   isFeatured: z.boolean().optional(),
   status: z.string().regex(/^(DRAFT|PUBLISHED|FEATURED|ARCHIVED)$/, 'Status inválido').optional(),
@@ -196,10 +202,9 @@ export async function DELETE(
     if ('error' in authResult) {
       debugInfo.push(`Auth failed: ${authResult.error}`);
       return NextResponse.json(
-        { error: authResult.error, debug: debugInfo },
+        { error: authResult.error },
         {
-          status: authResult.status,
-          headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
+          status: authResult.status
         }
       );
     }
@@ -211,11 +216,8 @@ export async function DELETE(
     if (!id || typeof id !== 'string') {
       debugInfo.push(`Invalid ID parameter: ${id}`);
       return NextResponse.json(
-        { error: 'ID inválido', debug: debugInfo },
-        {
-          status: 400,
-          headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
-        }
+        { error: 'ID inválido' },
+        { status: 400 }
       );
     }
     debugInfo.push(`Processing delete for ID: ${id}`);
@@ -227,11 +229,8 @@ export async function DELETE(
     } catch (dbConnectError) {
       debugInfo.push(`Database connection failed: ${dbConnectError instanceof Error ? dbConnectError.message : String(dbConnectError)}`);
       return NextResponse.json(
-        { error: 'Erro de conexão com banco de dados', debug: debugInfo },
-        {
-          status: 500,
-          headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
-        }
+        { error: 'Erro de conexão com banco de dados' },
+        { status: 500 }
       );
     }
 
@@ -250,22 +249,16 @@ export async function DELETE(
     } catch (findError) {
       debugInfo.push(`Find query failed: ${findError instanceof Error ? findError.message : String(findError)}`);
       return NextResponse.json(
-        { error: 'Erro ao buscar item', debug: debugInfo },
-        {
-          status: 500,
-          headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
-        }
+        { error: 'Erro ao buscar item' },
+        { status: 500 }
       );
     }
 
     if (!existingItem) {
       debugInfo.push('Item not found in database');
       return NextResponse.json(
-        { error: 'Item não encontrado', debug: debugInfo },
-        {
-          status: 404,
-          headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
-        }
+        { error: 'Item não encontrado' },
+        { status: 404 }
       );
     }
     debugInfo.push(`Item found: "${existingItem.title}" with ${existingItem.favorites.length} favorites`);
@@ -283,11 +276,8 @@ export async function DELETE(
       } catch (favDeleteError) {
         debugInfo.push(`Failed to delete favorites: ${favDeleteError instanceof Error ? favDeleteError.message : String(favDeleteError)}`);
         return NextResponse.json(
-          { error: 'Erro ao remover dependências', debug: debugInfo },
-          {
-            status: 500,
-            headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
-          }
+          { error: 'Erro ao remover dependências' },
+          { status: 500 }
         );
       }
     }
@@ -308,21 +298,15 @@ export async function DELETE(
       if (deleteError instanceof Error) {
         if (deleteError.message.includes('Foreign key constraint')) {
           return NextResponse.json(
-            { error: 'Não é possível excluir: item possui dependências', debug: debugInfo },
-            {
-              status: 409,
-              headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
-            }
+            { error: 'Não é possível excluir: item possui dependências' },
+            { status: 409 }
           );
         }
       }
 
       return NextResponse.json(
-        { error: 'Erro ao deletar item', debug: debugInfo },
-        {
-          status: 500,
-          headers: { 'X-Debug-Info': JSON.stringify(debugInfo) }
-        }
+        { error: 'Erro ao deletar item' },
+        { status: 500 }
       );
     }
 
@@ -349,7 +333,7 @@ export async function DELETE(
     debugInfo.push(`Delete completed successfully in ${endTime - startTime}ms`);
 
     return NextResponse.json(
-      { message: 'Item deletado com sucesso', debug: debugInfo },
+      { message: 'Item deletado com sucesso' },
       {
         status: 200,
         headers: {
@@ -363,15 +347,11 @@ export async function DELETE(
     const endTime = Date.now();
     debugInfo.push(`Unexpected error after ${endTime - startTime}ms: ${error instanceof Error ? error.message : String(error)}`);
 
+    // Detalhe técnico só no log do servidor, não na resposta
+    logger.error('Erro inesperado na API do portfólio (admin):', error, debugInfo);
+
     return NextResponse.json(
-      {
-        error: 'Erro interno do servidor',
-        debug: debugInfo,
-        details: error instanceof Error ? {
-          message: error.message,
-          name: error.name
-        } : String(error)
-      },
+      { error: 'Erro interno do servidor' },
       {
         status: 500,
         headers: {
@@ -382,11 +362,3 @@ export async function DELETE(
     );
   }
 }
-
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '16mb',
-    },
-  },
-}; 

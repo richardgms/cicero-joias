@@ -118,6 +118,11 @@ Severidade: 🔴 crítico · 🟠 alto · 🟡 médio · ⚪ baixo
 | D3 | A hospedagem oficial é a Vercel? (remover Netlify) | Etapa 5 |
 | D4 | ✅ UploadThing (decidido em 20/10/2026) | Etapa 4 |
 
+**D2 — decidido em 20/10/2026:** site público **sem login de cliente**. Remover "Entrar" do menu público e a função de favoritos; Clerk carrega só em `/admin` e `/sign-in`. Sugerido desativar novos cadastros no painel do Clerk.
+**D3 — decidido em 20/10/2026:** hospedagem **só Vercel**. Remover `netlify.toml` e `@netlify/plugin-nextjs`; unificar cabeçalhos de segurança no `next.config`.
+
+**Depois do plano:** otimizar o layout do **painel admin para celular** (hoje feito para desktop) — em um chat novo, a pedido do usuário.
+
 ---
 
 ## Etapas

@@ -4,6 +4,11 @@ import prisma from '@/lib/prisma';
 import { z } from 'zod';
 import { deleteUnusedImages, removedImages } from '@/lib/uploadthing-server';
 
+// Fotos vão para o UploadThing: o banco só guarda URL (base64 deixava o site pesado)
+const imageField = z.string().refine((v) => !v.startsWith('data:'), {
+  message: 'Envie a imagem pelo botão de upload (imagem embutida não é aceita)',
+});
+
 // Schema de validação para atualização de produto
 const updateProductSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório').optional(),
@@ -12,8 +17,8 @@ const updateProductSchema = z.object({
   category: z.enum(['JEWELRY', 'RINGS', 'NECKLACES', 'EARRINGS', 'BRACELETS', 'WATCHES', 'ACCESSORIES', 'WEDDING_RINGS']).optional(),
   isActive: z.boolean().optional(),
   isReadyDelivery: z.boolean().optional(),
-  mainImage: z.string().optional().nullable(),
-  images: z.array(z.string()).optional(),
+  mainImage: imageField.optional().nullable(),
+  images: z.array(imageField).optional(),
   stock: z.number().int().min(0, 'Estoque não pode ser negativo').optional(),
   weight: z.number().positive('Peso deve ser positivo').optional().nullable(),
   material: z.string().optional().nullable(),
