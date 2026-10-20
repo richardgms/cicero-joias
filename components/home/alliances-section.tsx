@@ -31,7 +31,7 @@ export function AlliancesSection() {
           className="relative order-2 aspect-[4/5] overflow-hidden border-border-default bg-surface-subtle p-0 shadow-card sm:aspect-[16/10] lg:order-1 lg:col-span-6 lg:aspect-[4/5]"
         >
           <Image
-            src="/assets/photosproducts/aliancas/hero.webp"
+            src="/assets/home/aliancas.webp"
             alt="Par de alianças personalizadas produzido na oficina da Cícero Joias"
             fill
             sizes="(max-width: 1024px) 100vw, 50vw"
