@@ -44,7 +44,6 @@ interface Product {
   price: number;
   category: string;
   mainImage: string | null;
-  images: string[];
   stock: number;
   weight?: number;
   material?: string;

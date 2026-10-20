@@ -26,7 +26,6 @@ async function getPortfolioData() {
         description: true,
         category: true,
         mainImage: true,
-        images: true,
         createdAt: true,
       },
       orderBy: { createdAt: 'desc' },
@@ -49,7 +48,6 @@ async function getPortfolioData() {
     description: item.description,
     category: item.category as string,
     mainImage: item.mainImage,
-    images: item.images as string[],
     createdAt: item.createdAt.toISOString(),
   }));
 

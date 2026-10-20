@@ -62,7 +62,6 @@ export async function GET(request: Request) {
           price: true,
           category: true,
           mainImage: true,
-          images: true,
           stock: true,
           weight: true,
           material: true,
@@ -83,7 +82,6 @@ export async function GET(request: Request) {
     const productsWithPlaceholder = products.map((product) => ({
       ...product,
       mainImage: product.mainImage || '/assets/images/placeholder-jewelry.svg',
-      images: product.images.length > 0 ? product.images : ['/assets/images/placeholder-jewelry.svg']
     }));
 
     return NextResponse.json({

@@ -38,7 +38,6 @@ export async function GET(request: Request) {
           description: true,
           category: true,
           mainImage: true,
-          images: true,
           createdAt: true,
         },
       }),

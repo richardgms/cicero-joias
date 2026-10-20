@@ -37,7 +37,6 @@ export interface PortfolioListItem {
     description: string | null;
     category: string;
     mainImage: string;
-    images: string[];
     createdAt: string;
 }
 
