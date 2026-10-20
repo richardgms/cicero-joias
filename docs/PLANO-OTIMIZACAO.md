@@ -195,11 +195,12 @@ D4 decidido (20/10/2026): **UploadThing** — conta ativa (0 arquivos, limite 2 
 - [ ] Reduzir o limite de 50 MB da API e limpar `stack`/`debug` das rotas do admin (S5)
 - Medir: tamanho do HTML do portfólio e do banco
 
-### Etapa 5 — Infraestrutura e dependências · risco: médio
-- [ ] I2 — Remover configuração Netlify (D3) e unificar headers de segurança
-- [ ] O6 — Remover dependências sem uso
-- [ ] I3 — Avaliar React 19
-- [ ] I4 — Atualizar browserslist
+### Etapa 5 — Infraestrutura e dependências · risco: médio · ✅ concluída 20/10/2026
+- [x] I2 — `netlify.toml` e `@netlify/plugin-nextjs` removidos (D3); `Permissions-Policy` e `Referrer-Policy: strict-origin-when-cross-origin` trazidos para o `next.config` (commits f6cf632, 6c9283e)
+- [x] O6 — 21 componentes de `components/ui` sem uso removidos (modelos do shadcn) e 30 dependências sem uso desinstaladas; `typescript`/`@types/node` só em devDependencies. Pacotes diretos 63 → 44, `node_modules` −106 MB
+- [x] I3 — React 18.2 → **19.2.8** (o App Router do Next 15 espera o 19), tipos 19.2, Radix atualizado, sonner 1 → 2; removidos `@ts-expect-error Server Component`; `AnimatedSection` sem eventos conflitantes (commit da1e847). Versões com menos de 2 semanas evitadas por cautela. Deploy anterior anotado para reverter: `cicero-joias-ou3ble9q1`
+- [x] I4 — `caniuse-lite` atualizado (aviso do build sumiu)
+- [x] Bug achado: `toast()` do sonner nunca aparecia (Toaster não montado) — avisos de erro do admin (visibilidade, saúde) e "Link copiado" dos detalhes. Montado no layout do admin e nos layouts dos detalhes
 
 ### Etapa 6 — Vigilância · risco: nenhum
 - [ ] I5 — Ativar Vercel Speed Insights
