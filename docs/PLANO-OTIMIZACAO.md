@@ -36,6 +36,19 @@ Metas: Performance ≥ 90, LCP < 2,5 s, TBT < 200 ms, CLS < 0,1, Acessibilidade 
 | `/portfolio` | 1 → **45** | 90 | — ¹ | 100 | 71,6 → 54,9 s | 4,7 s → **420 ms** | 0,89 → **0** | 10,1 MB |
 | `/servicos/aliancas-personalizadas` | 49 ² → **70** | 90 | 100 | 100 | 14,6 s | 140 ms | 0 | 2,4 MB |
 
+### Após a Etapa 4 — fotos fora do banco (20/10/2026, site publicado)
+
+| Página | Início do plano → Etapa 2 → **Agora** | Boas prát. | LCP | TBT | CLS | Peso |
+|---|---|---|---|---|---|---|
+| `/` | 50 → 83 → **80** | 100 | 4,6 s | 180 ms | 0 | 2,4 → **0,8 MB** |
+| `/sobre` | 13 → 74 → **82** | 100 | 4,5 s | 180 ms | 0 | 0,8 MB |
+| `/servicos` | 21 → 75 → **90** | 100 | 3,5 s | 130 ms | 0 | 0,8 MB |
+| `/pronta-entrega` | 21 → 72 → **86** | 100 | 3,6 s | 170 ms | 0 | 3,6 → **0,8 MB** |
+| `/portfolio` | 1 → 45 → **83** | — → **100** | 54,9 → **4,5 s** | 130 ms | 0 | 10,1 → **0,9 MB** |
+| `/servicos/aliancas-personalizadas` | 49 → 70 → **82** | 100 | 14,6 → **4,5 s** | 150 ms | 0,055 | 2,4 → **0,8 MB** |
+
+HTML do portfólio 12,5 MB → 101 KB. Banco: fotos 9,3 MB → 0 (URLs). O que segura o LCP agora (~4,5 s no 4G simulado) é a imagem principal de cada página + JS do Clerk — Etapa 3.
+
 ¹ Sem nota: o HTML de 12,5 MB é grande demais para o Lighthouse ler. ² Medido em 20/10 antes do P7.
 Fontes pré-carregadas por página: 11 arquivos (~550 KB) → 4 (129 KB). O que ainda segura o LCP e o peso é a foto em base64 (P2): portfólio 10 MB, pronta-entrega 3,6 MB (1 produto), home e alianças 2,4 MB (destaques do portfólio via API).
 
@@ -154,7 +167,7 @@ D4 decidido (20/10/2026): **UploadThing** — conta ativa (0 arquivos, limite 2 
 - [x] S6 — Rota de upload do UploadThing exige role admin (antes: qualquer logado)
 - [x] P2 — Admin envia arquivo ao UploadThing (redimensionado no navegador, até 2400 px WebP) em vez de base64; exclusão/troca de foto apaga o arquivo sem uso (commit 2475173)
 - [x] P2 — Script `scripts/migrate-images-to-uploadthing.mjs` (simulação por padrão, `--apply`, idempotente por hash). Ensaiado 2× no banco de testes: 11 fotos, 9,5 MB → 730 KB; 2ª cópia limpa reaproveitou as 11 sem reenviar; HTML do portfólio 12,5 MB → 96 KB
-- [ ] Produção: push do código → backup novo → migração (simulação, depois `--apply`) → redeploy para regenerar páginas estáticas → medir
+- [x] Produção (20/10/2026): push do código (d663a0b) → backup novo `cicero-joias-public-*-antes-migracao-fotos.dump` (8 MB, contagens conferidas) → simulação → `--apply` (10 fotos, todas reaproveitadas do ensaio, 0 base64 restante, 10/10 URLs abrindo) → arquivo órfão do produto "Teste" (apagado pelo admin) removido do UploadThing → redeploy → medição
 - [ ] Reduzir o limite de 50 MB da API e limpar `stack`/`debug` das rotas do admin (S5)
 - Medir: tamanho do HTML do portfólio e do banco
 
