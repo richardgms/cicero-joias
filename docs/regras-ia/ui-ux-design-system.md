@@ -5,6 +5,14 @@ description: Use when styling components, creating layouts, or choosing colors/i
 
 # UI/UX & Design System (Cicero Joias)
 
+> **Fonte da verdade: `docs/design-system-cj.md`.** Leia antes de criar ou alterar qualquer interface. Regras que mais costumam ser esquecidas:
+> - Texto dourado: `text-action-strong` só em fundo claro (vira #B1860E em títulos/ícones e #8F6A0C em texto pequeno); em fundo escuro, `text-action-on-dark` (seção 3.1).
+> - `text-text-secondary` sem opacidade; contraste mínimo WCAG AA.
+> - Fontes do público: só Jost, Libre Caslon e Marcellus.
+> - Imagens: WebP no tamanho de exibição; fotos do admin via UploadThing, nunca base64 (seção 11).
+> - Nada de tela de carregamento em tela cheia nas páginas públicas.
+> - Componentes de `components/ui` sem uso foram removidos; para usar um novo componente do shadcn, adicione com o CLI do shadcn.
+
 ## Overview
 We aim for a "Premium, State-of-the-Art" aesthetic. Glassmorphism, smooth animations, and refined typography.
 
