@@ -73,33 +73,21 @@ export async function GET(request: Request) {
 
     if (errorMessage.includes('connect') || errorMessage.includes('econnrefused') || errorMessage.includes('enotfound')) {
       return NextResponse.json(
-        {
-          error: 'Não foi possível conectar ao banco de dados. O serviço pode estar temporariamente indisponível.',
-          hint: 'Se você está usando Supabase, verifique se o projeto não foi pausado por inatividade.'
-        },
+        { error: 'Serviço temporariamente indisponível. Tente novamente em instantes.' },
         { status: 503 },
       );
     }
 
     if (errorMessage.includes('timeout')) {
       return NextResponse.json(
-        { error: 'A conexão com o banco de dados expirou. Tente novamente.' },
+        { error: 'A requisição demorou demais. Tente novamente.' },
         { status: 504 },
       );
     }
 
-    if (errorMessage.includes('does not exist') || errorMessage.includes('relation')) {
-      return NextResponse.json(
-        { error: 'Erro de estrutura do banco de dados. Execute as migrations do Prisma.' },
-        { status: 500 },
-      );
-    }
-
+    // Detalhes do erro ficam só no log do servidor (logger.error acima)
     return NextResponse.json(
-      {
-        error: 'Erro interno do servidor ao buscar portfólio',
-        details: error instanceof Error ? error.message : 'Erro desconhecido'
-      },
+      { error: 'Erro interno do servidor ao buscar portfólio' },
       { status: 500 },
     );
   }

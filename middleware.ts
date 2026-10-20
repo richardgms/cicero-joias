@@ -48,7 +48,8 @@ export default clerkMiddleware(async (auth, req) => {
 
   // Proteger rotas administrativas primeiro
   if (isProtectedRoute(req)) {
-    auth.protect();
+    // No Clerk v6 protect() é assíncrono: sem await a proteção não tinha efeito
+    await auth.protect();
   }
 
   // Verificar se é uma página controlável

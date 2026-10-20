@@ -82,7 +82,10 @@ Severidade: 🔴 crítico · 🟠 alto · 🟡 médio · ⚪ baixo
 | I4 | ⚪ | `browserslist`/`caniuse-lite` desatualizados | Aviso no build |
 | I5 | 🟡 | Sem monitoramento de desempenho | O portfólio chegou a 14 MB sem ninguém perceber |
 | I6 | 🔴 ✅ | Senha do banco desatualizada na Vercel | Achado no deploy da Etapa 1 (20/10/2026): APIs públicas (portfólio, categorias, pronta-entrega) davam 500, admin sem banco e todo deploy falhava. **Resolvido** atualizando `DATABASE_URL`/`DIRECT_URL` na Vercel e refazendo o deploy |
-| S1 | 🟠 | APIs expõem detalhes internos de erro | Respostas 500 incluíam `details` com a mensagem do Prisma (servidor do banco, tipo de falha). Corrigir para mensagem genérica + log no servidor |
+| S1 | 🟠 ✅ | APIs expõem detalhes internos de erro | Respostas 500 das APIs públicas incluíam `details` com a mensagem do Prisma e uma dica sobre o Supabase. **Resolvido**: mensagem genérica, detalhe só no log do servidor |
+| S2 | 🔴 ✅ | API do admin não verificava se o usuário é admin | `checkAdminAuth()` (usado pelas 11 rotas `/api/admin` e pelas páginas do admin que leem o banco) só checava se havia sessão; o role ADMIN era verificado apenas na tela (`AdminGuard`). Qualquer conta logada podia criar/editar/apagar portfólio e produtos, mudar visibilidade e listar usuários (com e-mails) chamando a API direto — e `/sign-up` é público. **Resolvido**: `checkAdminAuth()` agora exige `publicMetadata.role === 'admin'` (mesma regra do `AdminGuard`) |
+| S3 | 🟠 ✅ | Proteção do middleware para `/admin` não funcionava | `auth.protect()` sem `await` (assíncrono no Clerk v6). **Resolvido**: visitante sem login vai para `/sign-in` antes de qualquer conteúdo do admin |
+| S4 | 🟠 ✅ | Rota pública executava DDL no banco | `POST /api/create-activity-logs` rodava `CREATE TABLE` em produção sem autenticação (o middleware libera todo `/api`). Nenhum código a usava e a tabela já existe. **Resolvido**: rota removida |
 
 ---
 
@@ -132,7 +135,7 @@ Cada item: `[ ]` pendente · `[~]` em andamento · `[x]` feito (com commit).
 - [x] P7b — `og:image` corrigida: a home e o portfólio não tinham imagem de compartilhamento (o `openGraph` da página substituía o do layout) e os detalhes do portfólio/pronta-entrega usavam a foto em base64 (inválida e duplicada no `<head>`)
 - [x] P8 — Novo `formatDate()` em `lib/utils.ts` (fuso fixo `America/Sao_Paulo`) aplicado no portfólio (listagem e detalhe) e no detalhe da pronta-entrega; faixa de preço da pronta-entrega com `toLocaleString('pt-BR')`. Erro #418 confirmado sumido com o servidor em UTC (como na Vercel). Obs.: a nota 0 em "Boas práticas" do portfólio continua, mas por outro motivo — o HTML de 12,5 MB é grande demais para o Lighthouse ler (auditoria `charset` falha e a categoria fica sem nota); resolve com o P2
 - [x] P11 — As 5 imagens estavam em código morto (nunca executado, sem 404 para o visitante): removidos `portfolioCases` de `components/home/home-data.ts` e o componente não usado `components/ui/lazy-image.tsx`
-- [ ] Termos de uso e Política de privacidade mostram "Última atualização" = data do build (`new Date()`), não a data real do texto. Decidir uma data fixa (conteúdo)
+- [x] Termos de uso e Política de privacidade: "Última atualização" fixada em 12/02/2026 (criação dos textos no git; o commit de 17/08 só mudou imports), em vez da data de cada deploy
 - [x] P6 — Levantamento no navegador: o público vê só Jost (texto), Libre Caslon (títulos) e Marcellus (números); Inter/Playfair só no admin; Montserrat, Philosopher e Cormorant em lugar nenhum — mas as 8 eram pré-carregadas em toda página (~550 KB). Removidas Montserrat, Philosopher e Cormorant (classes antigas → `font-sans`/`font-heading`); Inter/Playfair com `preload: false`; Libre Caslon TTF → WOFF2 com subconjunto latino (295 → 89 KB, eixo de peso intacto, acentos conferidos). Visual idêntico (prints antes/depois). Obs.: o build local no Windows não gera os preloads de fonte (manifesto vazio) — conferir no deploy
 - Medir: Lighthouse em todas as páginas
 
@@ -140,7 +143,9 @@ Cada item: `[ ]` pendente · `[~]` em andamento · `[x]` feito (com commit).
 - [ ] P5 — Clerk só onde precisa (conforme D2)
 - [ ] P4 — Revisar componentes `'use client'` desnecessários e o uso de `framer-motion` (LazyMotion / CSS)
 - [ ] P9 — Cachear a verificação de visibilidade de páginas
-- [ ] S1 — APIs devolvem mensagem genérica em erro (sem `details` do Prisma)
+- [x] S1 — APIs públicas devolvem mensagem genérica em erro (sem `details` do Prisma)
+- [x] S2/S3/S4 — Autorização do admin na API, `await auth.protect()` no middleware e remoção da rota de setup pública (achados durante o S1)
+- [ ] S5 — Rotas do admin ainda devolvem `stack`/`debug` em erro (agora só para admins); limpar quando mexer nessas rotas na Etapa 4
 - [ ] P10 — Avaliar renderizar a pronta-entrega no servidor
 - Medir: TBT e tamanho de JS por rota (`npm run analyze`)
 
@@ -169,6 +174,7 @@ Cada item: `[ ]` pendente · `[~]` em andamento · `[x]` feito (com commit).
 | Data | Item | Commit | Antes → Depois |
 |---|---|---|---|
 | 20/10/2026 | Diagnóstico | — | Linha de base registrada |
+| 20/10/2026 | S1–S4 — segurança | ver commit "fix(security)" | Usuário logado não-admin: acesso total à API do admin → bloqueado (403). `/admin` sem login: página servida → redireciona ao login. Rota pública com `CREATE TABLE` → removida. Erros públicos sem detalhes internos |
 | 20/10/2026 | P6 — fontes | ver commit "perf(P6)" | 8 → 5 famílias declaradas; pré-carregadas no público: 11 arquivos (~550 KB) → esperado 4 arquivos (~180 KB), a confirmar após deploy. Libre Caslon 295 → 89 KB |
 | 20/10/2026 | P7 — imagens fixas, ícones e og:image | ver commit "perf(P7)" | Serviços › Alianças: maior imagem 3,9 MB → 18 KB, peso 6,9 → 3,1 MB, desempenho 49 → 67 (o resto são 2,2 MB da API de destaques, P2). Sobre: 74. HTML do detalhe do portfólio 13,2 → 11,4 MB. `og:image` válida em todas as páginas |
 | 20/10/2026 | P8 + P11 — datas e código morto | ver commit "fix(P8,P11)" | Erros no console do portfólio: 1 (React #418) → 0. −49 linhas de dados mortos e 1 componente não usado |

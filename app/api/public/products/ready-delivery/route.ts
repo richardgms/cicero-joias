@@ -108,11 +108,9 @@ export async function GET(request: Request) {
       });
     }
 
+    // Detalhes do erro ficam só no log do servidor (console.error acima)
     return NextResponse.json(
-      {
-        error: 'Erro interno do servidor',
-        details: error instanceof Error ? error.message : 'Erro desconhecido'
-      },
+      { error: 'Erro interno do servidor' },
       { status: 500 }
     );
   }

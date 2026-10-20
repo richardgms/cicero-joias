@@ -10,30 +10,12 @@ export interface AdminAuthError {
   details?: string;
 }
 
-// Função para verificar se o usuário está autenticado.
-// A verificação de role ADMIN é feita pelo AdminGuard (client-side) no layout.
-// 
-// Para rotas de API, use checkAdminAuthStrict() que verifica o role via Clerk API.
+// Verificação usada por todas as rotas /api/admin.
+// Antes só checava se havia sessão: qualquer usuário logado (não admin) passava,
+// porque o AdminGuard só protege a interface, não a API. Agora exige o mesmo
+// role ADMIN (publicMetadata.role) que o AdminGuard exige na tela.
 export async function checkAdminAuth(): Promise<AdminAuthSuccess | AdminAuthError> {
-  try {
-    // auth() usa a sessão local — NÃO faz chamada HTTP ao Clerk API
-    const { userId } = await auth();
-
-    if (!userId) {
-      return {
-        error: 'Não autorizado - faça login para continuar',
-        status: 401
-      };
-    }
-
-    return { userId };
-  } catch (error: any) {
-    console.error('❌ [Auth Check] Unexpected error:', error?.message);
-    return {
-      error: 'Erro interno durante autenticação',
-      status: 500,
-    };
-  }
+  return checkAdminAuthStrict();
 }
 
 // Versão rigorosa que verifica role ADMIN via Clerk API.

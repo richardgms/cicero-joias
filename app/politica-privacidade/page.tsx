@@ -13,7 +13,7 @@ export default function PoliticaPrivacidadePage() {
                 <h1 className="font-heading text-4xl font-bold text-text-primary mb-8">Política de Privacidade</h1>
 
                 <div className="space-y-6 font-sans text-text-secondary leading-relaxed [&_h3]:font-heading [&_h3]:text-xl [&_h3]:font-bold [&_h3]:text-text-primary [&_h3]:mt-8 [&_h3]:mb-3 [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:space-y-2">
-                    <p className="font-numeric">Última atualização: {new Date().toLocaleDateString('pt-BR')}</p>
+                    <p className="font-numeric">Última atualização: 12/02/2026</p>
 
                     <p>
                         A sua privacidade é importante para nós. É política da Cícero Joias respeitar a sua privacidade
