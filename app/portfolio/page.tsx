@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Portfólio de Joias e Restaurações - Cícero Joias',
     description: 'Conheça nossos projetos recentes: alianças personalizadas, restaurações com memória afetiva e renovações de peças queridas.',
+    images: [{ url: '/assets/logos/og-image.jpg', width: 800, height: 800, alt: 'Cícero Joias - Logo' }],
   },
 };
 

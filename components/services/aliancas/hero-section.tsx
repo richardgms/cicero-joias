@@ -47,7 +47,7 @@ export function AliancasHeroSection() {
     >
       <div className="absolute inset-0">
         <Image
-          src="/assets/services/aliancas/hero.svg"
+          src="/assets/services/aliancas/hero.webp"
           alt="Alianças Personalizadas Cícero Joias"
           fill
           priority

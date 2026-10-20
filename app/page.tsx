@@ -35,11 +35,13 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'pt_BR',
     siteName: 'Cicero Joias',
+    images: [{ url: '/assets/logos/og-image.jpg', width: 800, height: 800, alt: 'Cícero Joias - Logo' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Cicero Joias - Joalheria Completa',
     description: 'Alianças personalizadas, banho de ouro e consertos especializados. 40 anos de tradição, atendendo João Pessoa e região.',
+    images: ['/assets/logos/og-image.jpg'],
   },
 };
 

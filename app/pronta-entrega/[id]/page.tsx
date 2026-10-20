@@ -63,7 +63,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         product.seoDescription ||
         product.description ||
         `Conheça ${product.name}, disponível para pronta entrega na Cícero Joias.`,
-      images: product.mainImage ? [product.mainImage] : undefined,
+      // Fotos ainda guardadas em base64 não servem como og:image (e duplicavam a foto no <head>)
+      images: product.mainImage?.startsWith('http') ? [product.mainImage] : ['/assets/logos/og-image.jpg'],
     },
   };
 }

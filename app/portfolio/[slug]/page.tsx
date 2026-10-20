@@ -84,7 +84,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         portfolioItem.seoDescription ||
         portfolioItem.description ||
         `Conheça o projeto ${portfolioItem.title}`,
-      images: portfolioItem.mainImage ? [portfolioItem.mainImage] : undefined,
+      // Fotos ainda guardadas em base64 não servem como og:image (e duplicavam a foto no <head>)
+      images: portfolioItem.mainImage?.startsWith('http') ? [portfolioItem.mainImage] : ['/assets/logos/og-image.jpg'],
     },
   };
 }
