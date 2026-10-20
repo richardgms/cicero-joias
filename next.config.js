@@ -75,7 +75,13 @@ const nextConfig = {
           },
           {
             key: 'Referrer-Policy',
-            value: 'origin-when-cross-origin'
+            value: 'strict-origin-when-cross-origin'
+          },
+          {
+            // Vindo do antigo netlify.toml (a hospedagem é só Vercel): o site não usa
+            // câmera, microfone nem localização
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=()'
           }
         ]
       }
