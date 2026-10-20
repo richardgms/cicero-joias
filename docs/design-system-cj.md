@@ -3,7 +3,9 @@
 > [!IMPORTANT]
 > Este é o **único** documento de referência para o Design System. Use os tokens e padrões aqui definidos, não valores arbitrários.
 
-> Última atualização: **17/08/2026** — fundações, Home, `/servicos`, `/servicos/aliancas-personalizadas`, `/servicos/consertos`, `/servicos/banho-de-ouro`, `/servicos/joias-sob-medida`, `/servicos/lentes-de-oculos`, `/servicos/limpeza-de-joias`, `/portfolio`, `/portfolio/[slug]`, `/sobre`, `/pronta-entrega`, `/pronta-entrega/[id]` e as páginas auxiliares (`/termos-uso`, `/politica-privacidade`, `/acesso-negado`, `/sign-in`, `/sign-up`, `not-found`, `error`) concluídos. Migração das páginas públicas cadastradas está completa; só falta o painel administrativo (fora de escopo por enquanto).
+> Última atualização: **20/10/2026** — dourado de texto em dois tons com contraste AA (seção 3.1), regras de acessibilidade, fontes enxutas (só as usadas, WOFF2), imagens (seção 11) e remoção do loading global. Ver também `docs/PLANO-OTIMIZACAO.md`.
+>
+> Atualização anterior: **17/08/2026** — fundações, Home, `/servicos`, `/servicos/aliancas-personalizadas`, `/servicos/consertos`, `/servicos/banho-de-ouro`, `/servicos/joias-sob-medida`, `/servicos/lentes-de-oculos`, `/servicos/limpeza-de-joias`, `/portfolio`, `/portfolio/[slug]`, `/sobre`, `/pronta-entrega`, `/pronta-entrega/[id]` e as páginas auxiliares (`/termos-uso`, `/politica-privacidade`, `/acesso-negado`, `/sign-in`, `/sign-up`, `not-found`, `error`) concluídos. Migração das páginas públicas cadastradas está completa; só falta o painel administrativo (fora de escopo por enquanto).
 
 ---
 
@@ -36,7 +38,13 @@
 | **Bold 700** | Uso pontual; evitar em grandes blocos para preservar o refinamento. |
 | **Italic 400–500** | Palavras de acento editorial e composições especiais, nunca para texto de interface. |
 
-Os arquivos variáveis regular e itálico são auto-hospedados em `app/fonts/libre-caslon` com licença SIL OFL 1.1. A Cormorant Garamond e as fontes anteriores permanecem cadastradas temporariamente para páginas legadas, mas o tema público resolve `font-heading` para Libre Caslon.
+Os arquivos variáveis regular e itálico são auto-hospedados em `app/fonts/libre-caslon` (licença SIL OFL 1.1), em **WOFF2 com subconjunto latino** (todos os acentos do português; 295 KB → 89 KB). O eixo de peso 400–700 é preservado.
+
+### Carregamento das fontes (regra)
+
+- O site público carrega **apenas** Jost, Libre Caslon e Marcellus. Não introduza outra família sem revisar o peso: cada família pré-carregada custa pontos de desempenho.
+- **Inter** e **Playfair Display** são do painel admin (tema padrão) e usam `preload: false`, para não pesar no site público.
+- **Montserrat, Philosopher e Cormorant Garamond foram removidas** (20/10/2026). As classes `font-montserrat`/`font-philosopher`/`font-cormorant` não existem mais: use `font-sans` e `font-heading`.
 
 ---
 
@@ -47,13 +55,32 @@ Os arquivos variáveis regular e itálico são auto-hospedados em `app/fonts/lib
 | Nome | Token | Hex (Ref) | Descrição |
 | :--- | :--- | :--- | :--- |
 | **Esmeralda 700** | `brand-emerald-700` / `action-primary` | `#184434` | Cor primária da marca. Sofisticação e tradição. |
-| **Ouro 600** | `brand-gold-600` / `action-strong` | `#C79A34` | Acentos, botões de ação e detalhes nobres. |
+| **Ouro 600** | `brand-gold-600` / `action-strong` | `#C79A34` | Fundos de botões de ação, bordas, detalhes nobres. **Como cor de texto em fundo claro, vira um dos tons da seção 3.1.** |
+| **Ouro 300** | `brand-gold-300` / `action-on-dark` | `#D5B367` | Texto, ícones e acentos dourados **sobre fundos escuros** (esmeralda). |
 | **Marfim** | `brand-ivory` / `surface-page` | `#F7F5F0` | Fundo principal das seções claras. |
 | **Grafite** | `brand-graphite` / `text-body` | `#2E363D` | Texto principal sobre fundos claros. |
 | **Texto secundário** | `brand-text-secondary` / `text-secondary` | `#5C6B62` | Apoio, descrições e metadados. |
 
 > [!TIP]
 > Use sempre os tokens semânticos (`bg-surface-page`, `text-primary`) em vez dos nomes das cores.
+
+### 3.1 Dourado em texto e contraste (WCAG AA)
+
+O `#C79A34` sobre marfim/branco tem contraste de só 2,4–2,6:1. Para manter a identidade **e** passar em acessibilidade, a classe `text-action-strong` (texto dourado em fundo claro) é resolvida em `app/globals.css` em **dois tons** — decisão aprovada em 20/10/2026 após comparar opções na própria página (um tom único `#896A24` foi rejeitado por parecer latão/bronze):
+
+| Onde | Cor resultante | Variável CSS | Contraste mínimo exigido |
+| :--- | :--- | :--- | :--- |
+| Dourado dentro de **títulos** (`h1`–`h3`) e **ícones** (`svg`) | `#B1860E` | `--ds-action-strong-heading` | 3:1 (texto grande / elemento gráfico) |
+| Dourado em **texto pequeno** (etiquetas, links, datas, rótulos) | `#8F6A0C` | `--ds-action-strong-text` | 4,5:1 |
+| Fundos, bordas, botões (`bg-`, `border-`, `shadow-`) | `#C79A34` | `--ds-action-strong` | — |
+
+Regras:
+
+- **Fundo claro** → texto dourado com `text-action-strong` (o tom correto é aplicado automaticamente).
+- **Fundo escuro** (esmeralda, cards `variant="dark"`, gradientes escuros) → `text-action-on-dark`. **Nunca** `text-action-strong` em fundo escuro: lá ele fica escuro demais.
+- Destaque dourado grande fora de `h1`–`h3` recebe o tom de texto pequeno (mais escuro). Se precisar do tom claro, coloque o destaque dentro do título.
+- **Texto secundário** (`text-text-secondary`, `#5C6B62`) sempre em **opacidade total** sobre fundo claro. As variações `/60`, `/70` e `/80` reprovam em contraste (3,0–3,6:1) e foram removidas.
+- Mudança de cor de marca: mostre as opções aplicadas na página real antes de publicar.
 
 ---
 
@@ -209,11 +236,16 @@ Regras de uso:
 Used in product details or technical specifications.
 
 ```tsx
-<div className="flex flex-col gap-1 border-l-2 border-ouro/20 pl-4">
-  <dt className="text-[10px] font-bold uppercase tracking-widest text-text-secondary/50">Label</dt>
-  <dd className="font-montserrat text-sm font-medium text-text-primary">Value</dd>
-</div>
+<dl>
+  <div className="flex flex-col gap-1 border-l-2 border-ouro/20 pl-4">
+    <dt className="text-[10px] font-bold uppercase tracking-widest text-text-secondary">Label</dt>
+    <dd className="font-sans text-sm font-medium text-text-primary">Value</dd>
+  </div>
+</dl>
 ```
+
+> [!IMPORTANT]
+> Em `<dl>`, o `<dt>` vem **antes** do `<dd>` (cada par pode ficar dentro de uma `<div>`). Se o visual pedir o valor acima do rótulo (ex.: números grandes nos heros de serviço), não use `<dl>`: use parágrafos (`<p>`) — `<dd>` antes de `<dt>` é inválido e reprova em acessibilidade.
 
 ### 4.8 Card de Depoimento (Fundo Claro)
 
@@ -263,6 +295,8 @@ Usada em seções de "nosso processo" (`/servicos/consertos`, `/servicos/banho-d
 > [!IMPORTANT]
 > O número da timeline é sempre dourado sólido (`text-action-strong`, sem opacidade reduzida). Não reintroduzir `opacity-20` ou similar nesse elemento.
 
+Estrutura semântica: `<ol>` → `<li>` → `AnimatedSection` (a animação fica **dentro** do item). Um `<div>` de animação entre `<ol>` e `<li>` torna a lista inválida.
+
 ### 4.11 Footer do tema público
 
 O footer público usa `bg-brand-emerald-950`, preserva as informações e destinos existentes e mantém contraste, foco visível e alvos de toque mínimos de 44px.
@@ -304,7 +338,7 @@ Padrão consolidado em `/pronta-entrega` para cards de produto com foto, preço 
 | **Categoria** | `Badge variant="gold"` **acima do título**, como eyebrow editorial (`mb-3 self-start` no grid) — nunca sobre a foto |
 | **Hierarquia do conteúdo** | categoria → título (`font-heading`, hover dourado) → descrição (`line-clamp-2`) → divisor → preço + meta → CTA |
 | **Preço** | Ponto focal da área de comércio: `font-numeric text-2xl font-bold text-text-primary`, separado da narrativa por `border-t border-border-default/60 pt-4` |
-| **Meta (código/estoque)** | De-enfatizada: `text-xs text-text-secondary/70`, alinhada à direita, rótulos curtos ("Cód." em vez de "Código:") |
+| **Meta (código/estoque)** | De-enfatizada por tamanho e posição: `text-xs text-text-secondary` (sem opacidade — ver seção 3.1), alinhada à direita, rótulos curtos ("Cód." em vez de "Código:") |
 | **Urgência de estoque** | Texto discreto `text-xs font-semibold text-error` ("Últimas unidades") junto da linha de estoque — **não** uma badge sobre a imagem nem badge destrutiva no meta |
 | **Altura uniforme** | `flex h-full flex-col` no Card + `mt-auto` antes do bloco de preço — CTAs alinham na base mesmo com descrições de tamanhos diferentes |
 
@@ -389,12 +423,15 @@ Para garantir que o conteúdo do Hero tenha o mesmo espaçamento visual no topo 
 Para manter a consistência e a percepção de performance premium, usamos um único componente: `<LoadingScreen />`.
 **IMPORTANTE**: Sempre forneça uma mensagem contextual na *prop* `message` (ex: "Carregando usuários...", "Salvando alterações...").
 
-### 8.1 Fullscreen Loading (Transição de Páginas)
+### 8.1 Fullscreen Loading (somente admin)
 
-Usado em `app/loading.tsx` e `app/admin/loading.tsx`. Fundo sólido (Esmeralda Deep) para evitar "piscar" de conteúdo branco.
+> [!WARNING]
+> **Não use tela de carregamento em tela cheia nas páginas públicas.** O antigo `app/loading.tsx` global foi removido em 20/10/2026: ele entrava no HTML antes do conteúdo, fazia o rodapé "pular" (CLS 0,89), atrasava a imagem principal e deixava páginas vazias para o Google. Pelo mesmo motivo, guardas de visibilidade não podem bloquear a renderização: o conteúdo é mostrado de imediato e só é trocado se a página estiver oculta.
+
+O variant `fullscreen` fica restrito a fluxos do admin (ex.: verificação de permissões no `AdminGuard`). O `app/admin/loading.tsx` usa o variant `inline`.
 
 ```tsx
-<LoadingScreen variant="fullscreen" message="Carregando..." />
+<LoadingScreen variant="fullscreen" message="Verificando permissões..." />
 ```
 
 ### 8.2 Inline Loading (Conteúdo Assíncrono)
@@ -432,6 +469,14 @@ Antes de finalizar qualquer componente, verifique:
 - [ ] Alvos de toque têm pelo menos 44×44px e estados `focus-visible`
 - [ ] Animações respeitam `prefers-reduced-motion`
 - [ ] Páginas não introduzem valores hexadecimais ou espaçamentos arbitrários
+- [ ] Texto dourado: `text-action-strong` só em fundo claro; em fundo escuro, `text-action-on-dark` (seção 3.1)
+- [ ] `text-text-secondary` sem opacidade (`/60`–`/80`) sobre fundo claro
+- [ ] Títulos em ordem (`h1` → `h2` → `h3`), sem pular nível só pelo tamanho visual (o tamanho vem da classe)
+- [ ] Botões só com ícone têm `aria-label`; `aria-label` em `div` exige `role` (ex.: estrelas com `role="img"`)
+- [ ] Nome acessível de links contém o texto visível (prefira não usar `aria-label` quando já há texto)
+- [ ] Listas válidas: `<ol>/<ul>` só com `<li>` como filhos; `<dl>` com `<dt>` antes de `<dd>`
+- [ ] Imagens seguem a seção 11 (WebP, tamanho de exibição, nunca base64)
+- [ ] Nenhuma fonte nova sem revisar o impacto no carregamento (seção 2)
 
 ---
 
@@ -501,7 +546,7 @@ Todas as páginas públicas cadastradas estão migradas. O que resta:
 
 ### 10.3 Regras para continuar
 
-- A página pública atual define composição, conteúdo e comportamento; o HTML do Design System é apenas especificação visual.
+- A página pública atual define composição, conteúdo e comportamento; o HTML do Design System (mockup de jul/2026, hoje fora do repositório em `Documentos\Cícero Joias - Design System`) é apenas referência visual histórica. **Este documento é a fonte da verdade.**
 - Nunca importar ou copiar `support.js` para a aplicação.
 - Preservar dados dinâmicos, autenticação, uploads, links, WhatsApp e comportamento existente.
 - Usar tokens semânticos e os componentes fundamentais; não criar um Design System paralelo.
@@ -511,3 +556,17 @@ Todas as páginas públicas cadastradas estão migradas. O que resta:
 - Fazer mudanças pequenas e reversíveis, com revisão desktop/mobile.
 - Ao concluir cada página: ESLint, `tsc --noEmit`, build e commit próprio; não fazer push ou deploy sem autorização.
 - Não versionar `.serena/`, screenshots, previews HTML, artefatos gerados nem a pasta da especificação visual, salvo decisão explícita.
+
+---
+
+## 11. Imagens e Mídia
+
+| Regra | Padrão |
+| :--- | :--- |
+| **Formato** | WebP para fotos. SVG só para vetores de verdade (logo, ícones): o `next/image` **não otimiza SVG**, então uma foto embutida em SVG chega crua (o hero de Alianças tinha 5,3 MB). |
+| **Tamanho** | Arquivo no tamanho máximo de exibição (heros até 2560 px de largura; cards ~640 px). Fotos de 6000 px foram reduzidas sem perda visível. Guarde os originais em alta fora do repositório (`Documentos\Cícero Joias - Acervo de imagens\originais-alta-resolucao`). |
+| **Fotos do admin** | Enviadas ao **UploadThing** (o banco guarda só a URL). O formulário reduz a foto no próprio aparelho (até 2400 px, WebP) antes do envio. **Nunca** salvar imagem em base64 no banco — a API recusa. |
+| **Componente** | `next/image` com `sizes` coerente com o layout; `priority` só na imagem principal da primeira dobra. |
+| **Ícones de site** | `favicon-48.png` e `apple-touch-icon.png` (180 px) em `public/assets/logos`. Nunca apontar favicon para arquivo grande. |
+| **Compartilhamento** | `og-image.jpg` 800×800 (JPG, para funcionar no WhatsApp). Toda página com `openGraph` próprio precisa repetir `images` — o `openGraph` da página substitui o do layout. |
+| **Peso por página** | Referência após a otimização (out/2026): ~450 KB por página pública no celular. Se uma página passar de ~1 MB, investigar antes de publicar. |
