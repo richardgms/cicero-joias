@@ -11,6 +11,30 @@
 
 ---
 
+## ▶ Estado atual / passagem (20/10/2026, fim do dia)
+
+O trabalho continua em outro agente (Claude Code no app Orca, nesta mesma pasta, branch `main`). Tudo commitado e publicado até `0146d01`.
+
+**Concluído e em produção:** Etapas 0 (exceto nada pendente), 1, 2, 3, 4 e 5, mais correções de segurança S1–S6. Resultado no site publicado: desempenho 90–95 em todas as páginas públicas (Pronta-entrega 86, adiada), Acessibilidade/Boas práticas/SEO 100. Admin testado pelo usuário após React 19 e após o upload pelo UploadThing: tudo ok.
+
+**Próximo: Etapa 6 — Vigilância** (ver lista na seção Etapas). Ainda não iniciada. Propor os passos ao usuário antes de mexer.
+
+**Pendências opcionais (não bloqueiam):** P4 (rever `'use client'`/animações), P9 (cache da verificação de visibilidade), P10 (pronta-entrega no servidor — adiado: página oculta e sem produtos).
+
+**Decisões tomadas:** D1 arquivos fora do repo em `Documentos\Cícero Joias - <tipo>` · D2 sem login de cliente (Clerk só em `/admin` e telas de entrar) · D3 só Vercel · D4 fotos no UploadThing · dourado em texto = opção D em dois tons (#B1860E títulos/ícones, #8F6A0C texto pequeno) · React 19.2.8 (linha estável; evitar versões com < 2 semanas).
+
+**Cuidados para quem continuar:**
+- Leia `CLAUDE.md` do projeto (stack, comandos, regras críticas) e `docs/design-system-cj.md` antes de mexer em interface.
+- Build local: `NEXT_DIST_DIR=.next-after npx next build`; o build **reescreve `tsconfig.json` e `next-env.d.ts`** → `git checkout -- tsconfig.json next-env.d.ts` e apagar `.next-after`. Se aparecer erro de tipos de rota removida, apagar `.next/types`. Um erro interno ocasional do build some ao repetir.
+- No Windows o build local não gera preload de fontes; conferir em produção.
+- Medir antes e depois **no mesmo ambiente**; decidir pela mediana de algumas medições (uma medição isolada já enganou).
+- Autonomia: um commit por item; push por etapa; push sem perguntar só em baixo risco já testado (texto, imagem, CSS, docs); perguntar antes de push com banco, segurança, login/permissões ou pagamento; nada no banco de produção sem ok explícito e backup verificado; nunca exibir valores do `.env` (só "ok/erro").
+- Depois de todo push: acompanhar o deploy na Vercel até "Ready"/"Error" (`vercel ls cicero-joias --prod`) e testar as páginas/APIs principais no site publicado. Deploy de rollback conhecido: `cicero-joias-ou3ble9q1-cicerojoias-projects.vercel.app` (antes do React 19).
+- Encerrar servidores locais (`next start`) e tarefas em segundo plano ao terminar cada teste.
+- Página de acompanhamento no celular: https://claude.ai/artifact/Vg2iF4AgwNHCAdQLo14F4A — se o novo ambiente não tiver a ferramenta de Artifact, atualizar só este arquivo e avisar o usuário.
+
+**Depois do plano:** sugerir ao usuário um chat novo para otimizar o **layout do painel admin para celular** (hoje feito para desktop).
+
 ## Linha de base (20/10/2026)
 
 Lighthouse 12, celular (4G lento + CPU 4x mais lenta), site publicado em `cicerojoias.com`.
@@ -202,10 +226,10 @@ D4 decidido (20/10/2026): **UploadThing** — conta ativa (0 arquivos, limite 2 
 - [x] I4 — `caniuse-lite` atualizado (aviso do build sumiu)
 - [x] Bug achado: `toast()` do sonner nunca aparecia (Toaster não montado) — avisos de erro do admin (visibilidade, saúde) e "Link copiado" dos detalhes. Montado no layout do admin e nos layouts dos detalhes
 
-### Etapa 6 — Vigilância · risco: nenhum
-- [ ] I5 — Ativar Vercel Speed Insights
-- [ ] Orçamento de peso por página (ex.: HTML < 200 KB, JS < 300 KB, LCP < 2,5 s)
-- [ ] Lighthouse automático a cada deploy
+### Etapa 6 — Vigilância · risco: nenhum · ▶ PRÓXIMA
+- [ ] I5 — Ativar Vercel Speed Insights (pacote `@vercel/speed-insights` + componente no layout; ativar no painel da Vercel — passo do usuário). Avaliar peso extra no site público
+- [ ] Orçamento de peso por página. Referência atual: ~450 KB por página pública no celular; JS inicial compartilhado 102 KB; LCP ~3 s no 4G simulado
+- [ ] Lighthouse automático a cada deploy (ex.: GitHub Action com Lighthouse CI contra o deploy, ou checagem agendada) — definir com o usuário onde receber o aviso
 
 ---
 
