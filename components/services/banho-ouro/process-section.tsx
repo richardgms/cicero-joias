@@ -163,8 +163,8 @@ export function BanhoOuroProcessSection() {
               const Icon = step.icon;
 
               return (
-                <AnimatedSection key={step.number} delay={0.1 + index * 0.06}>
-                  <li className="relative">
+                <li key={step.number} className="relative">
+                  <AnimatedSection delay={0.1 + index * 0.06}>
                     <div className="hidden lg:grid lg:grid-cols-[1fr,auto,1fr] lg:items-center lg:gap-6">
                       <div className="flex justify-end">
                         {isLeft && <StepCard step={step} align="right" />}
@@ -201,8 +201,8 @@ export function BanhoOuroProcessSection() {
                         <StepCard step={step} align="left" />
                       </div>
                     </div>
-                  </li>
-                </AnimatedSection>
+                  </AnimatedSection>
+                </li>
               );
             })}
           </ol>

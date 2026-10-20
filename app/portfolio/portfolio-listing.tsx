@@ -246,7 +246,7 @@ export function PortfolioListing({ initialItems, categories, totalCount }: Portf
                             </div>
 
                             <div className="flex items-center justify-end gap-2">
-                                <span className="font-sans text-xs font-semibold uppercase tracking-wide text-text-secondary/70">Organizar por</span>
+                                <span className="font-sans text-xs font-semibold uppercase tracking-wide text-text-secondary">Organizar por</span>
                                 <Select value={dateFilter} onValueChange={setDateFilter}>
                                     <SelectTrigger aria-label="Organizar por" className="w-[160px] border-action-strong/20 text-text-primary bg-white/50 focus:ring-action-strong/30">
                                         <SelectValue placeholder="Mais recentes" />
@@ -259,7 +259,7 @@ export function PortfolioListing({ initialItems, categories, totalCount }: Portf
                             </div>
                         </div>
 
-                        <div className="flex items-center justify-end font-sans text-xs text-text-secondary/60">
+                        <div className="flex items-center justify-end font-sans text-xs text-text-secondary">
                             {filteredAndSortedItems.length > 0 && (
                                 <p>Exibindo {paginatedItems.length} de {filteredAndSortedItems.length} projetos</p>
                             )}
@@ -270,7 +270,7 @@ export function PortfolioListing({ initialItems, categories, totalCount }: Portf
                     <AnimatePresence initial={false}>
                         {paginatedItems.length === 0 ? (
                             <div className="flex h-48 flex-col items-center justify-center gap-3 text-center">
-                                <p className="font-sans text-sm text-text-secondary/70">
+                                <p className="font-sans text-sm text-text-secondary">
                                     Nenhum projeto encontrado com os filtros atuais.
                                 </p>
                                 <Button onClick={() => handleCategoryChange('all')} variant="outline" className="border-action-strong/30 text-action-strong">
@@ -330,7 +330,7 @@ export function PortfolioListing({ initialItems, categories, totalCount }: Portf
                                                             {item.title}
                                                         </h2>
                                                         {(item.description && viewMode === 'list') && (
-                                                            <p className="font-sans text-sm text-text-secondary/70 line-clamp-2">{item.description}</p>
+                                                            <p className="font-sans text-sm text-text-secondary line-clamp-2">{item.description}</p>
                                                         )}
                                                     </div>
 

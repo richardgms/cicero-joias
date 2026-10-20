@@ -297,7 +297,7 @@ export function PortfolioPreviewSection({
                         </h3>
 
                         {/* Link "Ver detalhes" */}
-                        <div className="flex items-center gap-2 text-sm font-medium text-action-strong group-hover:gap-3 transition-all duration-500">
+                        <div className="flex items-center gap-2 text-sm font-medium text-action-on-dark group-hover:gap-3 transition-all duration-500">
                           <span>Ver detalhes</span>
                           <ArrowRight className="h-4 w-4 transition-transform duration-500" />
                         </div>

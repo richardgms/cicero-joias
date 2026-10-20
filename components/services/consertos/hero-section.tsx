@@ -112,14 +112,14 @@ export function ConsertosHeroSection() {
           </Button>
         </div>
 
-        <dl className="mt-10 grid w-full max-w-5xl gap-4 md:grid-cols-3">
+        <div className="mt-10 grid w-full max-w-5xl gap-4 md:grid-cols-3">
           {heroStats.map((stat) => (
             <Card
               key={stat.label}
               variant="dark"
               className="border-border-on-dark bg-surface-dark-elevated/80 p-6 backdrop-blur-md"
             >
-              <dd className="font-numeric text-3xl text-action-on-dark sm:text-4xl">
+              <p className="font-numeric text-3xl text-action-on-dark sm:text-4xl">
                 {shouldReduceMotion ? (
                   <span>{stat.prefix}{stat.number}{stat.suffix}</span>
                 ) : (
@@ -131,17 +131,17 @@ export function ConsertosHeroSection() {
                     suffix={stat.suffix}
                   />
                 )}
-              </dd>
-              <dt className="mt-2 text-xs font-bold uppercase tracking-label text-text-on-dark">
+              </p>
+              <p className="mt-2 text-xs font-bold uppercase tracking-label text-text-on-dark">
                 {stat.label}
-              </dt>
+              </p>
               <div className="mx-auto my-4 h-px w-16 bg-border-on-dark" aria-hidden="true" />
               <p className="text-sm leading-relaxed text-text-on-dark/70">
                 {stat.description}
               </p>
             </Card>
           ))}
-        </dl>
+        </div>
 
         <p className="mt-4 max-w-2xl text-xs leading-relaxed text-text-on-dark/60">
           *Tempo médio para consertos simples como soldas rápidas e ajustes de

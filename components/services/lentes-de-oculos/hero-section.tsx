@@ -90,21 +90,21 @@ export function LentesDeOculosHeroSection() {
           </Button>
         </div>
 
-        <dl className="mt-6 grid w-full max-w-5xl gap-3 sm:mt-10 sm:gap-4 md:grid-cols-3">
+        <div className="mt-6 grid w-full max-w-5xl gap-3 sm:mt-10 sm:gap-4 md:grid-cols-3">
           <Card
             variant="dark"
             className="border-border-on-dark bg-surface-dark-elevated/80 p-4 backdrop-blur-md sm:p-6"
           >
-            <dd className="font-numeric text-3xl text-action-on-dark sm:text-4xl">
+            <p className="font-numeric text-3xl text-action-on-dark sm:text-4xl">
               {shouldReduceMotion ? (
                 <span>+40 anos</span>
               ) : (
                 <CountUp to={40} from={0} duration={2} prefix="+" suffix=" anos" />
               )}
-            </dd>
-            <dt className="mt-2 text-xs font-bold uppercase tracking-label text-text-on-dark">
+            </p>
+            <p className="mt-2 text-xs font-bold uppercase tracking-label text-text-on-dark">
               De tradição
-            </dt>
+            </p>
             <div className="mx-auto my-2 hidden h-px w-16 bg-border-on-dark sm:block" aria-hidden="true" />
             <p className="hidden text-sm leading-relaxed text-text-on-dark/70 sm:block">
               Cuidando da visão dos nossos clientes em João Pessoa.
@@ -115,16 +115,16 @@ export function LentesDeOculosHeroSection() {
             variant="dark"
             className="border-border-on-dark bg-surface-dark-elevated/80 p-4 backdrop-blur-md sm:p-6"
           >
-            <dd className="font-numeric text-3xl text-action-on-dark sm:text-4xl">
+            <p className="font-numeric text-3xl text-action-on-dark sm:text-4xl">
               {shouldReduceMotion ? (
                 <span>5 tipos</span>
               ) : (
                 <CountUp to={5} from={0} duration={2} suffix=" tipos" />
               )}
-            </dd>
-            <dt className="mt-2 text-xs font-bold uppercase tracking-label text-text-on-dark">
+            </p>
+            <p className="mt-2 text-xs font-bold uppercase tracking-label text-text-on-dark">
               De lente disponíveis
-            </dt>
+            </p>
             <div className="mx-auto my-2 h-px w-16 bg-border-on-dark" aria-hidden="true" />
             <p className="text-sm leading-relaxed text-text-on-dark/70">
               Monofocal, multifocal, antirreflexo, fotossensível e blue light.
@@ -135,18 +135,18 @@ export function LentesDeOculosHeroSection() {
             variant="dark"
             className="border-border-on-dark bg-surface-dark-elevated/80 p-4 backdrop-blur-md sm:p-6"
           >
-            <dd className="font-numeric text-3xl text-action-on-dark sm:text-4xl">
+            <p className="font-numeric text-3xl text-action-on-dark sm:text-4xl">
               Atendimento
-            </dd>
-            <dt className="mt-2 text-xs font-bold uppercase tracking-label text-text-on-dark">
+            </p>
+            <p className="mt-2 text-xs font-bold uppercase tracking-label text-text-on-dark">
               Personalizado
-            </dt>
+            </p>
             <div className="mx-auto my-2 hidden h-px w-16 bg-border-on-dark sm:block" aria-hidden="true" />
             <p className="hidden text-sm leading-relaxed text-text-on-dark/70 sm:block">
               Ajudamos você a escolher a lente ideal para sua receita.
             </p>
           </Card>
-        </dl>
+        </div>
 
         <a
           href="#sobre"

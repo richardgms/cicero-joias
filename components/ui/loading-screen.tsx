@@ -133,7 +133,7 @@ export function LoadingScreen({
                     transition={{ delay: 0.2 }}
                     className={cn(
                         "font-jost font-medium uppercase tracking-[0.25em] text-center px-4",
-                        variant === 'fullscreen' ? "text-sm text-ouro" : "text-[10px] text-text-secondary/60"
+                        variant === 'fullscreen' ? "text-sm text-ouro" : "text-[10px] text-text-secondary"
                     )}
                 >
                     {message}

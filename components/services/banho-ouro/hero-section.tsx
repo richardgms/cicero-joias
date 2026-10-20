@@ -143,14 +143,14 @@ export function BanhoOuroHeroSection() {
           </Button>
         </div>
 
-        <dl className="mt-6 grid w-full max-w-5xl gap-3 sm:mt-10 sm:gap-4 md:grid-cols-3">
+        <div className="mt-6 grid w-full max-w-5xl gap-3 sm:mt-10 sm:gap-4 md:grid-cols-3">
           {heroStats.map((stat) => (
             <Card
               key={stat.label}
               variant="dark"
               className="border-border-on-dark bg-surface-dark-elevated/80 p-4 backdrop-blur-md sm:p-6"
             >
-              <dd className="font-numeric text-3xl text-action-on-dark sm:text-4xl">
+              <p className="font-numeric text-3xl text-action-on-dark sm:text-4xl">
                 {shouldReduceMotion ? (
                   <span>
                     {stat.prefix}
@@ -166,10 +166,10 @@ export function BanhoOuroHeroSection() {
                     suffix={stat.suffix}
                   />
                 )}
-              </dd>
-              <dt className="mt-2 text-xs font-bold uppercase tracking-label text-text-on-dark">
+              </p>
+              <p className="mt-2 text-xs font-bold uppercase tracking-label text-text-on-dark">
                 {stat.label}
-              </dt>
+              </p>
               <div
                 className="mx-auto my-2 hidden h-px w-16 bg-border-on-dark sm:block"
                 aria-hidden="true"
@@ -179,7 +179,7 @@ export function BanhoOuroHeroSection() {
               </p>
             </Card>
           ))}
-        </dl>
+        </div>
 
         <a
           href="#sobre"

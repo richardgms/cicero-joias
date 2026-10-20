@@ -209,12 +209,12 @@ export function PortfolioDetail({ portfolioItem, relatedProjects }: PortfolioDet
                         transition={{ delay: 0.4, duration: 0.6 }}
                     >
                         <div className="space-y-5">
-                            <p className="font-sans text-[15px] leading-[1.8] text-text-secondary/80 sm:text-base whitespace-pre-wrap first-letter:text-4xl first-letter:font-heading first-letter:font-bold first-letter:text-action-strong first-letter:mr-1 first-letter:float-left first-letter:leading-[0.85] first-letter:mt-1">
+                            <p className="font-sans text-[15px] leading-[1.8] text-text-secondary sm:text-base whitespace-pre-wrap first-letter:text-4xl first-letter:font-heading first-letter:font-bold first-letter:text-action-strong first-letter:mr-1 first-letter:float-left first-letter:leading-[0.85] first-letter:mt-1">
                                 {portfolioItem.description}
                             </p>
 
                             {portfolioItem.detailedDescription && (
-                                <div className="text-[15px] leading-[1.8] text-text-secondary/70 font-sans pt-5 border-t border-border-default/60 whitespace-pre-wrap">
+                                <div className="text-[15px] leading-[1.8] text-text-secondary font-sans pt-5 border-t border-border-default/60 whitespace-pre-wrap">
                                     {portfolioItem.detailedDescription}
                                 </div>
                             )}
@@ -230,7 +230,7 @@ export function PortfolioDetail({ portfolioItem, relatedProjects }: PortfolioDet
                                 <dl className="grid gap-x-8 gap-y-5 sm:grid-cols-2">
                                     {Object.entries(portfolioItem.specifications).map(([key, value]) => (
                                         <div key={key} className="flex flex-col gap-1.5 border-l-2 border-action-strong/25 pl-4">
-                                            <dt className="text-[10px] font-bold uppercase tracking-[0.15em] text-text-secondary/60">{key}</dt>
+                                            <dt className="text-[10px] font-bold uppercase tracking-[0.15em] text-text-secondary">{key}</dt>
                                             <dd className="font-sans text-sm font-semibold text-text-primary">{value}</dd>
                                         </div>
                                     ))}

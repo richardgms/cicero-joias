@@ -66,7 +66,7 @@ export default async function AcessoNegadoPage({
           </div>
 
           <div className="mt-8 border-t border-border-default pt-6">
-            <p className="font-sans text-sm text-text-secondary/70">
+            <p className="font-sans text-sm text-text-secondary">
               Quer saber quando estará disponível?{' '}
               <a
                 href="https://wa.me/5583991180251?text=Olá! Gostaria de saber quando a página estará disponível."

@@ -234,19 +234,19 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
                                     R$ {formatPrice(hasPromo ? product.promotionalPrice! : product.price)}
                                 </p>
                                 {hasPromo && (
-                                    <p className="font-numeric text-lg text-text-secondary/60 line-through">
+                                    <p className="font-numeric text-lg text-text-secondary line-through">
                                         R$ {formatPrice(product.price)}
                                     </p>
                                 )}
                             </div>
 
                             {product.description && (
-                                <p className="font-sans text-[15px] leading-[1.8] text-text-secondary/80 sm:text-base whitespace-pre-wrap">
+                                <p className="font-sans text-[15px] leading-[1.8] text-text-secondary sm:text-base whitespace-pre-wrap">
                                     {product.description}
                                 </p>
                             )}
 
-                            <p className="font-sans text-sm text-text-secondary/70">
+                            <p className="font-sans text-sm text-text-secondary">
                                 {isOutOfStock
                                     ? 'Sem estoque no momento.'
                                     : `${product.stock} ${product.stock === 1 ? 'unidade disponível' : 'unidades disponíveis'}`}
@@ -262,7 +262,7 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
                                 <dl className="grid gap-x-8 gap-y-5 sm:grid-cols-2">
                                     {Object.entries(specifications).map(([key, value]) => (
                                         <div key={key} className="flex flex-col gap-1.5 border-l-2 border-action-strong/25 pl-4">
-                                            <dt className="text-[10px] font-bold uppercase tracking-[0.15em] text-text-secondary/60">{key}</dt>
+                                            <dt className="text-[10px] font-bold uppercase tracking-[0.15em] text-text-secondary">{key}</dt>
                                             <dd className="font-sans text-sm font-semibold text-text-primary">{value}</dd>
                                         </div>
                                     ))}

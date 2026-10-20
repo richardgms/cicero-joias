@@ -150,7 +150,7 @@ export default function SobrePage() {
                   </div>
                   <p className="font-heading text-2xl font-bold text-text-primary mb-1">{item.value}</p>
                   <p className="font-sans text-xs font-semibold uppercase tracking-wide text-action-primary/70 mb-3">{item.label}</p>
-                  <p className="font-sans text-sm text-text-secondary/80 leading-relaxed">{item.description}</p>
+                  <p className="font-sans text-sm text-text-secondary leading-relaxed">{item.description}</p>
                 </Card>
               ))}
             </div>
@@ -177,7 +177,7 @@ export default function SobrePage() {
                 <Quote className="mx-auto h-8 w-8 text-action-strong/80 mb-6" aria-hidden="true" />
                 <blockquote className="font-heading text-xl md:text-2xl font-bold text-text-on-dark leading-relaxed mb-6">
                   &ldquo;Movido pela paixão pela arte da joalheria e pelo desejo de criar peças que{' '}
-                  <span className="text-action-strong">eternizassem momentos especiais</span>&rdquo;
+                  <span className="text-action-on-dark">eternizassem momentos especiais</span>&rdquo;
                 </blockquote>
                 <cite className="font-sans text-xs text-text-on-dark/70 not-italic uppercase tracking-widest">
                   — Mestre Joalheiro Cícero, Fundador
@@ -195,7 +195,7 @@ export default function SobrePage() {
                     1985 — O Início
                   </span>
                 </div>
-                <p className="font-sans text-base text-text-secondary/80 leading-relaxed">
+                <p className="font-sans text-base text-text-secondary leading-relaxed">
                   {storyParagraphs[0]}
                 </p>
               </Card>
@@ -208,7 +208,7 @@ export default function SobrePage() {
                     Crescimento
                   </span>
                 </div>
-                <p className="font-sans text-base text-text-secondary/80 leading-relaxed">
+                <p className="font-sans text-base text-text-secondary leading-relaxed">
                   {storyParagraphs[1]}
                 </p>
               </Card>
@@ -221,7 +221,7 @@ export default function SobrePage() {
                     2000 — Expansão
                   </span>
                 </div>
-                <p className="font-sans text-base text-text-secondary/80 leading-relaxed">
+                <p className="font-sans text-base text-text-secondary leading-relaxed">
                   {storyParagraphs[2]}
                 </p>
               </Card>
@@ -238,7 +238,7 @@ export default function SobrePage() {
                     Hoje — Legado Vivo
                   </span>
                 </div>
-                <p className="font-sans text-base text-text-secondary/80 leading-relaxed">
+                <p className="font-sans text-base text-text-secondary leading-relaxed">
                   {storyParagraphs[3]}
                 </p>
               </Card>
@@ -264,7 +264,7 @@ export default function SobrePage() {
                     </div>
                     <span className="font-sans text-sm font-bold uppercase tracking-widest text-action-strong">{item.year}</span>
                     <h3 className="font-heading text-xl font-bold text-text-primary">{item.title}</h3>
-                    <p className="font-sans text-sm text-text-secondary/80 leading-relaxed">{item.description}</p>
+                    <p className="font-sans text-sm text-text-secondary leading-relaxed">{item.description}</p>
                   </div>
                 ))}
               </div>

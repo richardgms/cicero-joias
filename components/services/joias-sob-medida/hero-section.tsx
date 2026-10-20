@@ -90,21 +90,21 @@ export function JoiasSobMedidaHeroSection() {
           </Button>
         </div>
 
-        <dl className="mt-6 grid w-full max-w-5xl gap-3 sm:mt-10 sm:gap-4 md:grid-cols-3">
+        <div className="mt-6 grid w-full max-w-5xl gap-3 sm:mt-10 sm:gap-4 md:grid-cols-3">
           <Card
             variant="dark"
             className="border-border-on-dark bg-surface-dark-elevated/80 p-4 backdrop-blur-md sm:p-6"
           >
-            <dd className="font-numeric text-3xl text-action-on-dark sm:text-4xl">
+            <p className="font-numeric text-3xl text-action-on-dark sm:text-4xl">
               {shouldReduceMotion ? (
                 <span>+40 anos</span>
               ) : (
                 <CountUp to={40} from={0} duration={2} prefix="+" suffix=" anos" />
               )}
-            </dd>
-            <dt className="mt-2 text-xs font-bold uppercase tracking-label text-text-on-dark">
+            </p>
+            <p className="mt-2 text-xs font-bold uppercase tracking-label text-text-on-dark">
               De experiência
-            </dt>
+            </p>
             <div className="mx-auto my-2 hidden h-px w-16 bg-border-on-dark sm:block" aria-hidden="true" />
             <p className="hidden text-sm leading-relaxed text-text-on-dark/70 sm:block">
               Mais de quatro décadas criando peças personalizadas.
@@ -115,16 +115,16 @@ export function JoiasSobMedidaHeroSection() {
             variant="dark"
             className="border-border-on-dark bg-surface-dark-elevated/80 p-4 backdrop-blur-md sm:p-6"
           >
-            <dd className="font-numeric text-3xl text-action-on-dark sm:text-4xl">
+            <p className="font-numeric text-3xl text-action-on-dark sm:text-4xl">
               {shouldReduceMotion ? (
                 <span>100%</span>
               ) : (
                 <CountUp to={100} from={0} duration={2} suffix="%" />
               )}
-            </dd>
-            <dt className="mt-2 text-xs font-bold uppercase tracking-label text-text-on-dark">
+            </p>
+            <p className="mt-2 text-xs font-bold uppercase tracking-label text-text-on-dark">
               Produção interna
-            </dt>
+            </p>
             <div className="mx-auto my-2 hidden h-px w-16 bg-border-on-dark sm:block" aria-hidden="true" />
             <p className="hidden text-sm leading-relaxed text-text-on-dark/70 sm:block">
               Nada é terceirizado: tudo feito no nosso ateliê.
@@ -135,18 +135,18 @@ export function JoiasSobMedidaHeroSection() {
             variant="dark"
             className="border-border-on-dark bg-surface-dark-elevated/80 p-4 backdrop-blur-md sm:p-6"
           >
-            <dd className="font-numeric text-3xl text-action-on-dark sm:text-4xl">
+            <p className="font-numeric text-3xl text-action-on-dark sm:text-4xl">
               Eterna
-            </dd>
-            <dt className="mt-2 text-xs font-bold uppercase tracking-label text-text-on-dark">
+            </p>
+            <p className="mt-2 text-xs font-bold uppercase tracking-label text-text-on-dark">
               Garantia
-            </dt>
+            </p>
             <div className="mx-auto my-2 hidden h-px w-16 bg-border-on-dark sm:block" aria-hidden="true" />
             <p className="hidden text-sm leading-relaxed text-text-on-dark/70 sm:block">
               Em peças de ouro 18k e prata 990.
             </p>
           </Card>
-        </dl>
+        </div>
 
         <a
           href="#sobre"

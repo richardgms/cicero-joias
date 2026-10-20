@@ -418,7 +418,7 @@ function ProntaEntregaContent() {
                         Faixa de Preço
                       </label>
                       <div className="relative ml-2 group">
-                        <HelpCircle className="h-4 w-4 text-text-secondary/60 cursor-help" />
+                        <HelpCircle className="h-4 w-4 text-text-secondary cursor-help" />
                         <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-surface-dark text-text-on-dark text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
                           Arraste as extremidades para definir preço mínimo e máximo
                           <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-surface-dark"></div>
@@ -540,12 +540,12 @@ function ProntaEntregaContent() {
                                     R$ {(product.price || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                                   </p>
                                   {product.material && (
-                                    <p className="font-sans text-xs text-text-secondary/70">{product.material}</p>
+                                    <p className="font-sans text-xs text-text-secondary">{product.material}</p>
                                   )}
                                 </div>
                                 <div className="text-right font-sans">
-                                  <p className="text-xs text-text-secondary/70">Cód. {product.code}</p>
-                                  <p className="text-xs text-text-secondary/70">
+                                  <p className="text-xs text-text-secondary">Cód. {product.code}</p>
+                                  <p className="text-xs text-text-secondary">
                                     {product.stock} {product.stock === 1 ? 'unidade' : 'unidades'}
                                   </p>
                                   {product.stock <= 5 && product.stock > 0 && (
@@ -594,7 +594,7 @@ function ProntaEntregaContent() {
                                     <p className="font-sans text-sm text-text-secondary mb-2">
                                       {product.description || 'Produto de alta qualidade disponível para pronta entrega.'}
                                     </p>
-                                    <div className="flex items-center space-x-4 font-sans text-xs text-text-secondary/70">
+                                    <div className="flex items-center space-x-4 font-sans text-xs text-text-secondary">
                                       <span>Cód. {product.code}</span>
                                       {product.material && <span>{product.material}</span>}
                                       <span>{product.stock} {product.stock === 1 ? 'unidade' : 'unidades'}</span>
