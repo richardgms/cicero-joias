@@ -15,7 +15,12 @@ const handleAuth = async () => {
 // Definição do nosso FileRouter
 export const ourFileRouter = {
   // Definimos um "endpoint" de upload com um nome
-  portfolioImageUploader: f({ image: { maxFileSize: "4MB", maxFileCount: 10 } })
+  portfolioImageUploader: f(
+    { image: { maxFileSize: "4MB", maxFileCount: 10 } },
+    // O navegador recebe a URL assim que o arquivo termina de subir, sem esperar
+    // o onUploadComplete voltar do servidor (padrão true na v7 = espera longa)
+    { awaitServerData: false },
+  )
     // Definimos as permissões e o que pode ser feito com o arquivo
     .middleware(() => handleAuth())
     .onUploadComplete(async ({ metadata, file }) => {

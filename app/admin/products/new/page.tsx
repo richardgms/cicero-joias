@@ -50,6 +50,7 @@ interface FormData {
 export default function NewProductPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [formData, setFormData] = useState<FormData>({
     name: '',
     description: '',
@@ -114,7 +115,12 @@ export default function NewProductPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    uploadImageFile(file)
+    setUploadProgress(0);
+    uploadImageFile(file, { onProgress: setUploadProgress })
+      .finally(() => {
+        setUploadProgress(null);
+        e.target.value = '';
+      })
       .then((result) => {
 
         if (isMain) {
@@ -128,7 +134,7 @@ export default function NewProductPage() {
       })
       .catch((error) => {
         console.error('Erro no upload da imagem:', error);
-        alert('Não foi possível enviar a imagem. Tente novamente.');
+        alert(error instanceof Error && error.message.startsWith('O envio demorou') ? error.message : 'Não foi possível enviar a imagem. Tente novamente.');
       });
   };
 
@@ -330,12 +336,13 @@ export default function NewProductPage() {
                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                           <Upload className="w-8 h-8 mb-4 text-gray-500" />
                           <p className="mb-2 text-sm text-gray-500">
-                            <span className="font-semibold">Clique para fazer upload</span>
+                            <span className="font-semibold">{uploadProgress !== null ? `Enviando imagem... ${uploadProgress}%` : 'Clique para fazer upload'}</span>
                           </p>
                           <p className="text-xs text-gray-500">PNG, JPG ou JPEG</p>
                         </div>
                         <input
                           type="file"
+                          disabled={uploadProgress !== null}
                           className="hidden"
                           accept="image/*"
                           onChange={(e) => handleImageUpload(e, true)}
@@ -378,9 +385,10 @@ export default function NewProductPage() {
 
                     <label className="flex flex-col items-center justify-center h-24 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
                       <Upload className="w-6 h-6 text-gray-400" />
-                      <span className="text-xs text-gray-500 mt-1">Adicionar</span>
+                      <span className="text-xs text-gray-500 mt-1">{uploadProgress !== null ? `Enviando ${uploadProgress}%` : 'Adicionar'}</span>
                       <input
                         type="file"
+                        disabled={uploadProgress !== null}
                         className="hidden"
                         accept="image/*"
                         onChange={(e) => handleImageUpload(e, false)}
@@ -423,7 +431,7 @@ export default function NewProductPage() {
                 <CardTitle>Ações</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button type="submit" className="w-full" disabled={loading || uploadProgress !== null}>
                   {loading ? (
                     <div className="flex items-center">
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>

@@ -43,11 +43,34 @@ async function prepareImage(file: File): Promise<File> {
   }
 }
 
+// Tempo máximo de um envio. Em rede móvel instável o upload pode travar sem
+// erro; depois disso cancelamos e a tela mostra a falha para tentar de novo.
+const UPLOAD_TIMEOUT_MS = 90_000;
+
+interface UploadImageOptions {
+  // Progresso de 0 a 100, para a tela mostrar "Enviando 45%"
+  onProgress?: (percent: number) => void;
+}
+
 // Envia a imagem para o UploadThing e devolve a URL pública do arquivo.
 // Substitui o antigo FileReader.readAsDataURL, que gravava a foto em base64 no banco.
-export async function uploadImageFile(file: File): Promise<string> {
+export async function uploadImageFile(file: File, options: UploadImageOptions = {}): Promise<string> {
   const prepared = await prepareImage(file);
-  const [uploaded] = await uploadFiles('portfolioImageUploader', { files: [prepared] });
-  if (!uploaded?.ufsUrl) throw new Error('O upload não retornou uma URL');
-  return uploaded.ufsUrl;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), UPLOAD_TIMEOUT_MS);
+
+  try {
+    const [uploaded] = await uploadFiles('portfolioImageUploader', {
+      files: [prepared],
+      signal: controller.signal,
+      onUploadProgress: ({ progress }) => options.onProgress?.(Math.round(progress)),
+    });
+    if (!uploaded?.ufsUrl) throw new Error('O upload não retornou uma URL');
+    return uploaded.ufsUrl;
+  } catch (error) {
+    if (controller.signal.aborted) throw new Error('O envio demorou demais. Verifique a conexão e tente de novo.');
+    throw error;
+  } finally {
+    clearTimeout(timer);
+  }
 }

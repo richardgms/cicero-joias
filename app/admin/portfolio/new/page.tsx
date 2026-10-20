@@ -64,6 +64,7 @@ export default function NewPortfolioPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { toast } = useToast();
   const createPortfolioMutation = useCreatePortfolioItem();
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [formData, setFormData] = useState<FormData>({
     title: '',
     description: '',
@@ -238,7 +239,12 @@ export default function NewPortfolioPage() {
 
     setUploadingImage(true);
 
-    uploadImageFile(file)
+    setUploadProgress(0);
+    uploadImageFile(file, { onProgress: setUploadProgress })
+      .finally(() => {
+        setUploadProgress(null);
+        e.target.value = '';
+      })
       .then((result) => {
 
         if (isMain) {
@@ -262,7 +268,7 @@ export default function NewPortfolioPage() {
         setUploadingImage(false);
         toast({
           title: "Erro no upload",
-          description: "Não foi possível enviar a imagem. Tente novamente.",
+          description: error instanceof Error && error.message.startsWith('O envio demorou') ? error.message : "Não foi possível enviar a imagem. Tente novamente.",
           variant: "destructive",
         });
       });
@@ -589,7 +595,7 @@ export default function NewPortfolioPage() {
                             <>
                               <Upload className="w-8 h-8 mb-4 text-gray-500" />
                               <p className="mb-2 text-sm text-gray-500">
-                                <span className="font-semibold">Clique para fazer upload</span>
+                                <span className="font-semibold">{uploadProgress !== null ? `Enviando imagem... ${uploadProgress}%` : 'Clique para fazer upload'}</span>
                               </p>
                               <p className="text-xs text-gray-500">PNG, JPG ou JPEG (máx 5MB)</p>
                             </>
@@ -599,7 +605,7 @@ export default function NewPortfolioPage() {
                           type="file"
                           className="hidden"
                           accept="image/*"
-                          disabled={uploadingImage}
+                          disabled={uploadingImage || uploadProgress !== null}
                           onChange={(e) => handleImageUpload(e, true)}
                         />
                       </label>
@@ -641,9 +647,10 @@ export default function NewPortfolioPage() {
 
                     <label className="flex flex-col items-center justify-center h-24 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
                       <Upload className="w-6 h-6 text-gray-400" />
-                      <span className="text-xs text-gray-500 mt-1">Adicionar</span>
+                      <span className="text-xs text-gray-500 mt-1">{uploadProgress !== null ? `Enviando ${uploadProgress}%` : 'Adicionar'}</span>
                       <input
                         type="file"
+                        disabled={uploadProgress !== null}
                         className="hidden"
                         accept="image/*"
                         onChange={(e) => handleImageUpload(e, false)}
@@ -722,7 +729,7 @@ export default function NewPortfolioPage() {
                 <Button
                   type="submit"
                   className="w-full"
-                  disabled={createPortfolioMutation.isPending || uploadingImage}
+                  disabled={createPortfolioMutation.isPending || uploadingImage || uploadProgress !== null}
                 >
                   {createPortfolioMutation.isPending ? (
                     <div className="flex items-center">

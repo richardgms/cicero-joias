@@ -67,6 +67,7 @@ export default function EditPortfolioPage() {
   const [initialLoading, setInitialLoading] = useState(true);
   const [uploadingImage, setUploadingImage] = useState(false);
   const { toast } = useToast();
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [formData, setFormData] = useState<FormData>({
     title: '',
     description: '',
@@ -276,7 +277,12 @@ export default function EditPortfolioPage() {
 
     setUploadingImage(true);
 
-    uploadImageFile(file)
+    setUploadProgress(0);
+    uploadImageFile(file, { onProgress: setUploadProgress })
+      .finally(() => {
+        setUploadProgress(null);
+        e.target.value = '';
+      })
       .then((result) => {
 
         if (isMain) {
@@ -299,7 +305,7 @@ export default function EditPortfolioPage() {
         setUploadingImage(false);
         toast({
           title: "Erro no upload",
-          description: "Não foi possível enviar a imagem. Tente novamente.",
+          description: error instanceof Error && error.message.startsWith('O envio demorou') ? error.message : "Não foi possível enviar a imagem. Tente novamente.",
           variant: "destructive",
         });
       });
@@ -613,12 +619,13 @@ export default function EditPortfolioPage() {
                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                           <Upload className="w-8 h-8 mb-4 text-gray-500" />
                           <p className="mb-2 text-sm text-gray-500">
-                            <span className="font-semibold">Clique para fazer upload</span>
+                            <span className="font-semibold">{uploadProgress !== null ? `Enviando imagem... ${uploadProgress}%` : 'Clique para fazer upload'}</span>
                           </p>
                           <p className="text-xs text-gray-500">PNG, JPG ou JPEG</p>
                         </div>
                         <input
                           type="file"
+                          disabled={uploadProgress !== null}
                           className="hidden"
                           accept="image/*"
                           onChange={(e) => handleImageUpload(e, true)}
@@ -662,9 +669,10 @@ export default function EditPortfolioPage() {
 
                     <label className="flex flex-col items-center justify-center h-24 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
                       <Upload className="w-6 h-6 text-gray-400" />
-                      <span className="text-xs text-gray-500 mt-1">Adicionar</span>
+                      <span className="text-xs text-gray-500 mt-1">{uploadProgress !== null ? `Enviando ${uploadProgress}%` : 'Adicionar'}</span>
                       <input
                         type="file"
+                        disabled={uploadProgress !== null}
                         className="hidden"
                         accept="image/*"
                         onChange={(e) => handleImageUpload(e, false)}
@@ -744,7 +752,7 @@ export default function EditPortfolioPage() {
                 <CardTitle>Ações</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button type="submit" className="w-full" disabled={loading || uploadProgress !== null}>
                   {loading ? (
                     <div className="flex items-center">
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
