@@ -155,7 +155,7 @@ Cada item: `[ ]` pendente · `[~]` em andamento · `[x]` feito (com commit).
 - [x] O1 — `public/` de 40 MB → 7,5 MB. Apagados o `.zip` de cópias e o `hero.svg` duplicado; 92 arquivos sem uso (no código e no banco) movidos para `Documentos\Cícero Joias - Acervo de imagens`, com cópia conferida byte a byte
 - [x] O2 — Imagem da home movida de `photosproducts/aliancas/hero.webp` para `assets/home/aliancas.webp`; regras obsoletas removidas do `.gitignore` e `.vercelignore`
 - [x] O3 — `artifacts/`: `print/tools/` (177 MB) apagado e o resto movido para `Documentos\Cícero Joias - Impressos`; 2 worktrees antigos (62 MB, já incorporados ao `main`) removidos; mockup do Design System (jul/2026, já incorporado em `design-system-cj.md`) movido para `Documentos\Cícero Joias - Design System`
-- [x] O4 — `rules/` e o guia de regras de IDE movidos para `docs/regras-ia/`; índice em `docs/README.md`; Gemini CLI removido do projeto (`GEMINI.md`) a pedido
+- [x] O4 — `rules/` e o guia de regras de IDE movidos para `docs/regras-ia/` (depois substituída pelo `CLAUDE.md` do projeto, 20/10/2026: regras genéricas/desatualizadas removidas, o que importava foi incorporado); índice em `docs/README.md`; Gemini CLI removido do projeto (`GEMINI.md`) a pedido
 - [x] O5 — 7 scripts avulsos removidos (duplicatas do portfólio e DNS do WSL); mantidos `check-database.ts`, `cleanup-orphaned-data.ts` e `optimize-images.mjs`
 - Medido: `public/` 40 MB → 7,5 MB; pasta do projeto ~280 MB mais leve; build passando
 

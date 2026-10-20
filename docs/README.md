@@ -1,5 +1,7 @@
 # Documentação — Cícero Joias
 
+Instruções para assistentes de IA (Claude Code) ficam em [`../CLAUDE.md`](../CLAUDE.md), lido automaticamente. A antiga pasta `regras-ia/` foi substituída por ele em 20/10/2026.
+
 | Documento | Para quê |
 |---|---|
 | [PLANO-OTIMIZACAO.md](PLANO-OTIMIZACAO.md) | Plano de desempenho e organização em andamento (etapas, decisões, registro) |
@@ -8,7 +10,6 @@
 | [ROTAS.md](ROTAS.md) | Mapa das rotas do site e do admin |
 | [prisma-guide.md](prisma-guide.md) | Guia do banco de dados e Prisma |
 | [PLAN-security-hardening.md](PLAN-security-hardening.md) | Plano de reforço de segurança |
-| [regras-ia/](regras-ia/) | Regras e convenções para assistentes de IA e IDEs |
 
 ## Fora do repositório (no PC, em `Documentos`)
 
