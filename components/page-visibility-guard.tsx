@@ -2,8 +2,7 @@
 
 import { ReactNode } from 'react';
 import { usePageVisibility } from '@/hooks/use-page-visibility';
-import { Eye, Shield, Loader2 } from 'lucide-react';
-import { LoadingScreen } from '@/components/ui/loading-screen';
+import { Eye, Shield } from 'lucide-react';
 
 interface PageVisibilityGuardProps {
   pageSlug: string;
@@ -16,13 +15,15 @@ export function PageVisibilityGuard({
   children,
   fallback
 }: PageVisibilityGuardProps) {
-  const { loading, isVisible, isAdmin, error } = usePageVisibility(pageSlug);
+  const { isVisible, isAdmin, isUserLoaded, error } = usePageVisibility(pageSlug);
 
-  // Loading state
-  if (loading) {
-    return (
-      <LoadingScreen variant="fullscreen" message="Verificando disponibilidade..." />
-    );
+  // Optimistic render: the content is server-rendered and shown right away while
+  // the visibility check runs. Blocking here used to ship pages with no content
+  // in the HTML (bad LCP/CLS and empty pages for search engines). We only swap
+  // the content out once we know the page is hidden and the viewer isn't admin.
+  const isPending = isVisible === null || (isVisible === false && !isUserLoaded);
+  if (isPending) {
+    return <div className="w-full">{children}</div>;
   }
 
   // Error state (fail-safe: show content)
