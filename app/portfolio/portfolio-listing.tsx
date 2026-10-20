@@ -198,6 +198,8 @@ export function PortfolioListing({ initialItems, categories, totalCount }: Portf
                                     size="sm"
                                     className={viewMode === 'grid' ? 'bg-action-primary text-text-on-dark shadow-sm' : 'border-border-default text-text-secondary hover:bg-surface-subtle'}
                                     onClick={() => setViewMode('grid')}
+                                    aria-label="Ver em grade"
+                                    aria-pressed={viewMode === 'grid'}
                                 >
                                     <Grid3X3 className="h-4 w-4" />
                                 </Button>
@@ -206,6 +208,8 @@ export function PortfolioListing({ initialItems, categories, totalCount }: Portf
                                     size="sm"
                                     className={viewMode === 'list' ? 'bg-action-primary text-text-on-dark shadow-sm' : 'border-border-default text-text-secondary hover:bg-surface-subtle'}
                                     onClick={() => setViewMode('list')}
+                                    aria-label="Ver em lista"
+                                    aria-pressed={viewMode === 'list'}
                                 >
                                     <List className="h-4 w-4" />
                                 </Button>
@@ -244,7 +248,7 @@ export function PortfolioListing({ initialItems, categories, totalCount }: Portf
                             <div className="flex items-center justify-end gap-2">
                                 <span className="font-sans text-xs font-semibold uppercase tracking-wide text-text-secondary/70">Organizar por</span>
                                 <Select value={dateFilter} onValueChange={setDateFilter}>
-                                    <SelectTrigger className="w-[160px] border-action-strong/20 text-text-primary bg-white/50 focus:ring-action-strong/30">
+                                    <SelectTrigger aria-label="Organizar por" className="w-[160px] border-action-strong/20 text-text-primary bg-white/50 focus:ring-action-strong/30">
                                         <SelectValue placeholder="Mais recentes" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -322,9 +326,9 @@ export function PortfolioListing({ initialItems, categories, totalCount }: Portf
                                                                 {categoryLabels[item.category] || item.category}
                                                             </Badge>
                                                         </div>
-                                                        <h3 className="font-heading text-xl font-bold text-text-primary transition-colors group-hover:text-action-strong line-clamp-2">
+                                                        <h2 className="font-heading text-xl font-bold text-text-primary transition-colors group-hover:text-action-strong line-clamp-2">
                                                             {item.title}
-                                                        </h3>
+                                                        </h2>
                                                         {(item.description && viewMode === 'list') && (
                                                             <p className="font-sans text-sm text-text-secondary/70 line-clamp-2">{item.description}</p>
                                                         )}

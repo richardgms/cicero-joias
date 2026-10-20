@@ -77,6 +77,7 @@ function TestimonialCard({ testimonial, className }: TestimonialCardProps) {
 
       <div
         className="relative z-10 flex gap-1"
+        role="img"
         aria-label={`${testimonial.rating} de 5 estrelas`}
       >
         {Array.from({ length: 5 }).map((_, index) => (

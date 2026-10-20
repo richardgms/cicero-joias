@@ -46,7 +46,6 @@ export function HomeHeader() {
         <Link
           href="/"
           className="flex min-h-control shrink-0 items-center gap-3 rounded-control"
-          aria-label="Cícero Joias — início"
         >
           <Image
             src="/assets/logos/circle-monogram.webp"
