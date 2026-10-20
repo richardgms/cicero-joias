@@ -164,9 +164,13 @@ html {
   --ds-action-primary-hover: var(--brand-emerald-900);
   --ds-action-strong: var(--brand-gold-600);
   --ds-action-strong-hover: var(--brand-gold-600);
-  /* #896A24: dourado para TEXTO sobre fundo claro (contraste >= 4,5:1). O dourado
-     #C79A34 continua em fundos, bordas e icones; sobre verde use text-action-on-dark */
-  --ds-action-strong-text: 137 106 36;
+  /* Dourado para TEXTO sobre fundo claro (opção D, aprovada em 20/10/2026), em dois
+     tons para ficar o mais perto possível do ouro sem perder contraste:
+     - títulos (h1–h3, texto grande, WCAG 3:1): #B1860E, mais claro e saturado
+     - texto pequeno (WCAG 4,5:1): #8F6A0C
+     O dourado #C79A34 continua em fundos, bordas e ícones; sobre verde use text-action-on-dark */
+  --ds-action-strong-heading: 177 134 14;
+  --ds-action-strong-text: 143 106 12;
   --ds-action-on-dark: var(--brand-gold-300);
   --ds-border-default: 198 206 199;
   --ds-border-subtle: 233 218 184;
@@ -362,4 +366,13 @@ html {
 .public-theme .hover\:text-action-strong:hover,
 .public-theme .group:hover .group-hover\:text-action-strong {
   color: rgb(var(--ds-action-strong-text) / var(--tw-text-opacity, 1));
+}
+
+/* Títulos (texto grande) e ícones (elemento gráfico) só precisam de contraste 3:1,
+   então usam o dourado mais claro */
+.public-theme :is(h1, h2, h3) .text-action-strong,
+.public-theme :is(h1, h2, h3).text-action-strong,
+.public-theme .text-action-strong > svg,
+.public-theme svg.text-action-strong {
+  color: rgb(var(--ds-action-strong-heading) / var(--tw-text-opacity, 1));
 }
