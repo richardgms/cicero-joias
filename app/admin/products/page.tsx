@@ -71,7 +71,6 @@ export default async function AdminProductsPage() {
       </AdminPageHeader>
 
       <Suspense fallback={<div className="py-12"><LoadingScreen variant="inline" message="Carregando produtos..." /></div>}>
-        {/* @ts-expect-error Server Component */}
         <ProductsContent />
       </Suspense>
     </div>

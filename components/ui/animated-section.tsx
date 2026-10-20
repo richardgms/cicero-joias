@@ -4,7 +4,13 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 
-interface AnimatedSectionProps extends React.HTMLAttributes<HTMLDivElement> {
+// Eventos de arrastar/animação do DOM têm assinatura diferente no framer-motion
+// (os tipos do React 19 acusam o conflito); nenhum uso os passa.
+type ConflictingMotionHandlers =
+  | 'onDrag' | 'onDragStart' | 'onDragEnd'
+  | 'onAnimationStart' | 'onAnimationEnd' | 'onAnimationIteration';
+
+interface AnimatedSectionProps extends Omit<React.HTMLAttributes<HTMLDivElement>, ConflictingMotionHandlers> {
   children: React.ReactNode;
   className?: string;
   delay?: number;

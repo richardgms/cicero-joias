@@ -76,7 +76,6 @@ export default async function AdminCategoriesPage() {
 
   return (
     <Suspense fallback={<div className="py-12"><LoadingScreen variant="inline" message="Carregando categorias..." /></div>}>
-      {/* @ts-expect-error Server Component */}
       <CategoriesContent />
     </Suspense>
   );

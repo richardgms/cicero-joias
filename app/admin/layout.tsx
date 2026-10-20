@@ -1,5 +1,6 @@
 import { AdminGuard } from '@/components/auth/admin-guard';
 import { ClerkScope } from '@/components/auth/clerk-scope';
+import { Toaster } from 'sonner';
 import { AdminSidebar } from '@/components/admin/admin-sidebar';
 import { AdminHeader } from '@/components/admin/admin-header';
 
@@ -27,6 +28,8 @@ export default function AdminLayout({
         </div>
       </div>
     </AdminGuard>
+    {/* Avisos do sonner (toast.success/error) usados nas telas do admin */}
+    <Toaster richColors position="top-right" />
     </ClerkScope>
   );
 } 

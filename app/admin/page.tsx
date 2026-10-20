@@ -100,7 +100,6 @@ export default async function AdminPage() {
 
   return (
     <Suspense fallback={<div className="py-12"><LoadingScreen variant="inline" message="Carregando dashboard..." /></div>}>
-      {/* @ts-expect-error Server Component */}
       <DashboardContent />
     </Suspense>
   );

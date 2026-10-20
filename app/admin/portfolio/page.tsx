@@ -68,7 +68,6 @@ export default async function AdminPortfolioPage() {
       </AdminPageHeader>
 
       <Suspense fallback={<div className="py-12"><LoadingScreen variant="inline" message="Carregando projetos..." /></div>}>
-        {/* @ts-expect-error Server Component */}
         <PortfolioContent />
       </Suspense>
     </div>
