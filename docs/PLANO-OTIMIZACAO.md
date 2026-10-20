@@ -103,7 +103,7 @@ Severidade: 🔴 crítico · 🟠 alto · 🟡 médio · ⚪ baixo
 - Pasta `Design system Cícero Joias/`: era o mockup de julho, já incorporado em `docs/design-system-cj.md`; movida para `Documentos\Cícero Joias - Design System` (feito).
 | D2 | O site público precisa de login de cliente (favoritos, conta)? Se não, o Clerk pode carregar só no `/admin` | Etapa 3 |
 | D3 | A hospedagem oficial é a Vercel? (remover Netlify) | Etapa 5 |
-| D4 | As fotos do banco vão para o UploadThing (já configurado no projeto) ou outro storage? | Etapa 4 |
+| D4 | ✅ UploadThing (decidido em 20/10/2026) | Etapa 4 |
 
 ---
 
@@ -116,7 +116,7 @@ Cada item: `[ ]` pendente · `[~]` em andamento · `[x]` feito (com commit).
 - [x] I1 — `.env` local atualizado (20/10/2026): banco, Clerk, UploadThing e `CRON_SECRET` validados; build local passa. Atenção: a URL do Supabase na porta 6543 precisa de `?pgbouncer=true&connection_limit=1`, senão o build falha com "prepared statement already exists"
 - [x] Backup do banco (20/10/2026): `pg_dump` 17.11 portátil em `C:\Users\joalh\tools\pgsql17`; backup do schema `public` (formato custom, 9,4 MB) em `C:\Users\joalh\Documentos\Cícero Joias - Backups\`. Contagem de registros conferida tabela a tabela. Banco: PostgreSQL 17.4, 28 MB (14 MB só em `portfolio_items`). **Refazer o backup imediatamente antes da Etapa 4.**
   - Restaurar (em um banco de testes, nunca direto em produção sem decidir): `pg_restore --no-owner --no-privileges --clean --if-exists -d "<URL>" "<arquivo>.dump"`
-- [ ] Banco de testes separado (branch/cópia no Supabase) para não testar contra produção — recomendado antes da Etapa 4
+- [x] Banco de testes separado (20/10/2026): PostgreSQL 17.11 portátil local (`C:\Users\joalh\tools\pgsql17-full`, dados em `C:\Users\joalh\tools\pgdata-cicero-teste`, porta 5433, só localhost), banco `cicero_teste` restaurado do backup — o que também validou que o backup restaura. Conexão em `.env.teste` (ignorado pelo git). Iniciar: `pg_ctl -D C:\Users\joalh\tools\pgdata-cicero-teste -o "-p 5433" start`
 
 > Nota (20/10/2026): as variáveis na Vercel são do tipo *Secret* e não podem ser baixadas com `vercel env pull` (vêm como `[SENSITIVE]`). Os valores do `.env` local precisam vir dos painéis: Supabase (`DATABASE_URL`, `DIRECT_URL`), Clerk (chaves e webhook secret), UploadThing (`UPLOADTHING_TOKEN`); `CRON_SECRET` local pode ser qualquer valor.
 
@@ -150,10 +150,12 @@ Cada item: `[ ]` pendente · `[~]` em andamento · `[x]` feito (com commit).
 - Medir: TBT e tamanho de JS por rota (`npm run analyze`)
 
 ### Etapa 4 — Fotos fora do banco · risco: alto (produção), requer aprovação
-- [ ] Backup do banco
-- [ ] P2 — Admin passa a enviar arquivo (UploadThing) em vez de base64 (D4)
-- [ ] P2 — Script de migração: base64 → arquivo → URL, com modo simulação primeiro
-- [ ] Reduzir o limite de 50 MB da API
+D4 decidido (20/10/2026): **UploadThing** — conta ativa (0 arquivos, limite 2 GB), chave/rota/pacotes já no projeto; Supabase Storage exigiria configurar tudo do zero.
+- [x] S6 — Rota de upload do UploadThing exige role admin (antes: qualquer logado)
+- [x] P2 — Admin envia arquivo ao UploadThing (redimensionado no navegador, até 2400 px WebP) em vez de base64; exclusão/troca de foto apaga o arquivo sem uso (commit 2475173)
+- [x] P2 — Script `scripts/migrate-images-to-uploadthing.mjs` (simulação por padrão, `--apply`, idempotente por hash). Ensaiado 2× no banco de testes: 11 fotos, 9,5 MB → 730 KB; 2ª cópia limpa reaproveitou as 11 sem reenviar; HTML do portfólio 12,5 MB → 96 KB
+- [ ] Produção: push do código → backup novo → migração (simulação, depois `--apply`) → redeploy para regenerar páginas estáticas → medir
+- [ ] Reduzir o limite de 50 MB da API e limpar `stack`/`debug` das rotas do admin (S5)
 - Medir: tamanho do HTML do portfólio e do banco
 
 ### Etapa 5 — Infraestrutura e dependências · risco: médio
