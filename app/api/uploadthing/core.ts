@@ -1,18 +1,15 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
-import { auth } from "@clerk/nextjs/server";
+import { checkAdminAuthStrict } from '@/lib/check-admin';
 import { logger } from '@/lib/logger';
 
 const f = createUploadthing();
 
-// Lógica de autenticação (ex: quem pode fazer upload?)
+// Só admins podem enviar arquivos (antes bastava estar logado)
 const handleAuth = async () => {
-  const { userId } = await auth();
-  if (!userId) throw new UploadThingError("Unauthorized");
-  // Aqui poderíamos verificar se o usuário é admin
-  // const user = await clerkClient.users.getUser(userId);
-  // if (user.publicMetadata.role !== 'admin') throw new UploadThingError("Unauthorized");
-  return { userId };
+  const result = await checkAdminAuthStrict();
+  if ('error' in result) throw new UploadThingError("Unauthorized");
+  return { userId: result.userId };
 }
 
 // Definição do nosso FileRouter

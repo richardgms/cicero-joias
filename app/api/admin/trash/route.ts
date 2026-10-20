@@ -2,6 +2,7 @@
 import { NextResponse } from 'next/server';
 import prisma, { executeWithRetry } from '@/lib/prisma';
 import { checkAdminAuth } from '@/lib/check-admin';
+import { deleteUnusedImages } from '@/lib/uploadthing-server';
 
 // GET /api/admin/trash - List deleted items
 export async function GET() {
@@ -119,6 +120,9 @@ export async function DELETE(request: Request) {
                 where: { id }
             });
         });
+
+        // Apaga as fotos do UploadThing que não são usadas por outro item
+        await deleteUnusedImages([item.mainImage, ...item.images]);
 
         // Log Activity
         await executeWithRetry(async () => {

@@ -14,6 +14,7 @@ const nextConfig = {
     remotePatterns: [
       { protocol: 'https', hostname: '**.uploadthing.com' },
       { protocol: 'https', hostname: 'utfs.io' },
+      { protocol: 'https', hostname: '**.ufs.sh' },
     ],
     formats: ['image/webp', 'image/avif'],
     minimumCacheTTL: 31536000,

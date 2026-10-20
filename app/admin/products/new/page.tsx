@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { uploadImageFile } from '@/lib/upload-image';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -113,20 +114,22 @@ export default function NewProductPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const result = event.target?.result as string;
+    uploadImageFile(file)
+      .then((result) => {
 
-      if (isMain) {
-        setFormData(prev => ({ ...prev, mainImage: result }));
-      } else {
-        setFormData(prev => ({
-          ...prev,
-          images: [...prev.images, result]
-        }));
-      }
-    };
-    reader.readAsDataURL(file);
+        if (isMain) {
+          setFormData(prev => ({ ...prev, mainImage: result }));
+        } else {
+          setFormData(prev => ({
+            ...prev,
+            images: [...prev.images, result]
+          }));
+        }
+      })
+      .catch((error) => {
+        console.error('Erro no upload da imagem:', error);
+        alert('Não foi possível enviar a imagem. Tente novamente.');
+      });
   };
 
   const removeImage = (index: number) => {

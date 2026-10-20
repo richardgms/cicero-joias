@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { uploadImageFile } from '@/lib/upload-image';
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
@@ -264,10 +265,10 @@ export default function EditPortfolioPage() {
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) { // 5MB
+    if (file.size > 20 * 1024 * 1024) { // 20MB (a foto é reduzida antes do envio)
       toast({
         title: "Arquivo muito grande",
-        description: "A imagem deve ter no máximo 5MB.",
+        description: "A imagem deve ter no máximo 20MB.",
         variant: "destructive",
       });
       return;
@@ -275,36 +276,33 @@ export default function EditPortfolioPage() {
 
     setUploadingImage(true);
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const result = event.target?.result as string;
+    uploadImageFile(file)
+      .then((result) => {
 
-      if (isMain) {
-        setFormData(prev => ({ ...prev, mainImage: result }));
-      } else {
-        setFormData(prev => ({
-          ...prev,
-          images: [...prev.images, result]
-        }));
-      }
+        if (isMain) {
+          setFormData(prev => ({ ...prev, mainImage: result }));
+        } else {
+          setFormData(prev => ({
+            ...prev,
+            images: [...prev.images, result]
+          }));
+        }
 
-      setUploadingImage(false);
-      toast({
-        title: "Imagem carregada",
-        description: `Imagem ${isMain ? 'principal' : 'adicional'} carregada com sucesso.`,
+        setUploadingImage(false);
+        toast({
+          title: "Imagem carregada",
+          description: `Imagem ${isMain ? 'principal' : 'adicional'} carregada com sucesso.`,
+        });
+      })
+      .catch((error) => {
+        console.error('Erro no upload da imagem:', error);
+        setUploadingImage(false);
+        toast({
+          title: "Erro no upload",
+          description: "Não foi possível enviar a imagem. Tente novamente.",
+          variant: "destructive",
+        });
       });
-    };
-
-    reader.onerror = () => {
-      setUploadingImage(false);
-      toast({
-        title: "Erro no upload",
-        description: "Não foi possível carregar a imagem. Tente novamente.",
-        variant: "destructive",
-      });
-    };
-
-    reader.readAsDataURL(file);
   };
 
   const removeImage = (index: number) => {

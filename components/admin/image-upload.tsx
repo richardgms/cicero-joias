@@ -5,6 +5,7 @@ import { Upload, X, ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import Image from 'next/image';
+import { uploadImageFile } from '@/lib/upload-image';
 
 interface ImageUploadProps {
   label?: string;
@@ -40,16 +41,19 @@ export function ImageUpload({
   accept = 'image/*',
 }: ImageUploadProps) {
   const [isDragging, setIsDragging] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleFileUpload = useCallback((file: File) => {
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const result = event.target?.result as string;
-      onChange(result);
-    };
-    reader.readAsDataURL(file);
+    setIsUploading(true);
+    uploadImageFile(file)
+      .then((url) => onChange(url))
+      .catch((error) => {
+        console.error('Erro no upload da imagem:', error);
+        alert('Não foi possível enviar a imagem. Tente novamente.');
+      })
+      .finally(() => setIsUploading(false));
   }, [onChange]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -127,7 +131,11 @@ export function ImageUpload({
             <div className="flex flex-col items-center justify-center pt-5 pb-6">
               <Upload className="w-8 h-8 mb-4 text-gray-500" />
               <p className="mb-2 text-sm text-gray-500">
-                <span className="font-semibold">Clique para fazer upload</span> ou arraste e solte
+                {isUploading ? (
+                  <span className="font-semibold">Enviando imagem...</span>
+                ) : (
+                  <><span className="font-semibold">Clique para fazer upload</span> ou arraste e solte</>
+                )}
               </p>
               <p className="text-xs text-gray-500">PNG, JPG ou JPEG</p>
             </div>
@@ -158,12 +166,12 @@ export function MultipleImageUpload({
   const handleFileUpload = useCallback((file: File) => {
     if (!file || values.length >= maxImages) return;
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const result = event.target?.result as string;
-      onChange([...values, result]);
-    };
-    reader.readAsDataURL(file);
+    uploadImageFile(file)
+      .then((url) => onChange([...values, url]))
+      .catch((error) => {
+        console.error('Erro no upload da imagem:', error);
+        alert('Não foi possível enviar a imagem. Tente novamente.');
+      });
   }, [values, onChange, maxImages]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

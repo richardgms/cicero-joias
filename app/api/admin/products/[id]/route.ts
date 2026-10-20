@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth, clerkClient } from '@clerk/nextjs/server';
 import prisma from '@/lib/prisma';
 import { z } from 'zod';
+import { deleteUnusedImages, removedImages } from '@/lib/uploadthing-server';
 
 // Schema de validação para atualização de produto
 const updateProductSchema = z.object({
@@ -139,6 +140,9 @@ export async function PUT(
       },
     });
 
+    // Fotos trocadas ou removidas na edição: apaga do UploadThing
+    await deleteUnusedImages(removedImages(existingProduct, product));
+
     // Log da atividade
     await prisma.activityLog.create({
       data: {
@@ -210,6 +214,9 @@ export async function DELETE(
     await prisma.product.delete({
       where: { id },
     });
+
+    // Apaga as fotos do UploadThing que não são usadas por outro item
+    await deleteUnusedImages([existingProduct.mainImage, ...existingProduct.images]);
 
     // Log da atividade
     await prisma.activityLog.create({

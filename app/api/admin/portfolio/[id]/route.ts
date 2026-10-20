@@ -3,6 +3,7 @@ import { auth, clerkClient } from '@clerk/nextjs/server';
 import prisma, { executeWithRetry } from '@/lib/prisma';
 import { z } from 'zod';
 import { checkAdminAuth } from '@/lib/check-admin';
+import { deleteUnusedImages, removedImages } from '@/lib/uploadthing-server';
 
 // Schema de validação para atualização de item do portfólio
 const updatePortfolioSchema = z.object({
@@ -134,6 +135,9 @@ export async function PUT(
         },
       });
     });
+
+    // Fotos trocadas ou removidas na edição: apaga do UploadThing
+    await deleteUnusedImages(removedImages(existingItem, portfolioItem));
 
     // Log da atividade
     await executeWithRetry(async () => {
