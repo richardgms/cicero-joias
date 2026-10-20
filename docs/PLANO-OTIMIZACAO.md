@@ -49,6 +49,19 @@ Metas: Performance ≥ 90, LCP < 2,5 s, TBT < 200 ms, CLS < 0,1, Acessibilidade 
 
 HTML do portfólio 12,5 MB → 101 KB. Banco: fotos 9,3 MB → 0 (URLs). O que segura o LCP agora (~4,5 s no 4G simulado) é a imagem principal de cada página + JS do Clerk — Etapa 3.
 
+### Após P5 — login só no admin (20/10/2026, site publicado)
+
+| Página | Início → Etapa 4 → **Agora** | Acessib. | LCP | TBT | Peso |
+|---|---|---|---|---|---|
+| `/` | 50 → 80 → **90** | 93 | 3,3 s | 140 ms | **449 KB** |
+| `/sobre` | 13 → 82 → **91** | 96 | 3,1 s | 50 ms | **423 KB** |
+| `/servicos` | 21 → 90 → **91** | 97 | 3,2 s | 60 ms | **446 KB** |
+| `/pronta-entrega` | 21 → 86 → **85** | 100 | 3,3 s | 140 ms | **447 KB** |
+| `/portfolio` | 1 → 83 → **92** | 90 | 3,2 s | 130 ms | **536 KB** |
+| `/servicos/aliancas-personalizadas` | 49 → 82 → **90** | 90 | 3,1 s | 190 ms | **449 KB** |
+
+Falta para as metas: LCP < 2,5 s (imagem principal), Acessibilidade ≥ 95 em início/portfólio/alianças, pronta-entrega ≥ 90.
+
 ¹ Sem nota: o HTML de 12,5 MB é grande demais para o Lighthouse ler. ² Medido em 20/10 antes do P7.
 Fontes pré-carregadas por página: 11 arquivos (~550 KB) → 4 (129 KB). O que ainda segura o LCP e o peso é a foto em base64 (P2): portfólio 10 MB, pronta-entrega 3,6 MB (1 produto), home e alianças 2,4 MB (destaques do portfólio via API).
 
@@ -158,7 +171,8 @@ Cada item: `[ ]` pendente · `[~]` em andamento · `[x]` feito (com commit).
 - Medir: Lighthouse em todas as páginas
 
 ### Etapa 3 — JavaScript · risco: médio
-- [ ] P5 — Clerk só onde precisa (conforme D2)
+- [x] P5 — Clerk só em `/admin` e nas telas de login (D2); menu público sem "Entrar"; isAdmin do menu via API; removidos LegacyHeader, header-auth, auth-provider e `/api/favorites` (commit 9fa8a98). Produção: 0 requisições ao Clerk nas páginas públicas, peso ~810 → ~450 KB, notas 90–92 em 5 de 6 páginas
+- [x] S5 — API do admin sem `debug`/`X-Debug-Info`, erros no log do servidor, validação recusa base64, config morta de 50 MB removida (commit 3859ce3)
 - [ ] P4 — Revisar componentes `'use client'` desnecessários e o uso de `framer-motion` (LazyMotion / CSS)
 - [ ] P9 — Cachear a verificação de visibilidade de páginas
 - [x] S1 — APIs públicas devolvem mensagem genérica em erro (sem `details` do Prisma)
