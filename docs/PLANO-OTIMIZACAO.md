@@ -173,12 +173,16 @@ Cada item: `[ ]` pendente · `[~]` em andamento · `[x]` feito (com commit).
 ### Etapa 3 — JavaScript · risco: médio
 - [x] P5 — Clerk só em `/admin` e nas telas de login (D2); menu público sem "Entrar"; isAdmin do menu via API; removidos LegacyHeader, header-auth, auth-provider e `/api/favorites` (commit 9fa8a98). Produção: 0 requisições ao Clerk nas páginas públicas, peso ~810 → ~450 KB, notas 90–92 em 5 de 6 páginas
 - [x] S5 — API do admin sem `debug`/`X-Debug-Info`, erros no log do servidor, validação recusa base64, config morta de 50 MB removida (commit 3859ce3)
-- [ ] P4 — Revisar componentes `'use client'` desnecessários e o uso de `framer-motion` (LazyMotion / CSS)
-- [ ] P9 — Cachear a verificação de visibilidade de páginas
+- [x] Acessibilidade (20/10/2026, commits feb45fb e ad2ec10): nomes acessíveis (estrelas, botões do portfólio, seletor, logo), ordem de títulos (portfólio, termos, privacidade), `<dl>` inválidas nos 6 heros de serviço, `<ol>` com `<li>` dentro de animação nos 5 serviços; **contraste aprovado pelo usuário**: texto dourado em fundo claro `#C79A34 → #896A24` (`--ds-action-strong-text`, só cor de texto), cinzas `text-secondary/60–80` → cor cheia. Resultado: **100 de acessibilidade em todas as páginas públicas**
+- [x] Diagnóstico de LCP: com fontes bloqueadas a nota iria a 98 e o LCP a 2,3 s — as 4 fontes pré-carregadas são o último freio, mas fazem parte da identidade visual; mantidas. Lição: uma medição isolada chegou a mostrar FCP de 2,6 s que não se repetiu — decidir pela mediana de várias medições
+- [ ] P4 — Revisar componentes `'use client'` desnecessários e o uso de `framer-motion` (LazyMotion / CSS) — opcional: notas já 90–95
+- [ ] P9 — Cachear a verificação de visibilidade de páginas — opcional
 - [x] S1 — APIs públicas devolvem mensagem genérica em erro (sem `details` do Prisma)
 - [x] S2/S3/S4 — Autorização do admin na API, `await auth.protect()` no middleware e remoção da rota de setup pública (achados durante o S1)
 - [ ] S5 — Rotas do admin ainda devolvem `stack`/`debug` em erro (agora só para admins); limpar quando mexer nessas rotas na Etapa 4
-- [ ] P10 — Avaliar renderizar a pronta-entrega no servidor
+- [ ] P10 — Renderizar a pronta-entrega no servidor (nota 86). **Adiado**: a página está oculta no menu e sem produtos; fazer quando ela voltar a ser usada
+
+**Medição após a Etapa 3 (20/10/2026, site publicado):** desempenho Início 90, Sobre 93, Serviços 95, Pronta-entrega 86, Portfólio 92, Alianças 93, Consertos 92; Acessibilidade, Boas práticas e SEO **100 em todas**.
 - Medir: TBT e tamanho de JS por rota (`npm run analyze`)
 
 ### Etapa 4 — Fotos fora do banco · risco: alto (produção), requer aprovação
