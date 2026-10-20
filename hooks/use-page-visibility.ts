@@ -1,8 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useUser } from '@clerk/nextjs';
 import { DEFAULT_VISIBLE_PAGES } from '@/lib/constants';
 
 interface PageVisibility {
@@ -17,11 +15,9 @@ export function usePageVisibility(pageSlug?: string) {
   const [visiblePages, setVisiblePages] = useState<PageVisibility[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { user, isLoaded } = useUser();
-  const router = useRouter();
-
-  // Verificar se usuário é admin - CORRIGIDO: usando publicMetadata
-  const isAdmin = (user?.publicMetadata?.role as string)?.toLowerCase() === 'admin';
+  // "É admin?" vem da API (o servidor lê a sessão). Assim o site público não
+  // precisa carregar o JavaScript do Clerk só para essa informação.
+  const [isAdmin, setIsAdmin] = useState(false);
 
   // Função para verificar uma página específica
   const checkPageVisibility = async (slug: string) => {
@@ -46,6 +42,8 @@ export function usePageVisibility(pageSlug?: string) {
     try {
       const response = await fetch('/api/page-visibility/visible-pages');
       const data = await response.json();
+
+      setIsAdmin(data.isAdmin === true);
 
       if (response.ok) {
         setVisiblePages(data.pages || []);
@@ -83,7 +81,8 @@ export function usePageVisibility(pageSlug?: string) {
     loading,
     error,
     isAdmin,
-    isUserLoaded: isLoaded,
+    // Pronto quando a API respondeu (inclui o isAdmin)
+    isUserLoaded: !loading,
     checkPageVisibility,
     refetch: fetchVisiblePages
   };

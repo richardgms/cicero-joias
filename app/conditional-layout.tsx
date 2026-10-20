@@ -39,7 +39,7 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
         </>
       )}
       <div className="flex min-h-screen flex-col">
-        <Header variant={usesPublicDesignSystem ? 'home' : 'legacy'} />
+        <Header />
         <main className="flex-1">{children}</main>
         <div
           className={`relative z-20 -mb-1 h-1 w-full ${

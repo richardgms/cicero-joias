@@ -1,4 +1,5 @@
 import { AdminGuard } from '@/components/auth/admin-guard';
+import { ClerkScope } from '@/components/auth/clerk-scope';
 import { AdminSidebar } from '@/components/admin/admin-sidebar';
 import { AdminHeader } from '@/components/admin/admin-header';
 
@@ -8,6 +9,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
+    <ClerkScope>
     <AdminGuard>
       <div className="min-h-screen bg-gray-100">
         {/* Sidebar */}
@@ -25,5 +27,6 @@ export default function AdminLayout({
         </div>
       </div>
     </AdminGuard>
+    </ClerkScope>
   );
 } 

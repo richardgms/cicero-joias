@@ -1,7 +1,6 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { UserButton, useUser } from '@clerk/nextjs';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -20,7 +19,6 @@ const whatsappMessage =
 export function HomeHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-  const { isSignedIn, user } = useUser();
   const { visiblePages, loading, isAdmin } = usePageVisibility();
 
   const navigation = useMemo(() => {
@@ -93,26 +91,6 @@ export function HomeHeader() {
         </nav>
 
         <div className="hidden shrink-0 items-center gap-2 lg:flex">
-          {isSignedIn ? (
-            <div className="flex items-center gap-2">
-              <span className="hidden font-sans text-xs text-text-on-dark/75 2xl:inline">
-                Olá, {user.firstName ?? 'Cícero'}
-              </span>
-              <UserButton
-                appearance={{
-                  elements: {
-                    userButtonAvatarBox:
-                      'h-9 w-9 border border-border-on-dark',
-                  },
-                }}
-                afterSignOutUrl="/"
-              />
-            </div>
-          ) : (
-            <Button asChild variant="ghostDark" size="sm">
-              <Link href="/sign-in">Entrar</Link>
-            </Button>
-          )}
 
           <Button asChild variant="goldOnDark" size="sm">
             <WhatsAppLink message={whatsappMessage}>
@@ -172,31 +150,6 @@ export function HomeHeader() {
             </nav>
 
             <div className="mt-4 flex flex-col gap-3 border-t border-border-on-dark pt-4">
-              {isSignedIn ? (
-                <div className="flex min-h-control items-center justify-between gap-3">
-                  <span className="font-sans text-sm text-text-on-dark/80">
-                    Olá, {user.firstName ?? 'Cícero'}
-                  </span>
-                  <UserButton
-                    appearance={{
-                      elements: {
-                        userButtonAvatarBox:
-                          'h-9 w-9 border border-border-on-dark',
-                      },
-                    }}
-                    afterSignOutUrl="/"
-                  />
-                </div>
-              ) : (
-                <Button asChild variant="outlineDark" className="w-full">
-                  <Link
-                    href="/sign-in"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Entrar
-                  </Link>
-                </Button>
-              )}
 
               <Button asChild variant="goldOnDark" className="w-full">
                 <WhatsAppLink message={whatsappMessage}>

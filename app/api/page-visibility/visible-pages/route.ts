@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
+import { auth } from '@clerk/nextjs/server'
+import { checkAdminAuthStrict } from '@/lib/check-admin'
 
 export const dynamic = 'force-dynamic'
 
@@ -11,8 +13,22 @@ const PAGE_MAPPING = [
   { slug: 'pronta-entrega', title: 'Pronta Entrega', href: '/pronta-entrega' },
 ]
 
+
+// Admin vê o link do painel no menu. Visitante sem sessão não gera chamada ao Clerk.
+async function viewerIsAdmin(): Promise<boolean> {
+  try {
+    const { userId } = await auth()
+    if (!userId) return false
+    return !('error' in (await checkAdminAuthStrict()))
+  } catch {
+    return false
+  }
+}
+
 // GET - Buscar apenas páginas visíveis (para menu de navegação)
 export async function GET() {
+  const isAdmin = await viewerIsAdmin()
+
   try {
     // Tentar buscar do banco de dados
     const pages = await prisma.pageVisibility.findMany({
@@ -32,7 +48,7 @@ export async function GET() {
       }
     })
 
-    return NextResponse.json({ pages: visiblePages }, { status: 200 })
+    return NextResponse.json({ pages: visiblePages, isAdmin }, { status: 200 })
   } catch (error) {
     console.error('Error fetching visible pages:', error)
 
@@ -44,6 +60,7 @@ export async function GET() {
 
     return NextResponse.json({
       pages: fallbackPages,
+      isAdmin,
       warning: 'Using fallback data - database query failed'
     }, { status: 200 })
   }
