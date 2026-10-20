@@ -54,8 +54,8 @@ function LegacyHeader() {
             <Image src="/assets/logos/circle-monogram.webp" alt="Cícero Joias" fill sizes="40px" />
           </div>
           <div className="flex flex-col leading-tight">
-            <span className="font-montserrat text-base font-semibold text-text-primary">Cícero Joias</span>
-            <span className="font-montserrat text-xs text-text-primary/70">Desde 1985</span>
+            <span className="font-sans text-base font-semibold text-text-primary">Cícero Joias</span>
+            <span className="font-sans text-xs text-text-primary/70">Desde 1985</span>
           </div>
         </Link>
 
@@ -65,7 +65,7 @@ function LegacyHeader() {
             <Link
               key={item.name}
               href={item.href}
-              className="font-montserrat text-sm font-medium text-text-primary hover:text-action-strong transition-colors"
+              className="font-sans text-sm font-medium text-text-primary hover:text-action-strong transition-colors"
             >
               {item.name}
             </Link>
@@ -76,7 +76,7 @@ function LegacyHeader() {
         <div className="hidden items-center gap-3 md:flex">
           {isSignedIn ? (
             <>
-              <span className="font-montserrat text-sm text-text-primary/80">
+              <span className="font-sans text-sm text-text-primary/80">
                 Olá, {user.firstName ?? 'Cícero'}
               </span>
               <UserButton appearance={{ elements: { userButtonAvatarBox: 'h-8 w-8' } }} afterSignOutUrl="/" />
@@ -84,7 +84,7 @@ function LegacyHeader() {
           ) : (
             <Link
               href="/sign-in"
-              className="font-montserrat rounded-full border border-text-primary/30 px-4 py-2 text-sm font-medium text-text-primary hover:bg-text-primary hover:text-text-on-dark transition-colors"
+              className="font-sans rounded-full border border-text-primary/30 px-4 py-2 text-sm font-medium text-text-primary hover:bg-text-primary hover:text-text-on-dark transition-colors"
             >
               Entrar
             </Link>
@@ -109,7 +109,7 @@ function LegacyHeader() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="font-montserrat text-sm font-medium text-text-primary hover:text-action-strong transition-colors"
+                className="font-sans text-sm font-medium text-text-primary hover:text-action-strong transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {item.name}
@@ -119,7 +119,7 @@ function LegacyHeader() {
             <div className="border-t border-border-default pt-4">
               {isSignedIn ? (
                 <div className="flex items-center justify-between">
-                  <span className="font-montserrat text-sm text-text-primary/80">
+                  <span className="font-sans text-sm text-text-primary/80">
                     Olá, {user.firstName ?? 'Cícero'}
                   </span>
                   <UserButton appearance={{ elements: { userButtonAvatarBox: 'h-8 w-8' } }} afterSignOutUrl="/" />
@@ -127,7 +127,7 @@ function LegacyHeader() {
               ) : (
                 <Link
                   href="/sign-in"
-                  className="font-montserrat inline-flex w-full justify-center rounded-full border border-text-primary/30 px-4 py-2 text-sm font-medium text-text-primary hover:bg-text-primary hover:text-text-on-dark transition-colors"
+                  className="font-sans inline-flex w-full justify-center rounded-full border border-text-primary/30 px-4 py-2 text-sm font-medium text-text-primary hover:bg-text-primary hover:text-text-on-dark transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Entrar

@@ -1,36 +1,31 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import {
-  Cormorant_Garamond,
-  Inter,
-  Jost,
-  Marcellus,
-  Montserrat,
-  Philosopher,
-  Playfair_Display,
-} from 'next/font/google';
+import { Inter, Jost, Marcellus, Playfair_Display } from 'next/font/google';
 import { Toaster } from '@/components/ui/toaster';
 import { Providers } from './providers';
 import { ConditionalLayout } from './conditional-layout';
 
-// Fonte sans-serif para corpo de texto
+// Fontes do painel admin (tema padrão). Sem preload: o site público não as usa,
+// então só são baixadas quando o admin é aberto.
 const inter = Inter({
   subsets: ['latin'],
   weight: ['400', '500', '600'],
   variable: '--font-inter',
   display: 'swap',
+  preload: false,
 });
 
-// Fonte serifada para títulos (h1, h2, h3)
 const playfair = Playfair_Display({
   subsets: ['latin'],
   weight: ['400', '600', '700'],
   variable: '--font-playfair',
   display: 'swap',
+  preload: false,
 });
 
-// Fonte Jost para Hero Section
+// Fontes do site público (.public-theme em globals.css):
+// Jost = texto, Libre Caslon = títulos, Marcellus = números.
 const jost = Jost({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
@@ -38,23 +33,17 @@ const jost = Jost({
   display: 'swap',
 });
 
-const cormorant = Cormorant_Garamond({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  style: ['normal', 'italic'],
-  variable: '--font-cormorant',
-  display: 'swap',
-});
-
+// woff2 com subconjunto latino (mesmo recorte do Google Fonts), gerado a partir
+// dos TTF variáveis oficiais (OFL) com fonttools.
 const libreCaslon = localFont({
   src: [
     {
-      path: './fonts/libre-caslon/LibreCaslonText-Variable.ttf',
+      path: './fonts/libre-caslon/LibreCaslonText-Variable.woff2',
       weight: '400 700',
       style: 'normal',
     },
     {
-      path: './fonts/libre-caslon/LibreCaslonText-Italic-Variable.ttf',
+      path: './fonts/libre-caslon/LibreCaslonText-Italic-Variable.woff2',
       weight: '400 700',
       style: 'italic',
     },
@@ -68,22 +57,6 @@ const marcellus = Marcellus({
   subsets: ['latin'],
   weight: '400',
   variable: '--font-marcellus',
-  display: 'swap',
-});
-
-// Fonte Philosopher para títulos principais e textos importantes
-const philosopher = Philosopher({
-  subsets: ['latin'],
-  weight: ['400', '700'],
-  variable: '--font-philosopher',
-  display: 'swap',
-});
-
-// Fonte Montserrat para parágrafos e textos menores
-const montserrat = Montserrat({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-montserrat',
   display: 'swap',
 });
 
@@ -136,7 +109,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR" className={`${inter.variable} ${playfair.variable} ${jost.variable} ${cormorant.variable} ${libreCaslon.variable} ${marcellus.variable} ${philosopher.variable} ${montserrat.variable}`}>
+    <html lang="pt-BR" className={`${inter.variable} ${playfair.variable} ${jost.variable} ${libreCaslon.variable} ${marcellus.variable}`}>
       <body suppressHydrationWarning className="min-h-screen bg-[#04160f] font-inter antialiased">
         <Providers>
           <ConditionalLayout>{children}</ConditionalLayout>

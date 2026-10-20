@@ -15,13 +15,10 @@ const config: Config = {
         heading: ['var(--font-heading)', 'serif'],
         numeric: ['var(--font-numeric)', 'serif'],
         'libre-caslon': ['var(--font-libre-caslon)', 'serif'],
-        cormorant: ['var(--font-cormorant)', 'serif'],
         marcellus: ['var(--font-marcellus)', 'serif'],
         playfair: ['var(--font-playfair)', 'serif'],
         inter: ['var(--font-inter)', 'sans-serif'],
         jost: ['var(--font-jost)', 'sans-serif'],
-        philosopher: ['var(--font-philosopher)', 'serif'],
-        montserrat: ['var(--font-montserrat)', 'sans-serif'],
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

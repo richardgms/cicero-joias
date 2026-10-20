@@ -119,7 +119,7 @@ Cada item: `[ ]` pendente · `[~]` em andamento · `[x]` feito (com commit).
 - [x] P8 — Novo `formatDate()` em `lib/utils.ts` (fuso fixo `America/Sao_Paulo`) aplicado no portfólio (listagem e detalhe) e no detalhe da pronta-entrega; faixa de preço da pronta-entrega com `toLocaleString('pt-BR')`. Erro #418 confirmado sumido com o servidor em UTC (como na Vercel). Obs.: a nota 0 em "Boas práticas" do portfólio continua, mas por outro motivo — o HTML de 12,5 MB é grande demais para o Lighthouse ler (auditoria `charset` falha e a categoria fica sem nota); resolve com o P2
 - [x] P11 — As 5 imagens estavam em código morto (nunca executado, sem 404 para o visitante): removidos `portfolioCases` de `components/home/home-data.ts` e o componente não usado `components/ui/lazy-image.tsx`
 - [ ] Termos de uso e Política de privacidade mostram "Última atualização" = data do build (`new Date()`), não a data real do texto. Decidir uma data fixa (conteúdo)
-- [ ] P6 — Reduzir as fontes às famílias realmente usadas; Libre Caslon em woff2
+- [x] P6 — Levantamento no navegador: o público vê só Jost (texto), Libre Caslon (títulos) e Marcellus (números); Inter/Playfair só no admin; Montserrat, Philosopher e Cormorant em lugar nenhum — mas as 8 eram pré-carregadas em toda página (~550 KB). Removidas Montserrat, Philosopher e Cormorant (classes antigas → `font-sans`/`font-heading`); Inter/Playfair com `preload: false`; Libre Caslon TTF → WOFF2 com subconjunto latino (295 → 89 KB, eixo de peso intacto, acentos conferidos). Visual idêntico (prints antes/depois). Obs.: o build local no Windows não gera os preloads de fonte (manifesto vazio) — conferir no deploy
 - Medir: Lighthouse em todas as páginas
 
 ### Etapa 3 — JavaScript · risco: médio
@@ -155,6 +155,7 @@ Cada item: `[ ]` pendente · `[~]` em andamento · `[x]` feito (com commit).
 | Data | Item | Commit | Antes → Depois |
 |---|---|---|---|
 | 20/10/2026 | Diagnóstico | — | Linha de base registrada |
+| 20/10/2026 | P6 — fontes | ver commit "perf(P6)" | 8 → 5 famílias declaradas; pré-carregadas no público: 11 arquivos (~550 KB) → esperado 4 arquivos (~180 KB), a confirmar após deploy. Libre Caslon 295 → 89 KB |
 | 20/10/2026 | P7 — imagens fixas, ícones e og:image | ver commit "perf(P7)" | Serviços › Alianças: maior imagem 3,9 MB → 18 KB, peso 6,9 → 3,1 MB, desempenho 49 → 67 (o resto são 2,2 MB da API de destaques, P2). Sobre: 74. HTML do detalhe do portfólio 13,2 → 11,4 MB. `og:image` válida em todas as páginas |
 | 20/10/2026 | P8 + P11 — datas e código morto | ver commit "fix(P8,P11)" | Erros no console do portfólio: 1 (React #418) → 0. −49 linhas de dados mortos e 1 componente não usado |
 | 20/10/2026 | P3 — galeria fora das listagens | ver commit "perf(P3)" | HTML `/portfolio` 16,9 → 12,5 MB (−26%); `/api/public/portfolio` 10,6 → 6,2 MB (−41%). Home (destaques) e pronta-entrega sem mudança: o peso ali é só a `mainImage` (o produto "Teste" da pronta-entrega tem 1,9 MB de foto) |

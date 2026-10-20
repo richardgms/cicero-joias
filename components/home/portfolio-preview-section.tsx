@@ -223,10 +223,10 @@ export function PortfolioPreviewSection({
           <span className="font-jost inline-flex items-center justify-center gap-2 rounded-full border border-action-strong/40 bg-action-strong/20 px-5 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-action-strong transition-all duration-500 hover:scale-105 hover:bg-action-strong/30 hover:border-action-strong/60 hover:shadow-button-gold cursor-default">
             Trabalhos em Destaque
           </span>
-          <h2 className="font-philosopher text-3xl sm:text-5xl lg:text-6xl font-bold text-text-on-dark leading-tight">
+          <h2 className="font-heading text-3xl sm:text-5xl lg:text-6xl font-bold text-text-on-dark leading-tight">
             Nossos Trabalhos
           </h2>
-          <p className="font-montserrat mx-auto max-w-3xl text-base sm:text-lg text-text-on-dark/90 leading-relaxed">
+          <p className="font-sans mx-auto max-w-3xl text-base sm:text-lg text-text-on-dark/90 leading-relaxed">
             Conheça alguns dos projetos que realizamos
           </p>
         </AnimatedSection>
@@ -245,11 +245,11 @@ export function PortfolioPreviewSection({
               <div className="mx-auto mb-6 h-16 w-16 rounded-full bg-text-primary/10 p-4">
                 <Sparkles className="h-full w-full text-text-primary/80" />
               </div>
-              <p className="font-montserrat text-sm font-medium text-text-on-dark mb-4">Nenhum projeto em destaque no momento</p>
-              <p className="font-montserrat text-xs text-text-on-dark/70 leading-relaxed">Em breve, novos trabalhos especiais serão destacados aqui.</p>
+              <p className="font-sans text-sm font-medium text-text-on-dark mb-4">Nenhum projeto em destaque no momento</p>
+              <p className="font-sans text-xs text-text-on-dark/70 leading-relaxed">Em breve, novos trabalhos especiais serão destacados aqui.</p>
             </div>
             <Link href="/portfolio">
-              <Button variant="outline" className="bg-transparent font-montserrat border-text-on-dark/30 text-text-on-dark hover:bg-text-on-dark/5 hover:border-text-on-dark/50 transition-all duration-500">
+              <Button variant="outline" className="bg-transparent font-sans border-text-on-dark/30 text-text-on-dark hover:bg-text-on-dark/5 hover:border-text-on-dark/50 transition-all duration-500">
                 Ver todo o portfólio
               </Button>
             </Link>
@@ -292,7 +292,7 @@ export function PortfolioPreviewSection({
                         </span>
 
                         {/* Título */}
-                        <h3 className="font-montserrat text-xl font-semibold leading-tight line-clamp-2">
+                        <h3 className="font-sans text-xl font-semibold leading-tight line-clamp-2">
                           {item.title}
                         </h3>
 
@@ -314,7 +314,7 @@ export function PortfolioPreviewSection({
                   <p className="font-jost text-sm uppercase tracking-[0.3em] text-text-on-dark/70">
                     Quer ver mais trabalhos nossos?
                   </p>
-                  <p className="font-montserrat mx-auto max-w-xl text-text-on-dark/90">
+                  <p className="font-sans mx-auto max-w-xl text-text-on-dark/90">
                     Explore nossa coleção completa de alianças personalizadas e restaurações
                     especiais.
                   </p>

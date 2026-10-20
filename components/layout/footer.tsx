@@ -371,12 +371,12 @@ export function Footer({ appearance = 'legacy' }: FooterProps) {
                   />
                 </div>
                 <div className="flex flex-col leading-tight">
-                  <span className="font-philosopher text-xl font-bold tracking-wide">Cícero Joias</span>
+                  <span className="font-heading text-xl font-bold tracking-wide">Cícero Joias</span>
                   <span className="font-jost text-xs font-semibold uppercase tracking-[0.3em] text-text-on-dark/60">Desde 1985</span>
                 </div>
               </Link>
 
-              <p className="font-montserrat text-sm leading-relaxed text-text-on-dark/70 max-w-md">
+              <p className="font-sans text-sm leading-relaxed text-text-on-dark/70 max-w-md">
                 Mais de quatro décadas criando joias sob medida, com atendimento direto do ourives e acompanhamento após a entrega. Nosso atelier em Santa Rita mantém o padrão artesanal que nos trouxe até aqui.
               </p>
             </div>
@@ -390,7 +390,7 @@ export function Footer({ appearance = 'legacy' }: FooterProps) {
                   <li key={item.name}>
                     <Link
                       href={item.href}
-                      className="font-montserrat text-sm text-text-on-dark/75 transition-colors hover:text-action-strong block w-max"
+                      className="font-sans text-sm text-text-on-dark/75 transition-colors hover:text-action-strong block w-max"
                     >
                       {item.name}
                     </Link>
@@ -404,7 +404,7 @@ export function Footer({ appearance = 'legacy' }: FooterProps) {
           <div className="space-y-8 md:pl-8 md:border-l md:border-white/5">
             <div>
               <h3 className="font-jost text-xs font-medium uppercase tracking-[0.3em] text-text-on-dark/50 mb-8">Contato</h3>
-              <div className="space-y-6 font-montserrat text-sm text-text-on-dark/60">
+              <div className="space-y-6 font-sans text-sm text-text-on-dark/60">
                 <div className="flex items-start gap-4">
                   <MapPin className="mt-1 h-4 w-4 flex-shrink-0 text-action-strong/70" />
                   <p className="leading-relaxed">
@@ -457,10 +457,10 @@ export function Footer({ appearance = 'legacy' }: FooterProps) {
 
         {/* Copyright e Links Legais */}
         <div className="mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
-          <p className="font-montserrat text-xs text-text-on-dark/50">
+          <p className="font-sans text-xs text-text-on-dark/50">
             © {year} Cícero Joias. Todos os direitos reservados.
           </p>
-          <div className="flex gap-6 font-montserrat text-xs text-text-on-dark/50">
+          <div className="flex gap-6 font-sans text-xs text-text-on-dark/50">
             <Link href="/termos-uso" className="hover:text-action-strong transition-colors">
               Termos de Uso
             </Link>

@@ -139,12 +139,12 @@ export function FinalCTASection({
         className="relative mx-auto flex w-full max-w-3xl flex-col items-center gap-8 px-4 sm:px-6 lg:px-8"
       >
         {/* Título */}
-        <h2 className="font-philosopher text-3xl font-bold text-text-on-dark sm:text-4xl lg:text-5xl">
+        <h2 className="font-heading text-3xl font-bold text-text-on-dark sm:text-4xl lg:text-5xl">
           Pronto para seu projeto?
         </h2>
 
         {/* Descrição */}
-        <p className="font-montserrat max-w-2xl text-base leading-relaxed text-text-on-dark/85 sm:text-lg">
+        <p className="font-sans max-w-2xl text-base leading-relaxed text-text-on-dark/85 sm:text-lg">
           Fale conosco pelo WhatsApp para tirar dúvidas, solicitar orçamento ou agendar uma visita. Nossa equipe está pronta para atender você.
         </p>
 
@@ -153,7 +153,7 @@ export function FinalCTASection({
           {benefits.map((benefit) => (
             <span
               key={benefit.text}
-              className="group font-montserrat inline-flex items-center gap-2 rounded-full border border-action-strong/50 bg-transparent px-4 py-2 text-sm text-action-strong/90 transition-all duration-500 hover:scale-105 hover:border-action-strong/70 hover:bg-action-strong/10 hover:shadow-sm"
+              className="group font-sans inline-flex items-center gap-2 rounded-full border border-action-strong/50 bg-transparent px-4 py-2 text-sm text-action-strong/90 transition-all duration-500 hover:scale-105 hover:border-action-strong/70 hover:bg-action-strong/10 hover:shadow-sm"
             >
               <benefit.icon className="h-4 w-4 text-action-strong transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6" aria-hidden="true" />
               {benefit.text}
