@@ -168,6 +168,7 @@ D4 decidido (20/10/2026): **UploadThing** — conta ativa (0 arquivos, limite 2 
 - [x] P2 — Admin envia arquivo ao UploadThing (redimensionado no navegador, até 2400 px WebP) em vez de base64; exclusão/troca de foto apaga o arquivo sem uso (commit 2475173)
 - [x] P2 — Script `scripts/migrate-images-to-uploadthing.mjs` (simulação por padrão, `--apply`, idempotente por hash). Ensaiado 2× no banco de testes: 11 fotos, 9,5 MB → 730 KB; 2ª cópia limpa reaproveitou as 11 sem reenviar; HTML do portfólio 12,5 MB → 96 KB
 - [x] Produção (20/10/2026): push do código (d663a0b) → backup novo `cicero-joias-public-*-antes-migracao-fotos.dump` (8 MB, contagens conferidas) → simulação → `--apply` (10 fotos, todas reaproveitadas do ensaio, 0 base64 restante, 10/10 URLs abrindo) → arquivo órfão do produto "Teste" (apagado pelo admin) removido do UploadThing → redeploy → medição
+- [x] Upload no admin validado pelo usuário no celular e no PC (20/10/2026). Primeiro teste revelou demora sem feedback: `awaitServerData` (padrão `true` na v7) fazia o navegador esperar a volta do servidor; corrigido com `awaitServerData: false`, progresso "Enviando X%", Salvar bloqueado durante o envio e limite de 90 s (commit 08204b6). Limpeza automática confirmada: fotos removidas na edição foram apagadas do UploadThing
 - [ ] Reduzir o limite de 50 MB da API e limpar `stack`/`debug` das rotas do admin (S5)
 - Medir: tamanho do HTML do portfólio e do banco
 
