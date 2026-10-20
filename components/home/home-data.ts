@@ -228,55 +228,6 @@ export const ringsHighlights: Array<
   },
 ];
 
-export type PortfolioCase = {
-  slug: string;
-  title: string;
-  image: string;
-  alt: string;
-  challenge: string;
-  solution: string;
-  result: string;
-};
-
-export const portfolioCases: PortfolioCase[] = [
-  {
-    slug: 'ana-pedro',
-    title: 'Ana & Pedro - acabamento fosco com bordas polidas',
-    image: '/assets/home/portfolio/case-01.webp',
-    alt: 'Alianças foscas com bordas polidas da Cícero Joias',
-    challenge:
-      'O casal queria alianças foscas que resistissem ao uso diário sem perder brilho nas bordas.',
-    solution:
-      'Ouro 18k com textura acetinada, bordas polidas e prova presencial para ajustar medidas.',
-    result:
-      '✓ Entregues em apenas 6 dias úteis com gravação interna personalizada e kit de cuidado completo.',
-  },
-  {
-    slug: 'julia-marcos',
-    title: 'Julia & Marcos - gravação interna personalizada',
-    image: '/assets/home/portfolio/case-02.webp',
-    alt: 'Alianças polidas com gravação interna personalizada',
-    challenge:
-      'Precisavam de gravação longa com coordenadas e data sem comprometer conforto.',
-    solution:
-      'Modelagem na loja, teste com anéis de prova e gravação laser feita na bancada do ourives.',
-    result:
-      '✓ Par final entregue em 7 dias úteis com acabamento polido espelhado e certificado de autenticidade.',
-  },
-  {
-    slug: 'familia-sousa',
-    title: 'Família Sousa - restauração de alianças de 1985',
-    image: '/assets/home/portfolio/case-03.webp',
-    alt: 'Alianças restauradas com brilho renovado',
-    challenge:
-      'Alianças com riscos profundos e perda de textura original após anos guardadas.',
-    solution:
-      'Limpeza ultrassom, reforço de solda e retexturização manual inspirada nas fotos antigas.',
-    result:
-      '✓ Entregues em 4 dias úteis com brilho totalmente recuperado e garantia de manutenção trimestral.',
-  },
-];
-
 export type Testimonial = {
   name: string;
   location: string;

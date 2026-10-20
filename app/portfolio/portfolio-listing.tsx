@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo, useEffect } from 'react';
+import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -309,7 +310,7 @@ export function PortfolioListing({ initialItems, categories, totalCount }: Portf
                                                     <div className="absolute bottom-3 left-3 flex items-center gap-2 transform translate-y-4 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
                                                         <div className="flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 font-sans text-xs font-semibold uppercase tracking-wide text-white backdrop-blur-md">
                                                             <Clock className="h-3 w-3" />
-                                                            <span className="font-numeric">{new Date(item.createdAt).toLocaleDateString('pt-BR')}</span>
+                                                            <span className="font-numeric">{formatDate(item.createdAt)}</span>
                                                         </div>
                                                     </div>
                                                 </div>

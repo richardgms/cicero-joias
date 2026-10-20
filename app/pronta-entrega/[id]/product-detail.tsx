@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronLeft, ArrowRight, Share2, Expand, X, Clock, CheckCircle2, Star } from 'lucide-react';
@@ -143,7 +144,7 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
                             </Badge>
                             <div className="flex items-center gap-2 text-xs font-medium text-text-on-dark/50">
                                 <Clock className="h-3 w-3" />
-                                <span className="font-numeric">{new Date(product.createdAt).toLocaleDateString('pt-BR')}</span>
+                                <span className="font-numeric">{formatDate(product.createdAt)}</span>
                             </div>
                         </div>
 

@@ -437,8 +437,8 @@ function ProntaEntregaContent() {
                       />
 
                       <div className="flex justify-between text-sm font-medium text-text-secondary">
-                        <span className="font-numeric">R$ {Math.round(displayPriceRange[0]).toLocaleString()}</span>
-                        <span className="font-numeric">R$ {Math.round(displayPriceRange[1]).toLocaleString()}</span>
+                        <span className="font-numeric">R$ {Math.round(displayPriceRange[0]).toLocaleString('pt-BR')}</span>
+                        <span className="font-numeric">R$ {Math.round(displayPriceRange[1]).toLocaleString('pt-BR')}</span>
                       </div>
 
                       <div className="text-center mt-3 font-sans">

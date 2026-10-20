@@ -115,8 +115,9 @@ Cada item: `[ ]` pendente · `[~]` em andamento · `[x]` feito (com commit).
 - [x] P1 — Removido o `app/loading.tsx` global e o `PageVisibilityGuard` passou a renderizar o conteúdo imediatamente (antes mostrava "Verificando disponibilidade..." em tela cheia e **o HTML de Sobre, Serviços e Pronta-entrega saía sem o conteúdo da página**). Páginas ocultas pelo admin continuam ocultas, mas o conteúdo aparece por um instante antes da troca
 - [x] P3 — Campo `images` (galeria) removido da listagem do portfólio, da API pública do portfólio e da API da pronta-entrega (nenhuma listagem usava). O que sobra de peso é a `mainImage` em base64 — só some com o P2 (Etapa 4)
 - [ ] P7 — Converter `hero.svg` de 5 MB, redimensionar `sobre-nos-hero`, monograma em tamanho de ícone
-- [ ] P8 — Corrigir o erro de hidratação das datas
-- [ ] P11 — Resolver as 5 imagens inexistentes referenciadas no código
+- [x] P8 — Novo `formatDate()` em `lib/utils.ts` (fuso fixo `America/Sao_Paulo`) aplicado no portfólio (listagem e detalhe) e no detalhe da pronta-entrega; faixa de preço da pronta-entrega com `toLocaleString('pt-BR')`. Erro #418 confirmado sumido com o servidor em UTC (como na Vercel). Obs.: a nota 0 em "Boas práticas" do portfólio continua, mas por outro motivo — o HTML de 12,5 MB é grande demais para o Lighthouse ler (auditoria `charset` falha e a categoria fica sem nota); resolve com o P2
+- [x] P11 — As 5 imagens estavam em código morto (nunca executado, sem 404 para o visitante): removidos `portfolioCases` de `components/home/home-data.ts` e o componente não usado `components/ui/lazy-image.tsx`
+- [ ] Termos de uso e Política de privacidade mostram "Última atualização" = data do build (`new Date()`), não a data real do texto. Decidir uma data fixa (conteúdo)
 - [ ] P6 — Reduzir as fontes às famílias realmente usadas; Libre Caslon em woff2
 - Medir: Lighthouse em todas as páginas
 
@@ -153,6 +154,7 @@ Cada item: `[ ]` pendente · `[~]` em andamento · `[x]` feito (com commit).
 | Data | Item | Commit | Antes → Depois |
 |---|---|---|---|
 | 20/10/2026 | Diagnóstico | — | Linha de base registrada |
+| 20/10/2026 | P8 + P11 — datas e código morto | ver commit "fix(P8,P11)" | Erros no console do portfólio: 1 (React #418) → 0. −49 linhas de dados mortos e 1 componente não usado |
 | 20/10/2026 | P3 — galeria fora das listagens | ver commit "perf(P3)" | HTML `/portfolio` 16,9 → 12,5 MB (−26%); `/api/public/portfolio` 10,6 → 6,2 MB (−41%). Home (destaques) e pronta-entrega sem mudança: o peso ali é só a `mainImage` (o produto "Teste" da pronta-entrega tem 1,9 MB de foto) |
 | 20/10/2026 | P1 — tela de carregamento e guarda de visibilidade | ver commit "perf(P1)" | Local, Lighthouse celular: Sobre 15→48, Serviços 21→50, Pronta-entrega 24→46; CLS 0,89→0; LCP 7,9→5,2 s (Sobre). JS inicial: Serviços 186→141 KB, Sobre 194→156 KB. Conteúdo agora presente no HTML |
 | 20/10/2026 | I6 — senha do banco na Vercel | — (config Vercel) | Deploy falhando e APIs 500 → deploy ok e APIs 200. Medido após deploy: HTML `/portfolio` 17,7 MB, `/api/public/portfolio` 11 MB, `/api/public/products/ready-delivery` 2 MB (1 produto) |
