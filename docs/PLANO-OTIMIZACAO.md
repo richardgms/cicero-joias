@@ -25,6 +25,20 @@ Lighthouse 12, celular (4G lento + CPU 4x mais lenta), site publicado em `cicero
 
 Metas: Performance ≥ 90, LCP < 2,5 s, TBT < 200 ms, CLS < 0,1, Acessibilidade ≥ 95.
 
+### Após a Etapa 2 (20/10/2026, site publicado, mesmas condições)
+
+| Página | Performance | Acessib. | Boas prát. | SEO | LCP | TBT | CLS | Peso |
+|---|---|---|---|---|---|---|---|---|
+| `/` | 50 → **83** | 93 | 100 | 100 | 5,4 → 4,5 s | 3,1 s → **130 ms** | 0 | 2,4 MB |
+| `/sobre` | 13 → **74** | 96 | 100 | 100 | 8,8 → 5,8 s | 3,4 s → **190 ms** | 1,26 → **0** | 0,8 MB |
+| `/servicos` | 21 → **75** | 97 | 100 | 100 | 8,9 → 6,1 s | 3,4 s → **100 ms** | 0,89 → **0** | 0,8 MB |
+| `/pronta-entrega` | 21 → **72** | 100 | 100 | 100 | 9,0 → 6,0 s | 3,4 s → **160 ms** | 0,89 → **0** | 3,6 MB |
+| `/portfolio` | 1 → **45** | 90 | — ¹ | 100 | 71,6 → 54,9 s | 4,7 s → **420 ms** | 0,89 → **0** | 10,1 MB |
+| `/servicos/aliancas-personalizadas` | 49 ² → **70** | 90 | 100 | 100 | 14,6 s | 140 ms | 0 | 2,4 MB |
+
+¹ Sem nota: o HTML de 12,5 MB é grande demais para o Lighthouse ler. ² Medido em 20/10 antes do P7.
+Fontes pré-carregadas por página: 11 arquivos (~550 KB) → 4 (129 KB). O que ainda segura o LCP e o peso é a foto em base64 (P2): portfólio 10 MB, pronta-entrega 3,6 MB (1 produto), home e alianças 2,4 MB (destaques do portfólio via API).
+
 ---
 
 ## Diagnóstico
