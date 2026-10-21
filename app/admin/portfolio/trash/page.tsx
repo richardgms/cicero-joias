@@ -185,7 +185,7 @@ export default function TrashPage() {
                                             size="sm"
                                             onClick={() => handleRestore(item.id)}
                                             disabled={!!processing}
-                                            className="w-full md:w-auto"
+                                            className="h-11 w-full md:h-9 md:w-auto"
                                         >
                                             {processing === item.id ? (
                                                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
@@ -200,7 +200,7 @@ export default function TrashPage() {
                                             size="sm"
                                             onClick={() => handlePermanentDelete(item.id, item.title)}
                                             disabled={!!processing}
-                                            className="w-full md:w-auto"
+                                            className="h-11 w-full md:h-9 md:w-auto"
                                         >
                                             <Trash2 className="h-4 w-4" />
                                             <span className="sr-only md:not-sr-only md:ml-2">Excluir</span>

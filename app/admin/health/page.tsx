@@ -197,8 +197,8 @@ export default function SystemHealthPage() {
                                         <tbody className="divide-y">
                                             {Object.entries(data.checks.environmentVariables.variables).map(([key, exists]) => (
                                                 <tr key={key} className="bg-card">
-                                                    <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{key}</td>
-                                                    <td className="px-4 py-3 text-right">
+                                                    <td className="break-all px-3 py-3 font-mono text-xs text-muted-foreground sm:px-4">{key}</td>
+                                                    <td className="whitespace-nowrap px-3 py-3 text-right sm:px-4">
                                                         {exists ? (
                                                             <span className="inline-flex items-center text-green-600 text-xs font-medium">
                                                                 <CheckCircle className="w-3 h-3 mr-1" /> Configurada
