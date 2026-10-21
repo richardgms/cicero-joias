@@ -56,6 +56,60 @@ const colorPresets = [
     { name: 'Dourado', value: '#D97706' },
 ];
 
+// Celular e tablet: lista compacta com editar/excluir à vista (a tabela fica no desktop)
+function MobileCategoryList({
+    categories,
+    onEdit,
+    onDelete,
+}: {
+    categories: Category[];
+    onEdit: (category: Category) => void;
+    onDelete: (id: string, name: string) => void;
+}) {
+    return (
+        <ul className="divide-y divide-gray-200 lg:hidden">
+            {categories.map((category) => (
+                <li key={category.id} className="flex items-center gap-3 py-2">
+                    <span
+                        className="h-6 w-6 shrink-0 rounded-full border"
+                        style={{ backgroundColor: category.color }}
+                        aria-hidden="true"
+                    />
+                    <div className="min-w-0 flex-1">
+                        <p className="font-medium leading-snug text-gray-900">{category.name}</p>
+                        <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                            <Badge variant={category.isActive ? "default" : "secondary"}>
+                                {category.isActive ? "Ativa" : "Inativa"}
+                            </Badge>
+                            <span className="text-xs text-gray-600">
+                                {category.itemCount} itens · ordem {category.order}
+                            </span>
+                        </div>
+                    </div>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-11 w-11 shrink-0"
+                        onClick={() => onEdit(category)}
+                        aria-label={`Editar ${category.name}`}
+                    >
+                        <Edit className="h-5 w-5" />
+                    </Button>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-11 w-11 shrink-0 text-red-600 hover:text-red-700"
+                        onClick={() => onDelete(category.id, category.name)}
+                        aria-label={`Excluir ${category.name}`}
+                    >
+                        <Trash2 className="h-5 w-5" />
+                    </Button>
+                </li>
+            ))}
+        </ul>
+    );
+}
+
 export function AdminCategoriesClient({ initialCategories }: AdminCategoriesClientProps) {
     const [categories, setCategories] = useState<Category[]>(initialCategories);
     const [editingCategory, setEditingCategory] = useState<Category | null>(null);
@@ -241,7 +295,7 @@ export function AdminCategoriesClient({ initialCategories }: AdminCategoriesClie
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
                 <Card>
                     <CardContent className="pt-6">
                         <div className="text-2xl font-bold">{categories.length}</div>
@@ -279,6 +333,8 @@ export function AdminCategoriesClient({ initialCategories }: AdminCategoriesClie
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
+                    <MobileCategoryList categories={portfolioCategories} onEdit={handleEdit} onDelete={handleDelete} />
+                    <div className="hidden lg:block">
                     <Table>
                         <TableHeader>
                             <TableRow>
@@ -342,6 +398,7 @@ export function AdminCategoriesClient({ initialCategories }: AdminCategoriesClie
                             ))}
                         </TableBody>
                     </Table>
+                    </div>
                     {!portfolioCategories.length && (
                         <div className="text-center py-8 text-gray-500">
                             Nenhuma categoria de portfólio encontrada
@@ -359,6 +416,8 @@ export function AdminCategoriesClient({ initialCategories }: AdminCategoriesClie
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
+                    <MobileCategoryList categories={productCategories} onEdit={handleEdit} onDelete={handleDelete} />
+                    <div className="hidden lg:block">
                     <Table>
                         <TableHeader>
                             <TableRow>
@@ -422,6 +481,7 @@ export function AdminCategoriesClient({ initialCategories }: AdminCategoriesClie
                             ))}
                         </TableBody>
                     </Table>
+                    </div>
                     {!productCategories.length && (
                         <div className="text-center py-8 text-gray-500">
                             Nenhuma categoria de produto encontrada

@@ -161,7 +161,7 @@ export default function AdminUsersPage() {
       </section>
 
       <section>
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
           {summaryCards.map((card) => (
             <Card key={card.title} className="border-esmeralda/10 bg-white/90">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -179,7 +179,7 @@ export default function AdminUsersPage() {
 
       <section className="space-y-4">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <div className="flex flex-1 items-center gap-3">
+          <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-esmeralda/50" />
               <Input
@@ -190,7 +190,7 @@ export default function AdminUsersPage() {
               />
             </div>
             <Select value={roleFilter} onValueChange={(value) => setRoleFilter(value as RoleFilter)}>
-              <SelectTrigger className="w-[160px]">
+              <SelectTrigger className="w-full sm:w-[160px]">
                 <SelectValue placeholder="Filtrar por papel" />
               </SelectTrigger>
               <SelectContent>
@@ -230,8 +230,8 @@ export default function AdminUsersPage() {
                   <TableRow className="hover:bg-esmeralda/5">
                     <TableHead>Usuário</TableHead>
                     <TableHead>Papel &amp; Acesso</TableHead>
-                    <TableHead>Perfil do Cliente</TableHead>
-                    <TableHead>Contato</TableHead>
+                    <TableHead className="hidden lg:table-cell">Perfil do Cliente</TableHead>
+                    <TableHead className="hidden lg:table-cell">Contato</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -244,15 +244,20 @@ export default function AdminUsersPage() {
                       <TableRow key={user.id} className="hover:bg-esmeralda/5">
                         <TableCell className="space-y-1">
                           <div className="font-medium text-esmeralda">{clientName}</div>
-                          <div className="flex items-center text-xs text-esmeralda/70">
-                            <Mail className="mr-1 h-3 w-3" />
+                          <div className="flex items-center break-all text-xs text-esmeralda/70">
+                            <Mail className="mr-1 h-3 w-3 shrink-0" />
                             {user.email}
                           </div>
                           <div className="text-xs text-esmeralda/80">Criado em {createdAt}</div>
+                          {/* Celular/tablet: contato aqui, porque as colunas de perfil e contato ficam ocultas */}
+                          <div className="space-y-1 text-xs text-esmeralda/70 lg:hidden">
+                            {user.client?.phone && <div>Tel.: {user.client.phone}</div>}
+                            {user.client?.whatsapp && <div>WhatsApp: {user.client.whatsapp}</div>}
+                          </div>
                         </TableCell>
 
                         <TableCell className="space-y-2">
-                          <div className="flex items-center gap-2">
+                          <div className="flex flex-wrap items-center gap-2">
                             <Badge className="bg-esmeralda/10 text-esmeralda border-esmeralda/20">
                               {roleLabels[user.role]}
                             </Badge>
@@ -267,7 +272,7 @@ export default function AdminUsersPage() {
                           </p>
                         </TableCell>
 
-                        <TableCell>
+                        <TableCell className="hidden lg:table-cell">
                           {user.client ? (
                             <div className="space-y-2 text-sm text-esmeralda">
 
@@ -279,7 +284,7 @@ export default function AdminUsersPage() {
                           )}
                         </TableCell>
 
-                        <TableCell className="space-y-1 text-xs text-esmeralda/70">
+                        <TableCell className="hidden space-y-1 text-xs text-esmeralda/70 lg:table-cell">
                           {user.client?.phone && (
                             <div className="flex items-center gap-2">
                               <Phone className="h-3 w-3" />
