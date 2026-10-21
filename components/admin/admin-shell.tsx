@@ -11,6 +11,14 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
 
+  // Marca o <body> para a regra de 16px nos campos (globals.css)
+  useEffect(() => {
+    document.body.dataset.admin = '';
+    return () => {
+      delete document.body.dataset.admin;
+    };
+  }, []);
+
   // Fecha a gaveta ao trocar de tela
   useEffect(() => {
     setMenuOpen(false);

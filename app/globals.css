@@ -376,3 +376,14 @@ html {
 .public-theme svg.text-action-strong {
   color: rgb(var(--ds-action-strong-heading) / var(--tw-text-opacity, 1));
 }
+
+/* Admin no celular: campos com 16px para o iPhone não dar zoom ao tocar.
+   O AdminShell marca o <body> com data-admin só enquanto o painel está aberto
+   (inclui os modais, que são desenhados fora da área do admin). */
+@media (max-width: 767px) {
+  body[data-admin] input,
+  body[data-admin] textarea,
+  body[data-admin] select {
+    font-size: 16px;
+  }
+}
