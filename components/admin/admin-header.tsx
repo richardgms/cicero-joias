@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Menu, X } from 'lucide-react';
 import { useUser, UserButton } from '@clerk/nextjs';
 import { usePageVisibility } from '@/hooks/use-page-visibility';
@@ -12,10 +11,14 @@ const essentialLinks = [
   { name: 'Início', href: '/' },
 ];
 
-export function AdminHeader() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+interface AdminHeaderProps {
+  menuOpen: boolean;
+  onMenuToggle: () => void;
+}
+
+export function AdminHeader({ menuOpen, onMenuToggle }: AdminHeaderProps) {
   const { isSignedIn, user } = useUser();
-  const { visiblePages, loading, isAdmin } = usePageVisibility();
+  const { visiblePages, loading } = usePageVisibility();
 
   const navigation = useMemo(() => {
     // Começar com link de Início
@@ -36,11 +39,26 @@ export function AdminHeader() {
 
 
   return (
-    <header className="sticky top-0 z-50 bg-white">
-      <nav className="flex items-center justify-between px-4 py-4 border-b border-gray-200" style={{ height: '73px' }}>
-        {/* Desktop navigation - centralizada */}
-        <div className="flex-1 flex justify-center">
-          <div className="hidden gap-6 md:flex">
+    <header className="sticky top-0 z-30 bg-white">
+      <nav className="flex h-[73px] items-center justify-between gap-3 border-b border-gray-200 px-2 sm:px-4">
+        {/* Celular/tablet: botão do menu do admin */}
+        <div className="flex items-center gap-1 lg:hidden">
+          <button
+            type="button"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-esmeralda hover:bg-esmeralda/10"
+            onClick={onMenuToggle}
+            aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
+            aria-expanded={menuOpen}
+            aria-controls="admin-menu"
+          >
+            {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+          <span className="text-lg font-bold text-esmeralda">Admin</span>
+        </div>
+
+        {/* Links do site público - centralizados (a partir de md) */}
+        <div className="hidden flex-1 justify-center md:flex">
+          <div className="flex gap-6">
             {navigation.map((item) => (
               <Link
                 key={item.name}
@@ -53,11 +71,11 @@ export function AdminHeader() {
           </div>
         </div>
 
-        {/* User / Auth */}
-        <div className="hidden items-center gap-3 md:flex">
+        {/* Usuário */}
+        <div className="flex items-center gap-3 pr-2 sm:pr-0">
           {isSignedIn ? (
             <>
-              <span className="text-sm text-esmeralda/80">
+              <span className="hidden text-sm text-esmeralda/80 sm:inline">
                 Olá, {user.firstName ?? 'Admin'}
               </span>
               <UserButton appearance={{ elements: { userButtonAvatarBox: 'h-8 w-8' } }} afterSignOutUrl="/" />
@@ -71,53 +89,7 @@ export function AdminHeader() {
             </Link>
           )}
         </div>
-
-        {/* Mobile toggle */}
-        <button
-          className="md:hidden rounded-full border border-esmeralda/30 p-2 text-esmeralda"
-          onClick={() => setMobileMenuOpen((prev) => !prev)}
-          aria-label="Abrir menu"
-        >
-          {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
       </nav>
-
-      {/* Mobile menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden border-t border-gray-200 bg-white px-4 py-4">
-          <div className="flex flex-col gap-4">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="text-sm font-medium text-esmeralda hover:text-ouro transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {item.name}
-              </Link>
-            ))}
-
-            <div className="border-t border-gray-200 pt-4">
-              {isSignedIn ? (
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-esmeralda/80">
-                    Olá, {user.firstName ?? 'Admin'}
-                  </span>
-                  <UserButton appearance={{ elements: { userButtonAvatarBox: 'h-8 w-8' } }} afterSignOutUrl="/" />
-                </div>
-              ) : (
-                <Link
-                  href="/sign-in"
-                  className="inline-flex w-full justify-center rounded-full border border-esmeralda/30 px-4 py-2 text-sm font-medium text-esmeralda hover:bg-esmeralda hover:text-marfim transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Entrar
-                </Link>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
     </header>
   );
-} 
+}

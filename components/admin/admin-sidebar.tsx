@@ -13,7 +13,9 @@ import {
   FileText,
   Gem,
   Eye,
-  Activity
+  Activity,
+  X,
+  ExternalLink
 } from 'lucide-react';
 
 const navigation = [
@@ -56,13 +58,39 @@ const navigation = [
 
 ];
 
-export function AdminSidebar() {
+interface AdminSidebarProps {
+  // Só valem abaixo de lg, onde o menu é uma gaveta
+  open: boolean;
+  onClose: () => void;
+}
+
+export function AdminSidebar({ open, onClose }: AdminSidebarProps) {
   const pathname = usePathname();
 
+  // Subtelas (ex.: /admin/portfolio/new) mantêm o item do menu marcado
+  const isItemActive = (href: string) =>
+    href === '/admin' ? pathname === href : pathname === href || pathname.startsWith(href + '/');
+
   return (
-    <div className="w-64 bg-white shadow-lg fixed top-0 left-0 h-screen flex flex-col z-50">
+    <>
+    {/* Fundo escuro atrás da gaveta (celular/tablet) */}
+    <div
+      className={cn(
+        'fixed inset-0 z-40 bg-black/50 transition-opacity lg:hidden',
+        open ? 'opacity-100' : 'pointer-events-none opacity-0'
+      )}
+      onClick={onClose}
+      aria-hidden="true"
+    />
+    <div
+      id="admin-menu"
+      className={cn(
+        'w-64 bg-white shadow-lg fixed top-0 left-0 h-[100dvh] flex flex-col z-50 transition-[transform,visibility] duration-200 lg:visible lg:translate-x-0',
+        open ? 'visible translate-x-0' : 'invisible -translate-x-full'
+      )}
+    >
       {/* Logo - Header fixo */}
-      <div className="flex items-center justify-center h-18 px-4 py-4 border-b border-gray-200 flex-shrink-0">
+      <div className="relative flex items-center justify-center h-18 px-4 py-4 border-b border-gray-200 flex-shrink-0">
         <Link href="/" className="flex items-center space-x-3 group h-10">
           <div className="relative">
             <Image
@@ -88,6 +116,14 @@ export function AdminSidebar() {
             <p className="text-xs text-esmeralda/70 -mt-0.5">Cícero Joias</p>
           </div>
         </Link>
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute right-2 top-1/2 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full text-esmeralda hover:bg-esmeralda/10 lg:hidden"
+          aria-label="Fechar menu"
+        >
+          <X className="h-5 w-5" />
+        </button>
       </div>
 
       {/* Área de navegação com scroll */}
@@ -96,13 +132,13 @@ export function AdminSidebar() {
         <nav className="mt-6 px-3">
           <div className="space-y-1">
             {navigation.map((item) => {
-              const isActive = pathname === item.href;
+              const isActive = isItemActive(item.href);
               return (
                 <Link
                   key={item.name}
                   href={item.href}
                   className={cn(
-                    'group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors',
+                    'group flex items-center px-3 py-3 lg:py-2 text-sm font-medium rounded-lg transition-colors',
                     isActive
                       ? 'bg-esmeralda text-marfim shadow-md'
                       : 'text-gray-700 hover:bg-esmeralda/10 hover:text-esmeralda'
@@ -123,6 +159,18 @@ export function AdminSidebar() {
           </div>
         </nav>
       </div>
+
+      {/* Link para o site público */}
+      <div className="border-t border-gray-200 p-3">
+        <Link
+          href="/"
+          className="group flex items-center px-3 py-3 lg:py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-esmeralda/10 hover:text-esmeralda transition-colors"
+        >
+          <ExternalLink className="mr-3 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-esmeralda" />
+          Ver site
+        </Link>
+      </div>
     </div>
+    </>
   );
 } 
