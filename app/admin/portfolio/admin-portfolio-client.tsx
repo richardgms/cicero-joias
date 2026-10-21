@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { useDeletePortfolioItem } from '@/hooks/use-portfolio';
 import { useRouter } from 'next/navigation';
+import { formatDate } from '@/lib/utils';
 import {
     Table,
     TableBody,
@@ -124,7 +125,7 @@ export function AdminPortfolioClient({ initialItems }: AdminPortfolioClientProps
     return (
         <div className="space-y-6">
             {/* Stats */}
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
                 <Card>
                     <CardContent className="pt-6">
                         <div className="text-2xl font-bold">{portfolioStats.total}</div>
@@ -195,6 +196,71 @@ export function AdminPortfolioClient({ initialItems }: AdminPortfolioClientProps
                     <CardTitle>Projetos ({filteredItems.length})</CardTitle>
                 </CardHeader>
                 <CardContent>
+                    {/* Celular e tablet: cartões com as ações à vista */}
+                    <ul className="space-y-3 lg:hidden">
+                        {filteredItems.map((item) => (
+                            <li key={item.id} className="rounded-lg border border-gray-200 bg-white p-3">
+                                <div className="flex gap-3">
+                                    <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                                        <Image
+                                            src={item.mainImage}
+                                            alt={item.title}
+                                            fill
+                                            className="object-cover"
+                                            sizes="64px"
+                                        />
+                                    </div>
+                                    <div className="min-w-0 flex-1 space-y-1.5">
+                                        <p className="font-medium leading-snug text-gray-900">{item.title}</p>
+                                        <div className="flex flex-wrap items-center gap-1.5">
+                                            <Badge variant={item.isActive ? "default" : "secondary"}>
+                                                {item.isActive ? "Ativo" : "Inativo"}
+                                            </Badge>
+                                            {item.isFeatured && (
+                                                <Badge className="bg-amber-100 text-amber-900 border-amber-300">
+                                                    ⭐ Destaque
+                                                </Badge>
+                                            )}
+                                            <Badge variant="outline">
+                                                {categoryLabels[item.category as keyof typeof categoryLabels] ?? item.category}
+                                            </Badge>
+                                        </div>
+                                        <p className="text-xs text-gray-600">
+                                            Ordem {item.order} · {formatDate(item.createdAt)}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="mt-3 grid grid-cols-3 gap-2">
+                                    <Button asChild size="sm" className="h-11">
+                                        <Link href={`/admin/portfolio/${item.id}/edit`}>
+                                            <Edit className="h-4 w-4 mr-1.5" />
+                                            Editar
+                                        </Link>
+                                    </Button>
+                                    <Button asChild size="sm" variant="outline" className="h-11">
+                                        <Link href={`/portfolio/${item.id}`}>
+                                            <Eye className="h-4 w-4 mr-1.5" />
+                                            Ver
+                                        </Link>
+                                    </Button>
+                                    <Button
+                                        type="button"
+                                        size="sm"
+                                        variant="outline"
+                                        className="h-11 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
+                                        onClick={() => handleDelete(item.id, item.title)}
+                                        disabled={deletePortfolioMutation.isPending}
+                                    >
+                                        <Trash2 className="h-4 w-4 mr-1.5" />
+                                        Excluir
+                                    </Button>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+
+                    {/* Desktop: tabela completa */}
+                    <div className="hidden lg:block">
                     <Table>
                         <TableHeader>
                             <TableRow>
@@ -248,7 +314,7 @@ export function AdminPortfolioClient({ initialItems }: AdminPortfolioClientProps
                                     </TableCell>
                                     <TableCell>{item.order}</TableCell>
                                     <TableCell>
-                                        {new Date(item.createdAt).toLocaleDateString('pt-BR')}
+                                        {formatDate(item.createdAt)}
                                     </TableCell>
                                     <TableCell>
                                         <DropdownMenu>
@@ -294,6 +360,7 @@ export function AdminPortfolioClient({ initialItems }: AdminPortfolioClientProps
                             ))}
                         </TableBody>
                     </Table>
+                    </div>
 
                     {filteredItems.length === 0 && (
                         <div className="text-center py-8">
