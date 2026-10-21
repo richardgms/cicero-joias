@@ -137,7 +137,7 @@ export function AdminProductsClient({ initialProducts }: AdminProductsClientProp
     return (
         <div className="space-y-6">
             {/* Stats - Memoized for performance */}
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3 sm:gap-4">
                 <Card>
                     <CardContent className="pt-6">
                         <div className="text-2xl font-bold">{products.length}</div>
@@ -162,7 +162,7 @@ export function AdminProductsClient({ initialProducts }: AdminProductsClientProp
                         <p className="text-xs text-muted-foreground">Estoque Baixo</p>
                     </CardContent>
                 </Card>
-                <Card>
+                <Card className="col-span-2 md:col-span-1">
                     <CardContent className="pt-6">
                         <div className="text-2xl font-bold">
                             R$ {stats.totalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
@@ -226,6 +226,79 @@ export function AdminProductsClient({ initialProducts }: AdminProductsClientProp
                     <CardTitle>Produtos ({filteredProducts.length})</CardTitle>
                 </CardHeader>
                 <CardContent>
+                    {/* Celular e tablet: cartões com as ações à vista */}
+                    <ul className="space-y-3 lg:hidden">
+                        {filteredProducts.map((product) => (
+                            <li key={product.id} className="rounded-lg border border-gray-200 bg-white p-3">
+                                <div className="flex gap-3">
+                                    <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                                        {product.mainImage ? (
+                                            <Image
+                                                src={product.mainImage}
+                                                alt={product.name}
+                                                fill
+                                                className="object-cover"
+                                                sizes="64px"
+                                            />
+                                        ) : (
+                                            <div className="flex h-full w-full items-center justify-center">
+                                                <Package className="h-6 w-6 text-gray-400" />
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="min-w-0 flex-1 space-y-1.5">
+                                        <p className="font-medium leading-snug text-gray-900">{product.name}</p>
+                                        <div className="flex flex-wrap items-center gap-1.5">
+                                            <Badge variant={product.isActive ? "default" : "secondary"}>
+                                                {product.isActive ? "Ativo" : "Inativo"}
+                                            </Badge>
+                                            {product.isReadyDelivery && (
+                                                <Badge variant="outline" className="text-green-600 border-green-600">
+                                                    Pronta Entrega
+                                                </Badge>
+                                            )}
+                                            <Badge variant="outline">
+                                                {categoryLabels[product.category as keyof typeof categoryLabels] ?? product.category}
+                                            </Badge>
+                                        </div>
+                                        <p className="text-sm text-gray-700">
+                                            {product.price !== null
+                                                ? `R$ ${product.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
+                                                : 'Sem preço'}
+                                            {' · '}
+                                            <span className={product.stock === 0 ? 'font-medium text-red-600' : product.stock <= 5 ? 'font-medium text-orange-600' : ''}>
+                                                {product.stock === 0 ? 'Esgotado' : `Estoque ${product.stock}${product.stock <= 5 ? ' (baixo)' : ''}`}
+                                            </span>
+                                        </p>
+                                        {product.code && (
+                                            <p className="text-xs text-gray-600">Cód. {product.code}</p>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="mt-3 grid grid-cols-2 gap-2">
+                                    <Button asChild size="sm" className="h-11">
+                                        <Link href={`/admin/products/${product.id}/edit`}>
+                                            <Edit className="h-4 w-4 mr-1.5" />
+                                            Editar
+                                        </Link>
+                                    </Button>
+                                    <Button
+                                        type="button"
+                                        size="sm"
+                                        variant="outline"
+                                        className="h-11 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
+                                        onClick={() => handleDelete(product.id, product.name)}
+                                    >
+                                        <Trash2 className="h-4 w-4 mr-1.5" />
+                                        Excluir
+                                    </Button>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+
+                    {/* Desktop: tabela completa */}
+                    <div className="hidden lg:block">
                     <Table>
                         <TableHeader>
                             <TableRow>
@@ -356,6 +429,7 @@ export function AdminProductsClient({ initialProducts }: AdminProductsClientProp
                             ))}
                         </TableBody>
                     </Table>
+                    </div>
 
                     {filteredProducts.length === 0 && (
                         <div className="text-center py-8">
