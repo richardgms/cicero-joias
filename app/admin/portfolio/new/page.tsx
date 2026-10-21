@@ -338,7 +338,7 @@ export default function NewPortfolioPage() {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6 pb-20 lg:pb-0">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Form */}
           <div className="lg:col-span-2 space-y-6">
@@ -386,6 +386,7 @@ export default function NewPortfolioPage() {
                     onChange={(e) => setFormData(prev => ({ ...prev, detailedDescription: e.target.value }))}
                     placeholder="Descrição completa e detalhada do projeto, processo de criação, materiais utilizados..."
                     rows={6}
+                    className="min-h-[16rem] lg:min-h-[80px]"
                   />
                 </div>
 
@@ -430,6 +431,7 @@ export default function NewPortfolioPage() {
                   <Input
                     id="order"
                     type="number"
+                    inputMode="numeric"
                     value={formData.order}
                     onChange={(e) => setFormData(prev => ({ ...prev, order: parseInt(e.target.value) || 0 }))}
                     placeholder="0"
@@ -637,10 +639,11 @@ export default function NewPortfolioPage() {
                           type="button"
                           variant="destructive"
                           size="icon"
-                          className="absolute -top-2 -right-2 h-6 w-6"
+                          className="absolute right-1 top-1 h-10 w-10 shadow-md lg:-top-2 lg:-right-2 lg:h-6 lg:w-6"
                           onClick={() => removeImage(index)}
+                          aria-label={`Remover imagem ${index + 1}`}
                         >
-                          <X className="h-3 w-3" />
+                          <X className="h-5 w-5 lg:h-3 lg:w-3" />
                         </Button>
                       </div>
                     ))}
@@ -721,14 +724,15 @@ export default function NewPortfolioPage() {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
+            {/* Ações: no celular/tablet vira barra fixa no rodapé, sempre à mão */}
+            <Card className="fixed inset-x-0 bottom-0 z-30 rounded-none border-x-0 border-b-0 shadow-[0_-4px_12px_rgba(0,0,0,0.08)] lg:static lg:rounded-lg lg:border lg:shadow-sm">
+              <CardHeader className="hidden lg:flex">
                 <CardTitle>Ações</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="flex gap-2 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] lg:block lg:space-y-4 lg:p-6 lg:pt-0">
                 <Button
                   type="submit"
-                  className="w-full"
+                  className="h-11 flex-[2] lg:h-10 lg:w-full"
                   disabled={createPortfolioMutation.isPending || uploadingImage || uploadProgress !== null}
                 >
                   {createPortfolioMutation.isPending ? (
@@ -749,7 +753,7 @@ export default function NewPortfolioPage() {
                   )}
                 </Button>
 
-                <Button type="button" variant="outline" className="w-full" asChild>
+                <Button type="button" variant="outline" className="h-11 flex-1 lg:h-10 lg:w-full" asChild>
                   <Link href="/admin/portfolio">
                     Cancelar
                   </Link>
