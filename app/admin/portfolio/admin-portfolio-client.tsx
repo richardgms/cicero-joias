@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useDeletePortfolioItem } from '@/hooks/use-portfolio';
 import { useRouter } from 'next/navigation';
 import { formatDate } from '@/lib/utils';
+import { generatePortfolioSlug } from '@/lib/slug-utils';
 import {
     Table,
     TableBody,
@@ -238,7 +239,7 @@ export function AdminPortfolioClient({ initialItems }: AdminPortfolioClientProps
                                         </Link>
                                     </Button>
                                     <Button asChild size="sm" variant="outline" className="h-11">
-                                        <Link href={`/portfolio/${item.id}`}>
+                                        <Link href={`/portfolio/${generatePortfolioSlug({ title: item.title, category: item.category, id: item.id })}`}>
                                             <Eye className="h-4 w-4 mr-1.5" />
                                             Ver
                                         </Link>
@@ -325,7 +326,7 @@ export function AdminPortfolioClient({ initialItems }: AdminPortfolioClientProps
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
                                                 <DropdownMenuItem asChild>
-                                                    <Link href={`/portfolio/${item.id}`}>
+                                                    <Link href={`/portfolio/${generatePortfolioSlug({ title: item.title, category: item.category, id: item.id })}`}>
                                                         <Eye className="h-4 w-4 mr-2" />
                                                         Visualizar
                                                     </Link>
