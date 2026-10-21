@@ -147,14 +147,14 @@ export default function NewProductPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center space-x-4">
-        <Button variant="ghost" size="icon" asChild>
+      <div className="flex items-start gap-2 sm:items-center sm:gap-4">
+        <Button variant="ghost" size="icon" className="h-11 w-11 shrink-0" asChild>
           <Link href="/admin/products">
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Novo Produto</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Novo Produto</h1>
           <p className="text-gray-600 mt-2">
             Adicione um novo produto ao catálogo
           </p>

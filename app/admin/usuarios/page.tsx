@@ -153,7 +153,7 @@ export default function AdminUsersPage() {
     <div className="space-y-8">
       <section>
         <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-semibold text-esmeralda">Usuários</h1>
+          <h1 className="text-2xl sm:text-3xl font-semibold text-esmeralda">Usuários</h1>
           <p className="text-sm text-esmeralda/70">
             Visualize todos os usuários sincronizados com o Clerk, monitore permissões e acompanhe os perfis de clientes ligados à base local.
           </p>

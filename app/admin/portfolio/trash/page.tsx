@@ -111,14 +111,14 @@ export default function TrashPage() {
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center gap-4">
+            <div className="flex items-start gap-2 sm:items-center sm:gap-4">
                 <Link href="/admin/portfolio">
-                    <Button variant="ghost" size="icon">
+                    <Button variant="ghost" size="icon" className="h-11 w-11 shrink-0">
                         <ArrowLeft className="h-4 w-4" />
                     </Button>
                 </Link>
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Lixeira</h1>
+                    <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Lixeira</h1>
                     <p className="text-muted-foreground">
                         Itens deletados nos últimos 30 dias.
                     </p>

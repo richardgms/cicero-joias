@@ -175,8 +175,8 @@ export default function PageVisibilityPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="border-b border-gray-200 pb-6">
-        <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-          <Eye className="mr-3 h-8 w-8 text-esmeralda" />
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center">
+          <Eye className="mr-3 h-7 w-7 sm:h-8 sm:w-8 shrink-0 text-esmeralda" />
           Controle de Visibilidade das Páginas
         </h1>
         <p className="mt-2 text-gray-600">

@@ -114,15 +114,15 @@ export default function SystemHealthPage() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-                        <Activity className="w-8 h-8 text-primary" />
+                    <h1 className="text-2xl sm:text-3xl font-bold tracking-tight flex items-center gap-2">
+                        <Activity className="w-7 h-7 sm:w-8 sm:h-8 shrink-0 text-primary" />
                         Diagnóstico do Sistema
                     </h1>
                     <p className="text-muted-foreground mt-1">
                         Status em tempo real da infraestrutura e conexões
                     </p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3">
                     {lastUpdated && (
                         <span className="text-sm text-muted-foreground flex items-center gap-1">
                             <Clock className="w-4 h-4" />
