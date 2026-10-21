@@ -215,7 +215,7 @@ export function AdminCategoriesClient({ initialCategories }: AdminCategoriesClie
                             Nova Categoria
                         </Button>
                     </DialogTrigger>
-                    <DialogContent>
+                    <DialogContent className="max-h-[90dvh] w-[calc(100%-2rem)] overflow-y-auto rounded-lg">
                         <DialogHeader>
                             <DialogTitle>
                                 {editingCategory ? 'Editar Categoria' : 'Nova Categoria'}
@@ -275,14 +275,15 @@ export function AdminCategoriesClient({ initialCategories }: AdminCategoriesClie
                                 />
                             </div>
 
-                            <div className="flex items-center space-x-2 pt-4">
-                                <Button type="submit" className="flex-1">
+                            <div className="flex flex-col-reverse gap-2 pt-4 sm:flex-row sm:items-center">
+                                <Button type="submit" className="h-11 sm:h-10 sm:flex-1">
                                     <Save className="h-4 w-4 mr-2" />
                                     {editingCategory ? 'Atualizar' : 'Criar'}
                                 </Button>
                                 <Button
                                     type="button"
                                     variant="outline"
+                                    className="h-11 sm:h-10"
                                     onClick={() => setIsDialogOpen(false)}
                                 >
                                     <X className="h-4 w-4 mr-2" />

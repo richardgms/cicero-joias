@@ -329,7 +329,7 @@ export default function PageVisibilityPage() {
                           Alterações Recentes ({page.visibilityLogs.length})
                         </button>
                       </DialogTrigger>
-                      <DialogContent className="max-w-2xl max-h-[600px]">
+                      <DialogContent className="max-w-2xl max-h-[min(600px,90dvh)] w-[calc(100%-2rem)] overflow-y-auto rounded-lg">
                         <DialogHeader>
                           <DialogTitle className="flex items-center">
                             <Clock className="w-5 h-5 mr-2 text-esmeralda" />
@@ -343,7 +343,7 @@ export default function PageVisibilityPage() {
                         <div className="mt-4 space-y-3 overflow-y-auto max-h-[400px]">
                           {page.visibilityLogs.map((log) => (
                             <div key={log.id} className="border border-gray-200 bg-gray-50 p-4 rounded-lg">
-                              <div className="flex items-center justify-between mb-2">
+                              <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                                 <div className="flex items-center space-x-2">
                                   <span className={`px-2 py-1 rounded text-xs font-medium ${log.previousStatus ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                                     }`}>
@@ -357,6 +357,7 @@ export default function PageVisibilityPage() {
                                 </div>
                                 <span className="text-xs text-gray-500">
                                   {new Date(log.createdAt).toLocaleDateString('pt-BR', {
+                                    timeZone: 'America/Sao_Paulo',
                                     day: '2-digit',
                                     month: '2-digit',
                                     year: 'numeric',
