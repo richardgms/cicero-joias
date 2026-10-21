@@ -19,7 +19,7 @@ O trabalho continua em outro agente (Claude Code no app Orca). Tudo commitado e 
 
 **Concluído e em produção:** Etapas 0 (exceto nada pendente), 1, 2, 3, 4 e 5, mais correções de segurança S1–S6. Resultado no site publicado: desempenho 90–95 em todas as páginas públicas (Pronta-entrega 86, adiada), Acessibilidade/Boas práticas/SEO 100. Admin testado pelo usuário após React 19 e após o upload pelo UploadThing: tudo ok.
 
-**Etapa 6 — Vigilância** (21/10/2026): itens commitados e testados localmente; falta o usuário ativar o Speed Insights no painel da Vercel, o push e a medição "depois" no site publicado.
+**Etapa 6 — Vigilância: ✅ concluída em 21/10/2026** (publicada em `3d8a584`). Speed Insights no ar, orçamento em `lighthouserc.json` e Lighthouse automático no GitHub (1ª execução: aprovada). Avisos de falha chegam ao usuário por e-mail e no app do GitHub. **O plano terminou** → próximo: chat novo para o layout do painel admin no celular.
 
 **Pendências opcionais (não bloqueiam):** P4 (rever `'use client'`/animações), P9 (cache da verificação de visibilidade), P10 (pronta-entrega no servidor — adiado: página oculta e sem produtos).
 
@@ -228,8 +228,8 @@ D4 decidido (20/10/2026): **UploadThing** — conta ativa (0 arquivos, limite 2 
 - [x] I4 — `caniuse-lite` atualizado (aviso do build sumiu)
 - [x] Bug achado: `toast()` do sonner nunca aparecia (Toaster não montado) — avisos de erro do admin (visibilidade, saúde) e "Link copiado" dos detalhes. Montado no layout do admin e nos layouts dos detalhes
 
-### Etapa 6 — Vigilância · risco: baixo · ▶ EM ANDAMENTO
-- [x] I5 — Speed Insights: `@vercel/speed-insights` 2.0.0, componente só na parte pública de `app/conditional-layout.tsx` (admin fora; `/sign-in`, `/sign-up`, `/acesso-negado` filtrados no `beforeSend`). Build ok, JS compartilhado segue 102 KB (commit f1fd398). Pendente: ativar no painel da Vercel (usuário) e medir o "depois" em produção
+### Etapa 6 — Vigilância · risco: baixo · ✅ concluída 21/10/2026
+- [x] I5 — Speed Insights: `@vercel/speed-insights` 2.0.0, componente só na parte pública de `app/conditional-layout.tsx` (admin fora; `/sign-in`, `/sign-up`, `/acesso-negado` filtrados no `beforeSend`). Build ok, JS compartilhado segue 102 KB (commit f1fd398). Já estava ativo no painel (script responde 200). Custo medido: +7 KB de JS por página
 - [x] Orçamento de peso em `lighthouserc.json` (~20% de folga sobre o medido): peso total ≤ 650 KB, JS ≤ 322 KB, imagens ≤ 244 KB, CLS ≤ 0,1, acessibilidade/boas práticas/SEO ≥ 95 reprovam; desempenho < 85 e LCP > 4 s só avisam (commit ce7fd55). Testado: passa hoje e reprova com limite apertado
 - [x] Lighthouse automático: `.github/workflows/lighthouse.yml` com Lighthouse CI 0.15.1 em 5 páginas (`/`, `/portfolio`, `/servicos`, `/servicos/aliancas-personalizadas`, `/sobre`), 3 medições cada, mediana. Roda a cada push na `main` (espera o deploy de produção da Vercel ficar pronto, para o aviso ir a quem fez o push), toda segunda 8h (Brasília) e pelo botão "Run workflow". Aviso = e-mail do GitHub quando reprova; tabela no resumo da execução; relatórios guardados 30 dias no próprio GitHub (sem upload público) (commit 3c25d64)
 
@@ -241,6 +241,7 @@ D4 decidido (20/10/2026): **UploadThing** — conta ativa (0 arquivos, limite 2 
 |---|---|---|---|
 | 20/10/2026 | Diagnóstico | — | Linha de base registrada |
 | 21/10/2026 | Etapa 6 — medição "antes" (produção, Lighthouse 13.5 celular, mediana de 3) | — | Início 91 · LCP 3,3 s · 455 KB (JS 235) — Portfólio 91 · 3,3 s · 544 KB (JS 270) — Serviços 94 · 3,0 s · 450 KB — Sobre 93 · 3,1 s · 430 KB; CLS 0 em todas |
+| 21/10/2026 | Etapa 6 — publicada, medição "depois" (mesmo método) | 3d8a584 | Peso +7 KB por página (script do Speed Insights): Início 455→462, Portfólio 544→551, Serviços 450→457, Sobre 430→437 KB. Desempenho 91→92, 91→88, 94→91, 93→91 (variação normal de ±3 entre medições; TBT caiu em todas); CLS 0. Lighthouse automático no GitHub: aprovado |
 | 20/10/2026 | S1–S4 — segurança | ver commit "fix(security)" | Usuário logado não-admin: acesso total à API do admin → bloqueado (403). `/admin` sem login: página servida → redireciona ao login. Rota pública com `CREATE TABLE` → removida. Erros públicos sem detalhes internos |
 | 20/10/2026 | P6 — fontes | ver commit "perf(P6)" | 8 → 5 famílias declaradas; pré-carregadas no público: 11 arquivos (~550 KB) → esperado 4 arquivos (~180 KB), a confirmar após deploy. Libre Caslon 295 → 89 KB |
 | 20/10/2026 | P7 — imagens fixas, ícones e og:image | ver commit "perf(P7)" | Serviços › Alianças: maior imagem 3,9 MB → 18 KB, peso 6,9 → 3,1 MB, desempenho 49 → 67 (o resto são 2,2 MB da API de destaques, P2). Sobre: 74. HTML do detalhe do portfólio 13,2 → 11,4 MB. `og:image` válida em todas as páginas |
