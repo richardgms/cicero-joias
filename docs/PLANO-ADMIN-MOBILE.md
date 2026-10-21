@@ -12,6 +12,8 @@
 - Peso do site público: CSS +560 bytes comprimido (17 067 → 17 627 B), porque o Tailwind gera um único CSS para o site todo. JavaScript público inalterado.
 - Ajuste feito durante o teste: margens das listas menores no celular (os botões dos cartões ficavam apertados a 360 px) e cabeçalho das telas empilhado até 1024 px.
 - Envio de várias fotos (3.5): testado no "Novo Projeto" com 3 fotos de uma vez; as 3 subiram para o UploadThing e apareceram. Saí sem salvar (o portfólio continua com 7 projetos). As 3 fotos de teste ficaram soltas no UploadThing (nomes `teste-*.webp`); podem ser apagadas pelo painel do UploadThing.
+- Correção pós-entrega (`6816f54`): o botão "Ver" do portfólio no admin dava "Página não encontrada" (já acontecia no menu ⋯ antigo). A página pública só aceita o endereço gerado por `generatePortfolioSlug` (título + final do id); o admin mandava o id puro. Testado no ar: os 7 links abrem.
+- Pendente conhecido: no desktop, Produtos → ⋯ → "Visualizar" aponta para `/admin/products/[id]`, rota que não existe (hoje há 0 produtos).
 - Foto "quebrada" do projeto Banho de Ouro 18k em Pulseira: verificado que **não** está quebrada (é a pulseira de prata antes do banho). Nada foi removido.
 
 ## Como foi medido
