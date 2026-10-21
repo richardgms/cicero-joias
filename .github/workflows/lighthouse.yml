@@ -1,0 +1,49 @@
+# Vigilância: mede as páginas públicas com o Lighthouse (celular, 3 vezes cada,
+# vale a mediana) e confere o orçamento de peso de lighthouserc.json.
+# Roda depois de cada deploy de produção na Vercel, toda segunda às 8h
+# (Brasília, pega fotos novas do admin que não passam por deploy) e pelo botão
+# "Run workflow". Se algo estourar, a execução falha e o GitHub avisa por e-mail.
+name: Vigilância (Lighthouse)
+
+on:
+  deployment_status:
+  schedule:
+    - cron: '0 11 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lighthouse
+  cancel-in-progress: true
+
+jobs:
+  lighthouse:
+    if: >-
+      github.event_name != 'deployment_status' ||
+      (github.event.deployment_status.state == 'success' &&
+       github.event.deployment.environment == 'Production')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Medir e conferir o orçamento
+        run: npx -y @lhci/cli@0.15.1 autorun --config=lighthouserc.json
+
+      - name: Resumo
+        if: always()
+        run: node .github/lighthouse-resumo.js >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Guardar relatórios
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorios-lighthouse
+          path: .lighthouseci/
+          retention-days: 30
