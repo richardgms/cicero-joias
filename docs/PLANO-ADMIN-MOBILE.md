@@ -6,10 +6,13 @@
 
 ## ▶ Estado atual
 
-**21/10/2026 — etapas 1 a 4 aprovadas e feitas no código (commits locais, sem push).** Falta testar no navegador: o admin local pede login no Clerk de desenvolvimento (só o usuário pode entrar). Depois do teste: push por etapa, deploy, Vigilância e teste no site publicado.
+**21/10/2026 — etapas 1 a 5 concluídas e publicadas.** Testado no admin publicado (Chrome do PC já logado, a pedido do usuário, que estava no celular) em 360, 390, 768 px e desktop, etapa por etapa, antes de publicar a seguinte.
 
-- Foto "quebrada" do projeto Banho de Ouro 18k em Pulseira: verificado que **não** está quebrada (o link abre, é a pulseira de prata antes do banho; carrega também na tela de edição). A falha foi pontual durante a inspeção, com muitas telas abertas ao mesmo tempo. Nada foi removido.
-- Peso do site público (build local × produção): CSS +560 bytes comprimido (17 067 → 17 627 B), porque o Tailwind gera um único CSS para o site todo. JavaScript público inalterado.
+- Deploys da Vercel: todos "Ready". Vigilância (Lighthouse) do último push (`cb86c8a`): aprovada. Páginas públicas principais respondem 200.
+- Peso do site público: CSS +560 bytes comprimido (17 067 → 17 627 B), porque o Tailwind gera um único CSS para o site todo. JavaScript público inalterado.
+- Ajuste feito durante o teste: margens das listas menores no celular (os botões dos cartões ficavam apertados a 360 px) e cabeçalho das telas empilhado até 1024 px.
+- Envio de várias fotos (3.5): testado no "Novo Projeto" com 3 fotos de uma vez; as 3 subiram para o UploadThing e apareceram. Saí sem salvar (o portfólio continua com 7 projetos). As 3 fotos de teste ficaram soltas no UploadThing (nomes `teste-*.webp`); podem ser apagadas pelo painel do UploadThing.
+- Foto "quebrada" do projeto Banho de Ouro 18k em Pulseira: verificado que **não** está quebrada (é a pulseira de prata antes do banho). Nada foi removido.
 
 ## Como foi medido
 
@@ -76,20 +79,22 @@ Visto de passagem, fora do escopo: a foto adicional do projeto "Banho de Ouro 18
 - [x] 4.3 Setup-database removida (aprovado).
 
 ### Etapa 5 — Verificação final
-- [ ] Medir todas as telas em 360/390/768/1280, conferir o peso do site público (Lighthouse) e testar no celular real.
+- [x] Medir todas as telas em 360/390/768/1280 e conferir o peso do site público (Lighthouse). Falta só o seu teste no celular real.
 
 ## Antes × depois
 
 | Medida | Antes | Depois |
 |---|---|---|
-| Área útil a 360 px | 89 px | — |
-| Área útil a 390 px | 119 px | — |
-| Área útil a 768 px | 512 px | — |
-| Navegar entre telas do admin no celular | não dá | — |
-| Botões fora da tela — Portfólio a 360 px | 10 | — |
-| Botões fora da tela — Categorias a 360 px | 11 | — |
-| Letra dos campos | 14 px (zoom no iPhone) | — |
-| Botão remover foto | 24 px | — |
+| Área útil a 360 px | 89 px | 345 px |
+| Área útil a 390 px | 119 px | 375 px |
+| Área útil a 768 px | 512 px | 753 px |
+| Navegar entre telas do admin no celular | não dá | gaveta pelo ☰ |
+| Botões fora da tela — Portfólio a 360 px | 10 | 0 |
+| Botões fora da tela — Categorias a 360 px | 11 | 0 |
+| Letra dos campos | 14 px (zoom no iPhone) | 16 px |
+| Botão remover foto | 24 px | 40 px |
+| Salvar no formulário | só no fim da rolagem | barra fixa no rodapé |
+| CSS do site público (comprimido) | 17 067 B | 17 627 B |
 
 ## Regras desta rodada
 - Um commit por item (português); push por etapa. Push sem perguntar só para CSS/layout/texto/docs já testado; o item 3.5 (upload) pede ok.
