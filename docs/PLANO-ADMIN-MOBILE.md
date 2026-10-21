@@ -6,7 +6,10 @@
 
 ## ▶ Estado atual
 
-**Fase: diagnóstico pronto — aguardando aprovação das etapas.** Nada de código foi alterado.
+**21/10/2026 — etapas 1 a 4 aprovadas e feitas no código (commits locais, sem push).** Falta testar no navegador: o admin local pede login no Clerk de desenvolvimento (só o usuário pode entrar). Depois do teste: push por etapa, deploy, Vigilância e teste no site publicado.
+
+- Foto "quebrada" do projeto Banho de Ouro 18k em Pulseira: verificado que **não** está quebrada (o link abre, é a pulseira de prata antes do banho; carrega também na tela de edição). A falha foi pontual durante a inspeção, com muitas telas abertas ao mesmo tempo. Nada foi removido.
+- Peso do site público (build local × produção): CSS +560 bytes comprimido (17 067 → 17 627 B), porque o Tailwind gera um único CSS para o site todo. JavaScript público inalterado.
 
 ## Como foi medido
 
@@ -47,30 +50,30 @@ Mais urgente para o uso real (cadastrar produto/foto, editar portfólio): **G1 +
 
 Visto de passagem, fora do escopo: a foto adicional do projeto "Banho de Ouro 18k em Pulseira de Prata 925" aparece como "imagem não encontrada" (é dado, não layout).
 
-## Etapas propostas (aguardando aprovação)
+## Etapas (aprovadas em 21/10/2026)
 
 ### Etapa 1 — Estrutura do painel (todas as telas) · risco baixo
-- [ ] 1.1 Abaixo de 1024 px o menu lateral vira gaveta aberta pelo ☰, com as 7 telas, "Ver site" e a conta. O conteúdo passa a usar a largura toda. Desktop igual ao de hoje.
-- [ ] 1.2 Cabeçalho do celular: "Admin" + ☰ de 44 px; espaçamento de 16 px no celular (24 px no desktop).
-- [ ] 1.3 Cabeçalho de cada tela: título em cima, botões embaixo e quebrando linha; a ação principal ("Novo …") sempre visível.
+- [x] 1.1 Abaixo de 1024 px o menu lateral vira gaveta aberta pelo ☰, com as 7 telas, "Ver site" e a conta. O conteúdo passa a usar a largura toda. Desktop igual ao de hoje.
+- [x] 1.2 Cabeçalho do celular: "Admin" + ☰ de 44 px; espaçamento de 16 px no celular (24 px no desktop).
+- [x] 1.3 Cabeçalho de cada tela: título em cima, botões embaixo e quebrando linha; a ação principal ("Novo …") sempre visível.
 
 ### Etapa 2 — Listas · risco baixo/médio
-- [ ] 2.1 Portfólio: no celular e tablet a tabela vira lista de cartões (foto, título, categoria, status, destaque) com botões Editar / Ver / Excluir de 44 px. Tabela continua no desktop.
-- [ ] 2.2 Produtos: mesmo padrão.
-- [ ] 2.3 Categorias e Usuários: mesmo padrão.
-- [ ] 2.4 Cartões de números com 2 por linha no celular.
+- [x] 2.1 Portfólio: no celular e tablet a tabela vira lista de cartões (foto, título, categoria, status, destaque) com botões Editar / Ver / Excluir de 44 px. Tabela continua no desktop.
+- [x] 2.2 Produtos: mesmo padrão (sem o botão "Ver": a rota `/admin/products/[id]` do menu antigo não existe, dá 404).
+- [x] 2.3 Categorias e Usuários: mesmo padrão.
+- [x] 2.4 Cartões de números com 2 por linha no celular.
 
 ### Etapa 3 — Formulários e fotos · risco baixo (não muda o envio das fotos)
-- [ ] 3.1 Campos com letra de 16 px no celular, só no admin (sem efeito no site público).
-- [ ] 3.2 Teclado numérico em preço, estoque, peso e ordem.
-- [ ] 3.3 Barra fixa "Salvar / Cancelar" no rodapé, no celular, nos 4 formulários.
-- [ ] 3.4 Fotos: botão remover de 44 px e sempre visível, miniaturas maiores; voltar (←) de 44 px; descrição detalhada mais alta.
-- [ ] 3.5 (opcional — mexe no fluxo de upload, pede ok separado) escolher várias fotos de uma vez.
+- [x] 3.1 Campos com letra de 16 px no celular, só no admin (sem efeito no site público).
+- [x] 3.2 Teclado numérico em estoque e ordem. Preço e peso ficaram como estão: o teclado decimal brasileiro usa vírgula, que o campo numérico não aceita.
+- [x] 3.3 Barra fixa "Salvar / Cancelar" no rodapé, no celular, nos 4 formulários.
+- [x] 3.4 Fotos: botão remover de 44 px e sempre visível, miniaturas maiores; voltar (←) de 44 px; descrição detalhada mais alta.
+- [x] 3.5 Escolher várias fotos adicionais de uma vez (mesmo envio de antes, uma após a outra). Commit separado; push só com ok.
 
 ### Etapa 4 — Modais e telas secundárias · risco baixo
-- [ ] 4.1 Modais (categoria, confirmar exclusão) com altura máxima e rolagem; botões empilhados.
-- [ ] 4.2 Health e Lixeira: ajustes finos.
-- [ ] 4.3 Setup-database: decidir (recomendação: remover a tela morta).
+- [x] 4.1 Modais (categoria, confirmar exclusão) com altura máxima e rolagem; botões empilhados.
+- [x] 4.2 Health e Lixeira: ajustes finos.
+- [x] 4.3 Setup-database removida (aprovado).
 
 ### Etapa 5 — Verificação final
 - [ ] Medir todas as telas em 360/390/768/1280, conferir o peso do site público (Lighthouse) e testar no celular real.
