@@ -200,15 +200,13 @@ export default function EditProductPage() {
     }
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, isMain = false) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  // Envia uma foto (a principal ou uma adicional)
+  const uploadOneImage = (file: File, isMain: boolean): Promise<void> => {
 
     setUploadProgress(0);
-    uploadImageFile(file, { onProgress: setUploadProgress })
+    return uploadImageFile(file, { onProgress: setUploadProgress })
       .finally(() => {
         setUploadProgress(null);
-        e.target.value = '';
       })
       .then((result) => {
 
@@ -225,6 +223,17 @@ export default function EditProductPage() {
         console.error('Erro no upload da imagem:', error);
         alert(error instanceof Error && error.message.startsWith('O envio demorou') ? error.message : 'Não foi possível enviar a imagem. Tente novamente.');
       });
+  };
+
+  // Várias fotos adicionais podem ser escolhidas de uma vez (útil no celular);
+  // são enviadas uma após a outra, pelo mesmo caminho de antes.
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, isMain = false) => {
+    const input = e.target;
+    const files = Array.from(input.files ?? []);
+    input.value = '';
+    for (const file of isMain ? files.slice(0, 1) : files) {
+      await uploadOneImage(file, isMain);
+    }
   };
 
   const removeImage = (index: number) => {
@@ -490,6 +499,7 @@ export default function EditProductPage() {
                         disabled={uploadProgress !== null}
                         className="hidden"
                         accept="image/*"
+                        multiple
                         onChange={(e) => handleImageUpload(e, false)}
                       />
                     </label>
