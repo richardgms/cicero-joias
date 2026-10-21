@@ -55,3 +55,6 @@ Python/
 
 .vercel
 .env*
+
+# Lighthouse CI (relatórios locais)
+.lighthouseci/
