@@ -275,13 +275,21 @@ export function AdminProductsClient({ initialProducts }: AdminProductsClientProp
                                         )}
                                     </div>
                                 </div>
-                                <div className="mt-3 grid grid-cols-2 gap-2">
+                                <div className={`mt-3 grid gap-2 ${product.isActive ? 'grid-cols-3' : 'grid-cols-2'}`}>
                                     <Button asChild size="sm" className="h-11">
                                         <Link href={`/admin/products/${product.id}/edit`}>
                                             <Edit className="h-4 w-4 mr-1.5" />
                                             Editar
                                         </Link>
                                     </Button>
+                                    {product.isActive && (
+                                        <Button asChild size="sm" variant="outline" className="h-11">
+                                            <Link href={`/pronta-entrega/${product.id}`}>
+                                                <Eye className="h-4 w-4 mr-1.5" />
+                                                Ver
+                                            </Link>
+                                        </Button>
+                                    )}
                                     <Button
                                         type="button"
                                         size="sm"
@@ -403,12 +411,20 @@ export function AdminProductsClient({ initialProducts }: AdminProductsClientProp
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
-                                                <DropdownMenuItem asChild>
-                                                    <Link href={`/admin/products/${product.id}`}>
+                                                {/* A página pública só mostra produtos ativos */}
+                                                {product.isActive ? (
+                                                    <DropdownMenuItem asChild>
+                                                        <Link href={`/pronta-entrega/${product.id}`}>
+                                                            <Eye className="h-4 w-4 mr-2" />
+                                                            Visualizar
+                                                        </Link>
+                                                    </DropdownMenuItem>
+                                                ) : (
+                                                    <DropdownMenuItem disabled>
                                                         <Eye className="h-4 w-4 mr-2" />
-                                                        Visualizar
-                                                    </Link>
-                                                </DropdownMenuItem>
+                                                        Inativo no site
+                                                    </DropdownMenuItem>
+                                                )}
                                                 <DropdownMenuItem asChild>
                                                     <Link href={`/admin/products/${product.id}/edit`}>
                                                         <Edit className="h-4 w-4 mr-2" />
