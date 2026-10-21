@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { ScrollProgress } from '@/components/ui/scroll-progress';
@@ -67,6 +68,15 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
           />
         </div>
       </div>
+      {/* Mede a velocidade real dos visitantes (só em produção, só no site
+          público; telas de login ficam de fora). */}
+      <SpeedInsights
+        beforeSend={(event) =>
+          /\/(sign-in|sign-up|acesso-negado)(\/|$)/.test(new URL(event.url).pathname)
+            ? null
+            : event
+        }
+      />
     </div>
   );
 }
