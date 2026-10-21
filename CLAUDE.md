@@ -30,5 +30,5 @@ Site institucional + painel admin da joalheria Cícero Joias (`cicerojoias.com`)
 ## Como trabalhar aqui
 - Plano e histórico de otimização: `docs/PLANO-OTIMIZACAO.md` (medir antes e depois, um commit por item).
 - Vigilância: `lighthouserc.json` é o orçamento de peso/notas das páginas públicas; `.github/workflows/lighthouse.yml` mede a cada push na `main` (espera o deploy da Vercel), toda segunda e pelo botão. Se reprovar, corrigir ou ajustar o orçamento com justificativa. Speed Insights fica só na parte pública (`app/conditional-layout.tsx`).
-- Onde trabalhar: pasta principal no dia a dia; worktree do Orca só com dois chats em paralelo (disco quase cheio). Em worktree: `.env` copiado, `node_modules` por junção para a pasta principal, push com `git push origin HEAD:main`.
+- Onde trabalhar e worktrees do Orca: seguir a seção "Worktrees" das instruções globais (`~/.claude/CLAUDE.md`). Não ligar `node_modules` por junção.
 - Antes de remover ou trocar algo, procurar quem usa. Conferir build e as páginas principais antes de publicar; depois do push, acompanhar o deploy até "Ready" e testar o site publicado.

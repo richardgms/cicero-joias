@@ -15,7 +15,7 @@
 
 O trabalho continua em outro agente (Claude Code no app Orca). Tudo commitado e publicado até `0146d01`.
 
-**Onde trabalhar:** pasta principal (`Documentos\Workspace\cicero-joias`, branch `main`) no dia a dia; worktree do Orca só quando houver dois chats em paralelo no projeto (cada worktree completa ocupa ~1,5 GB e o disco C: está quase cheio). Numa worktree: trazer o que estiver na `main` sem push, copiar o `.env` da pasta principal (sem exibir), ligar `node_modules` à pasta principal por junção (`New-Item -ItemType Junction`) em vez de reinstalar, e publicar com `git push origin HEAD:main`. Fechar a worktree ao terminar.
+**Onde trabalhar:** pasta principal (`Documentos\Workspace\cicero-joias`, branch `main`) no dia a dia; worktree do Orca só quando houver dois chats em paralelo no projeto (cada worktree completa ocupa ~1,5 GB e o disco C: está quase cheio). Numa worktree: trazer o que estiver na `main` sem push, copiar o `.env` da pasta principal (sem exibir), instalar os pacotes só se precisar de build/teste (a junção para a pasta principal foi tentada e o `npm install` a substituiu por cópia completa; e é arriscada na exclusão), e publicar com `git push origin HEAD:main`. Fechar a worktree ao terminar.
 
 **Concluído e em produção:** Etapas 0 (exceto nada pendente), 1, 2, 3, 4 e 5, mais correções de segurança S1–S6. Resultado no site publicado: desempenho 90–95 em todas as páginas públicas (Pronta-entrega 86, adiada), Acessibilidade/Boas práticas/SEO 100. Admin testado pelo usuário após React 19 e após o upload pelo UploadThing: tudo ok.
 
