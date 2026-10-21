@@ -13,7 +13,7 @@
 - Ajuste feito durante o teste: margens das listas menores no celular (os botões dos cartões ficavam apertados a 360 px) e cabeçalho das telas empilhado até 1024 px.
 - Envio de várias fotos (3.5): testado no "Novo Projeto" com 3 fotos de uma vez; as 3 subiram para o UploadThing e apareceram. Saí sem salvar (o portfólio continua com 7 projetos). As 3 fotos de teste ficaram soltas no UploadThing (nomes `teste-*.webp`); podem ser apagadas pelo painel do UploadThing.
 - Correção pós-entrega (`6816f54`): o botão "Ver" do portfólio no admin dava "Página não encontrada" (já acontecia no menu ⋯ antigo). A página pública só aceita o endereço gerado por `generatePortfolioSlug` (título + final do id); o admin mandava o id puro. Testado no ar: os 7 links abrem.
-- Pendente conhecido: no desktop, Produtos → ⋯ → "Visualizar" aponta para `/admin/products/[id]`, rota que não existe (hoje há 0 produtos).
+- Correção (`3ff201d`): Produtos → "Visualizar"/"Ver" apontava para `/admin/products/[id]`, rota inexistente. Agora abre `/pronta-entrega/[id]`, só para produtos ativos (a página pública só mostra ativos). Sem produtos cadastrados, o clique real fica para o primeiro cadastro.
 - Foto "quebrada" do projeto Banho de Ouro 18k em Pulseira: verificado que **não** está quebrada (é a pulseira de prata antes do banho). Nada foi removido.
 
 ## Como foi medido
@@ -64,7 +64,7 @@ Visto de passagem, fora do escopo: a foto adicional do projeto "Banho de Ouro 18
 
 ### Etapa 2 — Listas · risco baixo/médio
 - [x] 2.1 Portfólio: no celular e tablet a tabela vira lista de cartões (foto, título, categoria, status, destaque) com botões Editar / Ver / Excluir de 44 px. Tabela continua no desktop.
-- [x] 2.2 Produtos: mesmo padrão (sem o botão "Ver": a rota `/admin/products/[id]` do menu antigo não existe, dá 404).
+- [x] 2.2 Produtos: mesmo padrão (botão "Ver" abre `/pronta-entrega/[id]` para produtos ativos).
 - [x] 2.3 Categorias e Usuários: mesmo padrão.
 - [x] 2.4 Cartões de números com 2 por linha no celular.
 
