@@ -1,18 +1,22 @@
 # Vigilância: mede as páginas públicas com o Lighthouse (celular, 3 vezes cada,
 # vale a mediana) e confere o orçamento de peso de lighthouserc.json.
-# Roda depois de cada deploy de produção na Vercel, toda segunda às 8h
-# (Brasília, pega fotos novas do admin que não passam por deploy) e pelo botão
-# "Run workflow". Se algo estourar, a execução falha e o GitHub avisa por e-mail.
+# Roda a cada push na main (espera o deploy de produção da Vercel ficar pronto),
+# toda segunda às 8h (Brasília; pega fotos novas do admin, que não passam por
+# deploy) e pelo botão "Run workflow". Dispara pelo push, e não pelo evento da
+# Vercel, para o aviso de falha ir para quem fez o push (o GitHub só avisa quem
+# disparou). Se algo estourar, a execução falha e o GitHub avisa.
 name: Vigilância (Lighthouse)
 
 on:
-  deployment_status:
+  push:
+    branches: [main]
   schedule:
     - cron: '0 11 * * 1'
   workflow_dispatch:
 
 permissions:
   contents: read
+  deployments: read
 
 concurrency:
   group: lighthouse
@@ -20,13 +24,33 @@ concurrency:
 
 jobs:
   lighthouse:
-    if: >-
-      github.event_name != 'deployment_status' ||
-      (github.event.deployment_status.state == 'success' &&
-       github.event.deployment.environment == 'Production')
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
     steps:
+      - name: Esperar o deploy da Vercel
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+        run: |
+          for i in $(seq 1 60); do
+            id=$(gh api "repos/$REPO/deployments?sha=$SHA&environment=Production" -q '.[0].id' || true)
+            if [ -n "$id" ]; then
+              state=$(gh api "repos/$REPO/deployments/$id/statuses" -q '.[0].state' || true)
+              echo "Deploy: ${state:-aguardando}"
+              case "$state" in
+                success) exit 0 ;;
+                failure|error|inactive) echo "O deploy não ficou pronto ($state)."; exit 1 ;;
+              esac
+            else
+              echo "Deploy ainda não criado"
+            fi
+            sleep 20
+          done
+          echo "O deploy não ficou pronto em 20 minutos."
+          exit 1
+
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
