@@ -327,13 +327,13 @@ export function AdminCategoriesClient({ initialCategories }: AdminCategoriesClie
 
             {/* Portfolio Categories */}
             <Card>
-                <CardHeader>
+                <CardHeader className="px-4 sm:px-6">
                     <CardTitle className="flex items-center">
                         <Palette className="h-5 w-5 mr-2" />
                         Categorias de Portfólio ({portfolioCategories.length})
                     </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="px-4 sm:px-6">
                     <MobileCategoryList categories={portfolioCategories} onEdit={handleEdit} onDelete={handleDelete} />
                     <div className="hidden lg:block">
                     <Table>
@@ -410,13 +410,13 @@ export function AdminCategoriesClient({ initialCategories }: AdminCategoriesClie
 
             {/* Product Categories */}
             <Card>
-                <CardHeader>
+                <CardHeader className="px-4 sm:px-6">
                     <CardTitle className="flex items-center">
                         <Palette className="h-5 w-5 mr-2" />
                         Categorias de Produtos ({productCategories.length})
                     </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="px-4 sm:px-6">
                     <MobileCategoryList categories={productCategories} onEdit={handleEdit} onDelete={handleDelete} />
                     <div className="hidden lg:block">
                     <Table>

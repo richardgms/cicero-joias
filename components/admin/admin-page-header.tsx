@@ -30,7 +30,7 @@ export function AdminPageHeader({ title, description, children }: AdminPageHeade
     };
 
     return (
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="min-w-0">
                 <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{title}</h1>
                 <p className="text-gray-600 mt-2">{description}</p>

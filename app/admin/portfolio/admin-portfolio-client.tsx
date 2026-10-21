@@ -192,10 +192,10 @@ export function AdminPortfolioClient({ initialItems }: AdminPortfolioClientProps
 
             {/* Table */}
             <Card>
-                <CardHeader>
+                <CardHeader className="px-4 sm:px-6">
                     <CardTitle>Projetos ({filteredItems.length})</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="px-3 sm:px-6">
                     {/* Celular e tablet: cartões com as ações à vista */}
                     <ul className="space-y-3 lg:hidden">
                         {filteredItems.map((item) => (
