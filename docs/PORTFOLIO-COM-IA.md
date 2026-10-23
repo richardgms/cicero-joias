@@ -16,7 +16,7 @@ Fluxo para transformar fotos antigas de alianças (Drive, pasta PRODUTOS › ALI
 5. **Cadastrar** com `scripts/portfolio-lote.mjs`: converte para WebP 1024 px, envia ao UploadThing e cria os itens como **rascunho** (`isActive: false`, `status: DRAFT`). Simulação por padrão; `--apply` grava. Idempotente (foto por hash, item pulado se o título já existe).
    - Ensaiar antes no banco de testes: `node --env-file=.env --env-file=.env.teste scripts/portfolio-lote.mjs "<pasta>" --apply`
    - Produção: backup verificado antes e ok explícito do dono.
-6. **Ativar** no admin, item por item, depois de revisar.
+6. **Ativar** no admin, item por item, depois de revisar. A página `/portfolio` atualiza na hora quando o admin salva; itens gravados direto pelo script aparecem em até 10 minutos.
 
 ## Padrão dos textos (igual aos itens publicados)
 - Título: `Aliança em <Material> – <largura>mm <perfil/acabamento> com <detalhe>`
