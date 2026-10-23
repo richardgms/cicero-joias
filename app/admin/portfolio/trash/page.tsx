@@ -15,7 +15,6 @@ interface DeletedItem {
     title: string;
     mainImage: string | null;
     deletedAt: string;
-    status: string;
 }
 
 export default function TrashPage() {

@@ -49,7 +49,6 @@ interface FormData {
   images: string[];
   isActive: boolean;
   isFeatured: boolean;
-  status: 'DRAFT' | 'PUBLISHED' | 'FEATURED' | 'ARCHIVED';
   order: number;
   specifications: Specification[];
   seoTitle: string;
@@ -75,7 +74,6 @@ export default function NewPortfolioPage() {
     images: [],
     isActive: true,
     isFeatured: false,
-    status: 'ARCHIVED',
     order: 0,
     specifications: [],
     seoTitle: '',
@@ -690,7 +688,6 @@ export default function NewPortfolioPage() {
                     onCheckedChange={(checked) => setFormData(prev => ({
                       ...prev,
                       isActive: checked,
-                      status: checked ? 'PUBLISHED' : 'ARCHIVED'
                     }))}
                   />
                 </div>

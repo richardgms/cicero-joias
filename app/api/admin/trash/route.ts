@@ -23,8 +23,7 @@ export async function GET() {
                     id: true,
                     title: true,
                     mainImage: true,
-                    deletedAt: true,
-                    status: true
+                    deletedAt: true
                 }
             });
         });

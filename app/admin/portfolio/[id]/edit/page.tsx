@@ -49,7 +49,6 @@ interface FormData {
   images: string[];
   isActive: boolean;
   isFeatured: boolean;
-  status: 'DRAFT' | 'PUBLISHED' | 'FEATURED' | 'ARCHIVED';
   order: number;
   specifications: Specification[];
   seoTitle: string;
@@ -78,7 +77,6 @@ export default function EditPortfolioPage() {
     images: [],
     isActive: true,
     isFeatured: false,
-    status: 'ARCHIVED',
     order: 0,
     specifications: [],
     seoTitle: '',
@@ -137,7 +135,6 @@ export default function EditPortfolioPage() {
           images: item.images || [],
           isActive: item.isActive,
           isFeatured: item.isFeatured || false,
-          status: (item.status === 'DRAFT' ? 'ARCHIVED' : item.status === 'FEATURED' ? 'PUBLISHED' : item.status) || 'ARCHIVED',
           order: item.order || 0,
           specifications,
           seoTitle: item.seoTitle || '',
@@ -712,7 +709,6 @@ export default function EditPortfolioPage() {
                     onCheckedChange={(checked) => setFormData(prev => ({
                       ...prev,
                       isActive: checked,
-                      status: checked ? 'PUBLISHED' : 'ARCHIVED'
                     }))}
                   />
                 </div>

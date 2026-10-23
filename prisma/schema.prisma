@@ -79,7 +79,6 @@ model PortfolioItem {
   seoTitle            String?
   seoDescription      String?
   keywords            String[]
-  status              String            @default("DRAFT")
   relatedProjects     String[]
   customCategory      String?
   productId           String?

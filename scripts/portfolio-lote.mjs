@@ -1,5 +1,5 @@
 // Cadastra um lote de itens no portfólio a partir de uma pasta com fotos e textos.
-// Os itens entram como RASCUNHO (isActive: false, status DRAFT): só aparecem no
+// Os itens entram como RASCUNHO (isActive: false): só aparecem no
 // site depois de ativados no admin.
 //
 // A pasta precisa ter:
@@ -117,7 +117,6 @@ async function main() {
           relatedProjects: [],
           isActive: false,
           isFeatured: false,
-          status: 'DRAFT',
           order: order++,
         },
         select: { id: true },
