@@ -14,6 +14,10 @@ export const metadata: Metadata = {
   },
 };
 
+// Gerada no deploy e refeita quando o admin salva (revalidatePath). Os 10 minutos
+// cobrem mudanças feitas direto no banco, como o scripts/portfolio-lote.mjs.
+export const revalidate = 600;
+
 async function getPortfolioData() {
   const [items, categoriesRaw] = await Promise.all([
     prisma.portfolioItem.findMany({

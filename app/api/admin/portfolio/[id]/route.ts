@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { auth, clerkClient } from '@clerk/nextjs/server';
 import prisma, { executeWithRetry } from '@/lib/prisma';
 import { z } from 'zod';
@@ -141,6 +142,9 @@ export async function PUT(
         },
       });
     });
+
+    // A página /portfolio é gerada no deploy: pede para refazer (ativar/desativar, textos, foto)
+    revalidatePath('/portfolio');
 
     // Fotos trocadas ou removidas na edição: apaga do UploadThing
     await deleteUnusedImages(removedImages(existingItem, portfolioItem));
@@ -291,6 +295,7 @@ export async function DELETE(
         });
       });
       debugInfo.push('Portfolio item soft-deleted successfully');
+      revalidatePath('/portfolio');
     } catch (deleteError) {
       debugInfo.push(`Delete failed: ${deleteError instanceof Error ? deleteError.message : String(deleteError)}`);
 

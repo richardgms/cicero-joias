@@ -1,5 +1,6 @@
 
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import prisma, { executeWithRetry } from '@/lib/prisma';
 import { checkAdminAuth } from '@/lib/check-admin';
 import { deleteUnusedImages } from '@/lib/uploadthing-server';
@@ -59,6 +60,8 @@ export async function POST(request: Request) {
                 data: { deletedAt: null }
             });
         });
+
+        revalidatePath('/portfolio');
 
         // Log Activity
         await executeWithRetry(async () => {

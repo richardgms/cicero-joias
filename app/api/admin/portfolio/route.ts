@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { auth, clerkClient } from '@clerk/nextjs/server';
 import prisma, { executeWithRetry } from '@/lib/prisma';
 import { z } from 'zod';
@@ -397,6 +398,8 @@ export async function POST(request: Request) {
         });
       });
       debugInfo.push(`Portfolio item created successfully with ID: ${portfolioItem.id}`);
+      // A página /portfolio é gerada no deploy: pede para refazer com o item novo
+      revalidatePath('/portfolio');
     } catch (createError) {
       const errorMessage = createError instanceof Error ? createError.message : String(createError);
       debugInfo.push(`Creation failed: ${errorMessage}`);
