@@ -10,7 +10,7 @@ Site institucional + painel admin da joalheria Cícero Joias (`cicerojoias.com`)
 
 ## Comandos
 - `npm run dev` (porta 3000) · `npm run build` (roda `prisma generate`) · `npm run lint` · `npm run db:check`
-- Migração: editar `prisma/schema.prisma` → `npx prisma migrate dev --name <mudanca>` (local) → `npx prisma migrate deploy` (produção). Nunca alterar o banco de produção à mão.
+- Migração: editar `prisma/schema.prisma` → `prisma migrate diff --from-schema-datasource prisma/schema.prisma --to-schema-datamodel prisma/schema.prisma --script` (o `migrate dev` falha fora do terminal interativo) → salvar em `prisma/migrations/<data>_<nome>/migration.sql` → ensaiar com `migrate deploy` no banco de testes → produção só com backup verificado e ok do dono. A Vercel **não** roda migração: código compatível vai antes. Nunca alterar o banco de produção à mão.
 - Build de teste sem tocar no `.next` do dev: `NEXT_DIST_DIR=.next-after npx next build`; depois `git checkout -- tsconfig.json next-env.d.ts` (o build reescreve) e apague a pasta.
 
 ## Ambiente
@@ -28,7 +28,8 @@ Site institucional + painel admin da joalheria Cícero Joias (`cicerojoias.com`)
 - Avisos do admin usam `toast` do **sonner** (o `<Toaster>` está no layout do admin e dos detalhes).
 
 ## Como trabalhar aqui
-- Plano e histórico de otimização: `docs/PLANO-OTIMIZACAO.md` (medir antes e depois, um commit por item).
+- Plano e histórico de otimização: `docs/PLANO-OTIMIZACAO.md` (medir antes e depois, um commit por item; receita de backup na Etapa 0).
+- Novas peças no portfólio com foto de estúdio por IA: `docs/PORTFOLIO-COM-IA.md`.
 - Vigilância: `lighthouserc.json` é o orçamento de peso/notas das páginas públicas; `.github/workflows/lighthouse.yml` mede a cada push na `main` (espera o deploy da Vercel), toda segunda e pelo botão. Se reprovar, corrigir ou ajustar o orçamento com justificativa. Speed Insights fica só na parte pública (`app/conditional-layout.tsx`).
 - Onde trabalhar e worktrees do Orca: seguir a seção "Worktrees" das instruções globais (`~/.claude/CLAUDE.md`). Não ligar `node_modules` por junção.
 - Antes de remover ou trocar algo, procurar quem usa. Conferir build e as páginas principais antes de publicar; depois do push, acompanhar o deploy até "Ready" e testar o site publicado.
