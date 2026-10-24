@@ -20,7 +20,7 @@ Fluxo para transformar fotos antigas de alianças (Drive, pasta PRODUTOS › ALI
    - Monte uma folha de contato (miniaturas lado a lado) para comparar.
    - Pergunte ao dono o que a foto não mostra: material (ouro 18k, prata 990...), largura, interior e número de pedras.
    - **Nunca invente** esses dados.
-3. **Gerar** com a skill `gerar-imagem` (~40 s cada). Passe como `-Referencia` a foto original (ou várias, se for a mesma peça em ângulos diferentes) e `referencias\estilo-portfolio.png`.
+3. **Gerar** com a skill `gerar-imagem` (~40 s cada). Se errar a geometria da peça (frisos, bordas, simetria), use o agy (seção "Gerar com o agy"). Passe como `-Referencia` a foto original (ou várias, se for a mesma peça em ângulos diferentes) e `referencias\estilo-portfolio.png`.
    - Modelo do prompt, em inglês:
      - *Recreate the exact pair of wedding rings from the first reference photo as a professional jewelry studio product photo.*
      - *Keep the rings IDENTICAL: <largura, perfil, acabamento, detalhes>. Do not add or remove details.*
@@ -67,10 +67,20 @@ Fluxo para transformar fotos antigas de alianças (Drive, pasta PRODUTOS › ALI
 - **Antes de afirmar algo sobre os dados** (quantos itens, o que aparece no admin), confira no banco ou na tela.
 
 - **A foto original engana no acabamento e na cor.** Luz e filtro fazem polido espelhado parecer fosco escovado, e o ouro 16k (mais avermelhado) sair amarelo vivo. Pergunte ao dono o acabamento e o teor do ouro e descreva a cor no prompt. A correção funcionou editando a imagem quase certa (39(2) v1 → v2).
-- **Não fica fiel só pelo prompt:** a 33 (4 faixas diamantadas) e a 18 (aliança larga) saíram na contagem certa, mas o dono as reprovou por não ficarem 100% fiéis ao modelo. O motivo ele explica depois; quando explicar, registre aqui.
+- **Contagem certa não basta, a geometria também precisa ser fiel.** No 2º lote o Codex errou em peças com frisos: na 33 os 3 frisos finos ficaram centralizados e com ângulo errado (na original ficam agrupados de um lado, com uma faixa larga do outro, inclinados pela curvatura), a parte de trás do anel saiu mais estreita que a frente, e na 18 uma borda espelhada ficou mais larga que a outra (devem ser simétricas e largas).
+- **Antigravity (`agy`) gera imagem e acertou essas peças.** Veja "Gerar com o agy" abaixo.
+- **Ajuste de cor:** para trocar só o tom/saturação, use `sharp(...).modulate({ saturation, hue })`. Não muda o desenho e é instantâneo (a 33 ficou em 70%, a 18 em +10%). Peça de ouro 16k é mais quente que a de 18k.
+
+## Gerar com o agy (Antigravity)
+- Não há modelo de imagem na lista de `agy models`: a imagem vem de um subagente interno `image-generator` (o modelo exato não aparece). Gera JPG 1024 px, aceita fotos de referência e leva 2 a 3 min.
+- O sandbox não deixa gravar na pasta do projeto. A imagem fica em `~\.gemini\antigravity-cli\brain\<id-da-conversa>\` (o id vem no `--output-format stream-json`); copie de lá.
+- Comando: `agy --sandbox --add-dir "<pasta Fotos IA>" --print-timeout 400s --output-format stream-json -p "Use o subagente image-generator para gerar UMA imagem, usando como referência <original> e o recorte <detalhe>. Prompt (em inglês): ... Responda só com o caminho do arquivo."`
+- **O que funcionou:** passar a original + um recorte ampliado de uma peça, e escrever no prompt a geometria exata (largura relativa de cada faixa, de que lado ficam os frisos, bordas simétricas, "a parte de trás do anel tem a mesma largura da frente"). Rodar as peças em paralelo (`Start-Job`).
+- Use o Codex (`gerar-imagem`) para ajustes rápidos de cor ou quando a peça é simples; use o agy quando o Codex errar a geometria.
 - `pg_ctl start` dentro de um pipe (`| Select`) trava o comando, porque o servidor segura a saída. Inicie com `Start-Process -WindowStyle Hidden`.
 
 ## Histórico
 - 2026-10-23: 1º lote com as fotos 16 (ouro 18k 9mm abaulada), 26 (ouro 18k 6mm, coração com 10 zircônias, aprovada a v4) e 35 (prata 990 6mm, coração vazado). Ensaiado no banco de testes, criado como rascunho e ativado pelo dono. Fotos reserva para o próximo lote: 39(2), 33 e 18.
-- 2026-10-24: 2º lote, só a 39(2) aprovada (v2: ouro 16k, centro polido espelhado, bordas diamantadas, 6mm). Criada como rascunho na produção (id `cmvmqc9jw000012otwm29lqqy`), a ativar no admin. As fotos 33 e 18 ficaram em `textos.json`, fora do cadastro, aguardando nova versão. Backup: `Documentos\Cícero Joias - Backups\cicero-joias-public-20261024-antes-portfolio-lote2.dump` (restaurado numa cópia, 12 tabelas conferidas). Reservas restantes: 33 e 18, refazer.
+- 2026-10-24: 2º lote, só a 39(2) aprovada (v2: ouro 16k, centro polido espelhado, bordas diamantadas, 6mm). Criada como rascunho na produção (id `cmvmqc9jw000012otwm29lqqy`), a ativar no admin. Backup: `Documentos\Cícero Joias - Backups\cicero-joias-public-20261024-antes-portfolio-lote2.dump` (restaurado numa cópia, 12 tabelas conferidas).
+- 2026-10-24 (tarde): a 33 (ouro 16k, 5mm, 3 frisos, saturação 70%) e a 18 (ouro 18k, 10mm, unidade, +10% de saturação) foram refeitas pelo agy, aprovadas e criadas como rascunho na produção (ids `cmvmtmmw60000lndl2cck8qzs` e `cmvmtmnf20001lndlfh8zvgfw`), a ativar no admin. Backup: `cicero-joias-public-20261024-antes-portfolio-lote2b.dump` (restaurado, 12 tabelas conferidas). O portfólio passou a ter 13 itens. Fotos reserva do Drive para o próximo lote: 39 (a primeira), escolher outras.
 - 2026-10-23: removido o campo `status`. Backup antes: `Documentos\Cícero Joias - Backups\cicero-joias-public-20261023-1800-antes-remover-status.dump`.
