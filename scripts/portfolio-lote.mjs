@@ -15,6 +15,8 @@
 // Contra o banco de testes local (o segundo arquivo sobrescreve o banco):
 //   node --env-file=.env --env-file=.env.teste scripts/portfolio-lote.mjs "<pasta>" --apply
 //
+// Só alguns itens do textos.json: acrescente --only=39-2,33 (chaves do campo key).
+//
 // Idempotente: a foto recebe customId = hash do conteúdo (reaproveitada se já
 // foi enviada) e um item com o mesmo título que não esteja na lixeira é pulado.
 
@@ -64,7 +66,8 @@ async function existingByCustomId() {
 }
 
 async function main() {
-  const items = JSON.parse(readFileSync(path.join(folder, 'textos.json'), 'utf8'));
+  const only = process.argv.find((a) => a.startsWith('--only='))?.slice(7).split(',');
+  const items = JSON.parse(readFileSync(path.join(folder, 'textos.json'), 'utf8')).filter((i) => !only || only.includes(i.key));
   console.log(`Banco: ${dbHost} | modo: ${APPLY ? 'APLICAR' : 'simulação (use --apply para gravar)'} | itens no lote: ${items.length}\n`);
 
   const uploaded = await existingByCustomId();

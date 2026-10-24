@@ -39,6 +39,8 @@ Fluxo para transformar fotos antigas de alianças (Drive, pasta PRODUTOS › ALI
    - O script converte para WebP 1024 px, envia ao UploadThing e cria os itens como **rascunho** (`isActive: false`).
    - Só o `isActive` decide se o item aparece no site.
    - Simulação por padrão; `--apply` grava. É idempotente: a foto é identificada por hash e o item é pulado se o título já existe.
+   - `--only=39-2,33` cadastra só os itens com essas chaves do `textos.json` (útil quando o dono aprova parte do lote).
+   - O `montar.js` aceita as mesmas chaves como argumentos para a página de aprovação.
    - Ensaio no banco de testes: `node --env-file=.env --env-file=.env.teste scripts/portfolio-lote.mjs "<pasta>" --apply`. O segundo arquivo troca o banco.
    - Produção:
      - Backup verificado antes, como descrito em `docs/PLANO-OTIMIZACAO.md` (Etapa 0).
@@ -64,6 +66,11 @@ Fluxo para transformar fotos antigas de alianças (Drive, pasta PRODUTOS › ALI
 - **O antigo campo `status` (Rascunho/Publicado/Arquivado) não tinha efeito.** Foi removido em 2026-10-23. Não recriar.
 - **Antes de afirmar algo sobre os dados** (quantos itens, o que aparece no admin), confira no banco ou na tela.
 
+- **A foto original engana no acabamento e na cor.** Luz e filtro fazem polido espelhado parecer fosco escovado, e o ouro 16k (mais avermelhado) sair amarelo vivo. Pergunte ao dono o acabamento e o teor do ouro e descreva a cor no prompt. A correção funcionou editando a imagem quase certa (39(2) v1 → v2).
+- **Não fica fiel só pelo prompt:** a 33 (4 faixas diamantadas) e a 18 (aliança larga) saíram na contagem certa, mas o dono as reprovou por não ficarem 100% fiéis ao modelo. O motivo ele explica depois; quando explicar, registre aqui.
+- `pg_ctl start` dentro de um pipe (`| Select`) trava o comando, porque o servidor segura a saída. Inicie com `Start-Process -WindowStyle Hidden`.
+
 ## Histórico
 - 2026-10-23: 1º lote com as fotos 16 (ouro 18k 9mm abaulada), 26 (ouro 18k 6mm, coração com 10 zircônias, aprovada a v4) e 35 (prata 990 6mm, coração vazado). Ensaiado no banco de testes, criado como rascunho e ativado pelo dono. Fotos reserva para o próximo lote: 39(2), 33 e 18.
+- 2026-10-24: 2º lote, só a 39(2) aprovada (v2: ouro 16k, centro polido espelhado, bordas diamantadas, 6mm). Criada como rascunho na produção (id `cmvmqc9jw000012otwm29lqqy`), a ativar no admin. As fotos 33 e 18 ficaram em `textos.json`, fora do cadastro, aguardando nova versão. Backup: `Documentos\Cícero Joias - Backups\cicero-joias-public-20261024-antes-portfolio-lote2.dump` (restaurado numa cópia, 12 tabelas conferidas). Reservas restantes: 33 e 18, refazer.
 - 2026-10-23: removido o campo `status`. Backup antes: `Documentos\Cícero Joias - Backups\cicero-joias-public-20261023-1800-antes-remover-status.dump`.
