@@ -9,13 +9,18 @@ Fluxo para transformar fotos antigas de alianças (Drive, pasta PRODUTOS › ALI
 - `referencias\estilo-portfolio.png`: foto do portfólio atual usada como referência de estilo. `heart-a.png` é um exemplo de zoom de detalhe.
 - `textos.json`: um item por foto. Campos: `key`, `original`, `generated`, textos, `specifications`, SEO, `customCategory`, `confirmar` (lista do que falta o dono confirmar) e `nota` (opcional, aparece na página de aprovação).
 - `prompts-lote1.md`: os prompts usados no 1º lote, inclusive os que falharam.
-- `aprovacao\`: `template.html` e `montar.js`, que geram a página de aprovação.
+- `aprovacao\`: `template.html` e `montar.js`, que geram a página de aprovação (1º e 2º lotes).
+- `aprovacao\lote3\`: `gen2.js` + `tpl2.html` geram a página do 3º lote (original × molde × versões, com seções por foto). Publicada em https://claude.ai/artifact/GRuKbYHg1mpspr4uKfaE4D. Para um lote novo, copie a pasta e troque as seções.
+- `drive\`: `drive-ids.json` (nome da foto no Drive → ID), miniaturas `cand-*.jpg` e folhas de contato. Assim não é preciso listar o Drive de novo.
+- `blender\`: moldes 3D e scripts (ver "Molde no Blender").
 
 ## Passo a passo
 1. **Baixar do Drive.**
    - O conector do Drive não lista imagens. Use o Chrome, que está logado na conta dona da pasta.
    - Baixe cada foto pela miniatura em alta: `https://drive.google.com/thumbnail?id=<ID>&sz=w2400`, via `fetch` com credenciais e download por blob.
    - O Chrome às vezes deixa o arquivo como `.tmp` em Downloads. Identifique pelo tamanho, copie e renomeie.
+   - Faça o `fetch` numa aba aberta em `https://drive.google.com/robots.txt` (mesma origem, sem bloqueio). Na página de busca do Drive o `fetch` falha, e a captura de tela da extensão trava. Para achar os IDs, busque `ALIANÇAS <n>` no Drive e leia o atributo `data-id` dos itens; a busca não lista a pasta inteira de uma vez.
+   - As fotos 26, 26(2) e 19 (1º arquivo) deram erro no `fetch` da miniatura em 2026-10-26 (as 26 já tinham sido baixadas no 1º lote).
 2. **Escolher** modelos que ainda não estão no portfólio e com a peça bem visível.
    - Monte uma folha de contato (miniaturas lado a lado) para comparar.
    - Compare com os itens que já estão no site (páginas públicas) para não repetir modelo.
@@ -50,6 +55,21 @@ Fluxo para transformar fotos antigas de alianças (Drive, pasta PRODUTOS › ALI
 8. **Ativar** no admin, item por item.
    - A página `/portfolio` atualiza na hora quando o admin salva.
    - Itens gravados direto pelo script aparecem em até 10 minutos (`revalidate = 600`).
+
+## Fotos do Drive: o que já foi usado (atualize a cada lote)
+| Foto | Status |
+|---|---|
+| 16, 26 e 26(2) (mesma peça), 35 | Criadas com IA (1º lote), no site |
+| 39(2), 33, 18 | Criadas com IA (2º lote), no site |
+| 12, 3, 21 | Criadas no Blender + GPT (3º lote); 12 e 3 ativas, 21 rascunho |
+| 1(3) e ALIANÇA 1, 11, 5, 19 (2º arquivo), 4 | Já estavam no site, subidas à mão em fev/2026 (tabela no histórico) |
+| 10 | Reserva: ouro, mesma linha da prata chanfrada (11) do site |
+| 40 | Reserva: ouro diamantado no estojo em coração, parecido com a 21 |
+| 39 (1º arquivo) | Reserva: ranhuras segmentadas, desenho complexo (bom candidato ao Blender) |
+| 20, 24, 7 | Abauladas lisas, parecidas com a 16 |
+| 9 | Diamantada com friso, parecida com a 21 |
+| 34, 36, 22(2) | Vistas na folha de contato, ainda não avaliadas |
+| 19 (1º arquivo) | Não baixou pela miniatura; olhar no Drive |
 
 ## Perguntar antes de criar (toda aliança)
 Pergunte de uma vez, antes da primeira imagem, com a sua estimativa pela foto ao lado de cada item para o dono só confirmar:
