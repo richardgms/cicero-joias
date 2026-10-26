@@ -18,8 +18,8 @@ Fluxo para transformar fotos antigas de alianças (Drive, pasta PRODUTOS › ALI
    - O Chrome às vezes deixa o arquivo como `.tmp` em Downloads. Identifique pelo tamanho, copie e renomeie.
 2. **Escolher** modelos que ainda não estão no portfólio e com a peça bem visível.
    - Monte uma folha de contato (miniaturas lado a lado) para comparar.
-   - Pergunte ao dono o que a foto não mostra: material (ouro 18k, prata 990...), largura, interior e número de pedras.
-   - **Nunca invente** esses dados.
+   - Compare com os itens que já estão no site (páginas públicas) para não repetir modelo.
+   - **Antes de gerar qualquer imagem, faça ao dono as perguntas da seção "Perguntar antes de criar".** Nunca invente esses dados.
 3. **Gerar** com a skill `gerar-imagem` (~40 s cada). Se errar a geometria da peça (frisos, bordas, simetria), use o agy (seção "Gerar com o agy"). Passe como `-Referencia` a foto original (ou várias, se for a mesma peça em ângulos diferentes) e `referencias\estilo-portfolio.png`.
    - Modelo do prompt, em inglês:
      - *Recreate the exact pair of wedding rings from the first reference photo as a professional jewelry studio product photo.*
@@ -27,15 +27,16 @@ Fluxo para transformar fotos antigas de alianças (Drive, pasta PRODUTOS › ALI
      - *Only change the setting and lighting: seamless pure white to very light gray background, soft diffused studio lighting, subtle soft contact shadow.*
      - *Composition like the second reference photo (style only, do not copy its rings)… 1:1 square, no text, no watermark, no hands, no box, no props.*
    - Exemplos completos em `prompts-lote1.md`.
-4. **Conferir** cada imagem ampliada, recortando o detalhe da original e da gerada lado a lado.
+4. **Fidelidade à foto vem antes do prompt.** O dono pediu que a IA reproduza a proporção real da peça. Antes de gerar, meça na original: largura da faixa em relação ao diâmetro do anel e a porcentagem de cada acabamento (ex.: na foto 3, diamantada ~20% de cada lado e espelhada ~50% no centro). Escreva essas porcentagens no prompt e comece com "Above all, be faithful to the reference photo". Pedidos vagos ("mais estreita 20%") erram: saiu fina demais (12 v2); estimar a olho também errou (3 v1: diamantada larga demais).
+5. **Conferir** cada imagem ampliada, recortando o detalhe da original e da gerada lado a lado.
    - A IA erra a **contagem de pedras** e deixa pedras de tamanhos diferentes ou "derretidas". Conte na foto original antes.
    - **O que funciona:** editar a imagem quase certa passando só ela como referência e descrevendo a diferença exata. Por exemplo: *"it currently has 8 stones in rows of 2, 3, 2, 1. Make it exactly 10, in rows of 2, 3, 2, 2, 1… make every stone slightly smaller… Count carefully: 2+3+2+2+1 = 10"*.
    - **O que não funcionou:** gerar do zero com a contagem pedida, ou editar passando várias referências. Saíram 8 pedras ou pedras desiguais.
-5. **Aprovar** numa página Artifact com original × criada e os textos.
+6. **Aprovar** numa página Artifact com original × criada e os textos.
    - De dentro do repositório: `node "C:/Users/joalh/Documentos/Cícero Joias - Fotos IA/aprovacao/montar.js"` gera `aprovacao\pagina.html`.
    - Publique com a ferramenta Artifact. O 1º lote ficou em https://claude.ai/artifact/1KhjLVreVLJ4tJELtsgxgp.
    - O dono responde "aprovo N" ou "refazer N: …".
-6. **Cadastrar** com `scripts/portfolio-lote.mjs`.
+7. **Cadastrar** com `scripts/portfolio-lote.mjs`.
    - O script converte para WebP 1024 px, envia ao UploadThing e cria os itens como **rascunho** (`isActive: false`).
    - Só o `isActive` decide se o item aparece no site.
    - Simulação por padrão; `--apply` grava. É idempotente: a foto é identificada por hash e o item é pulado se o título já existe.
@@ -46,9 +47,38 @@ Fluxo para transformar fotos antigas de alianças (Drive, pasta PRODUTOS › ALI
      - Backup verificado antes, como descrito em `docs/PLANO-OTIMIZACAO.md` (Etapa 0).
      - Ok explícito do dono.
      - A trava do auto mode costuma bloquear o `--apply`. Nesse caso o dono roda o comando com `!`.
-7. **Ativar** no admin, item por item.
+8. **Ativar** no admin, item por item.
    - A página `/portfolio` atualiza na hora quando o admin salva.
    - Itens gravados direto pelo script aparecem em até 10 minutos (`revalidate = 600`).
+
+## Perguntar antes de criar (toda aliança)
+Pergunte de uma vez, antes da primeira imagem, com a sua estimativa pela foto ao lado de cada item para o dono só confirmar:
+1. **Material e teor:** prata 990, ouro 16k (mais avermelhado) ou 18k.
+2. **Largura** da faixa em mm.
+3. **Lateral do aro (espessura da borda):** a faixa reta entre o chanfro e o interior, que dá a sensação de peso. Três níveis:
+   - **fina:** quase um filete (0,15 mm no Blender). É a da prata 12.
+   - **média:** 0,35 mm.
+   - **grossa:** 0,6 mm, a peça parece pesada.
+4. **Perfil:** reto (flat), abaulado ou boleado. **Interior:** liso, abaulado (conforto) ou com gravação (a gravação não se reproduz).
+5. **Bordas:** chanfradas (o corte inclinado entre a face e a lateral) ou retas, polidas ou diamantadas.
+6. **Faixas e acabamentos:** quantas faixas, de que lado, e a proporção entre elas (ex.: na 3, três faixas iguais: diamantada, espelhada, diamantada). Frisos: quantos e onde.
+7. **Pedras:** quantas e como estão distribuídas.
+8. **O par:** as duas iguais ou diferentes (ex.: uma lisa e uma diamantada) e se a feminina é menor.
+9. **Composição:** a de referência é a da 12 v1 da IA (uma em pé e a outra encostada, na frente e à direita).
+10. **Cor:** se a cor da foto original é a real (luz e filtro enganam; ver "Armadilhas").
+
+## Molde no Blender (quando a IA erra a geometria)
+- A IA redesenha a peça a cada versão e erra largura, chanfro e espessura da borda. No Blender cada medida é um número e não muda sozinha. Ficou aprovado na 12 em 2026-10-26.
+- Arquivos em `Documentos\Cícero Joias - Fotos IA\blender\`:
+  - `anel12.py` monta a cena do zero: perfil, materiais (espelhado e diamantado), luz de estúdio clara, piso branco e câmera que enquadra o par.
+  - `ajustar-perfil.py` muda só o perfil dentro de um `.blend` já posicionado (`--side` = lateral do aro, `--width`, `--wall`, `--chamfer`) e renderiza, sem desfazer a posição.
+  - `render-blend.py` renderiza o `.blend` como está, depois que o dono ajustar à mão.
+  - `checar-piso.py` confere se as alianças encostam no piso.
+- Rodar sem abrir janela: `"C:\Program Files\Blender Foundation\Blender 5.1\blender.exe" -b <arquivo.blend> -P <script.py> -- <parâmetros>`.
+- O dono pode abrir o `.blend` e ajustar a posição. Depois disso, nunca rode `anel12.py` por cima (ele refaz a cena): use `ajustar-perfil.py` ou `render-blend.py`, e faça cópia do `.blend` antes de alterar.
+- Medidas da 12 aprovadas: faixa de 6 mm, parede de 0,95 mm, chanfro de 0,45 mm, lateral fina de 0,15 mm, diâmetro interno de 18,5 mm (masculina) e 16,5 mm (feminina).
+- O que o Blender ainda não faz bem: o brilho de grão do diamantado e a sombra no piso. O plano é passar o render ao ChatGPT só para o acabamento, sem mexer em forma, posição e medidas.
+- Para comparar, gere sempre a original, a versão anterior e a nova lado a lado na página de aprovação.
 
 ## Padrão dos textos (igual aos itens publicados)
 - Título: `Aliança em <Material> – <largura>mm <perfil/acabamento> com <detalhe>`
@@ -84,3 +114,14 @@ Fluxo para transformar fotos antigas de alianças (Drive, pasta PRODUTOS › ALI
 - 2026-10-24: 2º lote, só a 39(2) aprovada (v2: ouro 16k, centro polido espelhado, bordas diamantadas, 6mm). Criada como rascunho na produção (id `cmvmqc9jw000012otwm29lqqy`), a ativar no admin. Backup: `Documentos\Cícero Joias - Backups\cicero-joias-public-20261024-antes-portfolio-lote2.dump` (restaurado numa cópia, 12 tabelas conferidas).
 - 2026-10-24 (tarde): a 33 (ouro 16k, 5mm, 3 frisos, saturação 70%) e a 18 (ouro 18k, 10mm, unidade, +10% de saturação) foram refeitas pelo agy, aprovadas e criadas como rascunho na produção (ids `cmvmtmmw60000lndl2cck8qzs` e `cmvmtmnf20001lndlfh8zvgfw`), a ativar no admin. Backup: `cicero-joias-public-20261024-antes-portfolio-lote2b.dump` (restaurado, 12 tabelas conferidas). O portfólio passou a ter 13 itens. Fotos reserva do Drive para o próximo lote: 39 (a primeira), escolher outras.
 - 2026-10-23: removido o campo `status`. Backup antes: `Documentos\Cícero Joias - Backups\cicero-joias-public-20261023-1800-antes-remover-status.dump`.
+- 2026-10-26: planejando o 3º lote. Alianças antigas (fev/2026), subidas à mão e já no site; não recriar. Pares conferidos pelo dono (foto do Drive, pasta ALIANÇAS):
+
+  | No site | Foto do Drive |
+  |---|---|
+  | Ouro 16k – 8mm Flat com Frisos Laterais | 1(3) e "ALIANÇA 1" |
+  | Prata 990 – Design Flat com Corte Central e Bordas Chanfradas | 11 |
+  | Prata 990 com Fio de Ouro 18k – Detalhes Polidos | 5 |
+  | Ouro 16k com Corte Central e Acabamento Diamantado | 19b (o 2º arquivo "ALIANÇAS 19") |
+  | Ouro 18k – Boleada Diamantada com Cortes Laterais | 4 |
+
+  Candidatas do 3º lote: 12 (prata, centro diamantado) e 21 (ouro, duas faixas diamantadas com friso central). A 3ª vaga está em aberto (a foto 3 pode ser a mesma do "Corte Central"; reservas: 10, 40, 39, 20). Antes de sugerir foto, comparar com os itens do site (ler as páginas públicas, o banco de produção é bloqueado pelo auto mode).
