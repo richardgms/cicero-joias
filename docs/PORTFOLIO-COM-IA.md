@@ -124,4 +124,5 @@ Pergunte de uma vez, antes da primeira imagem, com a sua estimativa pela foto ao
   | Ouro 16k com Corte Central e Acabamento Diamantado | 19b (o 2º arquivo "ALIANÇAS 19") |
   | Ouro 18k – Boleada Diamantada com Cortes Laterais | 4 |
 
-  Candidatas do 3º lote: 12 (prata, centro diamantado) e 21 (ouro, duas faixas diamantadas com friso central). A 3ª vaga está em aberto (a foto 3 pode ser a mesma do "Corte Central"; reservas: 10, 40, 39, 20). Antes de sugerir foto, comparar com os itens do site (ler as páginas públicas, o banco de produção é bloqueado pelo auto mode).
+  3º lote: 12, 3 e 21 escolhidas. A IA sozinha não acertou a 12 (largura, chanfro, espessura da borda) nem a 3 (proporção das faixas); por isso nasceu o fluxo "Molde no Blender".
+- 2026-10-26: a 12 (prata 990, 6mm, flat com bordas chanfradas, uma lisa e uma diamantada, interior liso e reto) foi feita no Blender + acabamento do GPT (versão A), aprovada e criada como rascunho na produção (id `cmvpjz3f5000020oikgy3ihko`), a ativar no admin. Backup: `cicero-joias-public-20261026-antes-portfolio-lote3.dump` (restaurado, 12 tabelas conferidas). Portfólio com 14 itens. Próximas: 3 e 21.
