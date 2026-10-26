@@ -77,6 +77,7 @@ Pergunte de uma vez, antes da primeira imagem, com a sua estimativa pela foto ao
 - Rodar sem abrir janela: `"C:\Program Files\Blender Foundation\Blender 5.1\blender.exe" -b <arquivo.blend> -P <script.py> -- <parâmetros>`.
 - O dono pode abrir o `.blend` e ajustar a posição. Depois disso, nunca rode `anel12.py` por cima (ele refaz a cena): use `ajustar-perfil.py` ou `render-blend.py`, e faça cópia do `.blend` antes de alterar.
 - Medidas da 12 aprovadas: faixa de 6 mm, parede de 0,95 mm, chanfro de 0,45 mm, lateral fina de 0,15 mm, diâmetro interno de 18,5 mm (masculina) e 16,5 mm (feminina).
+- **O dono aprova o render do Blender antes de ele ir ao ChatGPT.** Mostre o molde (original × referência de composição × Blender) e espere o ok. Só depois gere o acabamento.
 - O que o Blender ainda não faz bem: o brilho de grão do diamantado e a sombra no piso. O plano é passar o render ao ChatGPT só para o acabamento, sem mexer em forma, posição e medidas.
 - Para comparar, gere sempre a original, a versão anterior e a nova lado a lado na página de aprovação.
 
@@ -126,3 +127,4 @@ Pergunte de uma vez, antes da primeira imagem, com a sua estimativa pela foto ao
 
   3º lote: 12, 3 e 21 escolhidas. A IA sozinha não acertou a 12 (largura, chanfro, espessura da borda) nem a 3 (proporção das faixas); por isso nasceu o fluxo "Molde no Blender".
 - 2026-10-26: a 12 (prata 990, 6mm, flat com bordas chanfradas, uma lisa e uma diamantada, interior liso e reto) foi feita no Blender + acabamento do GPT (versão A), aprovada e criada como rascunho na produção (id `cmvpjz3f5000020oikgy3ihko`), a ativar no admin. Backup: `cicero-joias-public-20261026-antes-portfolio-lote3.dump` (restaurado, 12 tabelas conferidas). Portfólio com 14 itens. Próximas: 3 e 21.
+- 2026-10-26: a 3 (ouro 16k, 5mm, flat, interior liso e reto, 3 faixas iguais diamantada/espelhada/diamantada, 2 cortes em V, sem filete nas bordas, parede 0,35 mm) foi feita no Blender (`anel3.py`) + acabamento do GPT (versão A, cor normal), aprovada e criada como rascunho na produção (id `cmvppsx2x0000qemgcrthwi2b`), a ativar no admin. Backup: `cicero-joias-public-20261026-antes-portfolio-lote3b.dump` (restaurado, 12 tabelas conferidas). Portfólio com 15 itens. Próxima: 21.
