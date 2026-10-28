@@ -66,7 +66,7 @@ Fluxo para transformar fotos antigas de alianças (Drive, pasta PRODUTOS › ALI
 | 10 | Reserva: ouro, mesma linha da prata chanfrada (11) do site |
 | 40 | Reserva: ouro diamantado no estojo em coração, parecido com a 21 |
 | 39 (1º arquivo) | Reserva: ranhuras segmentadas, desenho complexo (bom candidato ao Blender) |
-| 24, 20, 22(2) | **4º lote, em andamento** (escolhidas em 2026-10-27, medidas na seção "4º lote") |
+| 24, 20, 22(2) | Criadas no Blender + GPT (4º lote), aprovadas em 2026-10-28; cadastro como rascunho pendente (seção "4º lote") |
 | 7 | Abaulada lisa, reserva |
 | 9 | Diamantada fina com friso central, parente da 21 (reserva) |
 | 34, 36 | Abaulada lisa (34) e flat liso simples (36), reservas |
@@ -110,9 +110,14 @@ Todas em ouro 16k, sem pedras, par igual com a feminina só menor (diâmetro int
 |---|---|---|---|
 | 24 | 3,5 mm | Abaulado, interior reto flat, sem chanfro | Sem faixas nem frisos |
 | 20 | 5 mm | Abaulado, interior reto flat, sem chanfro | Sem faixas nem frisos |
-| 22(2) | 8 mm | Flat, interior liso reto polido | 1 friso fino em V perto de uma das bordas, nas duas |
-- Script: `blender\anel-lote4.py` (copiado do `anel3.py`). `--shape dome --dome <altura do arco em mm>` faz o abaulado; `--shape flat --cutpos <fração da largura a partir da borda> --cut --cutdepth` faz o friso fora do centro. Moldes iniciais (a conferir pelo dono): 24 `--width 3.5 --wall 0.15 --dome 1.0`; 20 `--width 5 --wall 0.15 --dome 1.2`; 22(2) `--width 8 --wall 0.15 --cutpos 0.25 --cut 0.35 --cutdepth 0.12`. A altura do arco e a posição do friso foram estimadas pela foto.
+| 22(2) | 4 mm (era 8 mm, alterado pelo dono em 2026-10-28) | Flat, interior liso reto polido | 1 friso fino em V perto de uma das bordas, nas duas |
+- Script: `blender\anel-lote4.py` (copiado do `anel3.py`). `--shape dome --dome <altura do arco em mm>` faz o abaulado; `--shape flat --cutpos <fração da largura a partir da borda> --cut --cutdepth` faz o friso fora do centro. Moldes iniciais (a conferir pelo dono): 24 `--width 3.5 --wall 0.15 --dome 1.0`; 20 `--width 5 --wall 0.15 --dome 1.2`; 22(2) `--width 4 --wall 0.15 --cutpos 0.25 --cut 0.35 --cutdepth 0.12`. A altura do arco e a posição do friso foram estimadas pela foto.
 - Lição: eu propus gerar a 24 e a 20 direto no GPT e o dono lembrou que o fluxo é Blender primeiro. Nas alianças, sempre começar pelo molde.
+- **Aprovadas em 2026-10-28:** 24 versão A com saturação 80% (3,5 mm, arco 0,5 mm), 20 versão A com 80% (5 mm, arco 0,6 mm), 22(2) versão B em cor normal (4 mm, friso a 25% da borda). Medidas finais do molde da 24: arco de 0,5 mm (o primeiro de 1,0 mm ficou pesado e redondo demais).
+- **Lição do arco:** use 48 a 64 segmentos no arco do abaulado para o render final. Com 16 (usados para o cálculo de posição ficar rápido) os reflexos saem com degraus serrilhados. Para montar o molde rápido use `N=16`; para renderizar, `N=64`.
+- **Copiar o ajuste fino do dono para uma cena nova:** o dono às vezes move as **malhas filhas** dentro de `A`/`B` (deslocamento local), e não o objeto raiz. `copiar-cena-dump.py` grava as posições, o deslocamento das filhas e a lente num JSON, e `copiar-cena-aplicar.py` aplica numa cena regenerada. Sem isso o par sai mais afastado.
+- O arquivo `.blend` só vale se estiver **salvo** (asterisco no título = não salvo). Conferir a data do arquivo antes de renderizar.
+- Cadastro: `Cícero Joias - Fotos IA\backup-e-simulacao-lote4.ps1` faz o backup da produção, prova que restaura e simula o cadastro (24, 20, 22). O auto mode bloqueia o acesso ao banco de produção, então o dono roda com `!`. Gravar (`--apply --only=24,20,22`) só depois do ok dele.
 
 ## Padrão dos textos (igual aos itens publicados)
 - Título: `Aliança em <Material> – <largura>mm <perfil/acabamento> com <detalhe>`
