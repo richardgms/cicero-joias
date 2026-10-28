@@ -66,7 +66,7 @@ Fluxo para transformar fotos antigas de alianças (Drive, pasta PRODUTOS › ALI
 | 10 | Reserva: ouro, mesma linha da prata chanfrada (11) do site |
 | 40 | Reserva: ouro diamantado no estojo em coração, parecido com a 21 |
 | 39 (1º arquivo) | Reserva: ranhuras segmentadas, desenho complexo (bom candidato ao Blender) |
-| 24, 20, 22(2) | Criadas no Blender + GPT (4º lote), aprovadas em 2026-10-28; cadastro como rascunho pendente (seção "4º lote") |
+| 24, 20, 22(2) | Criadas no Blender + GPT (4º lote), rascunhos na produção desde 2026-10-28; a ativar no admin |
 | 7 | Abaulada lisa, reserva |
 | 9 | Diamantada fina com friso central, parente da 21 (reserva) |
 | 34, 36 | Abaulada lisa (34) e flat liso simples (36), reservas |
@@ -167,3 +167,4 @@ Todas em ouro 16k, sem pedras, par igual com a feminina só menor (diâmetro int
 - 2026-10-26: a 12 (prata 990, 6mm, flat com bordas chanfradas, uma lisa e uma diamantada, interior liso e reto) foi feita no Blender + acabamento do GPT (versão A), aprovada e criada como rascunho na produção (id `cmvpjz3f5000020oikgy3ihko`), a ativar no admin. Backup: `cicero-joias-public-20261026-antes-portfolio-lote3.dump` (restaurado, 12 tabelas conferidas). Portfólio com 14 itens. Próximas: 3 e 21.
 - 2026-10-26: a 3 (ouro 16k, 5mm, flat, interior liso e reto, 3 faixas iguais diamantada/espelhada/diamantada, 2 cortes em V, sem filete nas bordas, parede 0,35 mm) foi feita no Blender (`anel3.py`) + acabamento do GPT (versão A, cor normal), aprovada e criada como rascunho na produção (id `cmvppsx2x0000qemgcrthwi2b`), a ativar no admin. Backup: `cicero-joias-public-20261026-antes-portfolio-lote3b.dump` (restaurado, 12 tabelas conferidas). Portfólio com 15 itens. Próxima: 21.
 - 2026-10-26: a 21 (ouro 18k, 6mm, flat, interior liso e reto, toda diamantada com corte central em V e filetes polidos nas bordas, filetes e corte de 0,55 mm, parede 0,35 mm) foi feita no Blender (`anel3.py --bands face,face`) + acabamento do GPT (versão A), aprovada e criada como rascunho na produção (id `cmvprfrcy000011jcel35koog`). Backup: `cicero-joias-public-20261026-antes-portfolio-lote3c.dump` (restaurado, 12 tabelas conferidas). O dono já ativou a 12 e a 3. Portfólio com 16 itens. 3º lote completo.
+- 2026-10-28: 4º lote (24, 20 e 22(2), ouro 16k, Blender + GPT) aprovado e criado como rascunho na produção: 24 (3,5 mm abaulada, versão A 80%) id `cmvrkroxl00004lsbl00v7t9z`; 20 (5 mm abaulada, versão A 80%) id `cmvrkrpfz00014lsbkijgvysf`; 22(2) (4 mm flat com friso em V, versão B) id `cmvrkrpwr00024lsblj3w7ul0`. Backup: `cicero-joias-public-20261028-antes-portfolio-lote4.dump` (31,8 KB, restaurado, 12 tabelas conferidas). Portfólio com 19 itens. A ativar no admin. Reservas que sobram: 39 (1º arquivo), 9, 36, 34, 7, 10, 40.
