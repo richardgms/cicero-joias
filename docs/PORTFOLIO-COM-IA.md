@@ -137,6 +137,7 @@ Todas em ouro 16k, sem pedras, par igual com a feminina só menor (diâmetro int
 
 - **A foto original engana no acabamento e na cor.** Luz e filtro fazem polido espelhado parecer fosco escovado, e o ouro 16k (mais avermelhado) sair amarelo vivo. Pergunte ao dono o acabamento e o teor do ouro e descreva a cor no prompt. A correção funcionou editando a imagem quase certa (39(2) v1 → v2).
 - **Contagem certa não basta, a geometria também precisa ser fiel.** No 2º lote o Codex errou em peças com frisos: na 33 os 3 frisos finos ficaram centralizados e com ângulo errado (na original ficam agrupados de um lado, com uma faixa larga do outro, inclinados pela curvatura), a parte de trás do anel saiu mais estreita que a frente, e na 18 uma borda espelhada ficou mais larga que a outra (devem ser simétricas e largas).
+- **Aviso `[uploadthing][deprecated] file.url / file.appUrl` no `--apply` não é erro.** O upload e o cadastro funcionam. Só vira problema na v9 do UploadThing: aí trocar `scripts/portfolio-lote.mjs` para `file.ufsUrl` (conferir antes que a URL gravada bate com a dos itens já publicados).
 - **Antigravity (`agy`) gera imagem e acertou essas peças.** Veja "Gerar com o agy" abaixo.
 - **Ajuste de cor:** para trocar só o tom/saturação, use `sharp(...).modulate({ saturation, hue })`. Não muda o desenho e é instantâneo (a 33 ficou em 70%, a 18 em +10%). Peça de ouro 16k é mais quente que a de 18k.
 
