@@ -66,9 +66,10 @@ Fluxo para transformar fotos antigas de alianças (Drive, pasta PRODUTOS › ALI
 | 10 | Reserva: ouro, mesma linha da prata chanfrada (11) do site |
 | 40 | Reserva: ouro diamantado no estojo em coração, parecido com a 21 |
 | 39 (1º arquivo) | Reserva: ranhuras segmentadas, desenho complexo (bom candidato ao Blender) |
-| 20, 24, 7 | Abauladas lisas, parecidas com a 16 |
-| 9 | Diamantada com friso, parecida com a 21 |
-| 34, 36, 22(2) | Vistas na folha de contato, ainda não avaliadas |
+| 24, 20, 22(2) | **4º lote, em andamento** (escolhidas em 2026-10-27, medidas na seção "4º lote") |
+| 7 | Abaulada lisa, reserva |
+| 9 | Diamantada fina com friso central, parente da 21 (reserva) |
+| 34, 36 | Abaulada lisa (34) e flat liso simples (36), reservas |
 | 19 (1º arquivo) | Não baixou pela miniatura; olhar no Drive |
 
 ## Perguntar antes de criar (toda aliança)
@@ -102,6 +103,16 @@ Pergunte de uma vez, antes da primeira imagem, com a sua estimativa pela foto ao
 - **O dono aprova o render do Blender antes de ele ir ao ChatGPT.** Mostre o molde (original × referência de composição × Blender) e espere o ok. Só depois gere o acabamento.
 - O que o Blender ainda não faz bem: o brilho de grão do diamantado e a sombra no piso. O plano é passar o render ao ChatGPT só para o acabamento, sem mexer em forma, posição e medidas.
 - Para comparar, gere sempre a original, a versão anterior e a nova lado a lado na página de aprovação.
+
+### 4º lote (24, 20 e 22(2)): medidas confirmadas pelo dono em 2026-10-27
+Todas em ouro 16k, sem pedras, par igual com a feminina só menor (diâmetro interno 18,5 mm masculina e 16,5 mm feminina), lateral do aro fina, bordas polidas.
+| Foto | Largura | Perfil | Detalhe |
+|---|---|---|---|
+| 24 | 3,5 mm | Abaulado, interior reto flat, sem chanfro | Sem faixas nem frisos |
+| 20 | 5 mm | Abaulado, interior reto flat, sem chanfro | Sem faixas nem frisos |
+| 22(2) | 8 mm | Flat, interior liso reto polido | 1 friso fino em V perto de uma das bordas, nas duas |
+- Script: `blender\anel-lote4.py` (copiado do `anel3.py`). `--shape dome --dome <altura do arco em mm>` faz o abaulado; `--shape flat --cutpos <fração da largura a partir da borda> --cut --cutdepth` faz o friso fora do centro. Moldes iniciais (a conferir pelo dono): 24 `--width 3.5 --wall 0.15 --dome 1.0`; 20 `--width 5 --wall 0.15 --dome 1.2`; 22(2) `--width 8 --wall 0.15 --cutpos 0.25 --cut 0.35 --cutdepth 0.12`. A altura do arco e a posição do friso foram estimadas pela foto.
+- Lição: eu propus gerar a 24 e a 20 direto no GPT e o dono lembrou que o fluxo é Blender primeiro. Nas alianças, sempre começar pelo molde.
 
 ## Padrão dos textos (igual aos itens publicados)
 - Título: `Aliança em <Material> – <largura>mm <perfil/acabamento> com <detalhe>`
