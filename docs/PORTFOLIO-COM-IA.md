@@ -122,7 +122,7 @@ Todas em ouro 16k com saturação 80%, sem pedras, flat, interior liso e reto, b
 |---|---|---|---|
 | 9 | 3,5 mm (a original é mais larga; o dono quis mais fina) | Fina | Toda diamantada até a borda; 1 friso polido em V um pouco à esquerda do centro |
 | 36 | 5 mm | Média | Toda espelhada, sem friso; bordas polidas levemente arredondadas pelo polimento |
-| 39 | 7 mm | Média | Centro espelhado largo, 2 frisos em V perto das bordas; feminina com as faixas das bordas diamantadas, masculina toda espelhada. Ranhuras transversais da foto: a confirmar |
+| 39 | 7 mm | Média | Centro espelhado largo, 2 frisos em V perto das bordas; feminina com as faixas das bordas diamantadas, masculina toda espelhada. Sem ranhuras atravessadas: as marcas horizontais da foto são reflexos da caixa |
 - Script: `blender\anel-lote5.py` (cópia do `anel-lote4.py`) com `--face 1` (face externa diamantada, friso polido) e `--round <mm>` (canto externo arredondado). Moldes salvos sem render final: 9 `--width 3.5 --wall 0.15 --face 1 --cutpos 0.42 --cut 0.35 --cutdepth 0.12`; 36 `--width 5 --wall 0.35 --round 0.12`. Prévias rápidas (700 px, 32 amostras) em `aliancas-9-previa.png` e `aliancas-36-previa.png`, para o dono conferir pelo celular.
 
 ## Padrão dos textos (igual aos itens publicados)
