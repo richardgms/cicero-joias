@@ -116,6 +116,15 @@ Todas em ouro 16k, sem pedras, par igual com a feminina só menor (diâmetro int
 - O arquivo `.blend` só vale se estiver **salvo** (asterisco no título = não salvo). Conferir a data do arquivo antes de renderizar.
 - Cadastro: `Cícero Joias - Fotos IA\backup-e-simulacao-lote4.ps1` faz o backup da produção, prova que restaura e simula o cadastro (24, 20, 22). O auto mode bloqueia o acesso ao banco de produção, então o dono roda com `!`. Gravar (`--apply --only=24,20,22`) só depois do ok dele.
 
+### 5º lote (9, 36 e 39): medidas confirmadas pelo dono em 2026-10-29
+Todas em ouro 16k com saturação 80%, sem pedras, flat, interior liso e reto, bordas retas sem chanfro, feminina menor (diâmetro interno 18,5 / 16,5 mm).
+| Foto | Largura | Lateral | Detalhe |
+|---|---|---|---|
+| 9 | 3,5 mm (a original é mais larga; o dono quis mais fina) | Fina | Toda diamantada até a borda; 1 friso polido em V um pouco à esquerda do centro |
+| 36 | 5 mm | Média | Toda espelhada, sem friso; bordas polidas levemente arredondadas pelo polimento |
+| 39 | 7 mm | Média | Centro espelhado largo, 2 frisos em V perto das bordas; feminina com as faixas das bordas diamantadas, masculina toda espelhada. Ranhuras transversais da foto: a confirmar |
+- Script: `blender\anel-lote5.py` (cópia do `anel-lote4.py`) com `--face 1` (face externa diamantada, friso polido) e `--round <mm>` (canto externo arredondado). Moldes salvos sem render final: 9 `--width 3.5 --wall 0.15 --face 1 --cutpos 0.42 --cut 0.35 --cutdepth 0.12`; 36 `--width 5 --wall 0.35 --round 0.12`. Prévias rápidas (700 px, 32 amostras) em `aliancas-9-previa.png` e `aliancas-36-previa.png`, para o dono conferir pelo celular.
+
 ## Padrão dos textos (igual aos itens publicados)
 - Título: `Aliança em <Material> – <largura>mm <perfil/acabamento> com <detalhe>`
 - `description`: 1–2 frases objetivas. `detailedDescription`: 2 parágrafos.
