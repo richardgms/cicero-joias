@@ -9,8 +9,8 @@ Fluxo para transformar fotos antigas de alianças (Drive, pasta PRODUTOS › ALI
 - `referencias\estilo-portfolio.png`: foto do portfólio atual usada como referência de estilo. `heart-a.png` é um exemplo de zoom de detalhe.
 - `textos.json`: um item por foto. Campos: `key`, `original`, `generated`, textos, `specifications`, SEO, `customCategory`, `confirmar` (lista do que falta o dono confirmar) e `nota` (opcional, aparece na página de aprovação).
 - `prompts-lote1.md`: os prompts usados no 1º lote, inclusive os que falharam.
-- `aprovacao\`: `template.html` e `montar.js`, que geram a página de aprovação (1º e 2º lotes).
-- `aprovacao\lote3\`: `gen2.js` + `tpl2.html` geram a página do 3º lote (original × molde × versões, com seções por foto). Publicada em https://claude.ai/artifact/GRuKbYHg1mpspr4uKfaE4D. Para um lote novo, copie a pasta e troque as seções.
+- `aprovacao\portfolio\gen.js`: gera a **página única das alianças** (`aliancas.html`): lote em andamento, reservas, peças no site e histórico. Link fixo: https://claude.ai/artifact/1NDUaFai6qAKam2e1NzvT6. **Nunca criar outra página:** a cada etapa, edite os dados no topo do `gen.js` (`ATUAL`, `RESERVAS`, `LOTES`), rode `node gen.js` e publique com `url` = esse link (em conversa nova, ler a página com `action: read` antes). Molde e versões do GPT entram em `ATUAL.pecas`/seção do lote atual, não em páginas separadas.
+- `aprovacao\` (`montar.js`, `template.html`), `aprovacao\lote3\` e `aprovacao\lote4\`: geradores antigos dos lotes 1 a 4, só como referência de layout (as páginas deles foram apagadas em 2026-10-28 e o conteúdo útil foi para a página única).
 - `drive\`: `drive-ids.json` (nome da foto no Drive → ID), miniaturas `cand-*.jpg` e folhas de contato. Assim não é preciso listar o Drive de novo.
 - `blender\`: moldes 3D e scripts (ver "Molde no Blender").
 
@@ -37,9 +37,7 @@ Fluxo para transformar fotos antigas de alianças (Drive, pasta PRODUTOS › ALI
    - A IA erra a **contagem de pedras** e deixa pedras de tamanhos diferentes ou "derretidas". Conte na foto original antes.
    - **O que funciona:** editar a imagem quase certa passando só ela como referência e descrevendo a diferença exata. Por exemplo: *"it currently has 8 stones in rows of 2, 3, 2, 1. Make it exactly 10, in rows of 2, 3, 2, 2, 1… make every stone slightly smaller… Count carefully: 2+3+2+2+1 = 10"*.
    - **O que não funcionou:** gerar do zero com a contagem pedida, ou editar passando várias referências. Saíram 8 pedras ou pedras desiguais.
-6. **Aprovar** numa página Artifact com original × criada e os textos.
-   - De dentro do repositório: `node "C:/Users/joalh/Documentos/Cícero Joias - Fotos IA/aprovacao/montar.js"` gera `aprovacao\pagina.html`.
-   - Publique com a ferramenta Artifact. O 1º lote ficou em https://claude.ai/artifact/1KhjLVreVLJ4tJELtsgxgp.
+6. **Aprovar** na página única das alianças (link e regra em "Onde ficam os arquivos"), com original × criada e os textos.
    - O dono responde "aprovo N" ou "refazer N: …".
 7. **Cadastrar** com `scripts/portfolio-lote.mjs`.
    - O script converte para WebP 1024 px, envia ao UploadThing e cria os itens como **rascunho** (`isActive: false`).
@@ -65,11 +63,10 @@ Fluxo para transformar fotos antigas de alianças (Drive, pasta PRODUTOS › ALI
 | 1(3) e ALIANÇA 1, 11, 5, 19 (2º arquivo), 4 | Já estavam no site, subidas à mão em fev/2026 (tabela no histórico) |
 | 10 | Reserva: ouro, mesma linha da prata chanfrada (11) do site |
 | 40 | Reserva: ouro diamantado no estojo em coração, parecido com a 21 |
-| 39 (1º arquivo) | Reserva: ranhuras segmentadas, desenho complexo (bom candidato ao Blender) |
+| 9, 36, 39 (1º arquivo) | 5º lote, escolhidas em 2026-10-28 (em andamento: confirmar medidas) |
 | 24, 20, 22(2) | Criadas no Blender + GPT (4º lote), rascunhos na produção desde 2026-10-28; a ativar no admin |
 | 7 | Abaulada lisa, reserva |
-| 9 | Diamantada fina com friso central, parente da 21 (reserva) |
-| 34, 36 | Abaulada lisa (34) e flat liso simples (36), reservas |
+| 34 | Abaulada lisa, reserva |
 | 19 (1º arquivo) | Não baixou pela miniatura; olhar no Drive |
 
 ## Perguntar antes de criar (toda aliança)
