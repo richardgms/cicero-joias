@@ -136,7 +136,7 @@ Flat, interior liso e reto, sem chanfro, feminina menor (diâmetro interno 18,5 
 | 15 | Prata 990 | 4 mm | Média | Toda diamantada até a borda; 1 friso polido em V perto de uma das bordas |
 | 40 | Prata 990 | 3,5 mm | Fina | 2 faixas diamantadas até a borda; 1 friso **reto** (não em V) no centro, banhado a ouro 18k |
 - **Largura:** o dono acha que o Blender mostra a aliança mais larga do que ela parece na vida real (6 mm parece 7; 5 parece 6). Por isso a 28 ficou com 5 mm em vez de 6. Na dúvida, propor a medida menor.
-- Script:  (cópia do ) com ,  (friso reto de fundo plano),  (friso em ouro 18k polido) e  (zircônia só na feminina, com aro de cravação polido;  em volta do aro,  na largura; o padrão é o meio da faixa mais larga). Moldes salvos sem render final e enquadrados a 72%: 28 ; 15 ; 40 .
+- Script: `blender\anel-lote6.py` (cópia do `anel-lote5.py`) com `--metal gold16|gold18|silver`, `--cutshape flat` (friso reto de fundo plano), `--cutgold 1` (friso em ouro 18k polido) e `--gem <mm>` (zircônia só na feminina, com aro de cravação polido; `--gemang` em volta do aro, `--gemz` na largura; o padrão é o meio da faixa mais larga). Moldes salvos sem render final e enquadrados a 72%: 28 `--metal gold18 --width 5 --wall 0.35 --round 0.12 --cutpos 0.42 --cut 0.35 --cutdepth 0.12 --gem 1.3`; 15 `--metal silver --width 4 --wall 0.35 --face 1 --cutpos 0.25 --cut 0.35 --cutdepth 0.12`; 40 `--metal silver --width 3.5 --wall 0.15 --face 1 --cutpos 0.5 --cut 0.45 --cutdepth 0.12 --cutshape flat --cutgold 1`.
 
 ## Padrão dos textos (igual aos itens publicados)
 - Título: `Aliança em <Material> – <largura>mm <perfil/acabamento> com <detalhe>`
