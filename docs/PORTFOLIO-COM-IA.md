@@ -63,7 +63,7 @@ Fluxo para transformar fotos antigas de alianças (Drive, pasta PRODUTOS › ALI
 | 1(3) e ALIANÇA 1, 11, 5, 19 (2º arquivo), 4 | Já estavam no site, subidas à mão em fev/2026 (tabela no histórico) |
 | 10 | Reserva: ouro, mesma linha da prata chanfrada (11) do site |
 | 9, 36, 39 (1º arquivo) | Criadas no Blender + GPT (5º lote), aprovadas em 2026-10-29 (versão B); gravar com `--apply` e ativar no admin |
-| 28, 15, 40 | 6º lote, escolhidas em 2026-10-29 (confirmar medidas). 28: ouro polido com friso central e 1 pedra; 15: prata diamantada com friso polido fora do centro (desenho parecido com a 9); 40: ouro diamantado com corte central polido (parecido com a 21) |
+| 28, 15, 40 | 6º lote, medidas confirmadas em 2026-10-29; moldes no Blender aguardando o dono. 28: ouro polido com friso central e 1 pedra; 15: prata diamantada com friso polido fora do centro (desenho parecido com a 9); 40: ouro diamantado com corte central polido (parecido com a 21) |
 | 24, 20, 22(2) | Criadas no Blender + GPT (4º lote), rascunhos na produção desde 2026-10-28; a ativar no admin |
 | 7 | Abaulada lisa, reserva |
 | 34 | Abaulada lisa, reserva |
@@ -127,6 +127,16 @@ Todas em ouro 16k (9 e 39 com saturação 80%; 36 na cor normal), sem pedras, fl
 - Script: `blender\anel-lote5.py` (cópia do `anel-lote4.py`) com `--face 1` (face externa diamantada, friso polido) e `--round <mm>` (canto externo arredondado). Moldes salvos sem render final: 9 `--width 3.5 --wall 0.15 --face 1 --cutpos 0.42 --cut 0.35 --cutdepth 0.12`; 36 `--width 5 --wall 0.35 --round 0.12` (o dono deitou as duas; desci alianças e câmera juntas 2,8 mm para encostarem no piso sem mudar o enquadramento); 39 `--width 7 --wall 0.35 --cutpos 0.15 --cutpos2 0.85 --cut 0.35 --cutdepth 0.15 --edgefaceb 1` (`--cutpos2` = 2º friso; `--edgefaceb 1` = faixas das pontas diamantadas só na feminina). Prompts do GPT em `prompts-lote5.md`.
 - **Folga em volta (padrão a partir do 5º lote):** as alianças ocupam **72% do quadro** (medida da 36, enquadrada pelo dono). `blender\enquadrar.py` mede quanto as alianças ocupam e, com `-- --target 0.72 --save`, muda só a lente (zoom), sem mexer em posição nem ângulo. Fazer isso antes do render final; não pedir ao GPT para afastar. A 39 também ganhou versões de 6 mm (`aliancas-39-6mm.blend`) e 4,5 mm (`aliancas-39-4p5mm.blend`, mesmo comando com `--width 4.5`) para o dono comparar com a de 7 mm. O cadastro no site só acontece com as 3 aprovadas (pedido do dono). Prévias rápidas (700 px, 32 amostras) em `aliancas-9-previa.png` e `aliancas-36-previa.png`, para o dono conferir pelo celular.
 - **GPT (2026-10-29):** renders finais (`render-blend.py`, 1600 px) das 3, com a 39 na posição e no afastamento que o dono ajustou (63% do quadro; respeitado). Prompts em `Fotos IAprompts-lote5.md`. Geradas em `geradasalianca-<n>-l5a/l5b.png` (A = só o render; B = render + original) e `-sat80` para 9 e 39. Todas saíram fiéis ao molde na 1ª tentativa; O dono aprovou as 3 na **versão B, cor normal** (sem os 80%). Textos no `textos.json` (chaves 9, 36, 39); ensaio no banco de testes ok (3 criadas, 2ª rodada pulou as 3, fotos webp abrindo). Backup e simulação: `Fotos IAackup-e-simulacao-lote5.ps1` (dump de 32 KB, restaurado, 12 tabelas conferidas, produção com 19 itens).
+
+### 6º lote (28, 15 e 40): medidas confirmadas pelo dono em 2026-10-29
+Flat, interior liso e reto, sem chanfro, feminina menor (diâmetro interno 18,5 / 16,5 mm).
+| Foto | Material | Largura | Lateral | Detalhe |
+|---|---|---|---|---|
+| 28 | Ouro 18k | 5 mm | Média | Toda espelhada, bordas levemente arredondadas pelo polimento; 1 friso em V quase no centro, um pouco deslocado (como na 9); 1 zircônia só na feminina |
+| 15 | Prata 990 | 4 mm | Média | Toda diamantada até a borda; 1 friso polido em V perto de uma das bordas |
+| 40 | Prata 990 | 3,5 mm | Fina | 2 faixas diamantadas até a borda; 1 friso **reto** (não em V) no centro, banhado a ouro 18k |
+- **Largura:** o dono acha que o Blender mostra a aliança mais larga do que ela parece na vida real (6 mm parece 7; 5 parece 6). Por isso a 28 ficou com 5 mm em vez de 6. Na dúvida, propor a medida menor.
+- Script:  (cópia do ) com ,  (friso reto de fundo plano),  (friso em ouro 18k polido) e  (zircônia só na feminina, com aro de cravação polido;  em volta do aro,  na largura; o padrão é o meio da faixa mais larga). Moldes salvos sem render final e enquadrados a 72%: 28 ; 15 ; 40 .
 
 ## Padrão dos textos (igual aos itens publicados)
 - Título: `Aliança em <Material> – <largura>mm <perfil/acabamento> com <detalhe>`
