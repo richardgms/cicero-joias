@@ -62,8 +62,8 @@ Fluxo para transformar fotos antigas de alianças (Drive, pasta PRODUTOS › ALI
 | 12, 3, 21 | Criadas no Blender + GPT (3º lote); 12 e 3 ativas, 21 rascunho |
 | 1(3) e ALIANÇA 1, 11, 5, 19 (2º arquivo), 4 | Já estavam no site, subidas à mão em fev/2026 (tabela no histórico) |
 | 10 | Reserva: ouro, mesma linha da prata chanfrada (11) do site |
-| 40 | Reserva: ouro diamantado no estojo em coração, parecido com a 21 |
-| 9, 36, 39 (1º arquivo) | 5º lote, escolhidas em 2026-10-28 (em andamento: confirmar medidas) |
+| 9, 36, 39 (1º arquivo) | Criadas no Blender + GPT (5º lote), aprovadas em 2026-10-29 (versão B); gravar com `--apply` e ativar no admin |
+| 28, 15, 40 | 6º lote, escolhidas em 2026-10-29 (confirmar medidas). 28: ouro polido com friso central e 1 pedra; 15: prata diamantada com friso polido fora do centro (desenho parecido com a 9); 40: ouro diamantado com corte central polido (parecido com a 21) |
 | 24, 20, 22(2) | Criadas no Blender + GPT (4º lote), rascunhos na produção desde 2026-10-28; a ativar no admin |
 | 7 | Abaulada lisa, reserva |
 | 34 | Abaulada lisa, reserva |
