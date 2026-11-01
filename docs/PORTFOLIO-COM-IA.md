@@ -65,7 +65,7 @@ Fluxo para transformar fotos antigas de alianças (Drive, pasta PRODUTOS › ALI
 | 9, 36, 39 (1º arquivo) | Criadas no Blender + GPT (5º lote), gravadas e ativas desde 2026-10-29 (títulos com a largura corrigida pelo dono) |
 | 28, 15, 40 | Criadas no Blender + GPT (6º lote), no ar desde 2026-10-30 (títulos com 6, 5 e 4 mm). 28: ouro polido com friso central e 1 pedra; 15: prata diamantada com friso polido fora do centro (desenho parecido com a 9); 40: ouro diamantado com corte central polido (parecido com a 21) |
 | 24, 20, 22(2) | Criadas no Blender + GPT (4º lote), ativas no site |
-| 13, 31 (baixo à esquerda) | Escolhidas para o 7º lote (2026-11-01), com uma abaulada lisa em prata |
+| 13, 31 (baixo à esquerda) | 7º lote (2026-11-01), com uma abaulada lisa em prata: moldes no Blender |
 | 32, 2, 31 (outros modelos) | Reserva, modelos novos: 32 catálogo com bicolor; 2 ouro 4 mm diamantado com friso; 31 catálogo de 6 modelos |
 | 10, 38 | Reserva; o dono as acha parecidas com a 22(2) e a 28 |
 | 6 e 6(2), 23, 27 | Reserva, repetem a 36 (ouro reto liso) |
@@ -151,12 +151,18 @@ Flat, interior liso e reto, sem chanfro, feminina menor (diâmetro interno 18,5 
 - **Copiar a pose de outra aliança** (a 40 na pose da 12, pedido do dono em 2026-10-30): copiar localização X/Y e rotação das alianças e a câmera (posição, ângulo e lente), depois `consertar-piso.py`, `encostar.py` (a inclinada encosta na outra), `enquadrar.py --target 0.72` e centralizar pelo deslocamento da lente (`shift_x`/`shift_y`, negativo leva as alianças para a direita e para cima). Como a parede das alianças muda, os números exatos da outra cena não servem sem esses ajustes.
 - GPT: 28 e 15 com versões A e B (`geradas\alianca-<n>-l6a/l6b.png`), prompts em `Fotos IA\prompts-lote6.md`. Todas fiéis ao molde na 1ª tentativa; zircônia da 28 saiu branca e só na feminina. **Aprovadas em 2026-10-30: 28 versão A, 15 versão B.** A 40 foi depois (lateral média-grossa); no render a lateral de baixo parecia chanfrada por reflexo, e o prompt pediu borda reta em 90°, sem chanfro: saiu reta nas duas versões.
 
-### 7º lote (13, abaulada em prata e 31 de baixo à esquerda): escolhido em 2026-11-01
-- **13:** prata 990, reta e lisa, toda espelhada. É a 36 (ouro) em prata: partir do molde dela com `--metal silver`.
-- **Abaulada lisa tradicional em prata:** modelo que o site já tem em ouro (24 e 20), agora em prata. Ideia do dono: refazer modelos do site em prata também vale como peça nova.
-- **31, aliança de baixo à esquerda** (recorte em `originais/ALIANCAS-31b.png` e `drive/cand-31b.jpg`): ouro, centro diamantado **rebaixado** e 2 faixas polidas nas bordas **mais altas** que o centro (degrau). O script ainda não faz esse degrau.
+### 7º lote (13, abaulada em prata e 31 de baixo à esquerda): medidas confirmadas pelo dono em 2026-11-01
+Par igual com a feminina menor (diâmetro interno 18,5 / 16,5 mm), interior liso e reto, sem pedras. A largura do título **não** sai do molde: perguntar ao dono antes de gravar (regra dele: o molde usa ~1 mm a menos que a peça real, e às vezes a medida do molde está errada).
+| Peça | Material | Molde | Lateral | Detalhe |
+|---|---|---|---|---|
+| 13 | Prata 990 | 5 mm, reta | Grossa (0,6) | Toda espelhada, bordas retas levemente arredondadas pelo polimento. É a 36 em prata |
+| Abaulada | Prata 990 | 4 mm, arco 0,5 mm | Média (0,35) | Toda espelhada, sem chanfro. É a 20 em prata (ideia do dono: refazer modelos do site em prata vale como peça nova) |
+| 31 (baixo à esquerda; recorte em `originais/ALIANCAS-31b.png`) | Ouro 16k | 5 mm, reta | Grossa (0,6, medida na faixa elevada) | 2 faixas polidas elevadas (15% da largura cada) e centro diamantado (70%) rebaixado 0,2 mm |
 - A 10 e a 38 ficaram de fora: o dono as acha parecidas com a 22(2) e a 28.
-- Medidas: checklist com as minhas estimativas na página única, aguardando o dono.
+- **Atalho: partir da cena de uma peça já aprovada.** `blender/trocar-metal.py -- --metal silver --save` troca a cor do metal sem mexer na cena; `blender/estreitar.py -- --de 5 --para 4 --wall 0.15 --arcode 0.6 --arcopara 0.5 --save` muda a largura (e a altura do arco) mantendo a pose. A 13 saiu de `aliancas-36.blend` (+ `engrossar.py` 0,35→0,6) e a abaulada de `aliancas-20-render.blend` (64 segmentos; + `engrossar.py` 0,15→0,35). Depois: `consertar-piso.py`, `separar.py` (a 13 afastou 1,37 mm porque a lateral cresceu) e `enquadrar.py --target 0.72`.
+- **31:** `blender/anel-lote7.py` (cópia do `anel-lote6.py`) com `--recess <mm>` (centro rebaixado) e `--band <fração>` (largura de cada faixa elevada): `--metal gold16 --width 5 --wall 0.6 --round 0.1 --recess 0.2 --band 0.15 --norender 1`.
+- `blender/previa.py -- <saida.png>` faz uma prévia de 700 px com 32 amostras, sem salvar o .blend, para o dono ver pelo celular. Prévias em `blender/aliancas-<peça>-previa.png`.
+- Próximo: o dono ajusta a posição no Blender e dá o ok; depois `render-blend.py`.
 
 ## Padrão dos textos (igual aos itens publicados)
 - Título: `Aliança em <Material> – <largura>mm <perfil/acabamento> com <detalhe>`
