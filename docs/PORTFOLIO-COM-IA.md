@@ -165,7 +165,9 @@ Par igual com a feminina menor (diâmetro interno 18,5 / 16,5 mm), interior liso
 - **Poses (pedido do dono em 2026-11-01, para não repetir a 36):** 13 com a maior deitada à esquerda e a menor apoiada nela à direita; abaulada com a pose da 20 espelhada; 31 com a pose da 21 (`copiar-cena-dump.py` da `aliancas-21.blend` + `copiar-cena-aplicar.py ... norender`). Cenas anteriores guardadas em `aliancas-13-pose-36.blend`, `aliancas-abaulada-prata-pose-20.blend` e `aliancas-31-cena-1.blend`.
 - Ferramentas novas de pose em `blender/`: `info-cena.py` (mostra posição, rotação, eixo e lugar na tela de cada aliança e se as malhas filhas foram movidas); `apoiar-lado.py -- --mover B [--lado esq] --save` (desliza a aliança no piso, para a direita da câmera, até encostar na outra; serve quando uma fica apoiada na borda da outra; o `separar.py` não resolve porque para em 3 mm); `centralizar.py -- --dx <fração> --save` (deslocamento da lente: positivo leva as alianças para a esquerda; conferir com `enquadrar.py` sem `--save`).
 - **Espelhar uma pose:** refletir a posição e o eixo de cada aliança no plano vertical da câmera (a aliança é simétrica, então o eixo refletido basta). Trocar qual aliança fica deitada: incorporar antes o deslocamento das malhas filhas na raiz (a B da 36 tinha as filhas movidas).
-- Próximo: ok do dono nas poses; depois `render-blend.py` e GPT.
+- Ajuste manual do dono em 2026-11-01 na abaulada (81% do quadro) e na 31 (63%); mantidos. A abaulada tinha ficado 0,095 mm acima do piso: corrigido com `consertar-piso.py` só na hora do render, porque o arquivo podia estar aberto no Blender dele (salvar por cima apagaria um dos dois). Cópias em `*-ajuste-manual.blend`.
+- **Manchas no interior espelhado** (13, menor): reflexos das bandeiras escuras do estúdio, não geometria; aparecem também no render final. O prompt pede ao GPT um interior limpo.
+- Render final das 3 (`blender/aliancas-<peça>-render.png`) em 2026-11-01. Prompts em `Fotos IA/prompts-lote7.md`. Próximo: ok do dono no render e GPT (A e B).
 
 ## Padrão dos textos (igual aos itens publicados)
 - Título: `Aliança em <Material> – <largura>mm <perfil/acabamento> com <detalhe>`
