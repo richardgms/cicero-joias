@@ -20,6 +20,7 @@ Fluxo para transformar fotos antigas de alianças (Drive, pasta PRODUTOS › ALI
    - Baixe cada foto pela miniatura em alta: `https://drive.google.com/thumbnail?id=<ID>&sz=w2400`, via `fetch` com credenciais e download por blob.
    - O Chrome às vezes deixa o arquivo como `.tmp` em Downloads. Identifique pelo tamanho, copie e renomeie.
    - Faça o `fetch` numa aba aberta em `https://drive.google.com/robots.txt` (mesma origem, sem bloqueio). Na página de busca do Drive o `fetch` falha, e a captura de tela da extensão trava. Para achar os IDs, busque `ALIANÇAS <n>` no Drive e leia o atributo `data-id` dos itens; a busca não lista a pasta inteira de uma vez.
+   - **Mais fácil:** o acervo local `Documentos\Cícero Joias - Acervo de imagensssets\photosproductsliancas` tem as mesmas fotos (51 arquivos, webp ~1000 px). Para ver e escolher, use essa pasta; o Chrome só é preciso para a 19 (1º arquivo), que não está lá. Miniaturas das reservas: `drive\cand-<n>.jpg`.
    - As fotos 26, 26(2) e 19 (1º arquivo) deram erro no `fetch` da miniatura em 2026-10-26 (as 26 já tinham sido baixadas no 1º lote).
 2. **Escolher** modelos que ainda não estão no portfólio e com a peça bem visível.
    - Monte uma folha de contato (miniaturas lado a lado) para comparar.
@@ -65,9 +66,14 @@ Fluxo para transformar fotos antigas de alianças (Drive, pasta PRODUTOS › ALI
 | 9, 36, 39 (1º arquivo) | Criadas no Blender + GPT (5º lote), gravadas e ativas desde 2026-10-29 (títulos com a largura corrigida pelo dono) |
 | 28, 15, 40 | Criadas no Blender + GPT (6º lote), no ar desde 2026-10-30 (títulos com 6, 5 e 4 mm). 28: ouro polido com friso central e 1 pedra; 15: prata diamantada com friso polido fora do centro (desenho parecido com a 9); 40: ouro diamantado com corte central polido (parecido com a 21) |
 | 24, 20, 22(2) | Criadas no Blender + GPT (4º lote), ativas no site |
-| 7 | Abaulada lisa, reserva |
-| 34 | Abaulada lisa, reserva |
-| 19 (1º arquivo) | Não baixou pela miniatura; olhar no Drive |
+| 13, 38, 32, 2, 31 | Reserva, modelos novos (levantados em 2026-11-01): 13 prata lisa espelhada; 38 ouro polido com friso e faixa central escura (conferir reflexo); 32 catálogo com bicolor; 2 ouro 4 mm diamantado com friso; 31 catálogo de 6 modelos |
+| 6 e 6(2), 23, 27 | Reserva, repetem a 36 (ouro reto liso) |
+| 29 | Reserva, repete a 22(2) |
+| 22 | Mesma peça da 22(2), no site |
+| 17, ALIANÇA 1(2), ALIANÇA1, `65bfe8c0…png` | Mesma linha da 1(3) já no site (ouro reto largo chanfrado) |
+| 14 | Reserva, repete a da foto 5 e a 40 |
+| 7, 34, 30, 37, 8, 25 | Reserva, repetem as abauladas/lisas 24 e 20 |
+| 19 (1º arquivo) | Não está no acervo local (lá só há a 19b); só no Drive |
 
 ## Perguntar antes de criar (toda aliança)
 Pergunte de uma vez, antes da primeira imagem, com a sua estimativa pela foto ao lado de cada item para o dono só confirmar:
@@ -196,3 +202,4 @@ Flat, interior liso e reto, sem chanfro, feminina menor (diâmetro interno 18,5 
 - 2026-10-28: 4º lote (24, 20 e 22(2), ouro 16k, Blender + GPT) aprovado e criado como rascunho na produção: 24 (3,5 mm abaulada, versão A 80%) id `cmvrkroxl00004lsbl00v7t9z`; 20 (5 mm abaulada, versão A 80%) id `cmvrkrpfz00014lsbkijgvysf`; 22(2) (4 mm flat com friso em V, versão B) id `cmvrkrpwr00024lsblj3w7ul0`. Backup: `cicero-joias-public-20261028-antes-portfolio-lote4.dump` (31,8 KB, restaurado, 12 tabelas conferidas). Portfólio com 19 itens. A ativar no admin. Reservas que sobram: 39 (1º arquivo), 9, 36, 34, 7, 10, 40.
 - 2026-10-30: conferido no backup que o 5º lote foi gravado em 2026-10-29 e está ativo (ids `cmvtmqeg90000p195tz799wns` 9, `cmvtmqepq0001p195zp15xct5` 36, `cmvtmqewz0002p1953nx2qd52` 39), com os títulos editados pelo dono. Todas as 22 peças estão ativas. 6º lote (28 A, 15 B, 40 B) aprovado; ensaio ok no banco de testes; backup `cicero-joias-public-20261030-antes-portfolio-lote6.dump` (restaurado, 12 tabelas conferidas).
 - 2026-11-01: conferido na página pública que o 6º lote está no ar: "Alianças em Ouro 18k – 6mm Retas com Friso e Zircônia" (28), "Alianças em Prata 990 – 5mm Diamantadas com Friso Polido" (15) e "Alianças em Prata 990 – 4mm Diamantadas com Filete de Ouro 18k" (40). O dono gravou com a largura do título corrigida (+1 mm sobre o molde nas 3). Portfólio com 25 peças (23 alianças e 2 banhos de ouro). `textos.json` alinhado com os títulos do site.
+- 2026-11-01: conferido o acervo local inteiro (mesmas fotos do Drive) contra as 25 peças do site. Reservas reorganizadas no `gen.js` em "modelos novos" (13, 10, 38, 32, 2, 31) e "repetem o site". A página única não abriu nesta conta do Claude (artifact "não encontrado"); o HTML está atualizado em `aprovacao\portfolioliancas.html`, à espera de publicar pela conta dona.
