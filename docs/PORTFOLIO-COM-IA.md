@@ -62,11 +62,12 @@ Fluxo para transformar fotos antigas de alianças (Drive, pasta PRODUTOS › ALI
 | 39(2), 33, 18 | Criadas com IA (2º lote), no site |
 | 12, 3, 21 | Criadas no Blender + GPT (3º lote), ativas no site |
 | 1(3) e ALIANÇA 1, 11, 5, 19 (2º arquivo), 4 | Já estavam no site, subidas à mão em fev/2026 (tabela no histórico) |
-| 10 | Reserva: ouro, mesma linha da prata chanfrada (11) do site |
 | 9, 36, 39 (1º arquivo) | Criadas no Blender + GPT (5º lote), gravadas e ativas desde 2026-10-29 (títulos com a largura corrigida pelo dono) |
 | 28, 15, 40 | Criadas no Blender + GPT (6º lote), no ar desde 2026-10-30 (títulos com 6, 5 e 4 mm). 28: ouro polido com friso central e 1 pedra; 15: prata diamantada com friso polido fora do centro (desenho parecido com a 9); 40: ouro diamantado com corte central polido (parecido com a 21) |
 | 24, 20, 22(2) | Criadas no Blender + GPT (4º lote), ativas no site |
-| 13, 38, 32, 2, 31 | Reserva, modelos novos (levantados em 2026-11-01): 13 prata lisa espelhada; 38 ouro polido com friso e faixa central escura (conferir reflexo); 32 catálogo com bicolor; 2 ouro 4 mm diamantado com friso; 31 catálogo de 6 modelos |
+| 13, 31 (baixo à esquerda) | Escolhidas para o 7º lote (2026-11-01), com uma abaulada lisa em prata |
+| 32, 2, 31 (outros modelos) | Reserva, modelos novos: 32 catálogo com bicolor; 2 ouro 4 mm diamantado com friso; 31 catálogo de 6 modelos |
+| 10, 38 | Reserva; o dono as acha parecidas com a 22(2) e a 28 |
 | 6 e 6(2), 23, 27 | Reserva, repetem a 36 (ouro reto liso) |
 | 29 | Reserva, repete a 22(2) |
 | 22 | Mesma peça da 22(2), no site |
@@ -149,6 +150,13 @@ Flat, interior liso e reto, sem chanfro, feminina menor (diâmetro interno 18,5 
 - **Mudar a lateral do aro sem perder a posição:** `blender\engrossar.py -- --de 0.15 --para 0.48 --save` empurra para fora tudo que não é o interior (face, friso, bordas). Depois rodar `consertar-piso.py` (as alianças afundam o tanto que cresceram), `separar.py` e `enquadrar.py --target 0.72`. Lateral média-grossa = 0,48 mm (entre média 0,35 e grossa 0,6).
 - **Copiar a pose de outra aliança** (a 40 na pose da 12, pedido do dono em 2026-10-30): copiar localização X/Y e rotação das alianças e a câmera (posição, ângulo e lente), depois `consertar-piso.py`, `encostar.py` (a inclinada encosta na outra), `enquadrar.py --target 0.72` e centralizar pelo deslocamento da lente (`shift_x`/`shift_y`, negativo leva as alianças para a direita e para cima). Como a parede das alianças muda, os números exatos da outra cena não servem sem esses ajustes.
 - GPT: 28 e 15 com versões A e B (`geradas\alianca-<n>-l6a/l6b.png`), prompts em `Fotos IA\prompts-lote6.md`. Todas fiéis ao molde na 1ª tentativa; zircônia da 28 saiu branca e só na feminina. **Aprovadas em 2026-10-30: 28 versão A, 15 versão B.** A 40 foi depois (lateral média-grossa); no render a lateral de baixo parecia chanfrada por reflexo, e o prompt pediu borda reta em 90°, sem chanfro: saiu reta nas duas versões.
+
+### 7º lote (13, abaulada em prata e 31 de baixo à esquerda): escolhido em 2026-11-01
+- **13:** prata 990, reta e lisa, toda espelhada. É a 36 (ouro) em prata: partir do molde dela com `--metal silver`.
+- **Abaulada lisa tradicional em prata:** modelo que o site já tem em ouro (24 e 20), agora em prata. Ideia do dono: refazer modelos do site em prata também vale como peça nova.
+- **31, aliança de baixo à esquerda** (recorte em `originais/ALIANCAS-31b.png` e `drive/cand-31b.jpg`): ouro, centro diamantado **rebaixado** e 2 faixas polidas nas bordas **mais altas** que o centro (degrau). O script ainda não faz esse degrau.
+- A 10 e a 38 ficaram de fora: o dono as acha parecidas com a 22(2) e a 28.
+- Medidas: checklist com as minhas estimativas na página única, aguardando o dono.
 
 ## Padrão dos textos (igual aos itens publicados)
 - Título: `Aliança em <Material> – <largura>mm <perfil/acabamento> com <detalhe>`
